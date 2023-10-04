@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "types": ["chrome"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

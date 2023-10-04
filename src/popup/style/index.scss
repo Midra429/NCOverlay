@@ -1,0 +1,11 @@
+@use './normalize.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 600px;
+  height: 450px;
+  background-color: aliceblue;
+}

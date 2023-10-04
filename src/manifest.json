@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "NCOverlay",
+  "description": "ニコニコのコメントをオーバーレイ表示するやつ",
+  "version": "0.0.1",
+
+  "action": {
+    "default_title": "NCOverlay",
+    "default_popup": "popup/index.html"
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["content_script.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://www.amazon.co.jp/*"],
+      "css": ["styles/primeVideo.css"]
+    },
+    {
+      "matches": ["https://animestore.docomo.ne.jp/*"],
+      "css": ["styles/dAnime.css"]
+    }
+  ],
+
+  "host_permissions": ["https://*/*"],
+
+  "permissions": ["declarativeContent", "scripting", "storage", "webRequest"],
+
+  "minimum_chrome_version": "93"
+}
