@@ -31,7 +31,7 @@
 
   "host_permissions": ["https://*/*"],
 
-  "permissions": ["declarativeContent", "scripting", "storage", "webRequest"],
+  "permissions": ["declarativeContent", "storage", "scripting"],
 
   "minimum_chrome_version": "93"
 }
