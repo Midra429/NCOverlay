@@ -1,5 +1,6 @@
 import vodPrimeVideo from './vod/primeVideo'
 import vodDAnime from './vod/dAnime'
+import vodAbema from './vod/abema'
 
 console.log('[NCOverlay] content_script.js')
 
@@ -22,8 +23,15 @@ if (location.hostname === 'www.amazon.co.jp') {
 
 // dアニメストア
 if (location.hostname === 'animestore.docomo.ne.jp') {
+  init()
+
   if (location.pathname.match('/animestore/sc_d_pc')) {
-    init()
     vodDAnime()
   }
+}
+
+// ABEMA
+if (location.hostname === 'abema.tv') {
+  init()
+  vodAbema()
 }

@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (isChromeMessageBadge(message)) {
-      chrome.action.setBadgeText({
+      promise = chrome.action.setBadgeText({
         text: message.body,
         tabId: sender.tab?.id,
       })

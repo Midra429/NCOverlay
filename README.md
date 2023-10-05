@@ -5,6 +5,7 @@
 ## 対応サイト
 - [Amazon Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [dアニメストア](https://animestore.docomo.ne.jp/animestore/)
+- [ABEMA](https://abema.tv/video/genre/animation)
 
 ## 使い方
 コメントは自動で取得・表示されるので何もしなくてOK。<br>

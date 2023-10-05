@@ -26,6 +26,10 @@
     {
       "matches": ["https://animestore.docomo.ne.jp/*"],
       "css": ["styles/dAnime.css"]
+    },
+    {
+      "matches": ["https://abema.tv/*"],
+      "css": ["styles/abema.css"]
     }
   ],
 

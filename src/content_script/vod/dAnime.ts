@@ -3,7 +3,7 @@ import { NiconicoApi } from '@/content_script/api/niconico'
 import { DAnimeApi } from '@/content_script/api/danime'
 import { getThreads } from '@/content_script/utils/getThreads'
 
-export default async function () {
+export default async () => {
   console.log('[NCOverlay] VOD: dアニメストア')
 
   const video = document.querySelector<HTMLVideoElement>('#video')
@@ -13,7 +13,7 @@ export default async function () {
   const nco = new NCOverlay(video)
 
   nco.onLoadedmetadata = async () => {
-    nco.init()
+    await nco.init()
 
     const partId = new URL(location.href).searchParams.get('partId')
 
@@ -39,7 +39,7 @@ export default async function () {
         console.log('[NCOverlay] threads (filtered)', threads)
 
         if (threads) {
-          nco.init(threads)
+          await nco.init(threads)
         }
       }
     }

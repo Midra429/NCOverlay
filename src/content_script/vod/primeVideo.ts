@@ -3,7 +3,7 @@ import { NiconicoApi } from '@/content_script/api/niconico'
 import { getThreads } from '@/content_script/utils/getThreads'
 import { extractEpisodeNumber } from '@/utils/extractEpisodeNumber'
 
-export default async function () {
+export default async () => {
   console.log('[NCOverlay] VOD: Prime Video')
 
   const canonicalUrl =
@@ -41,10 +41,10 @@ export default async function () {
     }
   }
 
-  const modify = (video: HTMLVideoElement) => {
+  const modify = async (video: HTMLVideoElement) => {
     console.log('[NCOverlay] modify()')
 
-    nco?.dispose()
+    await nco?.dispose()
     nco = null
 
     const playerUIContainer = video
@@ -88,9 +88,9 @@ export default async function () {
           console.log('[NCOverlay] threads (filtered)', threads)
 
           if (threads) {
-            nco?.init(threads)
+            await nco?.init(threads)
           } else {
-            nco?.dispose()
+            await nco?.dispose()
             nco = null
           }
         }
@@ -106,20 +106,24 @@ export default async function () {
     attributes: true,
     attributeFilter: ['src'],
   }
-  const obs = new MutationObserver((mutations) => {
+  const obs = new MutationObserver(async (mutations) => {
     obs.disconnect()
 
-    for (const mutation of mutations) {
-      if (!(mutation.target instanceof HTMLElement)) continue
+    if (nco && !document.contains(nco.video)) {
+      await nco.dispose()
+      nco = null
+    }
 
-      if (
-        mutation.type === 'childList' &&
-        0 < mutation.addedNodes.length &&
-        mutation.target.classList.contains('rendererContainer')
-      ) {
-        const video = mutation.target.getElementsByTagName('video')[0]
-        if (video?.src) {
-          modify(video)
+    for (const mutation of mutations) {
+      if (mutation.type === 'childList') {
+        if (!nco) {
+          const video = document.querySelector<HTMLVideoElement>(
+            '.webPlayerSDKContainer video'
+          )
+
+          if (video) {
+            await modify(video)
+          }
         }
       }
 
@@ -128,16 +132,17 @@ export default async function () {
         mutation.target instanceof HTMLVideoElement &&
         mutation.target.matches('.webPlayerSDKContainer video')
       ) {
-        if (mutation.target.src && !nco) {
-          modify(mutation.target)
-        } else {
-          nco?.dispose()
+        if (!mutation.target.src) {
+          await nco?.dispose()
           nco = null
+        } else if (!nco) {
+          await modify(mutation.target)
         }
       }
     }
 
-    obs.observe(document.body, obs_config)
+    obs.observe(document, obs_config)
   })
-  obs.observe(document.body, obs_config)
+
+  obs.observe(document, obs_config)
 }

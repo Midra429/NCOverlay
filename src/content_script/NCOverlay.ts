@@ -46,19 +46,22 @@ export class NCOverlay {
       this.#listener.loadedmetadata
     )
 
-    if (this.#video.duration && this.onLoadedmetadata) {
-      this.#video.dispatchEvent(new Event('loadedmetadata'))
-    }
-
     this.#canvas = document.createElement('canvas')
     this.#canvas.classList.add('NCOverlay-Canvas')
     this.#canvas.width = 1920
     this.#canvas.height = 1080
 
     this.init(data, format)
+
+    if (
+      HTMLMediaElement.HAVE_METADATA <= this.#video.readyState &&
+      this.onLoadedmetadata
+    ) {
+      this.#video.dispatchEvent(new Event('loadedmetadata'))
+    }
   }
 
-  init(data?: InputFormat, format?: InputFormatType) {
+  async init(data?: InputFormat, format?: InputFormatType) {
     console.log('[NCOverlay] NCOverlay.init()')
 
     const isPlaying = this.#isPlaying
@@ -85,22 +88,24 @@ export class NCOverlay {
 
     console.log('[NCOverlay] commentCount', this.#commentCount)
 
-    if (0 < this.#commentCount) {
-      setBadgeText(this.#commentCount.toLocaleString())
-    } else {
-      setBadgeText('')
-    }
-
     this.#niconiComments = new NiconiComments(this.#canvas, data, {
       format: format ?? 'v1',
     })
 
+    this.#update()
+
     if (isPlaying) {
       this.start()
     }
+
+    await setBadgeText(
+      0 < this.#commentCount ? this.#commentCount.toLocaleString() : ''
+    )
   }
 
-  dispose() {
+  async dispose() {
+    console.log('[NCOverlay] NCOverlay.dispose()')
+
     this.stop()
     this.clear()
 
@@ -114,6 +119,8 @@ export class NCOverlay {
     )
 
     this.#canvas.remove()
+
+    await setBadgeText('')
   }
 
   clear() {
