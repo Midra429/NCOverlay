@@ -1,4 +1,4 @@
-import type { Part, Data as PartData } from '@/types/danime/part'
+import type { Part, PartData } from '@/types/danime/part'
 
 const API_URL = 'https://animestore.docomo.ne.jp/animestore/rest/WS010105'
 

@@ -1,13 +1,13 @@
 export type Video = {
-  meta: Meta
-  data: Data
+  meta: VideoMeta
+  data: VideoData
 }
 
-export type Meta = {
+export type VideoMeta = {
   status: number
 }
 
-export type Data = {
+export type VideoData = {
   ads: null
   category: null
   channel: Channel | null

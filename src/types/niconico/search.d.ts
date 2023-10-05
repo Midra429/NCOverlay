@@ -3,15 +3,15 @@ export type SearchQuery = {
   q: string
 
   /** 検索対象のフィールド */
-  targets: (keyof Data)[]
+  targets: (keyof SearchData)[]
 
   /** レスポンスに含みたいヒットしたコンテンツのフィールド */
-  fields?: (keyof Omit<Data, 'tagsExact' | 'genre.keyword'>)[]
+  fields?: (keyof Omit<SearchData, 'tagsExact' | 'genre.keyword'>)[]
 
   /** 検索条件 */
   filters?: {
     [field in keyof Omit<
-      Data,
+      SearchData,
       'contentId' | 'title' | 'description' | 'thumbnailUrl'
     >]: {
       [key in '0' | 'gt' | 'gte' | 'lt' | 'lte']?: number | string
@@ -29,11 +29,11 @@ export type SearchQuery = {
 }
 
 export type Search = {
-  meta: Meta
-  data: Data[]
+  meta: SearchMeta
+  data: SearchData[]
 }
 
-export type Meta = {
+export type SearchMeta = {
   status: number
 
   /** status: 200 */
@@ -49,7 +49,7 @@ export type Meta = {
   errorMessage?: string
 }
 
-export type Data = {
+export type SearchData = {
   /** コンテンツID */
   'contentId'?: string
 

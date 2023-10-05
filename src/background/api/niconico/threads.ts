@@ -1,5 +1,5 @@
 import type { NvComment } from '@/types/niconico/video'
-import type { Threads } from '@/types/niconico/threads'
+import type { Threads, ThreadsData } from '@/types/niconico/threads'
 
 const API_URL = 'https://nvcomment.nicovideo.jp/v1/threads'
 
@@ -9,7 +9,7 @@ export type NvCommentBody = Omit<NvComment, 'server'> & {
 
 export const threads = async (
   nvComment: NvCommentBody
-): Promise<Threads | null> => {
+): Promise<ThreadsData | null> => {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -20,10 +20,12 @@ export const threads = async (
       },
       body: JSON.stringify(nvComment),
     })
+    const json: Threads = await res.json()
 
     if (res.ok) {
-      const json = await res.json()
-      return json
+      return json.data
+    } else {
+      console.error(json.meta)
     }
   } catch (e) {
     console.error(e)

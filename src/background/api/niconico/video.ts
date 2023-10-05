@@ -1,4 +1,4 @@
-import type { Video } from '@/types/niconico/video'
+import type { Video, VideoData } from '@/types/niconico/video'
 
 const API_URL = 'https://www.nicovideo.jp/api/watch/v3'
 const API_URL_GUEST = 'https://www.nicovideo.jp/api/watch/v3_guest'
@@ -6,7 +6,7 @@ const API_URL_GUEST = 'https://www.nicovideo.jp/api/watch/v3_guest'
 export const video = async (
   id: string,
   guest: boolean = false
-): Promise<Video | null> => {
+): Promise<VideoData | null> => {
   if (/^[a-z]+\d+$/.test(id)) {
     try {
       const params = {
@@ -29,10 +29,12 @@ export const video = async (
       const res = await fetch(url, {
         method: 'GET',
       })
+      const json: Video = await res.json()
 
       if (res.ok) {
-        const json = await res.json()
-        return json
+        return json.data
+      } else {
+        console.error(json.meta)
       }
     } catch (e) {
       console.error(e)

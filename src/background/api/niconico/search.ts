@@ -1,10 +1,12 @@
-import type { SearchQuery, Search } from '@/types/niconico/search'
+import type { SearchQuery, Search, SearchData } from '@/types/niconico/search'
 import { filterObject } from '@/utils/filterObject'
 
 const API_URL =
   'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search'
 
-export const search = async (query: SearchQuery): Promise<Search | null> => {
+export const search = async (
+  query: SearchQuery
+): Promise<SearchData[] | null> => {
   try {
     const params = {
       q: query.q,
@@ -21,10 +23,10 @@ export const search = async (query: SearchQuery): Promise<Search | null> => {
     filterObject(params)
 
     if (query.filters) {
-      for (const field of Object.keys(query.filters)) {
+      for (const field in query.filters) {
         if (query.filters[field] == null) continue
 
-        for (const key of Object.keys(query.filters[field])) {
+        for (const key in query.filters[field]) {
           if (query.filters[field][key] == null) continue
 
           const val = query.filters[field][key]
@@ -33,8 +35,6 @@ export const search = async (query: SearchQuery): Promise<Search | null> => {
         }
       }
     }
-
-    console.log(params)
 
     const url = `${API_URL}?${new URLSearchParams(
       params as Record<string, string>
@@ -45,10 +45,12 @@ export const search = async (query: SearchQuery): Promise<Search | null> => {
         'User-Agent': 'NCOverlay/1.0',
       },
     })
+    const json: Search = await res.json()
 
     if (res.ok) {
-      const json = await res.json()
-      return json
+      return json.data
+    } else {
+      console.error(json.meta)
     }
   } catch (e) {
     console.error(e)

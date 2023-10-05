@@ -2,10 +2,10 @@ export type Part = {
   resultCd: string
   version: string
   selfLink: string
-  data: Data
+  data: PartData
 }
 
-export type Data = {
+export type PartData = {
   appType: string
   partId: string
   workTitle: string

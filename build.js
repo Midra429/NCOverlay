@@ -1,6 +1,5 @@
 // @ts-check
 const fs = require('fs-extra')
-const { globSync } = require('glob')
 const sass = require('sass')
 const esbuild = require('esbuild')
 const archiver = require('archiver')

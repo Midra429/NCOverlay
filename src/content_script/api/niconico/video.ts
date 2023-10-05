@@ -1,13 +1,17 @@
 import type { ChromeMessage, ChromeResponse } from '@/types/chrome'
+import type { VideoData } from '@/types/niconico/video'
 
-export const video = async (id: string, guest?: boolean) => {
+export const video = async (
+  id: string,
+  guest?: boolean
+): Promise<VideoData | null> => {
   if (id) {
     const res = await chrome.runtime.sendMessage<
-      ChromeMessage<'video'>,
-      ChromeResponse<'video'>
+      ChromeMessage<'niconico:video'>,
+      ChromeResponse<'niconico:video'>
     >({
       id: Date.now(),
-      type: 'video',
+      type: 'niconico:video',
       body: {
         videoId: id,
         guest: guest,
@@ -15,8 +19,6 @@ export const video = async (id: string, guest?: boolean) => {
     })
 
     if (res.result) {
-      console.log(`[NCOverlay] video${guest ? ' (guest)' : ''}`, res.result)
-
       return res.result
     }
   }

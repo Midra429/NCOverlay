@@ -1,11 +1,14 @@
 import type { InputFormat, InputFormatType } from '@xpadev-net/niconicomments'
 import NiconiComments from '@xpadev-net/niconicomments'
+import { setBadgeText } from '@/content_script/utils/setBadgeText'
 
 export class NCOverlay {
   #video: HTMLVideoElement
   #canvas: HTMLCanvasElement
   #niconiComments: NiconiComments
 
+  #commentCount: number = 0
+  #noData: boolean = true
   #isPlaying: boolean = false
 
   onPlaying?: (e: Event) => void
@@ -22,13 +25,16 @@ export class NCOverlay {
   get niconiComments() {
     return this.#niconiComments
   }
+  get commentCount() {
+    return this.#commentCount
+  }
 
   constructor(
     video: HTMLVideoElement,
-    data: InputFormat = [],
+    data?: InputFormat,
     format?: InputFormatType
   ) {
-    console.log('[NCOverlay] video', video)
+    console.log('[NCOverlay] NCOverlay.video', video)
 
     this.#video = video
     this.#video.classList.add('NCOverlay-Video')
@@ -52,7 +58,7 @@ export class NCOverlay {
     this.init(data, format)
   }
 
-  init(data: InputFormat, format: InputFormatType = 'v1') {
+  init(data?: InputFormat, format?: InputFormatType) {
     console.log('[NCOverlay] NCOverlay.init()')
 
     const isPlaying = this.#isPlaying
@@ -62,8 +68,31 @@ export class NCOverlay {
       this.clear()
     }
 
+    this.#noData = !data || (Array.isArray(data) && data.length === 0)
+
+    if (this.#noData) {
+      data = undefined
+      format = 'empty'
+      this.#commentCount = 0
+    }
+
+    if (NiconiComments.typeGuard.v1.threads(data)) {
+      this.#commentCount = data.reduce(
+        (sum, thread) => sum + thread.comments.length,
+        0
+      )
+    }
+
+    console.log('[NCOverlay] commentCount', this.#commentCount)
+
+    if (0 < this.#commentCount) {
+      setBadgeText(this.#commentCount.toLocaleString())
+    } else {
+      setBadgeText('')
+    }
+
     this.#niconiComments = new NiconiComments(this.#canvas, data, {
-      format: format,
+      format: format ?? 'v1',
     })
 
     if (isPlaying) {
@@ -109,7 +138,7 @@ export class NCOverlay {
   }
 
   #loop() {
-    if (this.#isPlaying) {
+    if (this.#isPlaying && !this.#noData) {
       this.#update()
 
       requestAnimationFrame(() => this.#loop())
@@ -138,8 +167,7 @@ export class NCOverlay {
     },
 
     seeked: (e: Event) => {
-      console.log('[NCOverlay] Event: seeked')
-      console.log(`[NCOverlay] currentTime: ${this.#video.currentTime}`)
+      console.log('[NCOverlay] Event: seeked', this.#video.currentTime)
 
       this.#update()
 

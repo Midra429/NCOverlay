@@ -1,8 +1,7 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
-import { search as NiconicoApiSearch } from '@/content_script/api/search'
-import { video as NiconicoApiVideo } from '@/content_script/api/video'
-import { threads as NiconicoApiThreads } from '@/content_script/api/threads'
-import { DAnimeApi } from '@/api/danime'
+import { NiconicoApi } from '@/content_script/api/niconico'
+import { DAnimeApi } from '@/content_script/api/danime'
+import { getThreads } from '@/content_script/utils/getThreads'
 
 export default async function () {
   console.log('[NCOverlay] VOD: dアニメストア')
@@ -14,7 +13,7 @@ export default async function () {
   const nco = new NCOverlay(video)
 
   nco.onLoadedmetadata = async () => {
-    nco.init([])
+    nco.init()
 
     const partId = new URL(location.href).searchParams.get('partId')
 
@@ -25,58 +24,22 @@ export default async function () {
     console.log('[NCOverlay] partData', partData)
 
     if (partData) {
-      const searchResults = await NiconicoApiSearch({
+      const searchResults = await NiconicoApi.search({
         title: partData.title,
         duration: partData.partMeasureSecond,
-        workTitle: partData.workTitle,
-        subtitle: partData.partTitle,
+        // workTitle: partData.workTitle,
+        // subtitle: partData.partTitle,
       })
 
       if (searchResults) {
-        let niconicoVideoData = (
-          await Promise.all(
-            searchResults.map((v) => NiconicoApiVideo(v.contentId ?? ''))
-          )
-        ).filter(Boolean)
+        const threads = await getThreads(
+          ...searchResults.map((v) => v.contentId ?? '')
+        )
 
-        if (niconicoVideoData.length === 0) {
-          niconicoVideoData = (
-            await Promise.all(
-              searchResults.map((v) =>
-                NiconicoApiVideo(v.contentId ?? '', true)
-              )
-            )
-          ).filter(Boolean)
-        }
+        console.log('[NCOverlay] threads (filtered)', threads)
 
-        const niconicoThreads = (
-          await Promise.all(
-            niconicoVideoData.map((val) =>
-              NiconicoApiThreads({
-                additionals: {},
-                params: val!.data.comment.nvComment.params,
-                threadKey: val!.data.comment.nvComment.threadKey,
-              })
-            )
-          )
-        ).filter(Boolean)
-
-        let allThreads = niconicoThreads.map((v) => v!.data.threads).flat()
-
-        allThreads = allThreads
-          .filter((v) => 0 < v.commentCount)
-          .filter((val, idx, ary) => {
-            return (
-              idx ===
-              ary.findIndex((v) => v.id === val.id && v.fork === val.fork)
-            )
-          })
-          .filter((v) => v.fork !== 'easy')
-
-        console.log('[NCOverlay] allThreads', allThreads)
-
-        if (0 < allThreads.length) {
-          nco.init(allThreads)
+        if (threads) {
+          nco.init(threads)
         }
       }
     }

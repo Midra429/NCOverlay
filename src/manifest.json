@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "NCOverlay",
   "description": "ニコニコのコメントをオーバーレイ表示するやつ",
-  "version": "0.0.1",
+  "version": "0.0.2",
 
   "action": {
     "default_title": "NCOverlay",

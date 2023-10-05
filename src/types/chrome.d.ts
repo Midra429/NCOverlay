@@ -1,9 +1,13 @@
-import type { NvCommentBody } from '@/api/niconico/threads'
-import type { Search } from './niconico/search'
-import type { Video } from './niconico/video'
-import type { Threads } from './niconico/threads'
+import type { NvCommentBody } from '@/background/api/niconico/threads'
+import type { SearchData } from './niconico/search'
+import type { VideoData } from './niconico/video'
+import type { ThreadsData } from './niconico/threads'
 
-type ChromeMessageTypes = 'search' | 'video' | 'threads'
+type ChromeMessageTypes =
+  | 'niconico:search'
+  | 'niconico:video'
+  | 'niconico:threads'
+  | 'chrome:badge'
 
 type ChromeMessageBodySearch = {
   title: string
@@ -22,23 +26,27 @@ type ChromeMessageBodyThreads = {
 export type ChromeMessage<T extends ChromeMessageTypes = any> = {
   id: number | string
   type: T
-  body: T extends 'search'
+  body: T extends 'niconico:search'
     ? ChromeMessageBodySearch
-    : T extends 'video'
+    : T extends 'niconico:video'
     ? ChromeMessageBodyVideo
-    : T extends 'threads'
+    : T extends 'niconico:threads'
     ? ChromeMessageBodyThreads
-    : any
+    : T extends 'chrome:badge'
+    ? string
+    : void
 }
 
 export type ChromeResponse<T extends ChromeMessageTypes = any> = {
   id: number | string
   type: T
-  result: T extends 'search'
-    ? Search | null
-    : T extends 'video'
-    ? Video | null
-    : T extends 'threads'
-    ? Threads | null
-    : any
+  result: T extends 'niconico:search'
+    ? SearchData[] | null
+    : T extends 'niconico:video'
+    ? VideoData | null
+    : T extends 'niconico:threads'
+    ? ThreadsData | null
+    : T extends 'chrome:badge'
+    ? void
+    : void
 }

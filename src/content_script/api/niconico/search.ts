@@ -1,4 +1,5 @@
 import type { ChromeMessage, ChromeResponse } from '@/types/chrome'
+import type { SearchData } from '@/types/niconico/search'
 import { normalizeTitle } from '@/utils/normalizeTitle'
 import { optimizeTitleForSearch } from '@/utils/optimizeTitleForSearch'
 import { isEqualTitle } from '@/utils/isEqualTitle'
@@ -8,17 +9,17 @@ export const search = async (info: {
   duration: number
   workTitle?: string
   subtitle?: string
-}) => {
+}): Promise<SearchData[] | null> => {
   const optimizedTitle = optimizeTitleForSearch(info.title)
 
   console.log(`[NCOverlay] optimizedTitle: ${optimizedTitle}`)
 
   const res = await chrome.runtime.sendMessage<
-    ChromeMessage<'search'>,
-    ChromeResponse<'search'>
+    ChromeMessage<'niconico:search'>,
+    ChromeResponse<'niconico:search'>
   >({
     id: Date.now(),
-    type: 'search',
+    type: 'niconico:search',
     body: {
       title: optimizedTitle,
       duration: info.duration,
@@ -31,7 +32,7 @@ export const search = async (info: {
     const workTitle = info.workTitle ? normalizeTitle(info.workTitle) : null
     const subTitle = info.subtitle ? normalizeTitle(info.subtitle) : null
 
-    const matched = res.result.data.filter((val) => {
+    const matched = res.result.filter((val) => {
       const title = normalizeTitle(val.title!)
 
       return (
