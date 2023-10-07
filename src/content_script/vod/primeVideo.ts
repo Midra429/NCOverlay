@@ -95,8 +95,7 @@ export default async () => {
               comments: threads,
             })
           } else {
-            nco?.dispose()
-            nco = null
+            nco?.init()
           }
         }
       }
@@ -111,34 +110,19 @@ export default async () => {
     attributes: true,
     attributeFilter: ['src'],
   }
-  const obs = new MutationObserver((mutations) => {
+  const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    for (const mutation of mutations) {
-      if (!(mutation.target instanceof HTMLElement)) continue
+    if (nco && !document.contains(nco.video)) {
+      nco.dispose()
+      nco = null
+    } else if (!nco) {
+      const video = document.querySelector<HTMLVideoElement>(
+        '.webPlayerSDKContainer video'
+      )
 
-      if (
-        mutation.type === 'childList' &&
-        0 < mutation.addedNodes.length &&
-        mutation.target.classList.contains('rendererContainer')
-      ) {
-        const video = mutation.target.getElementsByTagName('video')[0]
-        if (video?.src) {
-          modify(video)
-        }
-      }
-
-      if (
-        mutation.type === 'attributes' &&
-        mutation.target instanceof HTMLVideoElement &&
-        mutation.target.matches('.webPlayerSDKContainer video')
-      ) {
-        if (!mutation.target.src) {
-          nco?.dispose()
-          nco = null
-        } else if (!nco) {
-          modify(mutation.target)
-        }
+      if (video) {
+        modify(video)
       }
     }
 

@@ -61,8 +61,7 @@ export default async () => {
                 comments: threads,
               })
             } else {
-              nco?.dispose()
-              nco = null
+              nco?.init()
             }
           }
         }
@@ -82,8 +81,8 @@ export default async () => {
     if (nco && !document.contains(nco.video)) {
       nco.dispose()
       nco = null
-    } else if (location.pathname.startsWith('/video/episode/')) {
-      if (!nco) {
+    } else if (!nco) {
+      if (location.pathname.startsWith('/video/episode/')) {
         const video = document.querySelector<HTMLVideoElement>(
           '.com-a-Video__video > video[preload="metadata"]'
         )
