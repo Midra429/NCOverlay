@@ -1,31 +1,29 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { VideoData } from '@/types/niconico/video'
 import type { ThreadsData } from '@/types/niconico/threads'
 import { NiconicoApi } from '@/content_script/api/niconico'
-import { getVideoData } from './getVideoData'
 
 export const getThreads = async (
-  ...contentIds: string[]
+  ...videoData: VideoData[]
 ): Promise<V1Thread[] | null> => {
-  contentIds = contentIds.filter(Boolean)
+  if (0 < videoData.length) {
+    const threadsData: ThreadsData[] = []
 
-  if (0 < contentIds.length) {
-    const videoData = (await getVideoData(...contentIds)) ?? []
+    for (const data of videoData) {
+      const result = await NiconicoApi.threads({
+        additionals: {},
+        params: data.comment.nvComment.params,
+        threadKey: data.comment.nvComment.threadKey,
+      })
 
-    const threadsData = (
-      await Promise.all(
-        videoData.map((val) =>
-          NiconicoApi.threads({
-            additionals: {},
-            params: val!.comment.nvComment.params,
-            threadKey: val!.comment.nvComment.threadKey,
-          })
-        )
-      )
-    ).filter(Boolean) as ThreadsData[]
+      if (result) {
+        threadsData.push(result)
+      }
+    }
 
     console.log('[NCOverlay] threadsData', threadsData)
 
-    let threads = threadsData.map((v) => v!.threads).flat()
+    let threads = threadsData.map((v) => v.threads).flat()
 
     threads = threads
       .filter((v) => 0 < v.commentCount)

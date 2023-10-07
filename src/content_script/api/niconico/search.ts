@@ -1,4 +1,4 @@
-import type { ChromeMessage, ChromeResponse } from '@/types/chrome'
+import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
 import type { SearchData } from '@/types/niconico/search'
 import { normalizeTitle } from '@/utils/normalizeTitle'
 import { optimizeTitleForSearch } from '@/utils/optimizeTitleForSearch'
@@ -18,7 +18,6 @@ export const search = async (info: {
     ChromeMessage<'niconico:search'>,
     ChromeResponse<'niconico:search'>
   >({
-    id: Date.now(),
     type: 'niconico:search',
     body: {
       title: optimizedTitle,
@@ -26,7 +25,7 @@ export const search = async (info: {
     },
   })
 
-  if (res.result) {
+  if (res?.result) {
     console.log('[NCOverlay] search', res.result)
 
     const workTitle = info.workTitle ? normalizeTitle(info.workTitle) : null

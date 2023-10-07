@@ -1,4 +1,4 @@
-import type { ChromeMessage, ChromeResponse } from '@/types/chrome'
+import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
 import type { VideoData } from '@/types/niconico/video'
 
 export const video = async (
@@ -10,7 +10,6 @@ export const video = async (
       ChromeMessage<'niconico:video'>,
       ChromeResponse<'niconico:video'>
     >({
-      id: Date.now(),
       type: 'niconico:video',
       body: {
         videoId: id,
@@ -18,7 +17,7 @@ export const video = async (
       },
     })
 
-    if (res.result) {
+    if (res?.result) {
       return res.result
     }
   }

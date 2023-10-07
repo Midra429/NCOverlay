@@ -1,45 +1,36 @@
-import type { ChromeMessage, ChromeResponse } from '@/types/chrome'
+import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
+import {
+  isChromeMessageSearch,
+  isChromeMessageVideo,
+  isChromeMessageThreads,
+  isChromeMessageBadge,
+} from '@/types/chrome/message'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
 
-const isChromeMessageSearch = (
-  msg: ChromeMessage
-): msg is ChromeMessage<'niconico:search'> => msg.type === 'niconico:search'
+chrome.action.setBadgeBackgroundColor({
+  color: '#2389FF',
+})
 
-const isChromeMessageVideo = (
-  msg: ChromeMessage
-): msg is ChromeMessage<'niconico:video'> => msg.type === 'niconico:video'
-
-const isChromeMessageThreads = (
-  msg: ChromeMessage
-): msg is ChromeMessage<'niconico:threads'> => msg.type === 'niconico:threads'
-
-const isChromeMessageBadge = (
-  msg: ChromeMessage
-): msg is ChromeMessage<'chrome:badge'> => msg.type === 'chrome:badge'
-
-chrome.action.disable()
+chrome.action.setBadgeTextColor({
+  color: '#ffffff',
+})
 
 chrome.runtime.onInstalled.addListener(() => {
-  // chrome.declarativeContent.onPageChanged.removeRules(() => {
-  //   chrome.declarativeContent.onPageChanged.addRules([
-  //     {
-  //       conditions: [
-  //         new chrome.declarativeContent.PageStateMatcher({
-  //           css: ['html.NCOverlay'],
-  //         }),
-  //       ],
-  //       actions: [new chrome.declarativeContent.ShowAction()],
-  //     },
-  //   ])
-  // })
+  chrome.action.disable()
 
-  chrome.action.setBadgeBackgroundColor({
-    color: '#2389FF',
-  })
-  chrome.action.setBadgeTextColor({
-    color: '#ffffff',
+  chrome.declarativeContent.onPageChanged.removeRules(() => {
+    chrome.declarativeContent.onPageChanged.addRules([
+      {
+        conditions: [
+          new chrome.declarativeContent.PageStateMatcher({
+            css: ['html.NCOverlay'],
+          }),
+        ],
+        actions: [new chrome.declarativeContent.ShowAction()],
+      },
+    ])
   })
 })
 
@@ -85,7 +76,7 @@ chrome.runtime.onMessage.addListener(
 
     if (isChromeMessageBadge(message)) {
       promise = chrome.action.setBadgeText({
-        text: message.body,
+        text: message.body.toString(),
         tabId: sender.tab?.id,
       })
     }
@@ -94,16 +85,14 @@ chrome.runtime.onMessage.addListener(
       promise
         .then((result) => {
           sendResponse({
-            id: message.id,
             type: message.type,
             result: result,
           })
         })
         .catch((e) => {
-          console.error(e)
+          console.log('[NCOverlay] Error', e)
 
           sendResponse({
-            id: message.id,
             type: message.type,
             result: null,
           })

@@ -1,3 +1,10 @@
+.NCOverlay-Video {
+  aspect-ratio: 16 / 9;
+  height: auto !important;
+  max-height: 100%;
+  margin: auto;
+}
+
 .NCOverlay-Canvas {
   position: absolute;
   inset: 0;

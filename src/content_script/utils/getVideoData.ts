@@ -7,16 +7,26 @@ export const getVideoData = async (
   contentIds = contentIds.filter(Boolean)
 
   if (0 < contentIds.length) {
-    let videoData = (
-      await Promise.all(contentIds.map((v) => NiconicoApi.video(v)))
-    ).filter(Boolean) as VideoData[]
+    const videoData: VideoData[] = []
+
+    for (const id of contentIds) {
+      const result = await NiconicoApi.video(id)
+
+      if (result) {
+        videoData.push(result)
+      }
+    }
 
     console.log('[NCOverlay] videoData', videoData)
 
     if (videoData.length === 0) {
-      videoData = (
-        await Promise.all(contentIds.map((v) => NiconicoApi.video(v, true)))
-      ).filter(Boolean) as VideoData[]
+      for (const id of contentIds) {
+        const result = await NiconicoApi.video(id, true)
+
+        if (result) {
+          videoData.push(result)
+        }
+      }
 
       console.log('[NCOverlay] videoData (guest)', videoData)
     }

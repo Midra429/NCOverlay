@@ -1,6 +1,7 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { NiconicoApi } from '@/content_script/api/niconico'
 import { DAnimeApi } from '@/content_script/api/danime'
+import { getVideoData } from '@/content_script/utils/getVideoData'
 import { getThreads } from '@/content_script/utils/getThreads'
 
 export default async () => {
@@ -13,7 +14,7 @@ export default async () => {
   const nco = new NCOverlay(video)
 
   nco.onLoadedmetadata = async () => {
-    await nco.init()
+    nco.init()
 
     const partId = new URL(location.href).searchParams.get('partId')
 
@@ -32,14 +33,18 @@ export default async () => {
       })
 
       if (searchResults) {
-        const threads = await getThreads(
+        const videoData = await getVideoData(
           ...searchResults.map((v) => v.contentId ?? '')
         )
+        const threads = videoData && (await getThreads(...videoData))
 
         console.log('[NCOverlay] threads (filtered)', threads)
 
         if (threads) {
-          await nco.init(threads)
+          nco.init({
+            data: videoData,
+            comments: threads,
+          })
         }
       }
     }

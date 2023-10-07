@@ -4,10 +4,10 @@ import type {
   ChromeResponse,
 } from '@/types/chrome/message'
 
-const queue: ChromeMessage<'chrome:badge'>[] = []
+const queue: ChromeMessage<'chrome:sendToPopup'>[] = []
 let running: Promise<ChromeResponse> | null = null
 
-const run = (message?: ChromeMessage<'chrome:badge'>) => {
+const run = (message?: ChromeMessage<'chrome:sendToPopup'>) => {
   if (message) {
     running = chrome.runtime
       .sendMessage(message)
@@ -17,9 +17,9 @@ const run = (message?: ChromeMessage<'chrome:badge'>) => {
   }
 }
 
-export const setBadgeText = (body: ChromeMessageBody['chrome:badge']) => {
-  const message: ChromeMessage<'chrome:badge'> = {
-    type: 'chrome:badge',
+export const sendToPopup = (body: ChromeMessageBody['chrome:sendToPopup']) => {
+  const message: ChromeMessage<'chrome:sendToPopup'> = {
+    type: 'chrome:sendToPopup',
     body: body,
   }
 

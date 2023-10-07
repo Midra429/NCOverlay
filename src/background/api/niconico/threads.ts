@@ -25,10 +25,10 @@ export const threads = async (
     if (res.ok) {
       return json.data
     } else {
-      console.error(json.meta)
+      console.log('[NCOverlay] Error', json)
     }
   } catch (e) {
-    console.error(e)
+    console.log('[NCOverlay] Error', e)
   }
 
   return null

@@ -1,5 +1,6 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { NiconicoApi } from '@/content_script/api/niconico'
+import { getVideoData } from '@/content_script/utils/getVideoData'
 import { getThreads } from '@/content_script/utils/getThreads'
 import { extractEpisodeNumber } from '@/utils/extractEpisodeNumber'
 
@@ -41,10 +42,10 @@ export default async () => {
     }
   }
 
-  const modify = async (video: HTMLVideoElement) => {
+  const modify = (video: HTMLVideoElement) => {
     console.log('[NCOverlay] modify()')
 
-    await nco?.dispose()
+    nco?.dispose()
     nco = null
 
     const playerUIContainer = video
@@ -81,16 +82,20 @@ export default async () => {
         })
 
         if (searchResults) {
-          const threads = await getThreads(
+          const videoData = await getVideoData(
             ...searchResults.map((v) => v.contentId ?? '')
           )
+          const threads = videoData && (await getThreads(...videoData))
 
           console.log('[NCOverlay] threads (filtered)', threads)
 
           if (threads) {
-            await nco?.init(threads)
+            nco?.init({
+              data: videoData,
+              comments: threads,
+            })
           } else {
-            await nco?.dispose()
+            nco?.dispose()
             nco = null
           }
         }
@@ -106,24 +111,20 @@ export default async () => {
     attributes: true,
     attributeFilter: ['src'],
   }
-  const obs = new MutationObserver(async (mutations) => {
+  const obs = new MutationObserver((mutations) => {
     obs.disconnect()
 
-    if (nco && !document.contains(nco.video)) {
-      await nco.dispose()
-      nco = null
-    }
-
     for (const mutation of mutations) {
-      if (mutation.type === 'childList') {
-        if (!nco) {
-          const video = document.querySelector<HTMLVideoElement>(
-            '.webPlayerSDKContainer video'
-          )
+      if (!(mutation.target instanceof HTMLElement)) continue
 
-          if (video) {
-            await modify(video)
-          }
+      if (
+        mutation.type === 'childList' &&
+        0 < mutation.addedNodes.length &&
+        mutation.target.classList.contains('rendererContainer')
+      ) {
+        const video = mutation.target.getElementsByTagName('video')[0]
+        if (video?.src) {
+          modify(video)
         }
       }
 
@@ -133,10 +134,10 @@ export default async () => {
         mutation.target.matches('.webPlayerSDKContainer video')
       ) {
         if (!mutation.target.src) {
-          await nco?.dispose()
+          nco?.dispose()
           nco = null
         } else if (!nco) {
-          await modify(mutation.target)
+          modify(mutation.target)
         }
       }
     }

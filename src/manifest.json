@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "NCOverlay",
-  "description": "ニコニコのコメントをオーバーレイ表示するやつ",
-  "version": "0.0.2",
+  "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
+  "version": "0.0.4",
 
   "action": {
     "default_title": "NCOverlay",

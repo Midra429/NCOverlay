@@ -1,5 +1,6 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { NiconicoApi } from '@/content_script/api/niconico'
+import { getVideoData } from '@/content_script/utils/getVideoData'
 import { getThreads } from '@/content_script/utils/getThreads'
 
 export default async () => {
@@ -21,10 +22,10 @@ export default async () => {
     }
   }
 
-  const modify = async (video: HTMLVideoElement) => {
+  const modify = (video: HTMLVideoElement) => {
     console.log('[NCOverlay] modify()')
 
-    await nco?.dispose()
+    nco?.dispose()
     nco = null
 
     const player = video.closest<HTMLElement>('.com-vod-VODScreen__player')
@@ -47,16 +48,20 @@ export default async () => {
           })
 
           if (searchResults) {
-            const threads = await getThreads(
+            const videoData = await getVideoData(
               ...searchResults.map((v) => v.contentId ?? '')
             )
+            const threads = videoData && (await getThreads(...videoData))
 
             console.log('[NCOverlay] threads (filtered)', threads)
 
             if (threads) {
-              await nco?.init(threads)
+              nco?.init({
+                data: videoData,
+                comments: threads,
+              })
             } else {
-              await nco?.dispose()
+              nco?.dispose()
               nco = null
             }
           }
@@ -71,11 +76,11 @@ export default async () => {
     childList: true,
     subtree: true,
   }
-  const obs = new MutationObserver(async () => {
+  const obs = new MutationObserver(() => {
     obs.disconnect()
 
     if (nco && !document.contains(nco.video)) {
-      await nco.dispose()
+      nco.dispose()
       nco = null
     } else if (location.pathname.startsWith('/video/episode/')) {
       if (!nco) {
@@ -84,7 +89,7 @@ export default async () => {
         )
 
         if (video) {
-          await modify(video)
+          modify(video)
         }
       }
     }
