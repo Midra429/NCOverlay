@@ -27,7 +27,7 @@
 
 ### Chrome Web Store
 
-https://chromewebstore.google.com/detail/ncoverlay/ofhffkmglkibpkgcfhbgajghlkgplafe
+https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 
 ### 手動
 
