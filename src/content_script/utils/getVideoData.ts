@@ -10,10 +10,10 @@ export const getVideoData = async (
     const videoData: VideoData[] = []
 
     for (const id of contentIds) {
-      const result = await NiconicoApi.video(id)
+      const res = await NiconicoApi.video(id)
 
-      if (result) {
-        videoData.push(result)
+      if (res) {
+        videoData.push(res)
       }
     }
 
@@ -21,10 +21,10 @@ export const getVideoData = async (
 
     if (videoData.length === 0) {
       for (const id of contentIds) {
-        const result = await NiconicoApi.video(id, true)
+        const res = await NiconicoApi.video(id, true)
 
-        if (result) {
-          videoData.push(result)
+        if (res) {
+          videoData.push(res)
         }
       }
 

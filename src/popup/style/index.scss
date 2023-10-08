@@ -13,6 +13,11 @@ body {
 
 :is(h1, h2, h3, h4, h5, h6, p) {
   margin: 0;
+
+  > small {
+    font-size: 0.8em;
+    font-weight: normal;
+  }
 }
 
 body {
@@ -67,6 +72,10 @@ header {
   align-items: center;
 
   > :is(h1, h2, h3, h4, h5, h6, p) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -102,7 +111,7 @@ header {
     background-color: #000;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     overflow: hidden;
 
     &-danime {
@@ -160,9 +169,26 @@ header {
   }
 }
 
-#Version {
-  font-size: 0.7em;
-  font-weight: normal;
+#Links {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-left: 10px;
+
+  > a {
+    display: block;
+    width: 26px;
+    height: 26px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    text-decoration: none;
+  }
+}
+
+#Version,
+#CommentsCount {
+  margin-left: 5px;
   opacity: 0.6;
 }
 

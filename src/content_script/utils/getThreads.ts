@@ -10,14 +10,14 @@ export const getThreads = async (
     const threadsData: ThreadsData[] = []
 
     for (const data of videoData) {
-      const result = await NiconicoApi.threads({
+      const res = await NiconicoApi.threads({
         additionals: {},
         params: data.comment.nvComment.params,
         threadKey: data.comment.nvComment.threadKey,
       })
 
-      if (result) {
-        threadsData.push(result)
+      if (res) {
+        threadsData.push(res)
       }
     }
 

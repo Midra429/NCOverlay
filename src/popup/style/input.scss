@@ -34,8 +34,11 @@
     background-color: hsl(0, 0%, 90%);
     box-shadow: inset 0 0 6px -4px rgb(0, 0, 0, 60%);
     cursor: pointer;
-    transition-duration: 0.2s;
-    transition-property: border-color, background-color;
+
+    body:not(.loading) & {
+      transition-duration: 0.2s;
+      transition-property: border-color, background-color;
+    }
 
     &::after {
       content: '';
@@ -48,9 +51,12 @@
       border-radius: 50%;
       background-color: hsl(0, 0%, 70%);
       box-shadow: 0 0 5px -2px rgb(0, 0, 0, 75%);
-      transition-duration: 0.2s;
-      transition-property: left, background-color;
-      will-change: left;
+
+      body:not(.loading) & {
+        transition-duration: 0.2s;
+        transition-property: left, background-color;
+        will-change: left;
+      }
     }
   }
 }

@@ -3,35 +3,34 @@ import {
   isChromeMessageSearch,
   isChromeMessageVideo,
   isChromeMessageThreads,
-  isChromeMessageBadge,
+  isChromeMessageAction,
+  isChromeMessageActionBadge,
+  isChromeMessageActionTitle,
 } from '@/types/chrome/message'
+import {
+  ACTION_ICONS_ENABLE,
+  ACTION_ICONS_DISABLE,
+  GITHUB_URL,
+} from '@/constants'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
 
-chrome.action.setBadgeBackgroundColor({
-  color: '#2389FF',
-})
+chrome.action.disable()
+chrome.action.setIcon({ path: ACTION_ICONS_DISABLE })
+chrome.action.setBadgeBackgroundColor({ color: '#2389FF' })
+chrome.action.setBadgeTextColor({ color: '#FFF' })
 
-chrome.action.setBadgeTextColor({
-  color: '#ffffff',
-})
+chrome.runtime.onInstalled.addListener((details) => {
+  const { version } = chrome.runtime.getManifest()
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.disable()
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    chrome.tabs.create({ url: `${GITHUB_URL}/blob/v${version}/README.md` })
+  }
 
-  chrome.declarativeContent.onPageChanged.removeRules(() => {
-    chrome.declarativeContent.onPageChanged.addRules([
-      {
-        conditions: [
-          new chrome.declarativeContent.PageStateMatcher({
-            css: ['html.NCOverlay'],
-          }),
-        ],
-        actions: [new chrome.declarativeContent.ShowAction()],
-      },
-    ])
-  })
+  if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+    chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
+  }
 })
 
 chrome.runtime.onMessage.addListener(
@@ -42,6 +41,7 @@ chrome.runtime.onMessage.addListener(
   ) => {
     let promise: Promise<any> | null = null
 
+    // ニコニコ 検索
     if (isChromeMessageSearch(message)) {
       const minLength = message.body.duration ? message.body.duration - 30 : -1
       const maxLength = message.body.duration ? message.body.duration + 30 : -1
@@ -66,18 +66,43 @@ chrome.runtime.onMessage.addListener(
       })
     }
 
+    // ニコニコ 動画情報
     if (isChromeMessageVideo(message)) {
       promise = NiconicoApi.video(message.body.videoId, message.body.guest)
     }
 
+    // ニコニコ コメント
     if (isChromeMessageThreads(message)) {
       promise = NiconicoApi.threads(message.body.nvComment)
     }
 
-    if (isChromeMessageBadge(message)) {
-      promise = chrome.action.setBadgeText({
-        text: message.body.toString(),
+    // 拡張機能 アクション 有効/無効
+    if (isChromeMessageAction(message)) {
+      if (message.body) {
+        chrome.action.enable(sender.tab?.id)
+      } else {
+        chrome.action.disable(sender.tab?.id)
+      }
+
+      chrome.action.setIcon({
         tabId: sender.tab?.id,
+        path: message.body ? ACTION_ICONS_ENABLE : ACTION_ICONS_DISABLE,
+      })
+    }
+
+    // 拡張機能 アクション バッジ
+    if (isChromeMessageActionBadge(message)) {
+      chrome.action.setBadgeText({
+        tabId: sender.tab?.id,
+        text: message.body.toString(),
+      })
+    }
+
+    // 拡張機能 アクション タイトル (ツールチップ)
+    if (isChromeMessageActionTitle(message)) {
+      chrome.action.setTitle({
+        tabId: sender.tab?.id,
+        title: message.body ? `${message.body} | NCOverlay` : '',
       })
     }
 

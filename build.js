@@ -29,6 +29,7 @@ const build = async () => {
   fs.mkdirSync(outputDir, { recursive: true })
 
   fs.copySync(`${inputDir}/manifest.json`, `${outputDir}/manifest.json`)
+  fs.copySync(`${inputDir}/assets`, `${outputDir}/assets`)
   fs.copySync(`${inputDir}/styles`, `${outputDir}/styles`)
   fs.copySync(`${inputDir}/popup/index.html`, `${outputDir}/popup/index.html`)
 

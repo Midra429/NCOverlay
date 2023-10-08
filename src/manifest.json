@@ -2,7 +2,14 @@
   "manifest_version": 3,
   "name": "NCOverlay",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
-  "version": "0.0.5",
+  "version": "1.0.0",
+
+  "icons": {
+    "16": "assets/images/icon_16.png",
+    "32": "assets/images/icon_32.png",
+    "48": "assets/images/icon_48.png",
+    "128": "assets/images/icon_128.png"
+  },
 
   "action": {
     "default_title": "NCOverlay",
@@ -35,7 +42,7 @@
 
   "host_permissions": ["https://*/*"],
 
-  "permissions": ["declarativeContent", "storage", "scripting"],
+  "permissions": ["storage"],
 
   "minimum_chrome_version": "93"
 }

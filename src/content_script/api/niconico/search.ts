@@ -5,9 +5,13 @@ import { optimizeTitleForSearch } from '@/utils/optimizeTitleForSearch'
 import { isEqualTitle } from '@/utils/isEqualTitle'
 
 export const search = async (info: {
+  /** 検索タイトル */
   title: string
+  /** 検索対象の動画の長さ用 */
   duration: number
+  /** 作品のタイトル (あいまい検索用) */
   workTitle?: string
+  /** エピソードのサブタイトル (あいまい検索用) */
   subtitle?: string
 }): Promise<SearchData[] | null> => {
   const optimizedTitle = optimizeTitleForSearch(info.title)

@@ -15,9 +15,19 @@ export const isChromeMessageThreads = (
   msg: ChromeMessage
 ): msg is ChromeMessage<'niconico:threads'> => msg.type === 'niconico:threads'
 
-export const isChromeMessageBadge = (
+export const isChromeMessageAction = (
   msg: ChromeMessage
-): msg is ChromeMessage<'chrome:badge'> => msg.type === 'chrome:badge'
+): msg is ChromeMessage<'chrome:action'> => msg.type === 'chrome:action'
+
+export const isChromeMessageActionBadge = (
+  msg: ChromeMessage
+): msg is ChromeMessage<'chrome:action:badge'> =>
+  msg.type === 'chrome:action:badge'
+
+export const isChromeMessageActionTitle = (
+  msg: ChromeMessage
+): msg is ChromeMessage<'chrome:action:title'> =>
+  msg.type === 'chrome:action:title'
 
 export const isChromeMessageSendToPopup = (
   msg: ChromeMessage
@@ -42,10 +52,15 @@ export type ChromeMessageBody = {
     nvComment: NvCommentBody
   }
 
-  'chrome:badge': string | number
+  'chrome:action': boolean
+  'chrome:action:badge': string | number
+  'chrome:action:title': string
+
   'chrome:sendToPopup': {
+    commentsCount?: number
     videoData?: VideoData[]
   }
+
   'chrome:getFromPage': void
 }
 
@@ -59,9 +74,14 @@ export type ChromeResponseResult = {
   'niconico:video': VideoData | null
   'niconico:threads': ThreadsData | null
 
-  'chrome:badge': void
+  'chrome:action': boolean
+  'chrome:action:badge': void
+  'chrome:action:title': void
+
   'chrome:sendToPopup': void
+
   'chrome:getFromPage': {
+    commentsCount?: number
     videoData?: VideoData[]
   }
 }

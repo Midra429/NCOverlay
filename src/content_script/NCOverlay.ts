@@ -9,7 +9,8 @@ import type { VideoData } from '@/types/niconico/video'
 import { isChromeMessageGetFromPage } from '@/types/chrome/message'
 import NiconiComments from '@xpadev-net/niconicomments'
 import { ChromeStorageApi } from '@/utils/storage'
-import { setBadgeText } from '@/content_script/utils/setBadgeText'
+import { setActionBadge } from '@/content_script/utils/setActionBadge'
+import { setActionTitle } from '@/content_script/utils/setActionTitle'
 import { sendToPopup } from '@/content_script/utils/sendToPopup'
 
 export class NCOverlay {
@@ -21,6 +22,7 @@ export class NCOverlay {
   #commentsData?: InputFormat
   #commentsFormat?: InputFormatType
 
+  #commentsCount: number = 0
   #isEmpty: boolean = true
   #isPlaying: boolean = false
 
@@ -147,14 +149,13 @@ export class NCOverlay {
       }
     )
 
-    let commentsCount = 0
     if (NiconiComments.typeGuard.v1.threads(this.#commentsData)) {
       for (const data of this.#commentsData) {
-        commentsCount += data.comments.length
+        this.#commentsCount += data.comments.length
       }
     }
 
-    console.log('[NCOverlay] commentsCount', commentsCount)
+    console.log('[NCOverlay] commentsCount', this.#commentsCount)
 
     this.#update()
 
@@ -163,17 +164,21 @@ export class NCOverlay {
     }
 
     let badgeText = ''
-    if (0 < commentsCount) {
-      if (1000 <= commentsCount) {
-        badgeText = `${Math.round((commentsCount / 1000) * 10) / 10}k`
+    if (0 < this.#commentsCount) {
+      if (1000 <= this.#commentsCount) {
+        badgeText = `${Math.round((this.#commentsCount / 1000) * 10) / 10}k`
       } else {
-        badgeText = commentsCount.toString()
+        badgeText = this.#commentsCount.toString()
       }
     }
 
-    setBadgeText(badgeText)
+    setActionBadge(badgeText)
+    setActionTitle(
+      `${this.#commentsCount.toLocaleString()}件のコメントを表示中`
+    )
 
     sendToPopup({
+      commentsCount: this.#commentsCount,
       videoData: this.#videoData,
     })
   }
@@ -202,7 +207,10 @@ export class NCOverlay {
 
     this.#canvas.remove()
 
-    setBadgeText('')
+    setActionBadge('')
+    setActionTitle('')
+
+    sendToPopup({})
   }
 
   clear() {
@@ -284,6 +292,7 @@ export class NCOverlay {
         sendResponse({
           type: message.type,
           result: {
+            commentsCount: this.#commentsCount,
             videoData: this.#videoData,
           },
         })

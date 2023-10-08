@@ -1,3 +1,4 @@
+import { setAction } from './utils/setAction'
 import vodPrimeVideo from './vod/primeVideo'
 import vodDAnime from './vod/dAnime'
 import vodAbema from './vod/abema'
@@ -8,6 +9,8 @@ chrome.runtime.onMessage.addListener(() => false)
 
 const init = () => {
   document.documentElement.classList.add('NCOverlay')
+
+  setAction(true)
 }
 
 const main = () => {

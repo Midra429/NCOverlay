@@ -1,6 +1,8 @@
 import type { ChromeStorageChanges } from '@/types/chrome/storage'
 import type { ChromeMessage } from '@/types/chrome/message'
+import type { VideoData } from '@/types/niconico/video'
 import { isChromeMessageSendToPopup } from '@/types/chrome/message'
+import { GITHUB_URL } from '@/constants'
 import { ChromeStorageApi } from '@/utils/storage'
 import { removeChilds } from '@/utils/dom/removeChilds'
 import { getFromPage } from './utils/getFromPage'
@@ -8,12 +10,36 @@ import { createVideoItem } from './utils/createVideoItem'
 
 console.log('[NCOverlay] popup.html')
 
-const init = async () => {
-  const manifest = chrome.runtime.getManifest()
+chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
+  if (isChromeMessageSendToPopup(message)) {
+    if (0 < Object.keys(message).length) {
+      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+        if (tab?.id === sender.tab?.id) {
+          console.log('[NCOverlay] chrome:sendToPopup', message.body)
 
-  if (manifest.version) {
-    document.getElementById('Version')!.textContent = `v${manifest.version}`
+          update(message.body)
+        }
+      })
+    } else {
+      update({})
+    }
   }
+
+  return false
+})
+
+const init = async () => {
+  document.body.classList.add('loading')
+
+  const { version } = chrome.runtime.getManifest()
+
+  document.querySelector('#Version')!.textContent = `v${version}`
+
+  const linkGitHub = document.querySelector<HTMLAnchorElement>('#LinkGitHub')!
+  linkGitHub.href = GITHUB_URL
+  linkGitHub.style.backgroundImage = `url("${chrome.runtime.getURL(
+    'assets/github-mark.svg'
+  )}")`
 
   const settings = await ChromeStorageApi.get({
     enable: true,
@@ -25,26 +51,27 @@ const init = async () => {
     document.querySelector<HTMLInputElement>('#SettingEnable')!
 
   settingEnable.checked = settings.enable!
-
   settingEnable.addEventListener('change', async function () {
     await ChromeStorageApi.set({ enable: this.checked })
   })
 
   // opacity
   const settingOpacity =
-    document.querySelector<HTMLInputElement>('#SettingsOpacity')!
-  const settingOpacityValue = document.getElementById('SettingsOpacityValue')!
+    document.querySelector<HTMLInputElement>('#SettingOpacity')!
+  const settingOpacityValue = document.querySelector('#SettingOpacityValue')!
 
   settingOpacityValue.textContent = settingOpacity.value =
     settings.opacity!.toString()
 
-  settingOpacity.addEventListener('input', function () {
+  const opacityChanged = async function (this: HTMLInputElement, ev: Event) {
     settingOpacityValue.textContent = this.value
-  })
-  settingOpacity.addEventListener('change', async function () {
     await ChromeStorageApi.set({ opacity: Number(this.value) })
-  })
+  }
 
+  settingOpacity.addEventListener('input', opacityChanged)
+  settingOpacity.addEventListener('change', opacityChanged)
+
+  // 別のポップアップからの設定変更時
   chrome.storage.local.onChanged.addListener(
     (changes: ChromeStorageChanges) => {
       if (
@@ -63,47 +90,46 @@ const init = async () => {
       }
     }
   )
+
+  setTimeout(() => {
+    document.body.classList.remove('loading')
+  }, 100)
+}
+
+const update = ({
+  commentsCount,
+  videoData,
+}: {
+  commentsCount?: number
+  videoData?: VideoData[]
+}) => {
+  document.querySelector('#CommentsCount')!.textContent = commentsCount
+    ? `(${commentsCount.toLocaleString()}件)`
+    : ''
+
+  const items = document.querySelector<HTMLElement>('#Items')!
+
+  removeChilds(items)
+
+  if (videoData) {
+    const fragment = document.createDocumentFragment()
+    for (const data of videoData) {
+      fragment.appendChild(createVideoItem(data))
+    }
+    items.appendChild(fragment)
+  }
 }
 
 const main = async () => {
   await init()
 
-  const items = document.querySelector<HTMLElement>('#Items')!
+  const res = await getFromPage()
 
-  const response = await getFromPage()
-  if (response?.result.videoData) {
-    removeChilds(items)
+  console.log('[NCOverlay] getFromPage()', res)
 
-    const fragment = document.createDocumentFragment()
-    for (const data of response.result.videoData) {
-      fragment.appendChild(createVideoItem(data))
-    }
-    items.appendChild(fragment)
+  if (res) {
+    update(res.result)
   }
-
-  chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
-    if (isChromeMessageSendToPopup(message)) {
-      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-        if (tab?.id === sender.tab?.id) {
-          console.log('[NCOverlay] chrome:sendToPopup', message.body)
-
-          const { videoData } = message.body
-
-          removeChilds(items)
-
-          if (videoData) {
-            const fragment = document.createDocumentFragment()
-            for (const data of videoData) {
-              fragment.appendChild(createVideoItem(data))
-            }
-            items.appendChild(fragment)
-          }
-        }
-      })
-    }
-
-    return false
-  })
 }
 
 main()

@@ -16,7 +16,18 @@
   <body>
     <main>
       <header id="Header">
-        <h1>NCOverlay&nbsp;&nbsp;<small id="Version"></small></h1>
+        <h1>
+          <span>NCOverlay</span>
+          <small id="Version"></small>
+          <div id="Links">
+            <a
+              id="LinkGitHub"
+              target="_blank"
+              rel="noopener external"
+              title="GitHub"
+            ></a>
+          </div>
+        </h1>
 
         <div class="input-toggle">
           <input type="checkbox" id="SettingEnable" />
@@ -31,12 +42,12 @@
 
         <ul>
           <li class="setting">
-            <label for="SettingOpacity">透明度</label>
+            <label for="SettingOpacity">不透明度</label>
 
             <div class="input-container">
               <input
                 type="range"
-                id="SettingsOpacity"
+                id="SettingOpacity"
                 class="input"
                 min="0"
                 max="100"
@@ -45,7 +56,7 @@
               />
 
               <span class="input-value">
-                <span id="SettingsOpacityValue">100</span>%
+                <span id="SettingOpacityValue">100</span>%
               </span>
             </div>
           </li>
@@ -54,7 +65,7 @@
 
       <section id="Comments">
         <header>
-          <h2>表示中のコメント</h2>
+          <h2>表示中のコメント<small id="CommentsCount"></small></h2>
         </header>
 
         <ul id="Items"></ul>

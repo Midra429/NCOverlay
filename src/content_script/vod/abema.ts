@@ -9,16 +9,30 @@ export default async () => {
   let nco: NCOverlay | null = null
 
   const getInfo = () => {
-    const title = document.querySelector<HTMLElement>(
+    const titleElem = document.querySelector<HTMLElement>(
       '.com-video-EpisodeTitle__series-info'
     )
-    const episode = document.querySelector<HTMLElement>(
+    const episodeElem = document.querySelector<HTMLElement>(
       '.com-video-EpisodeTitle__episode-title'
     )
 
+    let [title, season] =
+      titleElem?.textContent?.split('|').map((v) => v.trim()) ?? []
+
+    let fullTitle = title
+    if (title && season) {
+      if (season.includes(title)) {
+        fullTitle = season
+      } else {
+        fullTitle = `${title} ${season}`
+      }
+    }
+
     return {
-      title: title?.textContent?.trim(),
-      episode: episode?.textContent?.trim(),
+      title: fullTitle,
+      episode: episodeElem?.textContent?.trim(),
+      workTitle: title,
+      season: season,
     }
   }
 
@@ -45,6 +59,8 @@ export default async () => {
           const searchResults = await NiconicoApi.search({
             title: title,
             duration: nco?.video.duration ?? 0,
+            workTitle: info.workTitle,
+            subtitle: info.episode,
           })
 
           if (searchResults) {

@@ -25,18 +25,18 @@ export default async () => {
   let nco: NCOverlay | null = null
 
   const getInfo = () => {
-    const title = document.querySelector<HTMLElement>(
+    const titleElem = document.querySelector<HTMLElement>(
       '.atvwebplayersdk-title-text'
     )
-    const subtitle = document.querySelector<HTMLElement>(
+    const subtitleElem = document.querySelector<HTMLElement>(
       '.atvwebplayersdk-subtitle-text'
     )
     const se_raw =
-      subtitle?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
+      subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
 
     return {
-      title: title?.textContent?.trim(),
-      subtitle: subtitle?.lastChild?.textContent?.trim(),
+      title: titleElem?.textContent?.trim(),
+      subtitle: subtitleElem?.lastChild?.textContent?.trim(),
       season: Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0)),
       episode: Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0)),
     }
