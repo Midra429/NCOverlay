@@ -140,6 +140,7 @@ export class NCOverlay {
     this.#videoData = input.data
     this.#commentsData = input.comments
     this.#commentsFormat = input.format ?? 'v1'
+    this.#commentsCount = 0
 
     this.#niconiComments = new NiconiComments(
       this.#canvas,
@@ -163,19 +164,19 @@ export class NCOverlay {
       this.start()
     }
 
-    let badgeText = ''
     if (0 < this.#commentsCount) {
-      if (1000 <= this.#commentsCount) {
-        badgeText = `${Math.round((this.#commentsCount / 1000) * 10) / 10}k`
-      } else {
-        badgeText = this.#commentsCount.toString()
-      }
+      setActionBadge(
+        1000 <= this.#commentsCount
+          ? `${Math.round((this.#commentsCount / 1000) * 10) / 10}k`
+          : this.#commentsCount.toString()
+      )
+      setActionTitle(
+        `${this.#commentsCount.toLocaleString()}件のコメントを表示中`
+      )
+    } else {
+      setActionBadge('')
+      setActionTitle('')
     }
-
-    setActionBadge(badgeText)
-    setActionTitle(
-      `${this.#commentsCount.toLocaleString()}件のコメントを表示中`
-    )
 
     sendToPopup({
       commentsCount: this.#commentsCount,
