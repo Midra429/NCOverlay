@@ -22,7 +22,11 @@
 
   "content_scripts": [
     {
-      "matches": ["https://*/*"],
+      "matches": [
+        "https://www.amazon.co.jp/*",
+        "https://animestore.docomo.ne.jp/*",
+        "https://abema.tv/*"
+      ],
       "js": ["content_script.js"],
       "run_at": "document_end"
     },
@@ -40,9 +44,9 @@
     }
   ],
 
-  "host_permissions": ["https://*/*"],
-
   "permissions": ["storage"],
+
+  "host_permissions": ["https://*.nicovideo.jp/*"],
 
   "minimum_chrome_version": "93"
 }
