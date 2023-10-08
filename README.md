@@ -1,6 +1,6 @@
 # <sub><img src="assets/icon.png" width="30px" height="30px"></sub> NCOverlay
 
-<!-- [<img src="assets/badges/chrome.png" height="60px">](https://chrome.google.com/webstore/detail/) -->
+[<img src="assets/badges/chrome.png" height="60px">](https://chromewebstore.google.com/detail/ncoverlay/ofhffkmglkibpkgcfhbgajghlkgplafe)
 
 ## 概要
 
@@ -26,14 +26,16 @@
 ## インストール
 
 ### Chrome Web Store
-- 準備中
+
+https://chromewebstore.google.com/detail/ncoverlay/ofhffkmglkibpkgcfhbgajghlkgplafe
 
 ### 手動
+
 1. [Releases](https://github.com/Midra429/NCOverlay/releases) から最新バージョンの `extension.zip` をダウンロード
 2. ダウンロードしたファイルを `chrome://extensions` (デベロッパー モード: ON) にドラッグ&ドロップ
 
 ## 不具合報告・機能提案など
 
 - [GitHub](https://github.com/Midra429/NCOverlay/issues)
-<!-- - [Chrome Web Store](https://chrome.google.com/webstore/detail/) > サポート -->
+- [Chrome Web Store](https://chromewebstore.google.com/detail/ncoverlay/ofhffkmglkibpkgcfhbgajghlkgplafe) > サポート
 - [X (@Midra429)](https://x.com/Midra429) に [メンション](https://x.com/intent/tweet?screen_name=Midra429) や [DM](https://x.com/messages/compose?recipient_id=1052566817279864837)
