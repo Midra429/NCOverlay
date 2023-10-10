@@ -32,9 +32,16 @@ const build = async () => {
   fs.copySync(`${inputDir}/assets`, `${outputDir}/assets`)
   fs.copySync(`${inputDir}/styles`, `${outputDir}/styles`)
   fs.copySync(`${inputDir}/popup/index.html`, `${outputDir}/popup/index.html`)
+  fs.copySync(
+    `${inputDir}/side_panel/index.html`,
+    `${outputDir}/side_panel/index.html`
+  )
 
   // CSS
-  const cssPaths = [`${inputDir}/popup/style/index.scss`]
+  const cssPaths = [
+    `${inputDir}/popup/style/index.scss`,
+    `${inputDir}/side_panel/style/index.scss`,
+  ]
   for (const path of cssPaths) {
     const { css } = sass.compile(path)
     const filePath = path
@@ -46,9 +53,10 @@ const build = async () => {
 
   // JavaScript
   const jsPaths = [
-    `${inputDir}/background/index.ts`,
     `${inputDir}/content_script/index.ts`,
+    `${inputDir}/background/index.ts`,
     `${inputDir}/popup/script/index.ts`,
+    `${inputDir}/side_panel/script/index.ts`,
   ]
   const { outputFiles } = await esbuild.build({
     entryPoints: jsPaths,

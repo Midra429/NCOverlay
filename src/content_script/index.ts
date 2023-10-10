@@ -1,7 +1,9 @@
-import { setAction } from './utils/setAction'
+import { checkTargetSite } from '@/utils/checkTargetSite'
 import vodPrimeVideo from './vod/primeVideo'
 import vodDAnime from './vod/dAnime'
 import vodAbema from './vod/abema'
+import { setAction } from './utils/setAction'
+import { setSidePanel } from './utils/setSidePanel'
 
 console.log('[NCOverlay] content_script.js')
 
@@ -11,34 +13,28 @@ const init = () => {
   document.documentElement.classList.add('NCOverlay')
 
   setAction(true)
+  setSidePanel(true)
 }
 
 const main = () => {
+  const target = checkTargetSite(location.href)
+
+  if (!target) return
+
+  init()
+
   // Prime Video
-  if (location.hostname === 'www.amazon.co.jp') {
-    if (
-      location.pathname.match('/gp/video/') ||
-      location.pathname.match('/Amazon-Video/') ||
-      (location.pathname.match('/dp/') &&
-        document.querySelector('#pv-nav-container, .webPlayerSDKContainer'))
-    ) {
-      init()
-      vodPrimeVideo()
-    }
+  if (target === 'primeVideo') {
+    vodPrimeVideo()
   }
 
   // dアニメストア
-  if (location.hostname === 'animestore.docomo.ne.jp') {
-    init()
-
-    if (location.pathname.match('/animestore/sc_d_pc')) {
-      vodDAnime()
-    }
+  if (target === 'dAnime') {
+    vodDAnime()
   }
 
   // ABEMA
-  if (location.hostname === 'abema.tv') {
-    init()
+  if (target === 'abema') {
     vodAbema()
   }
 }

@@ -1,17 +1,11 @@
 import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
-import {
-  isChromeMessageSearch,
-  isChromeMessageVideo,
-  isChromeMessageThreads,
-  isChromeMessageAction,
-  isChromeMessageActionBadge,
-  isChromeMessageActionTitle,
-} from '@/types/chrome/message'
+import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import {
   ACTION_ICONS_ENABLE,
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
 } from '@/constants'
+import { checkTargetSite } from '@/utils/checkTargetSite'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
@@ -42,7 +36,7 @@ chrome.runtime.onMessage.addListener(
     let promise: Promise<any> | null = null
 
     // ニコニコ 検索
-    if (isChromeMessageSearch(message)) {
+    if (ChromeMessageTypeCheck['niconico:search'](message)) {
       const minLength = message.body.duration ? message.body.duration - 30 : -1
       const maxLength = message.body.duration ? message.body.duration + 30 : -1
 
@@ -67,17 +61,17 @@ chrome.runtime.onMessage.addListener(
     }
 
     // ニコニコ 動画情報
-    if (isChromeMessageVideo(message)) {
+    if (ChromeMessageTypeCheck['niconico:video'](message)) {
       promise = NiconicoApi.video(message.body.videoId, message.body.guest)
     }
 
     // ニコニコ コメント
-    if (isChromeMessageThreads(message)) {
+    if (ChromeMessageTypeCheck['niconico:threads'](message)) {
       promise = NiconicoApi.threads(message.body.nvComment)
     }
 
     // 拡張機能 アクション 有効/無効
-    if (isChromeMessageAction(message)) {
+    if (ChromeMessageTypeCheck['chrome:action'](message)) {
       if (message.body) {
         chrome.action.enable(sender.tab?.id)
       } else {
@@ -91,7 +85,7 @@ chrome.runtime.onMessage.addListener(
     }
 
     // 拡張機能 アクション バッジ
-    if (isChromeMessageActionBadge(message)) {
+    if (ChromeMessageTypeCheck['chrome:action:badge'](message)) {
       chrome.action.setBadgeText({
         tabId: sender.tab?.id,
         text: message.body.toString(),
@@ -99,10 +93,18 @@ chrome.runtime.onMessage.addListener(
     }
 
     // 拡張機能 アクション タイトル (ツールチップ)
-    if (isChromeMessageActionTitle(message)) {
+    if (ChromeMessageTypeCheck['chrome:action:title'](message)) {
       chrome.action.setTitle({
         tabId: sender.tab?.id,
         title: message.body ? `${message.body} | NCOverlay` : '',
+      })
+    }
+
+    // 拡張機能 サイドパネル 有効/無効
+    if (ChromeMessageTypeCheck['chrome:side_panel'](message)) {
+      chrome.sidePanel.setOptions({
+        tabId: sender.tab?.id,
+        enabled: message.body,
       })
     }
 
@@ -129,3 +131,40 @@ chrome.runtime.onMessage.addListener(
     return false
   }
 )
+
+chrome.tabs.onActivated.addListener(async (info) => {
+  const tab = await chrome.tabs.get(info.tabId)
+  const target = checkTargetSite(tab.url ?? '')
+
+  if (typeof tab.id !== 'undefined' && target) {
+    await chrome.sidePanel.setOptions({
+      tabId: tab.id,
+      enabled: false,
+    })
+    await chrome.sidePanel.setOptions({
+      tabId: tab.id,
+      enabled: true,
+    })
+  } else {
+    await chrome.sidePanel.setOptions({
+      tabId: tab.id,
+      enabled: false,
+    })
+  }
+})
+
+chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+  const target = checkTargetSite(tab.url ?? '')
+
+  if (typeof tab.id !== 'undefined' && target) {
+    await chrome.sidePanel.setOptions({
+      tabId: tab.id,
+      enabled: true,
+    })
+  } else {
+    await chrome.sidePanel.setOptions({
+      tabId: tab.id,
+      enabled: false,
+    })
+  }
+})

@@ -1,18 +1,17 @@
+import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
 import type { ChromeStorageChanges } from '@/types/chrome/storage'
-import type { ChromeMessage } from '@/types/chrome/message'
-import type { VideoData } from '@/types/niconico/video'
-import { isChromeMessageSendToPopup } from '@/types/chrome/message'
+import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import { GITHUB_URL } from '@/constants'
-import { ChromeStorageApi } from '@/utils/storage'
-import { removeChilds } from '@/utils/dom/removeChilds'
-import { getFromPage } from './utils/getFromPage'
+import { ChromeStorageApi, getFromPage } from '@/utils/chrome'
+import { removeChilds } from '@/utils/dom'
 import { createVideoItem } from './utils/createVideoItem'
 
 console.log('[NCOverlay] popup.html')
 
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
-  if (isChromeMessageSendToPopup(message)) {
-    if (0 < Object.keys(message).length) {
+  // ポップアップへ送信
+  if (ChromeMessageTypeCheck['chrome:sendToPopup'](message)) {
+    if (0 < Object.keys(message.body).length) {
       chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
         if (tab?.id === sender.tab?.id) {
           console.log('[NCOverlay] chrome:sendToPopup', message.body)
@@ -37,9 +36,6 @@ const init = async () => {
 
   const linkGitHub = document.querySelector<HTMLAnchorElement>('#LinkGitHub')!
   linkGitHub.href = GITHUB_URL
-  linkGitHub.style.backgroundImage = `url("${chrome.runtime.getURL(
-    'assets/github-mark.svg'
-  )}")`
 
   const settings = await ChromeStorageApi.get({
     enable: true,
@@ -97,19 +93,17 @@ const init = async () => {
 }
 
 const update = ({
-  commentsCount,
   videoData,
-}: {
-  commentsCount?: number
-  videoData?: VideoData[]
-}) => {
-  document.querySelector('#CommentsCount')!.textContent = commentsCount
-    ? `(${commentsCount.toLocaleString()}件)`
-    : ''
-
+  commentsCount,
+}: ChromeMessageBody['chrome:sendToPopup']) => {
   const items = document.querySelector<HTMLElement>('#Items')!
 
-  removeChilds(items)
+  if (
+    typeof videoData === 'undefined' &&
+    typeof commentsCount === 'undefined'
+  ) {
+    removeChilds(items)
+  }
 
   if (videoData) {
     const fragment = document.createDocumentFragment()
@@ -118,6 +112,10 @@ const update = ({
     }
     items.appendChild(fragment)
   }
+
+  document.querySelector('#CommentsCount')!.textContent = commentsCount
+    ? `(${commentsCount.toLocaleString()}件)`
+    : ''
 }
 
 const main = async () => {

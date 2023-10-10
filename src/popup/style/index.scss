@@ -1,21 +1,12 @@
-@use './normalize.css';
 @use './input.scss';
 
-body {
-  font-family: system-ui, 'Hiragino Kaku Gothic ProN', sans-serif;
-  font-size: 75%;
-}
-
 * {
-  box-sizing: border-box;
   user-select: none;
 }
 
 :is(h1, h2, h3, h4, h5, h6, p) {
-  margin: 0;
-
   > small {
-    font-size: 0.8em;
+    font-size: 80%;
     font-weight: normal;
   }
 }
@@ -106,7 +97,7 @@ header {
 
     position: relative;
     aspect-ratio: 16 / 9;
-    border: 2px solid #252525;
+    border: 3px solid #252525;
     border-radius: 8px;
     background-color: #000;
     background-position: center;
@@ -121,13 +112,15 @@ header {
 
   &-duration {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 40px;
-    height: 20px;
-    line-height: 20px;
-    border-radius: 6px 0 0 0;
-    background-color: rgb(37, 37, 37, 75%);
+    right: 2px;
+    bottom: 2px;
+    height: 15px;
+    line-height: 15px;
+    padding: 0 3px;
+    border-radius: 4px;
+    background-color: rgb(0, 0, 0, 50%);
+    backdrop-filter: blur(5px);
+    font-size: 90%;
     color: #fff;
     text-align: center;
   }
@@ -144,7 +137,7 @@ header {
 
     height: fit-content;
     color: inherit;
-    font-size: 1.1em;
+    font-size: 110%;
     font-weight: bold;
     text-decoration: none;
 
@@ -206,7 +199,7 @@ header {
     padding-left: 15px;
 
     > li {
-      font-size: 1.1em;
+      font-size: 110%;
       padding: 10px 0;
     }
   }

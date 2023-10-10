@@ -6,12 +6,13 @@ import type {
   ChromeResponseResult,
 } from '@/types/chrome/message'
 import type { VideoData } from '@/types/niconico/video'
-import { isChromeMessageGetFromPage } from '@/types/chrome/message'
+import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import NiconiComments from '@xpadev-net/niconicomments'
-import { ChromeStorageApi } from '@/utils/storage'
-import { setActionBadge } from '@/content_script/utils/setActionBadge'
-import { setActionTitle } from '@/content_script/utils/setActionTitle'
-import { sendToPopup } from '@/content_script/utils/sendToPopup'
+import { ChromeStorageApi } from '@/utils/chrome'
+import { setActionBadge } from './utils/setActionBadge'
+import { setActionTitle } from './utils/setActionTitle'
+import { sendToPopup } from './utils/sendToPopup'
+import { sendToSidePanel } from './utils/sendToSidePanel'
 
 export class NCOverlay {
   #video: HTMLVideoElement
@@ -23,13 +24,13 @@ export class NCOverlay {
   #commentsFormat?: InputFormatType
 
   #commentsCount: number = 0
-  #isEmpty: boolean = true
   #isPlaying: boolean = false
 
-  onPlaying?: (e: Event) => void
-  onPause?: (e: Event) => void
-  onSeeked?: (e: Event) => void
-  onLoadedmetadata?: (e: Event) => void
+  onPlaying?: (this: this, e: Event) => void
+  onPause?: (this: this, e: Event) => void
+  onSeeked?: (this: this, e: Event) => void
+  onTimeupdate?: (this: this, e: Event) => void
+  onLoadedmetadata?: (this: this, e: Event) => void
 
   get video() {
     return this.#video
@@ -66,6 +67,7 @@ export class NCOverlay {
     this.#video.addEventListener('playing', this.#listener.playing)
     this.#video.addEventListener('pause', this.#listener.pause)
     this.#video.addEventListener('seeked', this.#listener.seeked)
+    this.#video.addEventListener('timeupdate', this.#listener.timeupdate)
     this.#video.addEventListener(
       'loadedmetadata',
       this.#listener.loadedmetadata
@@ -121,6 +123,9 @@ export class NCOverlay {
   ) {
     console.log('[NCOverlay] NCOverlay.init()')
 
+    sendToPopup({})
+    sendToSidePanel({})
+
     const isPlaying = this.#isPlaying
 
     if (this.#niconiComments) {
@@ -128,19 +133,24 @@ export class NCOverlay {
       this.clear()
     }
 
-    this.#isEmpty =
-      !input.comments ||
-      (Array.isArray(input.comments) && input.comments.length === 0)
-
-    if (this.#isEmpty) {
-      input.comments = undefined
-      input.format = 'empty'
+    this.#commentsCount = 0
+    if (NiconiComments.typeGuard.v1.threads(input.comments)) {
+      for (const data of input.comments) {
+        this.#commentsCount += data.comments.length
+      }
     }
 
+    console.log('[NCOverlay] commentsCount', this.#commentsCount)
+
     this.#videoData = input.data
-    this.#commentsData = input.comments
-    this.#commentsFormat = input.format ?? 'v1'
-    this.#commentsCount = 0
+
+    if (0 < this.#commentsCount) {
+      this.#commentsData = input.comments
+      this.#commentsFormat = input.format ?? 'v1'
+    } else {
+      this.#commentsData = undefined
+      this.#commentsFormat = 'empty'
+    }
 
     this.#niconiComments = new NiconiComments(
       this.#canvas,
@@ -149,14 +159,6 @@ export class NCOverlay {
         format: this.#commentsFormat,
       }
     )
-
-    if (NiconiComments.typeGuard.v1.threads(this.#commentsData)) {
-      for (const data of this.#commentsData) {
-        this.#commentsCount += data.comments.length
-      }
-    }
-
-    console.log('[NCOverlay] commentsCount', this.#commentsCount)
 
     this.#update()
 
@@ -179,8 +181,12 @@ export class NCOverlay {
     }
 
     sendToPopup({
-      commentsCount: this.#commentsCount,
       videoData: this.#videoData,
+      commentsCount: this.#commentsCount,
+    })
+    sendToSidePanel({
+      commentsData: this.#commentsData,
+      currentTime: this.#video.currentTime,
     })
   }
 
@@ -201,6 +207,7 @@ export class NCOverlay {
     this.#video.removeEventListener('playing', this.#listener.playing)
     this.#video.removeEventListener('pause', this.#listener.pause)
     this.#video.removeEventListener('seeked', this.#listener.seeked)
+    this.#video.removeEventListener('timeupdate', this.#listener.timeupdate)
     this.#video.removeEventListener(
       'loadedmetadata',
       this.#listener.loadedmetadata
@@ -212,6 +219,7 @@ export class NCOverlay {
     setActionTitle('')
 
     sendToPopup({})
+    sendToSidePanel({})
   }
 
   clear() {
@@ -233,13 +241,18 @@ export class NCOverlay {
 
   #update() {
     this.#niconiComments.drawCanvas(Math.floor(this.#video.currentTime * 100))
+
+    sendToSidePanel({
+      currentTime: this.#video.currentTime,
+    })
   }
 
   #loop() {
-    if (this.#isPlaying && !this.#isEmpty) {
+    if (this.#isPlaying && 0 < this.#commentsCount) {
       this.#update()
 
-      requestAnimationFrame(() => this.#loop())
+      setTimeout(() => this.#loop(), 16)
+      // requestAnimationFrame(() => this.#loop())
     }
   }
 
@@ -249,9 +262,7 @@ export class NCOverlay {
 
       this.start()
 
-      if (this.onPlaying) {
-        this.onPlaying(e)
-      }
+      this.onPlaying?.(e)
     },
 
     pause: (e: Event) => {
@@ -259,9 +270,7 @@ export class NCOverlay {
 
       this.stop()
 
-      if (this.onPause) {
-        this.onPause(e)
-      }
+      this.onPause?.(e)
     },
 
     seeked: (e: Event) => {
@@ -269,17 +278,17 @@ export class NCOverlay {
 
       this.#update()
 
-      if (this.onSeeked) {
-        this.onSeeked(e)
-      }
+      this.onSeeked?.(e)
+    },
+
+    timeupdate: (e: Event) => {
+      this.onTimeupdate?.(e)
     },
 
     loadedmetadata: (e: Event) => {
       console.log('[NCOverlay] Event: loadedmetadata')
 
-      if (this.onLoadedmetadata) {
-        this.onLoadedmetadata(e)
-      }
+      this.onLoadedmetadata?.(e)
     },
 
     chromeOnMessage: (
@@ -289,12 +298,15 @@ export class NCOverlay {
         response: ChromeResponse<T>
       ) => void
     ) => {
-      if (isChromeMessageGetFromPage(message)) {
+      // ページから取得
+      if (ChromeMessageTypeCheck['chrome:getFromPage'](message)) {
         sendResponse({
           type: message.type,
           result: {
-            commentsCount: this.#commentsCount,
             videoData: this.#videoData,
+            commentsData: this.#commentsData,
+            commentsCount: this.#commentsCount,
+            currentTime: this.#video.currentTime,
           },
         })
 

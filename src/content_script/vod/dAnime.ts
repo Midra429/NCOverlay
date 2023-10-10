@@ -13,8 +13,8 @@ export default async () => {
 
   const nco = new NCOverlay(video)
 
-  nco.onLoadedmetadata = async () => {
-    nco.init()
+  nco.onLoadedmetadata = async function () {
+    this.init()
 
     const partId = new URL(location.href).searchParams.get('partId')
 
@@ -41,7 +41,7 @@ export default async () => {
         console.log('[NCOverlay] threads (filtered)', threads)
 
         if (threads) {
-          nco.init({
+          this.init({
             data: videoData,
             comments: threads,
           })

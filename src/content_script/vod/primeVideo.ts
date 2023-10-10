@@ -45,9 +45,6 @@ export default async () => {
   const modify = (video: HTMLVideoElement) => {
     console.log('[NCOverlay] modify()')
 
-    nco?.dispose()
-    nco = null
-
     const playerUIContainer = video
       .closest<HTMLElement>('.webPlayerSDKContainer')
       ?.querySelector<HTMLElement>('.webPlayerUIContainer')
@@ -55,7 +52,7 @@ export default async () => {
     if (playerUIContainer) {
       nco = new NCOverlay(video)
 
-      nco.onLoadedmetadata = async () => {
+      nco.onLoadedmetadata = async function () {
         const info = getInfo()
         console.log('[NCOverlay] info', info)
 
@@ -76,7 +73,7 @@ export default async () => {
 
         const searchResults = await NiconicoApi.search({
           title: title,
-          duration: nco?.video.duration ?? 0,
+          duration: this.video.duration ?? 0,
           workTitle: detail?.title,
           subtitle: info.subtitle,
         })
@@ -90,12 +87,12 @@ export default async () => {
           console.log('[NCOverlay] threads (filtered)', threads)
 
           if (threads) {
-            nco?.init({
+            this.init({
               data: videoData,
               comments: threads,
             })
           } else {
-            nco?.init()
+            this.init()
           }
         }
       }
