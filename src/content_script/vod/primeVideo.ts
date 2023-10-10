@@ -31,14 +31,14 @@ export default async () => {
     const subtitleElem = document.querySelector<HTMLElement>(
       '.atvwebplayersdk-subtitle-text'
     )
-    const se_raw =
-      subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
+    // const se_raw =
+    //   subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
 
     return {
       title: titleElem?.textContent?.trim(),
       subtitle: subtitleElem?.lastChild?.textContent?.trim(),
-      season: Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0)),
-      episode: Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0)),
+      // season: Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0)),
+      // episode: Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0)),
     }
   }
 
@@ -56,18 +56,20 @@ export default async () => {
         const info = getInfo()
         console.log('[NCOverlay] info', info)
 
-        let title = ''
-        if (
-          info.subtitle &&
-          !extractEpisodeNumber(info.subtitle) &&
-          Number.isFinite(info.episode)
-        ) {
-          title = `${detail?.title || info.title} ${info.episode}話 ${
-            info.subtitle
-          }`
-        } else {
-          title = `${detail?.title || info.title} ${info.subtitle}`
-        }
+        // let title = ''
+        // if (
+        //   info.subtitle &&
+        //   !extractEpisodeNumber(info.subtitle) &&
+        //   Number.isFinite(info.episode)
+        // ) {
+        //   title = `${detail?.title || info.title} ${info.episode}話 ${
+        //     info.subtitle
+        //   }`
+        // } else {
+        //   title = `${detail?.title || info.title} ${info.subtitle}`
+        // }
+
+        const title = `${detail?.title || info.title} ${info.subtitle}`
 
         console.log('[NCOverlay] title', title)
 
