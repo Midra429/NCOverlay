@@ -40,6 +40,7 @@ const init = async () => {
   const settings = await ChromeStorageApi.get({
     enable: true,
     opacity: 100,
+    showChangelog: true,
   })
 
   // enable
@@ -59,13 +60,38 @@ const init = async () => {
   settingOpacityValue.textContent = settingOpacity.value =
     settings.opacity!.toString()
 
-  const opacityChanged = async function (this: HTMLInputElement, ev: Event) {
+  const opacityChanged = async function (this: HTMLInputElement, e: Event) {
     settingOpacityValue.textContent = this.value
     await ChromeStorageApi.set({ opacity: Number(this.value) })
   }
 
   settingOpacity.addEventListener('input', opacityChanged)
   settingOpacity.addEventListener('change', opacityChanged)
+
+  // showChangelog
+  const settingShowChangelog = document.querySelector<HTMLInputElement>(
+    '#SettingShowChangelog'
+  )!
+
+  settingShowChangelog.checked = settings.showChangelog!
+  settingShowChangelog.addEventListener('change', async function () {
+    await ChromeStorageApi.set({ showChangelog: this.checked })
+  })
+
+  // コメント件数
+  if ('open' in chrome.sidePanel) {
+    const commentsCount = document.querySelector<HTMLElement>('#CommentsCount')!
+    commentsCount.classList.add('is-button')
+    commentsCount.title = 'サイドパネルを開く'
+    commentsCount.addEventListener('click', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+        // @ts-ignore
+        chrome.sidePanel.open({
+          windowId: tab.windowId,
+        })
+      })
+    })
+  }
 
   // 別のポップアップからの設定変更時
   chrome.storage.local.onChanged.addListener(
@@ -84,12 +110,17 @@ const init = async () => {
         settingOpacityValue.textContent = settingOpacity.value =
           changes.opacity.newValue.toString()
       }
+
+      if (
+        typeof changes.showChangelog?.newValue !== 'undefined' &&
+        settingShowChangelog.checked !== changes.showChangelog.newValue
+      ) {
+        settingShowChangelog.checked = changes.showChangelog.newValue
+      }
     }
   )
 
-  setTimeout(() => {
-    document.body.classList.remove('loading')
-  }, 100)
+  setTimeout(() => document.body.classList.remove('loading'), 100)
 }
 
 const update = ({

@@ -14,9 +14,13 @@ import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
 import { sendToSidePanel } from './utils/sendToSidePanel'
 
+const RENDER_REFRESH_RATE = 60
+const LOOP_INTERVAL_MS = Math.round(1000 / RENDER_REFRESH_RATE)
+
 export class NCOverlay {
   #video: HTMLVideoElement
   #canvas: HTMLCanvasElement
+
   #niconiComments: NiconiComments
 
   #videoData?: VideoData[]
@@ -37,18 +41,6 @@ export class NCOverlay {
   }
   get canvas() {
     return this.#canvas
-  }
-  get niconiComments() {
-    return this.#niconiComments
-  }
-  get videoData() {
-    return this.#videoData
-  }
-  get commentsData() {
-    return this.#commentsData
-  }
-  get commentsFormat() {
-    return this.#commentsFormat
   }
 
   constructor(
@@ -121,7 +113,11 @@ export class NCOverlay {
       format?: InputFormatType
     } = {}
   ) {
-    console.log('[NCOverlay] NCOverlay.init()')
+    if (input) {
+      console.log('[NCOverlay] NCOverlay.init(input)')
+    } else {
+      console.log('[NCOverlay] NCOverlay.init()')
+    }
 
     sendToPopup({})
     sendToSidePanel({})
@@ -155,12 +151,10 @@ export class NCOverlay {
     this.#niconiComments = new NiconiComments(
       this.#canvas,
       this.#commentsData,
-      {
-        format: this.#commentsFormat,
-      }
+      { format: this.#commentsFormat }
     )
 
-    this.#update()
+    this.#render()
 
     if (isPlaying) {
       this.start()
@@ -239,7 +233,7 @@ export class NCOverlay {
     }
   }
 
-  #update() {
+  #render() {
     this.#niconiComments.drawCanvas(Math.floor(this.#video.currentTime * 100))
 
     sendToSidePanel({
@@ -249,9 +243,9 @@ export class NCOverlay {
 
   #loop() {
     if (this.#isPlaying && 0 < this.#commentsCount) {
-      this.#update()
+      this.#render()
 
-      setTimeout(() => this.#loop(), 16)
+      setTimeout(() => this.#loop(), LOOP_INTERVAL_MS)
       // requestAnimationFrame(() => this.#loop())
     }
   }
@@ -276,7 +270,7 @@ export class NCOverlay {
     seeked: (e: Event) => {
       console.log('[NCOverlay] Event: seeked', this.#video.currentTime)
 
-      this.#update()
+      this.#render()
 
       this.onSeeked?.(e)
     },

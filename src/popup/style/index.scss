@@ -73,10 +73,28 @@ header {
   }
 }
 
+.is-button {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .setting {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 5px;
+  justify-content: start;
+  grid-template-columns: repeat(2, auto);
+  gap: 8px;
+  font-size: 110%;
+
+  &:has(input[type='range']) {
+    grid-template-columns: 1fr 3fr;
+  }
+
+  > label {
+    line-height: 30px;
+  }
 }
 
 .item {
@@ -188,7 +206,7 @@ header {
 
 #Header {
   &:has(input[type='checkbox']:not(:checked)) {
-    & ~ * {
+    & ~ #Comments {
       display: none;
     }
   }
@@ -196,12 +214,8 @@ header {
 
 #Settings {
   > ul {
+    gap: 5px;
     padding-left: 15px;
-
-    > li {
-      font-size: 110%;
-      padding: 10px 0;
-    }
   }
 }
 

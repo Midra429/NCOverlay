@@ -1,6 +1,19 @@
+input {
+  &[type='range'] {
+    cursor: ew-resize;
+  }
+
+  &[type='checkbox'] {
+    &,
+    & + label {
+      cursor: pointer;
+    }
+  }
+}
+
 .input-container {
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 5fr 1fr;
   gap: 5px;
 }
 

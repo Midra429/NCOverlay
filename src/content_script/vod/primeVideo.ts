@@ -2,7 +2,7 @@ import { NCOverlay } from '@/content_script/NCOverlay'
 import { NiconicoApi } from '@/content_script/api/niconico'
 import { getVideoData } from '@/content_script/utils/getVideoData'
 import { getThreads } from '@/content_script/utils/getThreads'
-import { extractEpisodeNumber } from '@/utils/extractEpisodeNumber'
+// import { extractEpisodeNumber } from '@/utils/extractEpisodeNumber'
 
 export default async () => {
   console.log('[NCOverlay] VOD: Prime Video')

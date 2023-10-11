@@ -5,6 +5,7 @@ import {
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
 } from '@/constants'
+import { ChromeStorageApi } from '@/utils/chrome'
 import { checkTargetSite } from '@/utils/checkTargetSite'
 import { NiconicoApi } from './api/niconico'
 
@@ -15,14 +16,20 @@ chrome.action.setIcon({ path: ACTION_ICONS_DISABLE })
 chrome.action.setBadgeBackgroundColor({ color: '#2389FF' })
 chrome.action.setBadgeTextColor({ color: '#FFF' })
 
-chrome.runtime.onInstalled.addListener((details) => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   const { version } = chrome.runtime.getManifest()
+  const settings = await ChromeStorageApi.get({
+    showChangelog: true,
+  })
 
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     chrome.tabs.create({ url: `${GITHUB_URL}/blob/v${version}/README.md` })
   }
 
-  if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+  if (
+    details.reason === chrome.runtime.OnInstalledReason.UPDATE &&
+    settings.showChangelog!
+  ) {
     chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
   }
 })
