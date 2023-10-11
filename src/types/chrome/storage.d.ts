@@ -1,6 +1,7 @@
 export type ChromeStorage = {
   enable: boolean
   opacity: number
+  lowPerformance: boolean
   showChangelog: boolean
 }
 

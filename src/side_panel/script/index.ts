@@ -1,12 +1,17 @@
+import type {
+  ChromeStorage,
+  ChromeStorageChanges,
+} from '@/types/chrome/storage'
 import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import NiconiComments from '@xpadev-net/niconicomments'
-import { getFromPage } from '@/utils/chrome'
+import { ChromeStorageApi, getFromPage } from '@/utils/chrome'
 import { removeChilds } from '@/utils/dom'
 import { createCommentItem } from './utils/createCommentItem'
 
 console.log('[NCOverlay] side_panel.html')
 
+let settings: Partial<ChromeStorage> = {}
 let timeIdxPairs: number[][] = []
 let prevIdx: number | null = null
 
@@ -27,7 +32,17 @@ chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
   return false
 })
 
-// const init = async () => {}
+chrome.storage.local.onChanged.addListener((changes: ChromeStorageChanges) => {
+  if (typeof changes.lowPerformance?.newValue !== 'undefined') {
+    settings.lowPerformance = changes.lowPerformance.newValue
+  }
+})
+
+const init = async () => {
+  settings = await ChromeStorageApi.get({
+    lowPerformance: false,
+  })
+}
 
 const update = async ({
   commentsData,
@@ -70,7 +85,7 @@ const update = async ({
 
       if (targetItem) {
         targetItem.scrollIntoView({
-          behavior: 'smooth',
+          behavior: settings.lowPerformance! ? 'instant' : 'smooth',
           block: 'end',
         })
 
@@ -81,7 +96,7 @@ const update = async ({
 }
 
 const main = async () => {
-  // await init()
+  await init()
 
   const res = await getFromPage()
 

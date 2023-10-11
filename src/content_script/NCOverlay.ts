@@ -14,9 +14,6 @@ import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
 import { sendToSidePanel } from './utils/sendToSidePanel'
 
-const RENDER_REFRESH_RATE = 60
-const LOOP_INTERVAL_MS = Math.round(1000 / RENDER_REFRESH_RATE)
-
 export class NCOverlay {
   #video: HTMLVideoElement
   #canvas: HTMLCanvasElement
@@ -29,6 +26,7 @@ export class NCOverlay {
 
   #commentsCount: number = 0
   #isPlaying: boolean = false
+  #loopIntervalMs: number = Math.round(1000 / 60)
 
   onPlaying?: (this: this, e: Event) => void
   onPause?: (this: this, e: Event) => void
@@ -94,6 +92,7 @@ export class NCOverlay {
       const settings = await ChromeStorageApi.get({
         enable: true,
         opacity: 100,
+        lowPerformance: false,
       })
 
       if (!settings.enable!) {
@@ -101,6 +100,10 @@ export class NCOverlay {
       }
 
       this.#canvas.style.opacity = (settings.opacity! / 100).toString()
+
+      this.#loopIntervalMs = Math.round(
+        1000 / (settings.lowPerformance ? 30 : 60)
+      )
     }, 0)
 
     console.log('[NCOverlay] new NCOverlay()', this)
@@ -245,8 +248,7 @@ export class NCOverlay {
     if (this.#isPlaying && 0 < this.#commentsCount) {
       this.#render()
 
-      setTimeout(() => this.#loop(), LOOP_INTERVAL_MS)
-      // requestAnimationFrame(() => this.#loop())
+      setTimeout(() => this.#loop(), this.#loopIntervalMs)
     }
   }
 
@@ -321,6 +323,12 @@ export class NCOverlay {
 
       if (typeof changes.opacity?.newValue !== 'undefined') {
         this.#canvas.style.opacity = (changes.opacity.newValue / 100).toString()
+      }
+
+      if (typeof changes.lowPerformance?.newValue !== 'undefined') {
+        this.#loopIntervalMs = Math.round(
+          1000 / (changes.lowPerformance.newValue ? 30 : 60)
+        )
       }
     },
   }

@@ -40,6 +40,7 @@ const init = async () => {
   const settings = await ChromeStorageApi.get({
     enable: true,
     opacity: 100,
+    lowPerformance: false,
     showChangelog: true,
   })
 
@@ -67,6 +68,16 @@ const init = async () => {
 
   settingOpacity.addEventListener('input', opacityChanged)
   settingOpacity.addEventListener('change', opacityChanged)
+
+  // lowPerformance
+  const settingLowPerformance = document.querySelector<HTMLInputElement>(
+    '#SettingLowPerformance'
+  )!
+
+  settingLowPerformance.checked = settings.lowPerformance!
+  settingLowPerformance.addEventListener('change', async function () {
+    await ChromeStorageApi.set({ lowPerformance: this.checked })
+  })
 
   // showChangelog
   const settingShowChangelog = document.querySelector<HTMLInputElement>(
