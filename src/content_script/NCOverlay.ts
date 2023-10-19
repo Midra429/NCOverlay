@@ -8,7 +8,7 @@ import type {
 import type { VideoData } from '@/types/niconico/video'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import NiconiComments from '@xpadev-net/niconicomments'
-import { ChromeStorageApi } from '@/utils/chrome'
+import { ChromeStorageApi } from '@/utils/chrome/storage'
 import { setActionBadge } from './utils/setActionBadge'
 import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
@@ -89,21 +89,15 @@ export class NCOverlay {
 
     // 設定読み込み
     setTimeout(async () => {
-      const settings = await ChromeStorageApi.get({
-        enable: true,
-        opacity: 100,
-        lowPerformance: false,
-      })
+      const settings = await ChromeStorageApi.getSettings()
 
-      if (!settings.enable!) {
+      if (!settings.enable) {
         this.#canvas.style.display = 'none'
       }
 
-      this.#canvas.style.opacity = (settings.opacity! / 100).toString()
+      this.#canvas.style.opacity = (settings.opacity / 100).toString()
 
-      this.#loopIntervalMs = Math.round(
-        1000 / (settings.lowPerformance ? 30 : 60)
-      )
+      this.setFPS(settings.lowPerformance ? 30 : 60)
     }, 0)
 
     console.log('[NCOverlay] new NCOverlay()', this)
@@ -236,6 +230,10 @@ export class NCOverlay {
     }
   }
 
+  setFPS(fps: number) {
+    this.#loopIntervalMs = Math.round(1000 / fps)
+  }
+
   #render() {
     this.#niconiComments.drawCanvas(Math.floor(this.#video.currentTime * 100))
 
@@ -326,9 +324,7 @@ export class NCOverlay {
       }
 
       if (typeof changes.lowPerformance?.newValue !== 'undefined') {
-        this.#loopIntervalMs = Math.round(
-          1000 / (changes.lowPerformance.newValue ? 30 : 60)
-        )
+        this.setFPS(changes.lowPerformance.newValue ? 30 : 60)
       }
     },
   }

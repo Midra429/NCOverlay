@@ -1,9 +1,13 @@
-import type { ChromeStorage } from '@/types/chrome/storage'
+import type {
+  ChromeStorage,
+  ChromeStorageSettings,
+} from '@/types/chrome/storage'
+import { SETTINGS_DEFAULT } from '@/constants'
 
 const get = async (
   keys: keyof ChromeStorage | (keyof ChromeStorage)[] | Partial<ChromeStorage>
-): Promise<Partial<ChromeStorage>> => {
-  return chrome.storage.local.get(keys)
+) => {
+  return chrome.storage.local.get(keys) as Promise<ChromeStorage>
 }
 
 const set = async (items: Partial<ChromeStorage>) => {
@@ -18,9 +22,14 @@ const clear = async () => {
   return chrome.storage.local.clear()
 }
 
+const getSettings = () => {
+  return get(SETTINGS_DEFAULT) as Promise<ChromeStorageSettings>
+}
+
 export const ChromeStorageApi = {
   get,
   set,
   remove,
   clear,
+  getSettings,
 }

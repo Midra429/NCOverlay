@@ -7,24 +7,27 @@ import { getThreads } from '@/content_script/utils/getThreads'
 export default async () => {
   console.log('[NCOverlay] VOD: Prime Video')
 
-  const canonicalUrl =
-    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ??
-    null
-  const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.at(0) ?? null
-
-  const rawData = document.querySelector(
-    '#main > script[type="text/template"]'
-  )?.textContent
-  const data = rawData ? JSON.parse(rawData) : null
-  const detail: { title: string } | null = asin
-    ? data?.props?.state?.detail?.detail?.[asin]
-    : null
-
-  console.log('[NCOverlay] detail', detail)
-
   let nco: NCOverlay | null = null
 
+  const getDetail = (): { title: string } | null => {
+    const canonicalUrl =
+      document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ??
+      null
+    const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.at(0) ?? null
+
+    const rawData = document.querySelector(
+      '#main > script[type="text/template"]'
+    )?.textContent
+    const data = JSON.parse(rawData ?? '{}')
+
+    return asin ? data.props?.state?.detail?.detail?.[asin] : null
+  }
+
   const getInfo = () => {
+    const detail = getDetail()
+
+    console.log('[NCOverlay] detail', detail)
+
     const titleElem = document.querySelector<HTMLElement>(
       '.atvwebplayersdk-title-text'
     )
@@ -35,8 +38,12 @@ export default async () => {
     //   subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
 
     return {
-      title: titleElem?.textContent?.trim(),
-      subtitle: subtitleElem?.lastChild?.textContent?.trim(),
+      // 呪術廻戦 懐玉・玉折／渋谷事変 || 呪術廻戦
+      title: detail?.title || titleElem?.textContent?.trim(),
+      // 第25話 懐玉
+      episode: subtitleElem?.lastChild?.textContent?.trim(),
+      // 呪術廻戦
+      workTitle: detail?.title,
       // season: Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0)),
       // episode: Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0)),
     }
@@ -54,47 +61,37 @@ export default async () => {
 
       nco.onLoadedmetadata = async function () {
         const info = getInfo()
+
         console.log('[NCOverlay] info', info)
 
-        // let title = ''
-        // if (
-        //   info.subtitle &&
-        //   !extractEpisodeNumber(info.subtitle) &&
-        //   Number.isFinite(info.episode)
-        // ) {
-        //   title = `${detail?.title || info.title} ${info.episode}話 ${
-        //     info.subtitle
-        //   }`
-        // } else {
-        //   title = `${detail?.title || info.title} ${info.subtitle}`
-        // }
+        if (info.title && info.episode) {
+          const title = `${info.title} ${info.episode}`
 
-        const title = `${detail?.title || info.title} ${info.subtitle}`
+          console.log('[NCOverlay] title', title)
 
-        console.log('[NCOverlay] title', title)
+          const searchResults = await NiconicoApi.search({
+            title: title,
+            duration: this.video.duration ?? 0,
+            workTitle: info.workTitle,
+            subTitle: info.episode,
+          })
 
-        const searchResults = await NiconicoApi.search({
-          title: title,
-          duration: this.video.duration ?? 0,
-          workTitle: detail?.title,
-          subtitle: info.subtitle,
-        })
+          if (searchResults) {
+            const videoData = await getVideoData(
+              ...searchResults.map((v) => v.contentId ?? '')
+            )
+            const threads = videoData && (await getThreads(...videoData))
 
-        if (searchResults) {
-          const videoData = await getVideoData(
-            ...searchResults.map((v) => v.contentId ?? '')
-          )
-          const threads = videoData && (await getThreads(...videoData))
+            console.log('[NCOverlay] threads (filtered)', threads)
 
-          console.log('[NCOverlay] threads (filtered)', threads)
-
-          if (threads) {
-            this.init({
-              data: videoData,
-              comments: threads,
-            })
-          } else {
-            this.init()
+            if (threads) {
+              this.init({
+                data: videoData,
+                comments: threads,
+              })
+            } else {
+              this.init()
+            }
           }
         }
       }

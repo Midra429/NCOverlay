@@ -204,13 +204,13 @@ header {
   opacity: 0.6;
 }
 
-#Header {
-  &:has(input[type='checkbox']:not(:checked)) {
-    & ~ #Comments {
-      display: none;
-    }
-  }
-}
+// #Header {
+//   &:has(input[type='checkbox']:not(:checked)) {
+//     & ~ #Comments {
+//       display: none;
+//     }
+//   }
+// }
 
 #Settings {
   > ul {

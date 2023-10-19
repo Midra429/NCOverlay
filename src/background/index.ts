@@ -5,8 +5,8 @@ import {
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
 } from '@/constants'
-import { ChromeStorageApi } from '@/utils/chrome'
-import { checkTargetSite } from '@/utils/checkTargetSite'
+import { ChromeStorageApi } from '@/utils/chrome/storage'
+import { checkSupportedVod } from '@/utils/checkSupportedVod'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
@@ -18,9 +18,7 @@ chrome.action.setBadgeTextColor({ color: '#FFF' })
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   const { version } = chrome.runtime.getManifest()
-  const settings = await ChromeStorageApi.get({
-    showChangelog: true,
-  })
+  const settings = await ChromeStorageApi.getSettings()
 
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     chrome.tabs.create({ url: `${GITHUB_URL}/blob/v${version}/README.md` })
@@ -28,7 +26,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
   if (
     details.reason === chrome.runtime.OnInstalledReason.UPDATE &&
-    settings.showChangelog!
+    settings.showChangelog
   ) {
     chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
   }
@@ -63,7 +61,7 @@ chrome.runtime.onMessage.addListener(
                 }
               : undefined,
         },
-        _limit: '5',
+        _limit: 5,
       })
     }
 
@@ -141,9 +139,9 @@ chrome.runtime.onMessage.addListener(
 
 chrome.tabs.onActivated.addListener(async (info) => {
   const tab = await chrome.tabs.get(info.tabId)
-  const target = checkTargetSite(tab.url ?? '')
+  const vod = checkSupportedVod(tab.url ?? '')
 
-  if (typeof tab.id !== 'undefined' && target) {
+  if (typeof tab.id !== 'undefined' && vod) {
     await chrome.sidePanel.setOptions({
       tabId: tab.id,
       enabled: false,
@@ -161,9 +159,9 @@ chrome.tabs.onActivated.addListener(async (info) => {
 })
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  const target = checkTargetSite(tab.url ?? '')
+  const vod = checkSupportedVod(tab.url ?? '')
 
-  if (typeof tab.id !== 'undefined' && target) {
+  if (typeof tab.id !== 'undefined' && vod) {
     await chrome.sidePanel.setOptions({
       tabId: tab.id,
       enabled: true,

@@ -2,7 +2,9 @@ import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
 import type { ChromeStorageChanges } from '@/types/chrome/storage'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import { GITHUB_URL } from '@/constants'
-import { ChromeStorageApi, getFromPage } from '@/utils/chrome'
+import { ChromeStorageApi } from '@/utils/chrome/storage'
+import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
+import { getFromPage } from '@/utils/chrome/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { createVideoItem } from './utils/createVideoItem'
 
@@ -12,8 +14,8 @@ chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
   // ポップアップへ送信
   if (ChromeMessageTypeCheck['chrome:sendToPopup'](message)) {
     if (0 < Object.keys(message.body).length) {
-      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-        if (tab?.id === sender.tab?.id) {
+      getCurrentTab().then((tab) => {
+        if (tab.id === sender.tab?.id) {
           console.log('[NCOverlay] chrome:sendToPopup', message.body)
 
           update(message.body)
@@ -37,18 +39,13 @@ const init = async () => {
   const linkGitHub = document.querySelector<HTMLAnchorElement>('#LinkGitHub')!
   linkGitHub.href = GITHUB_URL
 
-  const settings = await ChromeStorageApi.get({
-    enable: true,
-    opacity: 100,
-    lowPerformance: false,
-    showChangelog: true,
-  })
+  const settings = await ChromeStorageApi.getSettings()
 
   // enable
   const settingEnable =
     document.querySelector<HTMLInputElement>('#SettingEnable')!
 
-  settingEnable.checked = settings.enable!
+  settingEnable.checked = settings.enable
   settingEnable.addEventListener('change', async function () {
     await ChromeStorageApi.set({ enable: this.checked })
   })
@@ -59,7 +56,7 @@ const init = async () => {
   const settingOpacityValue = document.querySelector('#SettingOpacityValue')!
 
   settingOpacityValue.textContent = settingOpacity.value =
-    settings.opacity!.toString()
+    settings.opacity.toString()
 
   const opacityChanged = async function (this: HTMLInputElement, e: Event) {
     settingOpacityValue.textContent = this.value
@@ -74,7 +71,7 @@ const init = async () => {
     '#SettingLowPerformance'
   )!
 
-  settingLowPerformance.checked = settings.lowPerformance!
+  settingLowPerformance.checked = settings.lowPerformance
   settingLowPerformance.addEventListener('change', async function () {
     await ChromeStorageApi.set({ lowPerformance: this.checked })
   })
@@ -84,18 +81,19 @@ const init = async () => {
     '#SettingShowChangelog'
   )!
 
-  settingShowChangelog.checked = settings.showChangelog!
+  settingShowChangelog.checked = settings.showChangelog
   settingShowChangelog.addEventListener('change', async function () {
     await ChromeStorageApi.set({ showChangelog: this.checked })
   })
 
   // コメント件数
-  if ('open' in chrome.sidePanel) {
+  // @ts-ignore
+  if (typeof chrome.sidePanel.open === 'function') {
     const commentsCount = document.querySelector<HTMLElement>('#CommentsCount')!
     commentsCount.classList.add('is-button')
     commentsCount.title = 'サイドパネルを開く'
     commentsCount.addEventListener('click', () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      getCurrentTab().then((tab) => {
         // @ts-ignore
         chrome.sidePanel.open({
           windowId: tab.windowId,

@@ -1,17 +1,19 @@
 import type {
-  ChromeStorage,
+  ChromeStorageSettings,
   ChromeStorageChanges,
 } from '@/types/chrome/storage'
 import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import NiconiComments from '@xpadev-net/niconicomments'
-import { ChromeStorageApi, getFromPage } from '@/utils/chrome'
+import { ChromeStorageApi } from '@/utils/chrome/storage'
+import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
+import { getFromPage } from '@/utils/chrome/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { createCommentItem } from './utils/createCommentItem'
 
 console.log('[NCOverlay] side_panel.html')
 
-let settings: Partial<ChromeStorage> = {}
+let settings: ChromeStorageSettings
 let timeIdxPairs: number[][] = []
 let prevIdx: number | null = null
 
@@ -19,8 +21,8 @@ chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
   // サイドパネルへ送信
   if (ChromeMessageTypeCheck['chrome:sendToSidePanel'](message)) {
     if (0 < Object.keys(message.body).length) {
-      chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-        if (tab?.id === sender.tab?.id) {
+      getCurrentTab().then((tab) => {
+        if (tab.id === sender.tab?.id) {
           update(message.body)
         }
       })
@@ -39,9 +41,7 @@ chrome.storage.local.onChanged.addListener((changes: ChromeStorageChanges) => {
 })
 
 const init = async () => {
-  settings = await ChromeStorageApi.get({
-    lowPerformance: false,
-  })
+  settings = await ChromeStorageApi.getSettings()
 }
 
 const update = async ({
@@ -85,7 +85,7 @@ const update = async ({
 
       if (targetItem) {
         targetItem.scrollIntoView({
-          behavior: settings.lowPerformance! ? 'instant' : 'smooth',
+          behavior: settings.lowPerformance ? 'instant' : 'smooth',
           block: 'end',
         })
 

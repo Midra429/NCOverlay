@@ -19,7 +19,7 @@ export const part = async (partId: string): Promise<PartData | null> => {
       }
     }
   } catch (e) {
-    console.error(e)
+    console.error('[NCOverlay] Error', e)
   }
 
   return null

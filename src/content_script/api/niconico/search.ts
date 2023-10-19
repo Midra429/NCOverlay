@@ -12,7 +12,7 @@ export const search = async (info: {
   /** 作品のタイトル (あいまい検索用) */
   workTitle?: string
   /** エピソードのサブタイトル (あいまい検索用) */
-  subtitle?: string
+  subTitle?: string
 }): Promise<SearchData[] | null> => {
   const optimizedTitle = optimizeTitleForSearch(info.title)
 
@@ -33,7 +33,7 @@ export const search = async (info: {
     console.log('[NCOverlay] search', res.result)
 
     const workTitle = info.workTitle ? normalizeTitle(info.workTitle) : null
-    const subTitle = info.subtitle ? normalizeTitle(info.subtitle) : null
+    const subTitle = info.subTitle ? normalizeTitle(info.subTitle) : null
 
     const matched = res.result.filter((val) => {
       const title = normalizeTitle(val.title!)

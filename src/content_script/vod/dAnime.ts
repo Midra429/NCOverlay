@@ -25,11 +25,13 @@ export default async () => {
     console.log('[NCOverlay] partData', partData)
 
     if (partData) {
+      console.log('[NCOverlay] title', partData.title)
+
       const searchResults = await NiconicoApi.search({
         title: partData.title,
         duration: partData.partMeasureSecond,
         // workTitle: partData.workTitle,
-        // subtitle: partData.partTitle,
+        // subTitle: partData.partTitle,
       })
 
       if (searchResults) {

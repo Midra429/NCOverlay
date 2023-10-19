@@ -1,5 +1,7 @@
-export const checkTargetSite = (siteUrl: string) => {
-  let result: 'primeVideo' | 'dAnime' | 'abema' | null = null
+export type SupportedVods = 'primeVideo' | 'dAnime' | 'abema' | 'disneyPlus'
+
+export const checkSupportedVod = (siteUrl: string): SupportedVods | null => {
+  let result: SupportedVods | null = null
 
   try {
     const url = new URL(siteUrl)
@@ -25,6 +27,11 @@ export const checkTargetSite = (siteUrl: string) => {
     // ABEMA
     if (url.hostname === 'abema.tv') {
       result = 'abema'
+    }
+
+    // Disney+
+    if (url.hostname === 'www.disneyplus.com') {
+      result = 'disneyPlus'
     }
   } catch {}
 

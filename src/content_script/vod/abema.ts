@@ -16,6 +16,7 @@ export default async () => {
       '.com-video-EpisodeTitle__episode-title'
     )
 
+    // ['呪術廻戦', '第2期 懐玉・玉折']
     let [title, season] =
       titleElem?.textContent?.split('|').map((v) => v.trim()) ?? []
 
@@ -29,10 +30,12 @@ export default async () => {
     }
 
     return {
+      // 呪術廻戦 第2期 懐玉・玉折
       title: fullTitle,
+      // 第25話 懐玉
       episode: episodeElem?.textContent?.trim(),
+      // 呪術廻戦
       workTitle: title,
-      season: season,
     }
   }
 
@@ -46,6 +49,7 @@ export default async () => {
 
       nco.onLoadedmetadata = async function () {
         const info = getInfo()
+
         console.log('[NCOverlay] info', info)
 
         if (info.title && info.episode) {
@@ -57,7 +61,7 @@ export default async () => {
             title: title,
             duration: this.video.duration ?? 0,
             workTitle: info.workTitle,
-            subtitle: info.episode,
+            subTitle: info.episode,
           })
 
           if (searchResults) {

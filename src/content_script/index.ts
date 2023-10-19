@@ -1,41 +1,44 @@
-import { checkTargetSite } from '@/utils/checkTargetSite'
+import { checkSupportedVod } from '@/utils/checkSupportedVod'
+import { setAction } from './utils/setAction'
+import { setSidePanel } from './utils/setSidePanel'
 import vodPrimeVideo from './vod/primeVideo'
 import vodDAnime from './vod/dAnime'
 import vodAbema from './vod/abema'
-import { setAction } from './utils/setAction'
-import { setSidePanel } from './utils/setSidePanel'
+import vodDisneyPlus from './vod/disneyPlus'
 
 console.log('[NCOverlay] content_script.js')
 
 chrome.runtime.onMessage.addListener(() => false)
 
-const init = () => {
+const main = async () => {
+  const vod = checkSupportedVod(location.href)
+
+  if (!vod) return
+
   document.documentElement.classList.add('NCOverlay')
+  document.documentElement.dataset.ncoVod = vod
 
   setAction(true)
   setSidePanel(true)
-}
-
-const main = () => {
-  const target = checkTargetSite(location.href)
-
-  if (!target) return
-
-  init()
 
   // Prime Video
-  if (target === 'primeVideo') {
+  if (vod === 'primeVideo') {
     vodPrimeVideo()
   }
 
   // dアニメストア
-  if (target === 'dAnime') {
+  if (vod === 'dAnime') {
     vodDAnime()
   }
 
   // ABEMA
-  if (target === 'abema') {
+  if (vod === 'abema') {
     vodAbema()
+  }
+
+  // Disney+
+  if (vod === 'disneyPlus') {
+    vodDisneyPlus()
   }
 }
 

@@ -1,3 +1,8 @@
+/**
+ * スナップショット検索API v2
+ * @see https://site.nicovideo.jp/search-api-docs/snapshot
+ */
+
 export type SearchQuery = {
   /** 検索キーワード  */
   q: string
@@ -12,20 +17,32 @@ export type SearchQuery = {
   filters?: {
     [field in keyof Omit<
       SearchData,
-      'contentId' | 'title' | 'description' | 'thumbnailUrl'
+      | 'title'
+      | 'description'
+      | 'userId'
+      | 'channelId'
+      | 'thumbnailUrl'
+      | 'lastResBody'
     >]: {
       [key in '0' | 'gt' | 'gte' | 'lt' | 'lte']?: number | string
     }
   }
 
   /** ソート順 */
-  _sort?: string
+  _sort?: `${'-' | '+'}${
+    | 'viewCounter'
+    | 'mylistCounter'
+    | 'likeCounter'
+    | 'lengthSeconds'
+    | 'startTime'
+    | 'commentCounter'
+    | 'lastCommentTime'}`
 
   /** 返ってくるコンテンツの取得オフセット。最大:1600 */
-  _offset?: string
+  _offset?: number
 
   /** 返ってくるコンテンツの最大数。最大:100 */
-  _limit?: string
+  _limit?: number
 }
 
 export type Search = {
