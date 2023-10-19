@@ -7,12 +7,14 @@
 動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能です。<br>
 今現在はアニメのみ対応。
 
-## 対応サイト
+## 対応している動画配信サービス
 
 - [Amazon Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [dアニメストア](https://animestore.docomo.ne.jp/animestore/)
 - [ABEMA](https://abema.tv/video/genre/animation)
 - [Disney+](https://www.disneyplus.com/ja-jp/home)
+
+<small>※ 増減する可能性あり</small>
 
 ## 使い方
 コメントは自動で取得・表示されるので何もしなくてOK。<br>
