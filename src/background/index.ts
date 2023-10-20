@@ -48,11 +48,16 @@ chrome.runtime.onMessage.addListener(
       promise = NiconicoApi.search({
         q: message.body.title,
         targets: ['title'],
-        fields: ['contentId', 'title', 'channelId'],
+        fields: ['contentId', 'title', 'channelId', 'lengthSeconds'],
         filters: {
           'genre.keyword': {
             '0': 'アニメ',
           },
+          'tagsExact': message.body.tagsExact
+            ? {
+                '0': message.body.tagsExact.join(' '),
+              }
+            : undefined,
           'lengthSeconds':
             0 <= minLength && 0 < maxLength
               ? {
@@ -61,7 +66,7 @@ chrome.runtime.onMessage.addListener(
                 }
               : undefined,
         },
-        _limit: 5,
+        _limit: 10,
       })
     }
 

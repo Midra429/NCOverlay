@@ -66,7 +66,8 @@ export const ChromeMessageTypeCheck = {
 export type ChromeMessageBody = {
   'niconico:search': {
     title: string
-    duration: number
+    duration?: number
+    tagsExact?: string[]
   }
   'niconico:video': {
     videoId: string

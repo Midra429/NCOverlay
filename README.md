@@ -14,7 +14,7 @@
 - [ABEMA](https://abema.tv/video/genre/animation)
 - [Disney+](https://www.disneyplus.com/ja-jp/home)
 
-<small>※ 増減する可能性あり</small>
+※ 増減する可能性あり
 
 ## 使い方
 コメントは自動で取得・表示されるので何もしなくてOK。<br>
@@ -49,7 +49,7 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 2. ダウンロードしたファイルを `chrome://extensions` (デベロッパー モード: ON) にドラッグ&ドロップ
 
 ## 不具合報告・機能提案など
-- [GitHub > Issues](https://github.com/Midra429/NCOverlay/issues)
+- GitHub > [Issues](https://github.com/Midra429/NCOverlay/issues)
 - [Chrome Web Store](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe) > サポート
 - [X (@Midra429)](https://x.com/Midra429) に [メンション](https://x.com/intent/tweet?screen_name=Midra429) や [DM](https://x.com/messages/compose?recipient_id=1052566817279864837)
 

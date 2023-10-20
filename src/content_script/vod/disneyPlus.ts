@@ -1,8 +1,6 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
-import { NiconicoApi } from '@/content_script/api/niconico'
+import { loadComments } from '@/content_script/utils/loadComments'
 import { DisneyPlusApi } from '@/content_script/api/disneyPlus'
-import { getVideoData } from '@/content_script/utils/getVideoData'
-import { getThreads } from '@/content_script/utils/getThreads'
 
 export default async () => {
   console.log('[NCOverlay] VOD: Disney+')
@@ -19,21 +17,21 @@ export default async () => {
         groupNames.includes('Star') && groupNames.includes('Non-TWDC')
 
       if (isAnime) {
-        const title = dmcVideo.text.title.full.season.default.content
+        const series = dmcVideo.text.title.full.series?.default.content
+        const season = dmcVideo.text.title.full.season?.default.content
+        const program = dmcVideo.text.title.full.program.default.content
         const episodeNo = dmcVideo.episodeSeriesSequenceNumber
-        const episodeText = dmcVideo.text.title.full.program.default.content
-        const workTitle = dmcVideo.text.title.full.series.default.content
         const duration = dmcVideo.mediaMetadata.runtimeMillis / 1000
 
         return {
           // 呪術廻戦 懐玉・玉折／渋谷事変（第2期）
-          title: title,
+          title: season ?? program,
           // 25
           episodeNo: episodeNo,
           // 懐玉
-          episodeText: episodeText,
+          episodeText: program,
           // 呪術廻戦
-          workTitle: workTitle,
+          workTitle: series ?? season ?? program,
           // 1437
           duration: duration,
         }
@@ -49,38 +47,30 @@ export default async () => {
     nco = new NCOverlay(video)
 
     nco.onLoadedmetadata = async function () {
+      this.init()
+
       const info = await getInfo()
+
       console.log('[NCOverlay] info', info)
 
       if (info) {
-        const title = `${info.title} ${info.episodeNo}話 ${info.episodeText}`
+        let title = info.title
+        if (info.episodeNo !== null) {
+          title += ` ${info.episodeNo}話`
+        }
+        if (info.title !== info.episodeText) {
+          title += ` ${info.episodeText}`
+        }
 
         console.log('[NCOverlay] title', title)
 
-        const searchResults = await NiconicoApi.search({
+        await loadComments(this, {
           title: title,
           duration: info.duration ?? 0,
           workTitle: info.workTitle,
-          subTitle: info.episodeText,
+          subTitle:
+            info.episodeText !== info.title ? info.episodeText : undefined,
         })
-
-        if (searchResults) {
-          const videoData = await getVideoData(
-            ...searchResults.map((v) => v.contentId ?? '')
-          )
-          const threads = videoData && (await getThreads(...videoData))
-
-          console.log('[NCOverlay] threads (filtered)', threads)
-
-          if (threads) {
-            this.init({
-              data: videoData,
-              comments: threads,
-            })
-          } else {
-            this.init()
-          }
-        }
       }
     }
 

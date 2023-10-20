@@ -103,17 +103,18 @@ export class NCOverlay {
     console.log('[NCOverlay] new NCOverlay()', this)
   }
 
-  init(
-    input: {
-      data?: VideoData[]
-      comments?: InputFormat
-      format?: InputFormatType
-    } = {}
-  ) {
-    if (input) {
-      console.log('[NCOverlay] NCOverlay.init(input)')
-    } else {
+  init(input?: {
+    data?: VideoData[]
+    comments?: InputFormat
+    format?: InputFormatType
+  }) {
+    const isReset = typeof input === 'undefined'
+    const isFirst = !isReset && Object.keys(input).length === 0
+
+    if (isReset) {
       console.log('[NCOverlay] NCOverlay.init()')
+    } else if (!isFirst) {
+      console.log('[NCOverlay] NCOverlay.init(input)')
     }
 
     sendToPopup({})
@@ -127,19 +128,22 @@ export class NCOverlay {
     }
 
     this.#commentsCount = 0
-    if (NiconiComments.typeGuard.v1.threads(input.comments)) {
-      for (const data of input.comments) {
-        this.#commentsCount += data.comments.length
+
+    if (!isFirst && !isReset) {
+      if (NiconiComments.typeGuard.v1.threads(input.comments)) {
+        for (const data of input.comments) {
+          this.#commentsCount += data.comments.length
+        }
       }
+
+      console.log('[NCOverlay] commentsCount', this.#commentsCount)
     }
 
-    console.log('[NCOverlay] commentsCount', this.#commentsCount)
-
-    this.#videoData = input.data
+    this.#videoData = input?.data
 
     if (0 < this.#commentsCount) {
-      this.#commentsData = input.comments
-      this.#commentsFormat = input.format ?? 'v1'
+      this.#commentsData = input?.comments
+      this.#commentsFormat = input?.format ?? 'v1'
     } else {
       this.#commentsData = undefined
       this.#commentsFormat = 'empty'

@@ -1,7 +1,5 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
-import { NiconicoApi } from '@/content_script/api/niconico'
-import { getVideoData } from '@/content_script/utils/getVideoData'
-import { getThreads } from '@/content_script/utils/getThreads'
+import { loadComments } from '@/content_script/utils/loadComments'
 
 export default async () => {
   console.log('[NCOverlay] VOD: ABEMA')
@@ -48,6 +46,8 @@ export default async () => {
       nco = new NCOverlay(video)
 
       nco.onLoadedmetadata = async function () {
+        this.init()
+
         const info = getInfo()
 
         console.log('[NCOverlay] info', info)
@@ -57,30 +57,12 @@ export default async () => {
 
           console.log('[NCOverlay] title', title)
 
-          const searchResults = await NiconicoApi.search({
+          await loadComments(this, {
             title: title,
             duration: this.video.duration ?? 0,
             workTitle: info.workTitle,
             subTitle: info.episode,
           })
-
-          if (searchResults) {
-            const videoData = await getVideoData(
-              ...searchResults.map((v) => v.contentId ?? '')
-            )
-            const threads = videoData && (await getThreads(...videoData))
-
-            console.log('[NCOverlay] threads (filtered)', threads)
-
-            if (threads) {
-              this.init({
-                data: videoData,
-                comments: threads,
-              })
-            } else {
-              this.init()
-            }
-          }
         }
       }
 

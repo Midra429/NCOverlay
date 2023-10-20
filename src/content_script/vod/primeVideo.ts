@@ -1,8 +1,5 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
-import { NiconicoApi } from '@/content_script/api/niconico'
-import { getVideoData } from '@/content_script/utils/getVideoData'
-import { getThreads } from '@/content_script/utils/getThreads'
-// import { extractEpisodeNumber } from '@/utils/extractEpisodeNumber'
+import { loadComments } from '@/content_script/utils/loadComments'
 
 export default async () => {
   console.log('[NCOverlay] VOD: Prime Video')
@@ -39,7 +36,7 @@ export default async () => {
 
     return {
       // 呪術廻戦 懐玉・玉折／渋谷事変 || 呪術廻戦
-      title: detail?.title || titleElem?.textContent?.trim(),
+      title: detail?.title || titleElem?.textContent!.trim(),
       // 第25話 懐玉
       episode: subtitleElem?.lastChild?.textContent?.trim(),
       // 呪術廻戦
@@ -60,39 +57,26 @@ export default async () => {
       nco = new NCOverlay(video)
 
       nco.onLoadedmetadata = async function () {
+        this.init()
+
         const info = getInfo()
 
         console.log('[NCOverlay] info', info)
 
-        if (info.title && info.episode) {
-          const title = `${info.title} ${info.episode}`
+        if (info.title) {
+          let title = info.title
+          if (info.episode) {
+            title += ` ${info.episode}`
+          }
 
           console.log('[NCOverlay] title', title)
 
-          const searchResults = await NiconicoApi.search({
+          await loadComments(this, {
             title: title,
             duration: this.video.duration ?? 0,
             workTitle: info.workTitle,
             subTitle: info.episode,
           })
-
-          if (searchResults) {
-            const videoData = await getVideoData(
-              ...searchResults.map((v) => v.contentId ?? '')
-            )
-            const threads = videoData && (await getThreads(...videoData))
-
-            console.log('[NCOverlay] threads (filtered)', threads)
-
-            if (threads) {
-              this.init({
-                data: videoData,
-                comments: threads,
-              })
-            } else {
-              this.init()
-            }
-          }
         }
       }
 

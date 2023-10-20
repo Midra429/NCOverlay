@@ -18,7 +18,7 @@ export const normalizeText = (
   text = fixRomanNum(text)
   // 括弧を空白に
   text = text.replace(
-    /[-−\(\)（）｢｣「」『』【】［］〈〉《》〔〕{}｛｝\[\]]/g,
+    /[-–−\(\)（）｢｣「」『』【】［］〈〉《》〔〕{}｛｝\[\]]/g,
     ' '
   )
   // 全角英数字を半角英数字に

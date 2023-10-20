@@ -1,8 +1,6 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
-import { NiconicoApi } from '@/content_script/api/niconico'
+import { loadComments } from '@/content_script/utils/loadComments'
 import { DAnimeApi } from '@/content_script/api/danime'
-import { getVideoData } from '@/content_script/utils/getVideoData'
-import { getThreads } from '@/content_script/utils/getThreads'
 
 export default async () => {
   console.log('[NCOverlay] VOD: dアニメストア')
@@ -27,28 +25,12 @@ export default async () => {
     if (partData) {
       console.log('[NCOverlay] title', partData.title)
 
-      const searchResults = await NiconicoApi.search({
+      await loadComments(this, {
         title: partData.title,
         duration: partData.partMeasureSecond,
         // workTitle: partData.workTitle,
         // subTitle: partData.partTitle,
       })
-
-      if (searchResults) {
-        const videoData = await getVideoData(
-          ...searchResults.map((v) => v.contentId ?? '')
-        )
-        const threads = videoData && (await getThreads(...videoData))
-
-        console.log('[NCOverlay] threads (filtered)', threads)
-
-        if (threads) {
-          this.init({
-            data: videoData,
-            comments: threads,
-          })
-        }
-      }
     }
   }
 

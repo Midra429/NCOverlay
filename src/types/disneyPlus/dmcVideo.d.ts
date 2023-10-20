@@ -20,8 +20,8 @@ export type Video = {
   event: null
   encodedSeriesId: string
   episodeNumber: null
-  episodeSequenceNumber: number
-  episodeSeriesSequenceNumber: number
+  episodeSequenceNumber: number | null
+  episodeSeriesSequenceNumber: number | null
   family: Family
   groups: Group[]
   internalTitle: string
@@ -39,7 +39,7 @@ export type Video = {
   ratings: Rating[]
   releases: Release[]
   seasonId: string
-  seasonSequenceNumber: number
+  seasonSequenceNumber: number | null
   seriesId: string
   seriesType: string
   sport: null
@@ -269,9 +269,9 @@ export type Description = {
 }
 
 export type Brief = {
-  season: Program
+  season?: Program
   program: Program
-  series: Program
+  series?: Program
 }
 
 export type Program = {
