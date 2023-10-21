@@ -87,13 +87,17 @@ const init = async () => {
   })
 
   // コメント件数
-  // @ts-ignore
-  if (typeof chrome.sidePanel.open === 'function') {
+  if ('open' in chrome.sidePanel) {
     const commentsCount = document.querySelector<HTMLElement>('#CommentsCount')!
     commentsCount.classList.add('is-button')
     commentsCount.title = 'サイドパネルを開く'
     commentsCount.addEventListener('click', () => {
-      getCurrentTab().then((tab) => {
+      getCurrentTab().then(async (tab) => {
+        await chrome.sidePanel.setOptions({
+          tabId: tab.id,
+          enabled: true,
+        })
+
         // @ts-ignore
         chrome.sidePanel.open({
           windowId: tab.windowId,

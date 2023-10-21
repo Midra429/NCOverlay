@@ -3,16 +3,19 @@ import type { ThreadsData } from '@/types/niconico/threads'
 import { NiconicoApi } from '@/content_script/api/niconico'
 
 export const getThreadsData = async (videoData: {
-  normal: VideoData[]
-  splited: VideoData[]
-}): Promise<ThreadsData[] | null> => {
-  const threadsDataNormal: ThreadsData[] = []
-  const threadsDataSplited: ThreadsData[] = []
+  normal?: VideoData[]
+  splited?: VideoData[]
+}): Promise<{
+  [id: string]: ThreadsData
+} | null> => {
+  videoData.normal ??= []
+  videoData.splited ??= []
+
+  let threadsDataNormal: { [id: string]: ThreadsData } = {}
+  let threadsDataSplited: { [id: string]: ThreadsData } = {}
 
   // 通常の動画
   if (0 < videoData.normal.length) {
-    const threadsData: ThreadsData[] = []
-
     for (const data of videoData.normal) {
       const res = await NiconicoApi.threads({
         nvComment: {
@@ -23,54 +26,55 @@ export const getThreadsData = async (videoData: {
       })
 
       if (res) {
-        threadsData.push(res)
+        threadsDataNormal[data.video.id] = res
       }
     }
 
-    console.log('[NCOverlay] threadsData', threadsData)
-
-    threadsDataNormal.push(...threadsData)
+    console.log('[NCOverlay] threadsData', threadsDataNormal)
   }
 
   // 分割されている動画
   if (0 < videoData.splited.length) {
-    const threadsData: ThreadsData[] = []
-
-    let totalDurationMs = 0
+    let tmpOffset = 0
     for (let i = 0; i < videoData.splited.length; i++) {
+      const data = videoData.splited[i]
       const res = await NiconicoApi.threads({
         nvComment: {
           additionals: {},
-          params: videoData.splited[i].comment.nvComment.params,
-          threadKey: videoData.splited[i].comment.nvComment.threadKey,
+          params: data.comment.nvComment.params,
+          threadKey: data.comment.nvComment.threadKey,
         },
       })
 
       if (res) {
-        if (0 < i) {
-          totalDurationMs += videoData.splited[i - 1].video.duration * 1000
-
+        if (0 < tmpOffset) {
           for (const thread of res.threads) {
             for (const comment of thread.comments) {
-              comment.vposMs += totalDurationMs
+              comment.vposMs += tmpOffset
             }
           }
         }
 
-        threadsData.push(res)
+        tmpOffset += data.video.duration * 1000
+
+        threadsDataSplited[data.video.id] = res
       } else {
-        threadsData.splice(0)
+        threadsDataSplited = {}
         break
       }
     }
 
-    console.log('[NCOverlay] threadsData (splited)', threadsData)
-
-    threadsDataSplited.push(...threadsData)
+    console.log('[NCOverlay] threadsData (splited)', threadsDataSplited)
   }
 
-  if (0 < threadsDataNormal.length || 0 < threadsDataSplited.length) {
-    return [...threadsDataNormal, ...threadsDataSplited]
+  if (
+    0 < Object.keys(threadsDataNormal).length ||
+    0 < Object.keys(threadsDataSplited).length
+  ) {
+    return {
+      ...threadsDataNormal,
+      ...threadsDataSplited,
+    }
   }
 
   return null

@@ -16,11 +16,6 @@ export const normalizeText = (
   }
   // ローマ数字を統一
   text = fixRomanNum(text)
-  // 括弧を空白に
-  text = text.replace(
-    /[-–−\(\)（）｢｣「」『』【】［］〈〉《》〔〕{}｛｝\[\]]/g,
-    ' '
-  )
   // 全角英数字を半角英数字に
   text = text.replace(/[ａ-ｚ０-９]/g, (s) =>
     String.fromCharCode(s.charCodeAt(0) - 0xfee0)
@@ -30,7 +25,23 @@ export const normalizeText = (
     /./g,
     (s) =>
       ({
+        // 「-」に統一
+        '−': '-',
+        '‒': '-',
+        '–': '-',
+        '—': '-',
+        '―': '-',
+        '⸺': '-',
+
+        // 「~」に統一
         '〜': '~',
+        '˜': '~',
+        '῀': '~',
+        '⁓': '~',
+        '∼': '~',
+        '∿': '~',
+        '～': '~',
+
         '？': '?',
         '！': '!',
         '”': '"',
@@ -49,6 +60,11 @@ export const normalizeText = (
         '＝': '=',
         '＠': '@',
       }[s] || s)
+  )
+  // 括弧・区切りを空白に
+  text = text.replace(
+    /[\-~\(\)（）｢｣「」『』【】［］〈〉《》〔〕{}｛｝\[\]]/g,
+    ' '
   )
   // 連続した空白を1文字に
   text = text.replace(/\s+/g, ' ').trim()

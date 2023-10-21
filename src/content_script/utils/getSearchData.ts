@@ -1,9 +1,21 @@
-import type { SearchData } from '@/types/niconico/search'
+import type { SearchQuery, SearchData } from '@/types/niconico/search'
 import { DANIME_CHANNEL_ID } from '@/constants'
+import deepmerge from 'deepmerge'
 import { NiconicoApi } from '@/content_script/api/niconico'
 import { normalizeTitle } from '@/utils/normalizeTitle'
 import { optimizeTitleForSearch } from '@/utils/optimizeTitleForSearch'
 import { isEqualTitle } from '@/utils/isEqualTitle'
+
+const searchQueryBase: Partial<SearchQuery> = {
+  targets: ['title'],
+  fields: ['contentId', 'title', 'channelId', 'lengthSeconds'],
+  filters: {
+    'genre.keyword': {
+      '0': 'アニメ',
+    },
+  },
+  _limit: 10,
+}
 
 export const getSearchData = async (info: {
   /** 検索タイトル */
@@ -27,9 +39,18 @@ export const getSearchData = async (info: {
 
   // 検索 (通常)
   const searchNormal = await NiconicoApi.search({
-    title: optimizedTitle,
-    duration: info.duration,
+    query: deepmerge(searchQueryBase, {
+      q: optimizedTitle,
+      filters: {
+        lengthSeconds: {
+          gte: info.duration - 30,
+          lte: info.duration + 30,
+        },
+      },
+    }),
   })
+
+  console.log('[NCOverlay] searchData', searchNormal)
 
   if (searchNormal) {
     const workTitle = info.workTitle ? normalizeTitle(info.workTitle) : null
@@ -39,7 +60,7 @@ export const getSearchData = async (info: {
       const title = normalizeTitle(val.title!)
 
       return (
-        val.channelId &&
+        typeof val.channelId !== 'undefined' &&
         (isEqualTitle(val.title!, info.title) ||
           (workTitle &&
             subTitle &&
@@ -48,7 +69,7 @@ export const getSearchData = async (info: {
       )
     })
 
-    console.log('[NCOverlay] searchData', filtered)
+    console.log('[NCOverlay] searchData (filtered)', filtered)
 
     searchDataNormal.push(...filtered)
   }
@@ -56,11 +77,17 @@ export const getSearchData = async (info: {
   // 検索 (分割)
   if (
     !searchDataNormal.find((v) => v.channelId === DANIME_CHANNEL_ID) &&
-    (info.title.match(/(劇場|映画|\s本編$)/) || 3600 <= info.duration)
+    (info.title.match(/(劇場|映画)/) || 3600 <= info.duration)
   ) {
     const searchSplited = await NiconicoApi.search({
-      title: `${optimizedTitle} Chapter.`,
-      tagsExact: ['dアニメストア'],
+      query: deepmerge(searchQueryBase, {
+        q: `${optimizedTitle} Chapter.`,
+        filters: {
+          tagsExact: {
+            '0': 'dアニメストア',
+          },
+        },
+      }),
     })
 
     if (searchSplited) {
@@ -91,8 +118,8 @@ export const getSearchData = async (info: {
       )
 
       if (
-        info.duration - 5 <= totalDuration &&
-        totalDuration <= info.duration + 5
+        totalDuration - 5 <= info.duration &&
+        info.duration <= totalDuration + 5
       ) {
         console.log('[NCOverlay] searchData (splited)', filtered)
 

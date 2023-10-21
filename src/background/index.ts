@@ -42,32 +42,7 @@ chrome.runtime.onMessage.addListener(
 
     // ニコニコ 検索
     if (ChromeMessageTypeCheck['niconico:search'](message)) {
-      const minLength = message.body.duration ? message.body.duration - 30 : -1
-      const maxLength = message.body.duration ? message.body.duration + 30 : -1
-
-      promise = NiconicoApi.search({
-        q: message.body.title,
-        targets: ['title'],
-        fields: ['contentId', 'title', 'channelId', 'lengthSeconds'],
-        filters: {
-          'genre.keyword': {
-            '0': 'アニメ',
-          },
-          'tagsExact': message.body.tagsExact
-            ? {
-                '0': message.body.tagsExact.join(' '),
-              }
-            : undefined,
-          'lengthSeconds':
-            0 <= minLength && 0 < maxLength
-              ? {
-                  gte: minLength,
-                  lte: maxLength,
-                }
-              : undefined,
-        },
-        _limit: 10,
-      })
+      promise = NiconicoApi.search(message.body.query)
     }
 
     // ニコニコ 動画情報

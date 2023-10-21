@@ -7,7 +7,8 @@
   "license": "MIT",
   "dependencies": {
     "@geolonia/japanese-numeral": "^1.0.1",
-    "@xpadev-net/niconicomments": "^0.2.61"
+    "@xpadev-net/niconicomments": "^0.2.61",
+    "deepmerge": "^4.3.1"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.246",

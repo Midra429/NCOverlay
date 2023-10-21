@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "NCOverlay",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "homepage_url": "https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe",
 
   "icons": {
@@ -31,7 +31,11 @@
         "https://www.amazon.co.jp/*",
         "https://animestore.docomo.ne.jp/*",
         "https://abema.tv/*",
-        "https://www.disneyplus.com/*"
+        "https://www.disneyplus.com/*",
+        "https://tver.jp/*",
+        "https://www.b-ch.com/*",
+        "https://video.unext.jp/*",
+        "https://tv.dmm.com/*"
       ],
       "css": ["styles/main.css"],
       "js": ["content_script.js"],

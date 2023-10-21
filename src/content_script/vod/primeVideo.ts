@@ -10,14 +10,22 @@ export default async () => {
     const canonicalUrl =
       document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ??
       null
-    const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.at(0) ?? null
+    const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.at(0) ?? ''
+    const titleID =
+      document.querySelector<HTMLInputElement>(
+        '.dv-dp-node-watchlist input[name="titleID"]'
+      )?.value ?? ''
 
     const rawData = document.querySelector(
       '#main > script[type="text/template"]'
     )?.textContent
     const data = JSON.parse(rawData ?? '{}')
 
-    return asin ? data.props?.state?.detail?.detail?.[asin] : null
+    return (
+      data.props?.state?.detail?.detail?.[asin] ??
+      data.props?.state?.detail?.detail?.[titleID] ??
+      null
+    )
   }
 
   const getInfo = () => {

@@ -2,14 +2,14 @@ import type { VideoData } from '@/types/niconico/video'
 import { NiconicoApi } from '@/content_script/api/niconico'
 
 export const getVideoData = async (ids: {
-  normal: string[]
-  splited: string[]
+  normal?: string[]
+  splited?: string[]
 }): Promise<{
   normal: VideoData[]
   splited: VideoData[]
 } | null> => {
-  ids.normal = ids.normal?.filter(Boolean)
-  ids.splited = ids.splited?.filter(Boolean)
+  ids.normal = ids.normal?.filter(Boolean) ?? []
+  ids.splited = ids.splited?.filter(Boolean) ?? []
 
   const videoDataNormal: VideoData[] = []
   const videoDataSplited: VideoData[] = []
@@ -21,7 +21,7 @@ export const getVideoData = async (ids: {
     for (const id of ids.normal) {
       const res = await NiconicoApi.video({ videoId: id })
 
-      if (res) {
+      if (res && 0 < res.video.count.comment) {
         videoData.push(res)
       }
     }
@@ -32,7 +32,7 @@ export const getVideoData = async (ids: {
       for (const id of ids.normal) {
         const res = await NiconicoApi.video({ videoId: id, guest: true })
 
-        if (res) {
+        if (res && 0 < res.video.count.comment) {
           videoData.push(res)
         }
       }
@@ -56,7 +56,7 @@ export const getVideoData = async (ids: {
     for (const id of ids.splited) {
       const res = await NiconicoApi.video({ videoId: id })
 
-      if (res) {
+      if (res && 0 < res.video.count.comment) {
         videoData.push(res)
       }
     }

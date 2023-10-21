@@ -5,6 +5,10 @@ import vodPrimeVideo from './vod/primeVideo'
 import vodDAnime from './vod/dAnime'
 import vodAbema from './vod/abema'
 import vodDisneyPlus from './vod/disneyPlus'
+import vodTVer from './vod/tver'
+import vodBandaiChannel from './vod/bandaiChannel'
+import vodUnext from './vod/unext'
+import vodDmmTv from './vod/dmmTv'
 
 console.log('[NCOverlay] content_script.js')
 
@@ -39,6 +43,26 @@ const main = async () => {
   // Disney+
   if (vod === 'disneyPlus') {
     vodDisneyPlus()
+  }
+
+  // TVer
+  if (vod === 'tver') {
+    vodTVer()
+  }
+
+  // バンダイチャンネル
+  if (vod === 'bandaiChannel') {
+    vodBandaiChannel()
+  }
+
+  // U-NEXT
+  if (vod === 'unext') {
+    vodUnext()
+  }
+
+  // DMM TV
+  if (vod === 'dmmTv') {
+    vodDmmTv()
   }
 }
 

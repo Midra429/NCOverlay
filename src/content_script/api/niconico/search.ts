@@ -4,18 +4,16 @@ import type { SearchData } from '@/types/niconico/search'
 export const search = async (
   body: ChromeMessage<'niconico:search'>['body']
 ): Promise<SearchData[] | null> => {
-  if (body.title) {
-    const res = await chrome.runtime.sendMessage<
-      ChromeMessage<'niconico:search'>,
-      ChromeResponse<'niconico:search'>
-    >({
-      type: 'niconico:search',
-      body: body,
-    })
+  const res = await chrome.runtime.sendMessage<
+    ChromeMessage<'niconico:search'>,
+    ChromeResponse<'niconico:search'>
+  >({
+    type: 'niconico:search',
+    body: body,
+  })
 
-    if (res?.result) {
-      return res.result
-    }
+  if (res?.result) {
+    return res.result
   }
 
   return null

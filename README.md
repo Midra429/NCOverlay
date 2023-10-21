@@ -11,8 +11,12 @@
 
 - [Amazon Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [dアニメストア](https://animestore.docomo.ne.jp/animestore/)
-- [ABEMA](https://abema.tv/video/genre/animation)
+- [ABEMA](https://abema.tv/)
 - [Disney+](https://www.disneyplus.com/ja-jp/home)
+- [TVer](https://tver.jp/)
+- [バンダイチャンネル](https://www.b-ch.com/)
+- [U-NEXT](https://video.unext.jp/)
+- [DMM TV](https://tv.dmm.com/vod/)
 
 ※ 増減する可能性あり
 

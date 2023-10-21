@@ -1,6 +1,6 @@
 import type { InputFormat } from '@xpadev-net/niconicomments'
 import type { NvCommentBody } from '@/background/api/niconico/threads'
-import type { SearchData } from '@/types/niconico/search'
+import type { SearchQuery, SearchData } from '@/types/niconico/search'
 import type { VideoData } from '@/types/niconico/video'
 import type { ThreadsData } from '@/types/niconico/threads'
 
@@ -65,9 +65,7 @@ export const ChromeMessageTypeCheck = {
 
 export type ChromeMessageBody = {
   'niconico:search': {
-    title: string
-    duration?: number
-    tagsExact?: string[]
+    query: SearchQuery
   }
   'niconico:video': {
     videoId: string
