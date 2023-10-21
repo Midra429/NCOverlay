@@ -56,7 +56,7 @@ export const getSearchData = async (info: {
   // 検索 (分割)
   if (
     !searchDataNormal.find((v) => v.channelId === DANIME_CHANNEL_ID) &&
-    info.title.match(/(劇場|映画|\s本編$)/)
+    (info.title.match(/(劇場|映画|\s本編$)/) || 3600 <= info.duration)
   ) {
     const searchSplited = await NiconicoApi.search({
       title: `${optimizedTitle} Chapter.`,
@@ -64,17 +64,19 @@ export const getSearchData = async (info: {
     })
 
     if (searchSplited) {
-      const chapterRegExp = /chapter\.(\d)+$/i
+      const chapterRegExp = /Chapter\.(\d)+/i
 
       const filtered = searchSplited
         .filter((val) => {
-          const hasChapter = chapterRegExp.test(val.title!)
-          const baseTitle = val.title!.replace(chapterRegExp, '').trim()
+          const [title_first, , title_last] = val
+            .title!.split(chapterRegExp)
+            .map((v) => v.trim())
 
           return (
-            hasChapter &&
             val.channelId === DANIME_CHANNEL_ID &&
-            isEqualTitle(baseTitle, info.title)
+            chapterRegExp.test(val.title!) &&
+            isEqualTitle(title_first, info.title) &&
+            (!title_last || isEqualTitle(title_first, title_last))
           )
         })
         .sort((a, b) => {

@@ -9,6 +9,10 @@ const template =
 export const createVideoItem = (data: VideoData) => {
   const item = template.firstElementChild!.cloneNode(true) as HTMLElement
 
+  if (data._nco_extra_info?.type) {
+    item.classList.add(`item-${data._nco_extra_info.type}`)
+  }
+
   // サムネイル
   const videoThumbnail = item.querySelector<HTMLElement>('.video-thumbnail')!
   videoThumbnail.style.backgroundImage = `url(${data.video.thumbnail.url})`

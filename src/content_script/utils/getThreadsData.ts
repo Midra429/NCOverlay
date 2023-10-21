@@ -1,13 +1,13 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { VideoData } from '@/types/niconico/video'
 import type { ThreadsData } from '@/types/niconico/threads'
 import { NiconicoApi } from '@/content_script/api/niconico'
 
-export const getThreads = async (videoData: {
+export const getThreadsData = async (videoData: {
   normal: VideoData[]
   splited: VideoData[]
-}): Promise<V1Thread[] | null> => {
-  let threads: V1Thread[] = []
+}): Promise<ThreadsData[] | null> => {
+  const threadsDataNormal: ThreadsData[] = []
+  const threadsDataSplited: ThreadsData[] = []
 
   // 通常の動画
   if (0 < videoData.normal.length) {
@@ -29,7 +29,7 @@ export const getThreads = async (videoData: {
 
     console.log('[NCOverlay] threadsData', threadsData)
 
-    threads.push(...threadsData.map((v) => v.threads).flat())
+    threadsDataNormal.push(...threadsData)
   }
 
   // 分割されている動画
@@ -66,22 +66,11 @@ export const getThreads = async (videoData: {
 
     console.log('[NCOverlay] threadsData (splited)', threadsData)
 
-    threads.push(...threadsData.map((v) => v.threads).flat())
+    threadsDataSplited.push(...threadsData)
   }
 
-  threads = threads
-    .filter((v) => 0 < v.commentCount)
-    .filter((v) => v.fork !== 'easy')
-    .filter((val, idx, ary) => {
-      return (
-        idx === ary.findIndex((v) => v.id === val.id && v.fork === val.fork)
-      )
-    })
-
-  console.log('[NCOverlay] threads', threads)
-
-  if (0 < threads.length) {
-    return threads
+  if (0 < threadsDataNormal.length || 0 < threadsDataSplited.length) {
+    return [...threadsDataNormal, ...threadsDataSplited]
   }
 
   return null

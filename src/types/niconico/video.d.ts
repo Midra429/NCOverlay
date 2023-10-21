@@ -1,3 +1,8 @@
+/** NCOverlayによる追加情報 */
+type NCOExtraInfo = {
+  type: 'normal' | 'splited'
+}
+
 export type Video = {
   meta: VideoMeta
   data: VideoData
@@ -8,6 +13,8 @@ export type VideoMeta = {
 }
 
 export type VideoData = {
+  _nco_extra_info?: NCOExtraInfo // NCOverlayによる追加情報
+
   ads: null
   category: null
   channel: Channel | null
