@@ -11,6 +11,8 @@ export default async () => {
     const contentId = location.pathname.split('/').at(-1)
     const dmcVideo = contentId && (await DisneyPlusApi.dmcVideo(contentId))
 
+    console.log('[NCOverlay] DisneyPlusApi.dmcVideo', dmcVideo)
+
     if (dmcVideo) {
       const groupNames = dmcVideo.groups.map((v) => v.name)
       const isAnime =
@@ -23,15 +25,18 @@ export default async () => {
         const episodeNo = dmcVideo.episodeSeriesSequenceNumber
         const duration = dmcVideo.mediaMetadata.runtimeMillis / 1000
 
+        const workTitle = series ?? season ?? program
+        const title = season ?? program
+
         return {
-          // 呪術廻戦 懐玉・玉折／渋谷事変（第2期）
-          title: season ?? program,
-          // 25
-          episodeNo: episodeNo,
-          // 懐玉
-          episodeText: program,
           // 呪術廻戦
-          workTitle: series ?? season ?? program,
+          workTitle: workTitle,
+          // 呪術廻戦 懐玉・玉折／渋谷事変（第2期）
+          title: title,
+          // 25話
+          episodeNo: episodeNo != null ? `${episodeNo}話` : '',
+          // 懐玉
+          episodeText: episodeNo != null ? program : '',
           // 1437
           duration: duration,
         }
@@ -55,10 +60,10 @@ export default async () => {
 
       if (info) {
         let title = info.title
-        if (info.episodeNo !== null) {
-          title += ` ${info.episodeNo}話`
+        if (info.episodeNo) {
+          title += ` ${info.episodeNo}`
         }
-        if (info.title !== info.episodeText) {
+        if (info.episodeText) {
           title += ` ${info.episodeText}`
         }
 
@@ -68,8 +73,7 @@ export default async () => {
           title: title,
           duration: info.duration ?? 0,
           workTitle: info.workTitle,
-          subTitle:
-            info.episodeText !== info.title ? info.episodeText : undefined,
+          subTitle: info.episodeText,
         })
       }
     }

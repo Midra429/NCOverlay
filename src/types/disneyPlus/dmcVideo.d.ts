@@ -18,7 +18,7 @@ export type Video = {
   contentType: string
   currentAvailability: CurrentAvailability
   event: null
-  encodedSeriesId: string
+  encodedSeriesId: null | string
   episodeNumber: null
   episodeSequenceNumber: number | null
   episodeSeriesSequenceNumber: number | null
@@ -28,27 +28,27 @@ export type Video = {
   image: Image
   labels: Label[]
   league: null
-  mediaMetadata: MediaMetadata
+  mediaMetadata: VideoMediaMetadata
   meta: null
   mediaRights: MediaRights
-  milestone: Milestone
-  originalLanguage: Language
+  milestone: { [key: string]: Milestone[] }
+  originalLanguage: string
   participant: Participant
   programId: string
   programType: string
   ratings: Rating[]
   releases: Release[]
-  seasonId: string
+  seasonId: null | string
   seasonSequenceNumber: number | null
-  seriesId: string
-  seriesType: string
+  seriesId: null | string
+  seriesType: null | string
   sport: null
   tags: Tag[]
-  targetLanguage: Language
+  targetLanguage: string
   text: Text
   type: string
-  typedGenres: any[]
-  videoArt: any[]
+  typedGenres: TypedGenre[]
+  videoArt: VideoArt[]
   videoId: string
 }
 
@@ -66,10 +66,10 @@ export type Family = {
 }
 
 export type ParentRef = {
-  encodedSeriesId: string
+  encodedSeriesId: null | string
   programId: string
-  seasonId: string
-  seriesId: string
+  seasonId: null | string
+  seriesId: null | string
 }
 
 export type Group = {
@@ -79,27 +79,32 @@ export type Group = {
 }
 
 export type Image = {
-  title_treatment_layer: { [key: string]: HeroTile }
-  title_treatment: TitleTreatment
+  title_treatment_layer: { [key: string]: BackgroundDetail }
+  title_treatment: { [key: string]: BackgroundDetail }
   hero: { [key: string]: BackgroundDetail }
-  tile_partner: BackgroundUnauthenticated
-  title_treatment_centered: TitleTreatmentCentered
+  tile_partner: TilePartner
+  title_treatment_centered: BackgroundUnauthenticated
   tile: { [key: string]: BackgroundDetail }
-  thumbnail: Thumbnail
-  hero_tile: { [key: string]: HeroTile }
+  thumbnail?: Thumbnail
+  hero_tile: { [key: string]: BackgroundDetail }
   background_up_next: BackgroundUnauthenticated
-  title_treatment_mono: TitleTreatmentMono
-  background_unauthenticated: BackgroundUnauthenticated
+  title_treatment_mono?: TitleTreatmentMono
+  background_unauthenticated?: BackgroundUnauthenticated
   background_details: { [key: string]: BackgroundDetail }
-  thumbnail_partner: BackgroundUnauthenticated
+  thumbnail_partner?: BackgroundUnauthenticated
   hero_collection: BackgroundUnauthenticated
+  title_treatment_partner?: BackgroundUnauthenticated
+  thumbnail_version_ov_widescreen?: Thumbnail
+  hero_partner?: { [key: string]: HeroPartner }
+  thumbnail_version_imax_enhanced?: Thumbnail
 }
 
 export type BackgroundDetail = {
-  series: Series
+  series?: BackgroundDetailProgram
+  program?: BackgroundDetailProgram
 }
 
-export type Series = {
+export type BackgroundDetailProgram = {
   default: PurpleDefault
 }
 
@@ -114,26 +119,17 @@ export type BackgroundUnauthenticated = {
   '1.78': BackgroundDetail
 }
 
-export type HeroTile = {
-  program?: Series
-  series: Series
+export type HeroPartner = {
+  program: BackgroundDetailProgram
 }
 
 export type Thumbnail = {
-  '1.78': The178
+  '1.78': HeroPartner
 }
 
-export type The178 = {
-  program: Series
-}
-
-export type TitleTreatment = {
-  '3.32': BackgroundDetail
-  '1.78': HeroTile
-}
-
-export type TitleTreatmentCentered = {
-  '1.78': HeroTile
+export type TilePartner = {
+  '1.78': BackgroundDetail
+  '0.71'?: HeroPartner
 }
 
 export type TitleTreatmentMono = {
@@ -145,12 +141,12 @@ export type Label = {
   value: string
 }
 
-export type MediaMetadata = {
+export type VideoMediaMetadata = {
   activeAspectRatio: number
   audioTracks: AudioTrack[]
-  captions: any[]
+  captions: AudioTrack[]
   facets: Facet[]
-  features: any[]
+  features: string[]
   format: string
   mediaId: string
   phase: string
@@ -162,14 +158,16 @@ export type MediaMetadata = {
 }
 
 export type AudioTrack = {
-  features: string[]
-  language: Language
+  features?: Feature[]
+  language: string
   name: null
   renditionName: string
-  trackType: string
+  trackType: TrackType
 }
 
-export type Language = 'ja'
+export type Feature = 'dolby_20' | 'dolby_51'
+
+export type TrackType = 'PRIMARY' | 'NORMAL' | 'SDH' | 'FORCED'
 
 export type Facet = {
   activeAspectRatio: number
@@ -196,17 +194,6 @@ export type MediaRights = {
 }
 
 export type Milestone = {
-  intro_start: Ffec[]
-  FFEI: Ffec[]
-  intro_end: Ffec[]
-  FFEC: Ffec[]
-  up_next: Ffec[]
-  LFEC: Ffec[]
-  FFOC?: Ffec[]
-  LFOC?: Ffec[]
-}
-
-export type Ffec = {
   id: string
   milestoneTime: MilestoneTime[]
 }
@@ -220,10 +207,12 @@ export type Type = 'offset'
 
 export type Participant = {
   Actor: Actor[]
+  Director?: Actor[]
+  Producer?: Actor[]
 }
 
 export type Actor = {
-  characterDetails: CharacterDetails
+  characterDetails: CharacterDetails | null
   displayName: string
   order: number
   participantId: string
@@ -269,12 +258,12 @@ export type Description = {
 }
 
 export type Brief = {
-  season?: Program
-  program: Program
-  series?: Program
+  season?: SeasonClass
+  program: SeasonClass
+  series?: SeasonClass
 }
 
-export type Program = {
+export type SeasonClass = {
   default: SeasonDefault
 }
 
@@ -284,10 +273,31 @@ export type SeasonDefault = {
   sourceEntity: SourceEntity
 }
 
+export type Language = 'ja'
+
 export type SourceEntity = 'program' | 'season' | 'series'
 
 export type Title = {
   full: Brief
   sort: Brief
   slug: Brief
+}
+
+export type TypedGenre = {
+  name: string
+  partnerId: string
+  type: string
+}
+
+export type VideoArt = {
+  mediaMetadata: VideoArtMediaMetadata
+  purpose: string
+}
+
+export type VideoArtMediaMetadata = {
+  urls: URL[]
+}
+
+export type URL = {
+  url: string
 }

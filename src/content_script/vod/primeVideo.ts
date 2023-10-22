@@ -10,19 +10,20 @@ export default async () => {
   let nco: NCOverlay | null = null
 
   const getDetail = (): { title: string } | null => {
-    const canonicalUrl =
-      document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ??
-      null
+    const canonicalUrl = document.querySelector<HTMLLinkElement>(
+      'link[rel="canonical"]'
+    )?.href
+
     const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.at(0) ?? ''
     const titleID =
       document.querySelector<HTMLInputElement>(
         '.dv-dp-node-watchlist input[name="titleID"]'
       )?.value ?? ''
 
-    const rawData = document.querySelector(
-      '#main > script[type="text/template"]'
-    )?.textContent
-    const data = JSON.parse(rawData ?? '{}')
+    const data = JSON.parse(
+      document.querySelector('#main > script[type="text/template"]')
+        ?.textContent || '{}'
+    )
 
     return (
       data.props?.state?.detail?.detail?.[asin] ??
@@ -54,7 +55,7 @@ export default async () => {
 
     return {
       // 呪術廻戦 懐玉・玉折／渋谷事変 || 呪術廻戦
-      title: detail?.title || titleElem?.textContent!.trim(),
+      title: detail?.title || titleElem?.textContent?.trim(),
       // 第25話 懐玉
       episode: subtitleElem?.lastChild?.textContent?.trim(),
       // 呪術廻戦

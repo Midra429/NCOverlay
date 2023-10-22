@@ -20,6 +20,8 @@ export default async () => {
         contentId: contentId,
       }))
 
+    console.log('[NCOverlay] DmmTvApi.video', dataVideo)
+
     if (dataVideo) {
       // 15: アニメ, 17: 特撮
       const isAnime = dataVideo.categories.some(
@@ -28,14 +30,16 @@ export default async () => {
 
       if (isAnime) {
         return {
+          // 呪術廻戦
+          workTitle: dataVideo.titleName,
           // 呪術廻戦 懐玉・玉折／渋谷事変（第2期）
           title: dataVideo.seasonName,
           // 第25話
-          episodeNo: dataVideo.episode?.episodeNumberName,
+          episodeNo: dataVideo.episode?.episodeNumberName ?? '',
           // 懐玉
-          episodeText: dataVideo.episode?.episodeTitle,
-          // 呪術廻戦
-          workTitle: dataVideo.titleName,
+          episodeText: dataVideo.episode?.episodeTitle ?? '',
+          // 1435
+          duration: dataVideo.episode?.playInfo.duration,
         }
       }
     }
@@ -68,7 +72,7 @@ export default async () => {
 
         await loadComments(this, {
           title: title,
-          duration: this.video.duration ?? 0,
+          duration: info.duration ?? this.video.duration ?? 0,
           workTitle: info.workTitle,
           subTitle: info.episodeText,
         })

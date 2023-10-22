@@ -1,7 +1,7 @@
-import { normalizeText } from './normalizeText'
+import { normalize } from './normalize'
 
 export const extractEpisodeNumber = (title: string) => {
-  title = normalizeText(title, false)
+  title = normalize.text(title, false)
 
   return (
     title.match(

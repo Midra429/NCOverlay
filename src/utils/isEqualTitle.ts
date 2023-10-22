@@ -1,4 +1,4 @@
-import { normalizeTitle } from './normalizeTitle'
+import { normalize } from './normalize'
 
 /**
  * 2つのタイトルを比較して一致するかどうか(表記ゆれ対応)
@@ -10,7 +10,7 @@ export const isEqualTitle = (titleA: string, titleB: string): boolean => {
     result = titleA === titleB
 
     if (!result) {
-      result = normalizeTitle(titleA) === normalizeTitle(titleB)
+      result = normalize.title(titleA) === normalize.title(titleB)
     }
   }
 

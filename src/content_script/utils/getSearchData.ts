@@ -2,8 +2,8 @@ import type { SearchQuery, SearchData } from '@/types/niconico/search'
 import { DANIME_CHANNEL_ID } from '@/constants'
 import deepmerge from 'deepmerge'
 import { NiconicoApi } from '@/content_script/api/niconico'
-import { normalizeTitle } from '@/utils/normalizeTitle'
-import { optimizeTitleForSearch } from '@/utils/optimizeTitleForSearch'
+import { normalize } from '@/utils/normalize'
+import { optimize } from '@/utils/optimize'
 import { isEqualTitle } from '@/utils/isEqualTitle'
 
 const searchQueryBase: Partial<SearchQuery> = {
@@ -30,7 +30,7 @@ export const getSearchData = async (info: {
   normal: SearchData[]
   splited: SearchData[]
 } | null> => {
-  const optimizedTitle = optimizeTitleForSearch(info.title)
+  const optimizedTitle = optimize.title(info.title)
 
   console.log(`[NCOverlay] optimizedTitle: ${optimizedTitle}`)
 
@@ -53,20 +53,23 @@ export const getSearchData = async (info: {
   console.log('[NCOverlay] searchData', searchNormal)
 
   if (searchNormal) {
-    const workTitle = info.workTitle ? normalizeTitle(info.workTitle) : null
-    const subTitle = info.subTitle ? normalizeTitle(info.subTitle) : null
+    const workTitle = info.workTitle ? normalize.title(info.workTitle) : null
+    const subTitle = info.subTitle ? normalize.title(info.subTitle) : null
 
     const filtered = searchNormal.filter((val) => {
-      const title = normalizeTitle(val.title!)
+      const title = normalize.title(val.title!)
 
-      return (
-        val.channelId != null &&
-        (isEqualTitle(val.title!, info.title) ||
-          (workTitle &&
-            subTitle &&
-            title.startsWith(workTitle) &&
-            title.endsWith(subTitle)))
-      )
+      // 完全一致
+      const isMatch = isEqualTitle(val.title!, info.title)
+
+      // 部分一致
+      const isPartialMatch =
+        workTitle &&
+        subTitle &&
+        title.startsWith(workTitle) &&
+        title.endsWith(subTitle)
+
+      return val.channelId != null && (isMatch || isPartialMatch)
     })
 
     console.log('[NCOverlay] searchData (filtered)', filtered)
@@ -114,21 +117,34 @@ export const getSearchData = async (info: {
           return chapterA - chapterB
         })
 
-      const totalDuration = filtered.reduce(
-        (sum, val) => sum + val.lengthSeconds!,
-        0
-      )
+      // Chapterが連続しているかどうか
+      const isOrdered = !filtered.some((val, idx, ary) => {
+        if (0 < idx) {
+          const prev = Number(ary[idx - 1].title!.match(chapterRegExp)?.[1])
+          const now = Number(val.title!.match(chapterRegExp)?.[1])
+          return now - prev !== 1
+        }
+      })
 
-      console.log('[NCOverlay] duration', info.duration)
-      console.log('[NCOverlay] duration (splited)', totalDuration)
+      if (isOrdered) {
+        const totalDuration = filtered.reduce(
+          (sum, val) => sum + val.lengthSeconds!,
+          0
+        )
 
-      if (
-        totalDuration - 5 <= info.duration &&
-        info.duration <= totalDuration + 5
-      ) {
-        console.log('[NCOverlay] searchData (splited, filtered)', filtered)
+        console.log('[NCOverlay] duration', info.duration)
+        console.log('[NCOverlay] duration (splited)', totalDuration)
 
-        searchDataSplited.push(...filtered)
+        if (
+          totalDuration - 5 <= info.duration &&
+          info.duration <= totalDuration + 5
+        ) {
+          console.log('[NCOverlay] searchData (splited, filtered)', filtered)
+
+          searchDataSplited.push(...filtered)
+        }
+      } else {
+        console.log('[NCOverlay] Error: Chapterが連続していません', filtered)
       }
     }
   }

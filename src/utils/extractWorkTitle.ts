@@ -1,7 +1,7 @@
-import { normalizeText } from './normalizeText'
+import { normalize } from './normalize'
 
 export const extractWorkTitle = (title: string): string => {
-  title = normalizeText(title, false)
+  title = normalize.text(title, false)
 
   const splitedTitle = title.split(' ')
   if (splitedTitle.length === 3) {

@@ -1,12 +1,12 @@
 import { kanji2number, number2kanji } from '@geolonia/japanese-numeral'
-import { zeroPadding } from './zeroPadding'
+import { zeroPadding } from '../zeroPadding'
 
 /**
  * 話数表記を検索用に最適化する
  * @param title タイトル
  * @returns 話数表記を最適化したタイトル
  */
-export const optimizeEpisodeNumberForSearch = (title: string): string => {
+export const episodeNumber = (title: string): string => {
   const splitedTitle = title.split(' ')
   if (splitedTitle.length === 3) {
     const num = Number(splitedTitle[1])

@@ -20,7 +20,7 @@ export default async () => {
 
     const partData = await DAnimeApi.part(partId)
 
-    console.log('[NCOverlay] partData', partData)
+    console.log('[NCOverlay] DAnimeApi.part', partData)
 
     if (partData) {
       console.log('[NCOverlay] title', partData.title)

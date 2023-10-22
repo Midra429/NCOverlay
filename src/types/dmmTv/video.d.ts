@@ -11,11 +11,11 @@ export type DataVideo = {
   seasonType: string
   titleName: string
   seasonName: string
-  highlight: string
+  highlight: null | string
   description: string
   notices: null
   packageImage: string
-  productionYear: number
+  productionYear: number | null
   isNewArrival: boolean
   customTag: string
   isPublic: boolean
@@ -28,8 +28,8 @@ export type DataVideo = {
   rating: Rating
   casts: Cast[]
   staffs: Staff[]
-  categories: Category[]
-  genres: Category[]
+  categories: CategoryElement[]
+  genres: CategoryElement[]
   copyright: string
   relatedItems: RelatedItems
   __typename: string
@@ -40,7 +40,7 @@ export type DataVideo = {
   relatedSeasons: RelatedSeason[]
   nextDeliveryEpisode: NextDeliveryEpisode
   priceSummary: null
-  episode: Episode
+  episode?: Episode
   episodes: Episodes
   specialEpisode: SpecialEpisode
   pvEpisode: PVEpisode
@@ -62,11 +62,13 @@ export type Person = {
 
 export type PersonTypename = 'Person'
 
-export type Category = {
+export type CategoryElement = {
   name: string
   id: string
-  __typename: string
+  __typename: CategoryTypename
 }
+
+export type CategoryTypename = 'VideoCategory' | 'VideoGenre'
 
 export type Episode = {
   id: string
@@ -140,11 +142,11 @@ export type PurpleNode = {
   sampleMovie: string
   episodeTitle: string
   episodeNumber: number
-  episodeNumberName: string
+  episodeNumberName: null | string
   drmLevel: DRMLevel
   playInfo: PurplePlayInfo
   viewingRights: ViewingRights
-  freeProduct: FreeProduct
+  freeProduct: FreeProduct | null
   ppvProducts: any[]
   svodProduct: SvodProduct
   priceSummary: null
@@ -197,9 +199,13 @@ export type FluffyPlayInfo = {
 }
 
 export type Rating = {
-  category: string
-  __typename: string
+  category: CategoryEnum
+  __typename: RatingTypename
 }
+
+export type RatingTypename = 'VideoRating'
+
+export type CategoryEnum = 'G' | 'NR'
 
 export type RelatedItems = {
   videos: VideoElement[]
@@ -215,8 +221,10 @@ export type Book = {
   title: string
   thumbnail: string
   url: string
-  __typename: string
+  __typename: BookTypename
 }
+
+export type BookTypename = 'RelatedBook'
 
 export type Mono = {
   banner: string

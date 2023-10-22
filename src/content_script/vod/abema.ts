@@ -1,40 +1,48 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
+import { AbemaApi } from '@/content_script/api/abema'
 
 export default async () => {
   console.log('[NCOverlay] VOD: ABEMA')
 
   let nco: NCOverlay | null = null
 
-  const getInfo = () => {
-    const titleElem = document.querySelector<HTMLElement>(
-      '.com-video-EpisodeTitle__series-info'
-    )
-    const episodeElem = document.querySelector<HTMLElement>(
-      '.com-video-EpisodeTitle__episode-title'
-    )
+  const getInfo = async () => {
+    const id = location.pathname.split('/').at(-1)
 
-    // ['呪術廻戦', '第2期 懐玉・玉折']
-    let [title, season] =
-      titleElem?.textContent?.split('|').map((v) => v.trim()) ?? []
+    const program = id && (await AbemaApi.program(id))
 
-    let fullTitle = title
-    if (title && season) {
-      if (season.includes(title)) {
-        fullTitle = season
-      } else {
-        fullTitle = `${title} ${season}`
+    console.log('[NCOverlay] AbemaApi.program', program)
+
+    if (program) {
+      const isAnime = program.genre.id === 'animation'
+
+      if (isAnime) {
+        const workTitle = program.series.title
+        const title =
+          1 < program.season.sequence
+            ? `${workTitle} ${program.season.name}`
+            : workTitle
+
+        let episode: string = ''
+        if (title !== program.episode.title) {
+          episode = program.episode.title
+        }
+
+        return {
+          // 呪術廻戦
+          workTitle: workTitle,
+          // 呪術廻戦 第2期 懐玉・玉折
+          title: title,
+          // 第25話 懐玉
+          episode: episode,
+          // 1435
+          duration: program.info.duration,
+        }
       }
     }
 
-    return {
-      // 呪術廻戦 第2期 懐玉・玉折
-      title: fullTitle,
-      // 第25話 懐玉
-      episode: episodeElem?.textContent?.trim(),
-      // 呪術廻戦
-      workTitle: title,
-    }
+    return null
   }
 
   const modify = (video: HTMLVideoElement) => {
@@ -48,18 +56,21 @@ export default async () => {
       nco.onLoadedmetadata = async function () {
         this.init()
 
-        const info = getInfo()
+        const info = await getInfo()
 
         console.log('[NCOverlay] info', info)
 
-        if (info.title && info.episode) {
-          const title = `${info.title} ${info.episode}`
+        if (info) {
+          let title = info.title
+          if (info.episode) {
+            title += ` ${info.episode}`
+          }
 
           console.log('[NCOverlay] title', title)
 
           await loadComments(this, {
             title: title,
-            duration: this.video.duration ?? 0,
+            duration: info.duration ?? 0,
             workTitle: info.workTitle,
             subTitle: info.episode,
           })

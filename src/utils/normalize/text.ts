@@ -1,15 +1,12 @@
-import { fixRomanNum } from './fixRomanNum'
+import { fixRomanNum } from '../fixRomanNum'
 
 /**
- * テキストを共通化させる (半角に統一 & スペース除去 & 括弧除去)
+ * テキストを共通化させる (半角に統一 & 余分なスペース除去 & 括弧除去)
  * @param text テキスト
  * @param isLowerCase 小文字にするかどうか
  * @returns 共通化したテキスト
  */
-export const normalizeText = (
-  text: string,
-  isLowerCase: boolean = true
-): string => {
+export const text = (text: string, isLowerCase: boolean = true): string => {
   // 英字の大文字を小文字に
   if (isLowerCase) {
     text = text.toLowerCase()
