@@ -1,9 +1,3 @@
-export const isVisible = (elm?: Element | null): boolean => {
-  if (!(elm instanceof HTMLElement)) {
-    return false
-  }
-
-  const { width, height } = elm.getBoundingClientRect()
-
-  return elm.offsetParent !== null && 0 < width && 0 < height
+export const isVisible = <T extends Element>(elm: T | null): elm is T => {
+  return elm instanceof HTMLElement && elm.offsetParent !== null
 }

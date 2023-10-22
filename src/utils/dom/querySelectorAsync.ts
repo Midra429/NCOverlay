@@ -6,8 +6,6 @@ export const querySelectorAsync = async <T extends HTMLElement>(
 
   return new Promise((resolve) => {
     const intervalId = setInterval(() => {
-      console.log(cnt)
-
       const element = document.querySelector<T>(selectors)
 
       if (element) {

@@ -43,8 +43,8 @@ export const getSearchData = async (info: {
       q: optimizedTitle,
       filters: {
         lengthSeconds: {
-          gte: info.duration - 30,
-          lte: info.duration + 30,
+          gte: info.duration - 15,
+          lte: info.duration + 15,
         },
       },
     }),
@@ -76,7 +76,7 @@ export const getSearchData = async (info: {
 
   // 検索 (分割)
   if (
-    !searchDataNormal.find((v) => v.channelId === DANIME_CHANNEL_ID) &&
+    !searchDataNormal.some((v) => v.channelId === DANIME_CHANNEL_ID) &&
     (info.title.match(/(劇場|映画)/) || 3600 <= info.duration)
   ) {
     const searchSplited = await NiconicoApi.search({
@@ -89,6 +89,8 @@ export const getSearchData = async (info: {
         },
       }),
     })
+
+    console.log('[NCOverlay] searchData (splited)', searchSplited)
 
     if (searchSplited) {
       const chapterRegExp = /Chapter\.(\d)+/i
@@ -117,11 +119,14 @@ export const getSearchData = async (info: {
         0
       )
 
+      console.log('[NCOverlay] duration', info.duration)
+      console.log('[NCOverlay] duration (splited)', totalDuration)
+
       if (
         totalDuration - 5 <= info.duration &&
         info.duration <= totalDuration + 5
       ) {
-        console.log('[NCOverlay] searchData (splited)', filtered)
+        console.log('[NCOverlay] searchData (splited, filtered)', filtered)
 
         searchDataSplited.push(...filtered)
       }

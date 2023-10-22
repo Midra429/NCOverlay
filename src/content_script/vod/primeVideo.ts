@@ -1,5 +1,8 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
+import { isVisible } from '@/utils/dom'
+import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
+import { formatedToSeconds } from '@/utils/formatedToSeconds'
 
 export default async () => {
   console.log('[NCOverlay] VOD: Prime Video')
@@ -28,7 +31,7 @@ export default async () => {
     )
   }
 
-  const getInfo = () => {
+  const getInfo = async () => {
     const detail = getDetail()
 
     console.log('[NCOverlay] detail', detail)
@@ -39,8 +42,15 @@ export default async () => {
     const subtitleElem = document.querySelector<HTMLElement>(
       '.atvwebplayersdk-subtitle-text'
     )
+    const timeindicatorElem = await querySelectorAsync<HTMLElement>(
+      '.atvwebplayersdk-timeindicator-text:has(span)'
+    )
     // const se_raw =
     //   subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
+
+    const duration = (timeindicatorElem?.textContent?.split('/') ?? [])
+      .map(formatedToSeconds)
+      .reduce((sum, val) => sum + val, 0)
 
     return {
       // 呪術廻戦 懐玉・玉折／渋谷事変 || 呪術廻戦
@@ -49,6 +59,8 @@ export default async () => {
       episode: subtitleElem?.lastChild?.textContent?.trim(),
       // 呪術廻戦
       workTitle: detail?.title,
+      // 1435
+      duration: duration,
       // season: Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0)),
       // episode: Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0)),
     }
@@ -67,7 +79,7 @@ export default async () => {
       nco.onLoadedmetadata = async function () {
         this.init()
 
-        const info = getInfo()
+        const info = await getInfo()
 
         console.log('[NCOverlay] info', info)
 
@@ -81,7 +93,7 @@ export default async () => {
 
           await loadComments(this, {
             title: title,
-            duration: this.video.duration ?? 0,
+            duration: info.duration,
             workTitle: info.workTitle,
             subTitle: info.episode,
           })
@@ -101,7 +113,7 @@ export default async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (nco && !document.contains(nco.video)) {
+    if (nco && (!document.contains(nco.video) || !isVisible(nco.video))) {
       nco.dispose()
       nco = null
     } else if (!nco) {
@@ -109,7 +121,7 @@ export default async () => {
         '.webPlayerSDKContainer video'
       )
 
-      if (video) {
+      if (isVisible(video)) {
         modify(video)
       }
     }

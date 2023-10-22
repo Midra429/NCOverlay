@@ -157,7 +157,7 @@ export class NCOverlay {
 
     this.#render()
 
-    if (isPlaying) {
+    if (isPlaying || !this.#video.paused) {
       this.start()
     }
 
