@@ -5,7 +5,7 @@ import { DAnimeApi } from '@/content_script/api/danime'
 export default async () => {
   console.log('[NCOverlay] VOD: dアニメストア')
 
-  const video = document.querySelector<HTMLVideoElement>('#video')
+  const video = document.querySelector<HTMLVideoElement>('video#video')
 
   if (!video) return
 

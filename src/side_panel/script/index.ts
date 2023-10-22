@@ -6,7 +6,6 @@ import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import NiconiComments from '@xpadev-net/niconicomments'
 import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
 import { getFromPage } from '@/utils/chrome/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { createCommentItem } from './utils/createCommentItem'
@@ -20,15 +19,15 @@ let prevIdx: number | null = null
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
   // サイドパネルへ送信
   if (ChromeMessageTypeCheck['chrome:sendToSidePanel'](message)) {
-    if (0 < Object.keys(message.body).length) {
-      getCurrentTab().then((tab) => {
-        if (tab.id === sender.tab?.id) {
+    chrome.windows.getCurrent().then((window) => {
+      if (window.id === sender.tab!.windowId) {
+        if (0 < Object.keys(message.body).length) {
           update(message.body)
+        } else {
+          update({})
         }
-      })
-    } else {
-      update({})
-    }
+      }
+    })
   }
 
   return false

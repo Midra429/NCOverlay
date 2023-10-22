@@ -5,7 +5,7 @@ export default async () => {
   console.log('[NCOverlay] VOD: バンダイチャンネル')
 
   const video = document.querySelector<HTMLVideoElement>(
-    '#bcplayer > video.vjs-tech'
+    'video#bcplayer_html5_api'
   )
 
   if (!video) return

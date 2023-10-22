@@ -13,17 +13,17 @@ console.log('[NCOverlay] popup.html')
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
   // ポップアップへ送信
   if (ChromeMessageTypeCheck['chrome:sendToPopup'](message)) {
-    if (0 < Object.keys(message.body).length) {
-      getCurrentTab().then((tab) => {
-        if (tab.id === sender.tab?.id) {
+    chrome.windows.getCurrent().then((window) => {
+      if (window.id === sender.tab!.windowId) {
+        if (0 < Object.keys(message.body).length) {
           console.log('[NCOverlay] chrome:sendToPopup', message.body)
 
           update(message.body)
+        } else {
+          update({})
         }
-      })
-    } else {
-      update({})
-    }
+      }
+    })
   }
 
   return false
@@ -91,8 +91,10 @@ const init = async () => {
     const commentsCount = document.querySelector<HTMLElement>('#CommentsCount')!
     commentsCount.classList.add('is-button')
     commentsCount.title = 'サイドパネルを開く'
-    commentsCount.addEventListener('click', () => {
-      getCurrentTab().then(async (tab) => {
+    commentsCount.addEventListener('click', async () => {
+      const tab = await getCurrentTab()
+
+      if (tab) {
         await chrome.sidePanel.setOptions({
           tabId: tab.id,
           enabled: true,
@@ -102,7 +104,7 @@ const init = async () => {
         chrome.sidePanel.open({
           windowId: tab.windowId,
         })
-      })
+      }
     })
   }
 
@@ -122,6 +124,13 @@ const init = async () => {
       ) {
         settingOpacityValue.textContent = settingOpacity.value =
           changes.opacity.newValue.toString()
+      }
+
+      if (
+        typeof changes.lowPerformance?.newValue !== 'undefined' &&
+        settingLowPerformance.checked !== changes.lowPerformance.newValue
+      ) {
+        settingLowPerformance.checked = changes.lowPerformance.newValue
       }
 
       if (
