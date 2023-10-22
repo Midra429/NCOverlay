@@ -107,7 +107,7 @@ export type SearchData = {
   'categoryTags'?: string
 
   /** チャンネルのID */
-  'channelId'?: number
+  'channelId'?: number | null
 
   /** タグ(空白区切り) */
   'tags'?: string

@@ -60,7 +60,7 @@ export const getSearchData = async (info: {
       const title = normalizeTitle(val.title!)
 
       return (
-        typeof val.channelId !== 'undefined' &&
+        val.channelId != null &&
         (isEqualTitle(val.title!, info.title) ||
           (workTitle &&
             subTitle &&
