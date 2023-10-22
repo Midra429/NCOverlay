@@ -1,4 +1,4 @@
-import { checkSupportedVod } from '@/utils/checkSupportedVod'
+import { checkSupportedVod } from '@/content_script/utils/checkSupportedVod'
 import { setAction } from './utils/setAction'
 import { setSidePanel } from './utils/setSidePanel'
 import vodPrimeVideo from './vod/primeVideo'
@@ -15,7 +15,7 @@ console.log('[NCOverlay] content_script.js')
 chrome.runtime.onMessage.addListener(() => false)
 
 const main = async () => {
-  const vod = checkSupportedVod(location.href)
+  const vod = await checkSupportedVod(location.href)
 
   if (!vod) return
 

@@ -6,7 +6,7 @@ import {
   GITHUB_URL,
 } from '@/constants'
 import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { checkSupportedVod } from '@/utils/checkSupportedVod'
+import { isSupported } from '@/utils/chrome/isSupported'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
@@ -118,38 +118,50 @@ chrome.runtime.onMessage.addListener(
 )
 
 chrome.tabs.onActivated.addListener(async (info) => {
-  const tab = await chrome.tabs.get(info.tabId)
-  const vod = checkSupportedVod(tab.url ?? '')
-
-  if (typeof tab.id !== 'undefined' && vod) {
+  if (await isSupported(info.tabId)) {
     await chrome.sidePanel.setOptions({
-      tabId: tab.id,
+      tabId: info.tabId,
       enabled: false,
     })
     await chrome.sidePanel.setOptions({
-      tabId: tab.id,
+      tabId: info.tabId,
       enabled: true,
     })
   } else {
     await chrome.sidePanel.setOptions({
-      tabId: tab.id,
+      tabId: info.tabId,
       enabled: false,
     })
   }
 })
 
-chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  const vod = checkSupportedVod(tab.url ?? '')
+const prevHostnames: { [tabId: number]: string } = {}
 
-  if (typeof tab.id !== 'undefined' && vod) {
+chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+  if (await isSupported(tabId)) {
+    try {
+      const { hostname } = new URL(info.url ?? '')
+
+      if (hostname !== prevHostnames[tabId]) {
+        await chrome.sidePanel.setOptions({
+          tabId: tabId,
+          enabled: false,
+        })
+      }
+
+      prevHostnames[tabId] = hostname
+    } catch {}
+
     await chrome.sidePanel.setOptions({
-      tabId: tab.id,
+      tabId: tabId,
       enabled: true,
     })
   } else {
     await chrome.sidePanel.setOptions({
-      tabId: tab.id,
+      tabId: tabId,
       enabled: false,
     })
+
+    delete prevHostnames[tabId]
   }
 })

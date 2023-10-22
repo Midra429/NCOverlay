@@ -43,9 +43,19 @@
     }
   ],
 
-  "permissions": ["storage", "tabs", "sidePanel"],
+  "host_permissions": [
+    "https://*.nicovideo.jp/*",
+    "https://www.amazon.co.jp/*",
+    "https://animestore.docomo.ne.jp/*",
+    "https://abema.tv/*",
+    "https://www.disneyplus.com/*",
+    "https://tver.jp/*",
+    "https://www.b-ch.com/*",
+    "https://video.unext.jp/*",
+    "https://tv.dmm.com/*"
+  ],
 
-  "host_permissions": ["https://*.nicovideo.jp/*"],
+  "permissions": ["storage", "tabs", "scripting", "sidePanel"],
 
   "minimum_chrome_version": "114"
 }

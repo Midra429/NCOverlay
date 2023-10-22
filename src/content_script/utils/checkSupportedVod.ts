@@ -1,3 +1,5 @@
+import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
+
 export type SupportedVods =
   | 'primeVideo'
   | 'dAnime'
@@ -8,60 +10,58 @@ export type SupportedVods =
   | 'unext'
   | 'dmmTv'
 
-export const checkSupportedVod = (siteUrl: string): SupportedVods | null => {
-  let result: SupportedVods | null = null
-
+export const checkSupportedVod = async (
+  url: string
+): Promise<SupportedVods | null> => {
   try {
-    const { hostname, pathname } = new URL(siteUrl)
+    const { hostname, pathname } = new URL(url)
 
     // Prime Video
     if (hostname === 'www.amazon.co.jp') {
       if (
         pathname.match('/gp/video/') ||
         pathname.match('/Amazon-Video/') ||
-        (pathname.match('/dp/') &&
-          typeof document !== 'undefined' &&
-          document.querySelector('#pv-nav-container, .webPlayerSDKContainer'))
+        (pathname.match('/dp/') && (await querySelectorAsync('#dv-web-player')))
       ) {
-        result = 'primeVideo'
+        return 'primeVideo'
       }
     }
 
     // dアニメストア
     if (hostname === 'animestore.docomo.ne.jp') {
-      result = 'dAnime'
+      return 'dAnime'
     }
 
     // ABEMA
     if (hostname === 'abema.tv') {
-      result = 'abema'
+      return 'abema'
     }
 
     // Disney+
     if (hostname === 'www.disneyplus.com') {
-      result = 'disneyPlus'
+      return 'disneyPlus'
     }
 
     // TVer
     if (hostname === 'tver.jp') {
-      result = 'tver'
+      return 'tver'
     }
 
     // バンダイチャンネル
     if (hostname === 'www.b-ch.com') {
-      result = 'bandaiChannel'
+      return 'bandaiChannel'
     }
 
     // U-NEXT
     if (hostname === 'video.unext.jp') {
-      result = 'unext'
+      return 'unext'
     }
 
     // DMM TV
     if (hostname === 'tv.dmm.com') {
-      result = 'dmmTv'
+      return 'dmmTv'
     }
   } catch {}
 
-  return result
+  return null
 }
