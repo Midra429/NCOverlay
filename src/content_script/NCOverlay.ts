@@ -80,12 +80,12 @@ export class NCOverlay {
       }, 100)
     }
 
-    if (chrome?.runtime?.id) {
-      chrome.storage.local.onChanged.addListener(
-        this.#listener.chromeStorageOnChanged
-      )
-      chrome.runtime.onMessage.addListener(this.#listener.chromeOnMessage)
-    }
+    chrome.storage.local.onChanged.addListener(
+      this.#listener.chromeStorageOnChanged
+    )
+    chrome.runtime.onMessage.addListener(this.#listener.chromeOnMessage)
+
+    document.addEventListener('nco:capture', this.#listener.capture)
 
     // 設定読み込み
     setTimeout(async () => {
@@ -117,8 +117,8 @@ export class NCOverlay {
       console.log('[NCOverlay] NCOverlay.init(input)')
     }
 
-    sendToPopup({})
-    sendToSidePanel({})
+    sendToPopup(null)
+    sendToSidePanel(null)
 
     const isPlaying = this.#isPlaying
 
@@ -188,12 +188,12 @@ export class NCOverlay {
   dispose() {
     console.log('[NCOverlay] NCOverlay.dispose()')
 
-    if (chrome?.runtime?.id) {
-      chrome.storage.local.onChanged.removeListener(
-        this.#listener.chromeStorageOnChanged
-      )
-      chrome.runtime.onMessage.removeListener(this.#listener.chromeOnMessage)
-    }
+    chrome.storage.local.onChanged.removeListener(
+      this.#listener.chromeStorageOnChanged
+    )
+    chrome.runtime.onMessage.removeListener(this.#listener.chromeOnMessage)
+
+    document.removeEventListener('nco:capture', this.#listener.capture)
 
     this.stop()
     this.clear()
@@ -213,8 +213,8 @@ export class NCOverlay {
     setActionBadge('')
     setActionTitle('')
 
-    sendToPopup({})
-    sendToSidePanel({})
+    sendToPopup(null)
+    sendToSidePanel(null)
   }
 
   clear() {
@@ -238,17 +238,51 @@ export class NCOverlay {
     this.#loopIntervalMs = Math.round(1000 / fps)
   }
 
+  capture() {
+    const canvas = document.createElement('canvas')
+    canvas.width = this.#canvas.width
+    canvas.height = this.#canvas.height
+
+    const context = canvas.getContext('2d')
+
+    context!.drawImage(this.#video, 0, 0, canvas.width, canvas.height)
+    context!.drawImage(this.#canvas, 0, 0)
+
+    const img = document.createElement('img')
+    img.src = canvas.toDataURL('image/png')
+
+    const ref = window.open()
+    if (ref) {
+      img.style.display = 'block'
+      img.style.maxWidth = '100%'
+      img.style.maxHeight = '100%'
+      img.style.margin = 'auto'
+      img.style.backgroundColor = 'hsl(0, 0%, 90%)'
+
+      ref.document.body.style.display = 'flex'
+      ref.document.body.style.height = '100%'
+      ref.document.body.style.margin = '0px'
+      ref.document.body.style.backgroundColor = 'rgb(14, 14, 14)'
+
+      ref.document.body.appendChild(img)
+    }
+  }
+
   #render() {
     this.#niconiComments.drawCanvas(Math.floor(this.#video.currentTime * 100))
-
-    sendToSidePanel({
-      currentTime: this.#video.currentTime,
-    })
   }
+
+  #_tmp_time: number = -1
 
   #loop() {
     if (this.#isPlaying && 0 < this.#commentsCount) {
       this.#render()
+
+      const currentTime = Math.floor(this.#video.currentTime)
+      if (this.#_tmp_time !== currentTime) {
+        this.#_tmp_time = currentTime
+        sendToSidePanel({ currentTime })
+      }
 
       setTimeout(() => this.#loop(), this.#loopIntervalMs)
     }
@@ -288,6 +322,8 @@ export class NCOverlay {
 
       this.onLoadedmetadata?.(e)
     },
+
+    capture: () => this.capture(),
 
     chromeOnMessage: (
       message: ChromeMessage,

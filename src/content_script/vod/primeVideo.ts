@@ -5,8 +5,6 @@ import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { formatedToSeconds } from '@/utils/formatedToSeconds'
 
 export default async () => {
-  console.log('[NCOverlay] VOD: Prime Video')
-
   let nco: NCOverlay | null = null
 
   const getDetail = (): { title: string } | null => {

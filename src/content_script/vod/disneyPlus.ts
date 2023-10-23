@@ -3,8 +3,6 @@ import { loadComments } from '@/content_script/utils/loadComments'
 import { DisneyPlusApi } from '@/content_script/api/disneyPlus'
 
 export default async () => {
-  console.log('[NCOverlay] VOD: Disney+')
-
   let nco: NCOverlay | null = null
 
   const getInfo = async () => {

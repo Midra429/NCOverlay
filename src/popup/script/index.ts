@@ -11,19 +11,15 @@ import { createVideoItem } from './utils/createVideoItem'
 console.log('[NCOverlay] popup.html')
 
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
-  // ポップアップへ送信
-  if (ChromeMessageTypeCheck['chrome:sendToPopup'](message)) {
-    chrome.windows.getCurrent().then((window) => {
-      if (window.id === sender.tab!.windowId) {
-        if (0 < Object.keys(message.body).length) {
-          console.log('[NCOverlay] chrome:sendToPopup', message.body)
-
+  if (sender.tab!.active) {
+    // ポップアップへ送信
+    if (ChromeMessageTypeCheck['chrome:sendToPopup'](message)) {
+      chrome.windows.getCurrent().then((window) => {
+        if (window.id === sender.tab!.windowId) {
           update(message.body)
-        } else {
-          update({})
         }
-      }
-    })
+      })
+    }
   }
 
   return false
@@ -94,7 +90,7 @@ const init = async () => {
     commentsCount.addEventListener('click', async () => {
       const tab = await getCurrentTab()
 
-      if (tab) {
+      if (typeof tab?.id !== 'undefined') {
         await chrome.sidePanel.setOptions({
           tabId: tab.id,
           enabled: true,
@@ -145,20 +141,18 @@ const init = async () => {
   setTimeout(() => document.body.classList.remove('loading'), 100)
 }
 
-const update = ({
-  videoData,
-  commentsCount,
-}: ChromeMessageBody['chrome:sendToPopup']) => {
+const update = (body: ChromeMessageBody['chrome:sendToPopup']) => {
   const items = document.querySelector<HTMLElement>('#Items')!
 
-  if (
-    typeof videoData === 'undefined' &&
-    typeof commentsCount === 'undefined'
-  ) {
+  if (!body) {
     removeChilds(items)
+
+    return
   }
 
-  if (videoData) {
+  const { videoData, commentsCount } = body
+
+  if (typeof videoData !== 'undefined') {
     const fragment = document.createDocumentFragment()
     for (const data of videoData) {
       fragment.appendChild(createVideoItem(data))

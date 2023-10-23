@@ -59,7 +59,7 @@ export const loadComments = async (
     const diff = info.duration - duration
     const offsetMs = Math.floor((diff / 2) * 1000)
 
-    if (1000 < Math.abs(offsetMs)) {
+    if (1000 <= Math.abs(offsetMs)) {
       for (const thread of threads) {
         for (const comment of thread.comments) {
           comment.vposMs += offsetMs

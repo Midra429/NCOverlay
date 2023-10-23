@@ -1,3 +1,4 @@
+import { VODS } from '@/constants'
 import { checkSupportedVod } from '@/content_script/utils/checkSupportedVod'
 import { setAction } from './utils/setAction'
 import { setSidePanel } from './utils/setSidePanel'
@@ -18,6 +19,8 @@ const main = async () => {
   const vod = await checkSupportedVod(location.href)
 
   if (!vod) return
+
+  console.log(`[NCOverlay] VOD: ${VODS[vod]}`)
 
   document.documentElement.classList.add('NCOverlay')
   document.documentElement.dataset.ncoVod = vod

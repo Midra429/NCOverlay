@@ -30,7 +30,7 @@
 - コメントの表示/非表示
 - 設定
   - 不透明度: コメントの不透明度
-  - 低パフォーマンスモード: 負荷が低くなるかも？
+  - 低パフォーマンスモード: 負荷を下げる
     - コメントの描画: 60FPS → 30FPS
     - サイドパネル: 自動スクロールのアニメーション無効化
 - 表示中のコメントの元動画の確認
@@ -64,7 +64,7 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 pnpm run build
 ```
 
-### Output
+### 出力
 ```
 dist
   ├ extension             開発用

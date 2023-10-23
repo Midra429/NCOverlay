@@ -36,6 +36,7 @@ export const getThreadsData = async (videoData: {
   // 分割されている動画
   if (0 < videoData.splited.length) {
     let tmpOffset = 0
+
     for (let i = 0; i < videoData.splited.length; i++) {
       const data = videoData.splited[i]
       const res = await NiconicoApi.threads({

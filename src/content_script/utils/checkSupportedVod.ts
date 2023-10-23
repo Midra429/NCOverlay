@@ -1,18 +1,9 @@
+import { VODS } from '@/constants'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
-
-export type SupportedVods =
-  | 'primeVideo'
-  | 'dAnime'
-  | 'abema'
-  | 'disneyPlus'
-  | 'tver'
-  | 'bandaiChannel'
-  | 'unext'
-  | 'dmmTv'
 
 export const checkSupportedVod = async (
   url: string
-): Promise<SupportedVods | null> => {
+): Promise<keyof typeof VODS | null> => {
   try {
     const { hostname, pathname } = new URL(url)
 

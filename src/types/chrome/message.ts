@@ -84,12 +84,12 @@ export type ChromeMessageBody = {
   'chrome:sendToPopup': {
     videoData?: VideoData[]
     commentsCount?: number
-  }
+  } | null
 
   'chrome:sendToSidePanel': {
     commentsData?: InputFormat
     currentTime?: number
-  }
+  } | null
 
   'chrome:getFromPage': void
 }

@@ -3,8 +3,6 @@ import { loadComments } from '@/content_script/utils/loadComments'
 import { DmmTvApi } from '@/content_script/api/dmmTv'
 
 export default async () => {
-  console.log('[NCOverlay] VOD: DMM TV')
-
   let nco: NCOverlay | null = null
 
   const getInfo = async () => {

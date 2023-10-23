@@ -8,6 +8,23 @@ export const SETTINGS_DEFAULT: ChromeStorageSettings = {
   showChangelog: true,
 }
 
+export const VODS = {
+  primeVideo: 'Prime Video',
+  dAnime: 'dアニメストア',
+  abema: 'ABEMA',
+  disneyPlus: 'Disney+',
+  tver: 'TVer',
+  bandaiChannel: 'バンダイチャンネル',
+  unext: 'U-NEXT',
+  dmmTv: 'DMM TV',
+}
+
+export const VODS_ALLOW_CAPTURE: (keyof typeof VODS)[] = [
+  'abema',
+  'tver',
+  'bandaiChannel',
+]
+
 /** GitHub */
 export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
 

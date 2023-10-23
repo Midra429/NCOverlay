@@ -1,13 +1,11 @@
 import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
+import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
 
 export const getFromPage =
   async (): Promise<ChromeResponse<'chrome:getFromPage'> | null> => {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    })
+    const tab = await getCurrentTab()
 
-    if (tab?.id) {
+    if (typeof tab?.id !== 'undefined') {
       const res = await chrome.tabs.sendMessage<
         ChromeMessage<'chrome:getFromPage'>,
         ChromeResponse<'chrome:getFromPage'>

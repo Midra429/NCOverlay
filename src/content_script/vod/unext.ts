@@ -2,8 +2,6 @@ import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
 
 export default async () => {
-  console.log('[NCOverlay] VOD: U-NEXT')
-
   let nco: NCOverlay | null = null
 
   const getInfo = () => {

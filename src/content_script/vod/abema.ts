@@ -3,8 +3,6 @@ import { loadComments } from '@/content_script/utils/loadComments'
 import { AbemaApi } from '@/content_script/api/abema'
 
 export default async () => {
-  console.log('[NCOverlay] VOD: ABEMA')
-
   let nco: NCOverlay | null = null
 
   const getInfo = async () => {

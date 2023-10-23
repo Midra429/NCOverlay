@@ -17,17 +17,15 @@ let timeIdxPairs: number[][] = []
 let prevIdx: number | null = null
 
 chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
-  // サイドパネルへ送信
-  if (ChromeMessageTypeCheck['chrome:sendToSidePanel'](message)) {
-    chrome.windows.getCurrent().then((window) => {
-      if (window.id === sender.tab!.windowId) {
-        if (0 < Object.keys(message.body).length) {
+  if (sender.tab!.active) {
+    // サイドパネルへ送信
+    if (ChromeMessageTypeCheck['chrome:sendToSidePanel'](message)) {
+      chrome.windows.getCurrent().then((window) => {
+        if (window.id === sender.tab!.windowId) {
           update(message.body)
-        } else {
-          update({})
         }
-      }
-    })
+      })
+    }
   }
 
   return false
@@ -43,21 +41,22 @@ const init = async () => {
   settings = await ChromeStorageApi.getSettings()
 }
 
-const update = async ({
-  commentsData,
-  currentTime,
-}: ChromeMessageBody['chrome:sendToSidePanel']) => {
+const update = async (body: ChromeMessageBody['chrome:sendToSidePanel']) => {
   const items = document.querySelector<HTMLElement>('#Items')!
 
-  if (
-    typeof commentsData === 'undefined' &&
-    typeof currentTime === 'undefined'
-  ) {
+  if (!body) {
     timeIdxPairs = []
     removeChilds(items)
+
+    return
   }
 
-  if (NiconiComments.typeGuard.v1.threads(commentsData)) {
+  const { commentsData, currentTime } = body
+
+  if (
+    typeof commentsData !== 'undefined' &&
+    NiconiComments.typeGuard.v1.threads(commentsData)
+  ) {
     const comments = commentsData
       .map((v) => v.comments)
       .flat()
@@ -77,7 +76,7 @@ const update = async ({
   }
 
   if (typeof currentTime !== 'undefined') {
-    const idx = timeIdxPairs.find((v) => v[0] <= currentTime)?.[1]
+    const idx = timeIdxPairs.find(([time]) => time <= currentTime)?.[1]
 
     if (typeof idx !== 'undefined' && idx !== prevIdx) {
       const targetItem = items.children[idx]

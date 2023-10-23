@@ -1,15 +1,21 @@
 import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import {
+  VODS,
+  VODS_ALLOW_CAPTURE,
   ACTION_ICONS_ENABLE,
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
 } from '@/constants'
 import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { isSupported } from '@/utils/chrome/isSupported'
+import { isSupport } from '@/utils/chrome/isSupport'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
+
+const setSidePanel = (tabId: number, enabled: boolean) => {
+  return chrome.sidePanel.setOptions({ tabId, enabled })
+}
 
 chrome.action.disable()
 chrome.action.setIcon({ path: ACTION_ICONS_DISABLE })
@@ -30,6 +36,46 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   ) {
     chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
   }
+
+  chrome.contextMenus.create({
+    id: 'nco:capture',
+    title: 'スクリーンショット',
+    contexts: ['action'],
+  })
+
+  chrome.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
+    if (typeof tab?.id === 'undefined') return
+
+    if (menuItemId === 'nco:capture' && typeof tab?.id !== 'undefined') {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        args: [VODS, VODS_ALLOW_CAPTURE],
+        func: (
+          vods: typeof VODS,
+          vodsAllowCapture: typeof VODS_ALLOW_CAPTURE
+        ) => {
+          const vod = document.documentElement.dataset.ncoVod as
+            | keyof typeof vods
+            | undefined
+
+          if (vod) {
+            if (vodsAllowCapture.includes(vod)) {
+              document.dispatchEvent(new Event('nco:capture'))
+            } else {
+              const vodName = vods[vod]
+              const suppotedLists = vodsAllowCapture
+                .map((v) => vods[v])
+                .join(' / ')
+
+              alert(
+                `${vodName}はスクリーンショット非対応です。\n対応リスト: ${suppotedLists}`
+              )
+            }
+          }
+        },
+      })
+    }
+  })
 })
 
 chrome.runtime.onMessage.addListener(
@@ -117,50 +163,32 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
-chrome.tabs.onActivated.addListener(async (info) => {
-  if (await isSupported(info.tabId)) {
-    await chrome.sidePanel.setOptions({
-      tabId: info.tabId,
-      enabled: false,
-    })
-    await chrome.sidePanel.setOptions({
-      tabId: info.tabId,
-      enabled: true,
-    })
+chrome.tabs.onActivated.addListener(async ({ tabId }) => {
+  if (await isSupport(tabId)) {
+    await setSidePanel(tabId, false)
+    await setSidePanel(tabId, true)
   } else {
-    await chrome.sidePanel.setOptions({
-      tabId: info.tabId,
-      enabled: false,
-    })
+    await setSidePanel(tabId, false)
   }
 })
 
 const prevHostnames: { [tabId: number]: string } = {}
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  if (await isSupported(tabId)) {
+  if (await isSupport(tabId)) {
     try {
       const { hostname } = new URL(info.url ?? '')
 
       if (hostname !== prevHostnames[tabId]) {
-        await chrome.sidePanel.setOptions({
-          tabId: tabId,
-          enabled: false,
-        })
+        await setSidePanel(tabId, false)
       }
 
       prevHostnames[tabId] = hostname
     } catch {}
 
-    await chrome.sidePanel.setOptions({
-      tabId: tabId,
-      enabled: true,
-    })
+    await setSidePanel(tabId, true)
   } else {
-    await chrome.sidePanel.setOptions({
-      tabId: tabId,
-      enabled: false,
-    })
+    await setSidePanel(tabId, false)
 
     delete prevHostnames[tabId]
   }
