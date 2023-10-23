@@ -43,6 +43,10 @@
 詳しい使い方はこちら<br>
 https://github.com/Midra429/NCOverlay/releases/tag/v1.1.0
 
+### スクリーンショット
+拡張機能のアイコンの右クリックメニュー > スクリーンショット<br>
+※ 一部VODのみ対応 (ABEMA / TVer / バンダイチャンネル)
+
 ## インストール
 
 ### Chrome Web Store (推奨)
