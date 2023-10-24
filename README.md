@@ -9,8 +9,8 @@
 
 ## 対応している動画配信サービス
 
-- [Amazon Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [dアニメストア](https://animestore.docomo.ne.jp/animestore/)
+- [Amazon Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [ABEMA](https://abema.tv/)
 - [Disney+](https://www.disneyplus.com/ja-jp/home)
 - [TVer](https://tver.jp/)

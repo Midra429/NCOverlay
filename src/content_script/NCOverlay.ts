@@ -85,7 +85,7 @@ export class NCOverlay {
     )
     chrome.runtime.onMessage.addListener(this.#listener.chromeOnMessage)
 
-    document.addEventListener('nco:capture', this.#listener.capture)
+    document.addEventListener('ncoverlay:capture', this.#listener.capture)
 
     // 設定読み込み
     setTimeout(async () => {
@@ -193,7 +193,7 @@ export class NCOverlay {
     )
     chrome.runtime.onMessage.removeListener(this.#listener.chromeOnMessage)
 
-    document.removeEventListener('nco:capture', this.#listener.capture)
+    document.removeEventListener('ncoverlay:capture', this.#listener.capture)
 
     this.stop()
     this.clear()

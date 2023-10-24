@@ -6,17 +6,19 @@ export const getFromPage =
     const tab = await getCurrentTab()
 
     if (typeof tab?.id !== 'undefined') {
-      const res = await chrome.tabs.sendMessage<
-        ChromeMessage<'chrome:getFromPage'>,
-        ChromeResponse<'chrome:getFromPage'>
-      >(tab.id, {
-        type: 'chrome:getFromPage',
-        body: undefined,
-      })
+      try {
+        const res = await chrome.tabs.sendMessage<
+          ChromeMessage<'chrome:getFromPage'>,
+          ChromeResponse<'chrome:getFromPage'>
+        >(tab.id, {
+          type: 'chrome:getFromPage',
+          body: undefined,
+        })
 
-      if (res?.result) {
-        return res
-      }
+        if (res?.result) {
+          return res
+        }
+      } catch {}
     }
 
     return null

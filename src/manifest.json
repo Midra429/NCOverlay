@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NCOverlay",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
   "homepage_url": "https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe",
 
@@ -28,8 +28,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.amazon.co.jp/*",
         "https://animestore.docomo.ne.jp/*",
+        "https://www.amazon.co.jp/*",
         "https://abema.tv/*",
         "https://www.disneyplus.com/*",
         "https://tver.jp/*",
@@ -45,8 +45,8 @@
 
   "host_permissions": [
     "https://*.nicovideo.jp/*",
-    "https://www.amazon.co.jp/*",
     "https://animestore.docomo.ne.jp/*",
+    "https://www.amazon.co.jp/*",
     "https://abema.tv/*",
     "https://www.disneyplus.com/*",
     "https://tver.jp/*",

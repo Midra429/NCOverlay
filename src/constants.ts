@@ -9,8 +9,8 @@ export const SETTINGS_DEFAULT: ChromeStorageSettings = {
 }
 
 export const VODS = {
-  primeVideo: 'Prime Video',
   dAnime: 'dアニメストア',
+  primeVideo: 'Prime Video',
   abema: 'ABEMA',
   disneyPlus: 'Disney+',
   tver: 'TVer',

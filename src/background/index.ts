@@ -9,12 +9,25 @@ import {
 } from '@/constants'
 import { ChromeStorageApi } from '@/utils/chrome/storage'
 import { isSupport } from '@/utils/chrome/isSupport'
+import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
 
+const manifest = chrome.runtime.getManifest()
+
+const setContextMenu = (id: string | number, enabled: boolean) => {
+  chrome.contextMenus.update(id, { enabled })
+}
+
 const setSidePanel = (tabId: number, enabled: boolean) => {
-  return chrome.sidePanel.setOptions({ tabId, enabled })
+  const { side_panel } = manifest
+
+  return chrome.sidePanel.setOptions({
+    tabId,
+    enabled,
+    path: side_panel.default_path,
+  })
 }
 
 chrome.action.disable()
@@ -23,7 +36,7 @@ chrome.action.setBadgeBackgroundColor({ color: '#2389FF' })
 chrome.action.setBadgeTextColor({ color: '#FFF' })
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-  const { version } = chrome.runtime.getManifest()
+  const { version } = manifest
   const settings = await ChromeStorageApi.getSettings()
 
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -36,46 +49,56 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   ) {
     chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
   }
+})
 
+chrome.contextMenus.removeAll(() => {
   chrome.contextMenus.create({
-    id: 'nco:capture',
+    id: 'ncoverlay:capture',
     title: 'スクリーンショット',
     contexts: ['action'],
+    enabled: false,
+  })
+})
+
+chrome.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
+  if (typeof tab?.id === 'undefined') return
+
+  const permissions = await chrome.permissions.contains({
+    origins: [tab.url!],
   })
 
-  chrome.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
-    if (typeof tab?.id === 'undefined') return
+  if (!permissions) return
 
-    if (menuItemId === 'nco:capture' && typeof tab?.id !== 'undefined') {
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        args: [VODS, VODS_ALLOW_CAPTURE],
-        func: (
-          vods: typeof VODS,
-          vodsAllowCapture: typeof VODS_ALLOW_CAPTURE
-        ) => {
-          const vod = document.documentElement.dataset.ncoVod as
-            | keyof typeof vods
-            | undefined
+  if (menuItemId === 'ncoverlay:capture') {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      args: [VODS, VODS_ALLOW_CAPTURE],
+      func: (
+        vods: typeof VODS,
+        vodsAllowCapture: typeof VODS_ALLOW_CAPTURE
+      ) => {
+        const vod = document.documentElement.dataset.ncoVod as
+          | keyof typeof VODS
+          | undefined
 
-          if (vod) {
-            if (vodsAllowCapture.includes(vod)) {
-              document.dispatchEvent(new Event('nco:capture'))
-            } else {
-              const vodName = vods[vod]
-              const suppotedLists = vodsAllowCapture
-                .map((v) => vods[v])
-                .join(' / ')
+        if (vod) {
+          if (vodsAllowCapture.includes(vod)) {
+            document.dispatchEvent(new Event('ncoverlay:capture'))
+          } else {
+            const vodName = vods[vod]
+            const suppotedLists = vodsAllowCapture
+              .map((v) => vods[v])
+              .filter(Boolean)
+              .join(' / ')
 
-              alert(
-                `${vodName}はスクリーンショット非対応です。\n対応リスト: ${suppotedLists}`
-              )
-            }
+            alert(
+              `${vodName}はスクリーンショット非対応です\n対応リスト: ${suppotedLists}`
+            )
           }
-        },
-      })
-    }
-  })
+        }
+      },
+    })
+  }
 })
 
 chrome.runtime.onMessage.addListener(
@@ -163,8 +186,21 @@ chrome.runtime.onMessage.addListener(
   }
 )
 
+// ウィンドウ変更時
+chrome.windows.onFocusChanged.addListener(async (windowId) => {
+  const tab = await getCurrentTab(windowId)
+  const support = await isSupport(tab?.id)
+
+  setContextMenu('ncoverlay:capture', support)
+})
+
+// タブ変更時
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
-  if (await isSupport(tabId)) {
+  const support = await isSupport(tabId)
+
+  setContextMenu('ncoverlay:capture', support)
+
+  if (support) {
     await setSidePanel(tabId, false)
     await setSidePanel(tabId, true)
   } else {
@@ -174,8 +210,15 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
 
 const prevHostnames: { [tabId: number]: string } = {}
 
+// タブ更新時
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  if (await isSupport(tabId)) {
+  const support = await isSupport(tabId)
+
+  if (tab.active) {
+    setContextMenu('ncoverlay:capture', support)
+  }
+
+  if (support) {
     try {
       const { hostname } = new URL(info.url ?? '')
 

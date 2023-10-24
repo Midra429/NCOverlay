@@ -2,18 +2,23 @@ import { VODS } from '@/constants'
 import { checkSupportedVod } from '@/content_script/utils/checkSupportedVod'
 import { setAction } from './utils/setAction'
 import { setSidePanel } from './utils/setSidePanel'
-import vodPrimeVideo from './vod/primeVideo'
-import vodDAnime from './vod/dAnime'
-import vodAbema from './vod/abema'
-import vodDisneyPlus from './vod/disneyPlus'
-import vodTVer from './vod/tver'
-import vodBandaiChannel from './vod/bandaiChannel'
-import vodUnext from './vod/unext'
-import vodDmmTv from './vod/dmmTv'
 
 console.log('[NCOverlay] content_script.js')
 
 chrome.runtime.onMessage.addListener(() => false)
+
+const vodFunc: {
+  [key in keyof typeof VODS]: Promise<{ default: () => Promise<void> }>
+} = {
+  dAnime: import('./vod/dAnime'),
+  primeVideo: import('./vod/primeVideo'),
+  abema: import('./vod/abema'),
+  disneyPlus: import('./vod/disneyPlus'),
+  tver: import('./vod/tver'),
+  bandaiChannel: import('./vod/bandaiChannel'),
+  unext: import('./vod/unext'),
+  dmmTv: import('./vod/dmmTv'),
+}
 
 const main = async () => {
   const vod = await checkSupportedVod(location.href)
@@ -28,45 +33,7 @@ const main = async () => {
   setAction(true)
   setSidePanel(true)
 
-  // Prime Video
-  if (vod === 'primeVideo') {
-    vodPrimeVideo()
-  }
-
-  // dアニメストア
-  if (vod === 'dAnime') {
-    vodDAnime()
-  }
-
-  // ABEMA
-  if (vod === 'abema') {
-    vodAbema()
-  }
-
-  // Disney+
-  if (vod === 'disneyPlus') {
-    vodDisneyPlus()
-  }
-
-  // TVer
-  if (vod === 'tver') {
-    vodTVer()
-  }
-
-  // バンダイチャンネル
-  if (vod === 'bandaiChannel') {
-    vodBandaiChannel()
-  }
-
-  // U-NEXT
-  if (vod === 'unext') {
-    vodUnext()
-  }
-
-  // DMM TV
-  if (vod === 'dmmTv') {
-    vodDmmTv()
-  }
+  await (await vodFunc[vod]).default()
 }
 
 window.addEventListener('DOMContentLoaded', main)
