@@ -150,7 +150,7 @@ chrome.runtime.onMessage.addListener(
     if (ChromeMessageTypeCheck['chrome:action:title'](message)) {
       chrome.action.setTitle({
         tabId: sender.tab?.id,
-        title: message.body ? `${message.body} | NCOverlay` : '',
+        title: message.body,
       })
     }
 

@@ -7,7 +7,15 @@ export const getSupportStatus = async (
   capture: boolean
 }> => {
   if (typeof tabId !== 'undefined') {
-    try {
+    const tab = await chrome.tabs.get(tabId)
+
+    const permissions =
+      /^https?:\/\/.+/.test(tab.url!) &&
+      (await chrome.permissions.contains({
+        origins: [tab.url!],
+      }))
+
+    if (permissions) {
       const [{ result }] = await chrome.scripting.executeScript({
         target: { tabId },
         args: [VODS_ALLOW_CAPTURE],
@@ -24,7 +32,7 @@ export const getSupportStatus = async (
       })
 
       return result
-    } catch {}
+    }
   }
 
   return {

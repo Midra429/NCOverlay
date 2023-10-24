@@ -40,11 +40,9 @@ export const getVideoData = async (ids: {
       console.log('[NCOverlay] videoData (guest)', videoData)
     }
 
-    videoData.forEach((v) => {
-      v._nco_extra_info = {
-        type: 'normal',
-      }
-    })
+    for (const data of videoData) {
+      data._nco_extra_info = { type: 'normal' }
+    }
 
     videoDataNormal.push(...videoData)
   }
@@ -63,11 +61,9 @@ export const getVideoData = async (ids: {
 
     console.log('[NCOverlay] videoData (splited)', videoData)
 
-    videoData.forEach((v) => {
-      v._nco_extra_info = {
-        type: 'splited',
-      }
-    })
+    for (const data of videoData) {
+      data._nco_extra_info = { type: 'splited' }
+    }
 
     videoDataSplited.push(...videoData)
   }

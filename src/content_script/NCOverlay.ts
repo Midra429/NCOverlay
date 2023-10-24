@@ -14,6 +14,8 @@ import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
 import { sendToSidePanel } from './utils/sendToSidePanel'
 
+const kawaiiRegExp = /kawaii|かわいい|可愛い/i
+
 export class NCOverlay {
   #video: HTMLVideoElement
   #canvas: HTMLCanvasElement
@@ -128,15 +130,27 @@ export class NCOverlay {
     }
 
     this.#commentsCount = 0
+    let kawaiiPct = 0
 
     if (!isFirst && !isReset) {
+      let kawaiiCount = 0
+
       if (NiconiComments.typeGuard.v1.threads(input.comments)) {
         for (const data of input.comments) {
           this.#commentsCount += data.comments.length
+          kawaiiCount += data.comments.filter((v) =>
+            kawaiiRegExp.test(v.body)
+          ).length
         }
       }
 
       console.log('[NCOverlay] commentsCount', this.#commentsCount)
+      console.log('[NCOverlay] kawaiiCount', kawaiiCount)
+
+      kawaiiPct =
+        Math.round((kawaiiCount / this.#commentsCount) * 100 * 10) / 10
+
+      console.log(`[NCOverlay] kawaiiPct: ${kawaiiPct}%`)
     }
 
     this.#videoData = input?.data
@@ -168,7 +182,7 @@ export class NCOverlay {
           : this.#commentsCount.toString()
       )
       setActionTitle(
-        `${this.#commentsCount.toLocaleString()}件のコメントを表示中`
+        `${this.#commentsCount.toLocaleString()}件のコメント (かわいい率: ${kawaiiPct}%)`
       )
     } else {
       setActionBadge('')

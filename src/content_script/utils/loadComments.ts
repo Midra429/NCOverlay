@@ -1,8 +1,18 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { VideoData } from '@/types/niconico/video'
 import type { NCOverlay } from '@/content_script/NCOverlay'
 import { getSearchData } from './getSearchData'
 import { getVideoData } from './getVideoData'
 import { getThreadsData } from './getThreadsData'
+
+const filterVideoData = (videoData: VideoData[]) => {
+  return videoData.filter((v) => {
+    return (
+      // 公式アニメチャンネル
+      v.channel?.isOfficialAnime
+    )
+  })
+}
 
 const filterThreads = (threads: V1Thread[]) => {
   return threads.filter((val, idx, ary) => {
@@ -34,14 +44,19 @@ export const loadComments = async (
   const videoData = await getVideoData(videoIds)
   if (!videoData) return
 
+  const videoDataFiltered = {
+    normal: filterVideoData(videoData.normal),
+    splited: filterVideoData(videoData.splited),
+  }
+
   // コメント情報
-  const threadsData = await getThreadsData(videoData)
+  const threadsData = await getThreadsData(videoDataFiltered)
   if (!threadsData) return
 
-  const videoDataValues = Object.values(videoData).flat()
+  const videoDataValues = Object.values(videoDataFiltered).flat()
 
   // 分割されている動画の合計時間
-  const splitedTotalDuration = videoData.splited.reduce(
+  const splitedTotalDuration = videoDataFiltered.splited.reduce(
     (sum, val) => sum + val.video.duration,
     0
   )
