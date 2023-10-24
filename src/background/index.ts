@@ -8,7 +8,7 @@ import {
   GITHUB_URL,
 } from '@/constants'
 import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { isSupport } from '@/utils/chrome/isSupport'
+import { getSupportStatus } from '@/utils/chrome/getSupportStatus'
 import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
 import { NiconicoApi } from './api/niconico'
 
@@ -189,18 +189,18 @@ chrome.runtime.onMessage.addListener(
 // ウィンドウ変更時
 chrome.windows.onFocusChanged.addListener(async (windowId) => {
   const tab = await getCurrentTab(windowId)
-  const support = await isSupport(tab?.id)
+  const { capture } = await getSupportStatus(tab?.id)
 
-  setContextMenu('ncoverlay:capture', support)
+  setContextMenu('ncoverlay:capture', capture)
 })
 
 // タブ変更時
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
-  const support = await isSupport(tabId)
+  const { vod, capture } = await getSupportStatus(tabId)
 
-  setContextMenu('ncoverlay:capture', support)
+  setContextMenu('ncoverlay:capture', capture)
 
-  if (support) {
+  if (vod) {
     await setSidePanel(tabId, false)
     await setSidePanel(tabId, true)
   } else {
@@ -212,13 +212,13 @@ const prevHostnames: { [tabId: number]: string } = {}
 
 // タブ更新時
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  const support = await isSupport(tabId)
+  const { vod, capture } = await getSupportStatus(tabId)
 
   if (tab.active) {
-    setContextMenu('ncoverlay:capture', support)
+    setContextMenu('ncoverlay:capture', capture)
   }
 
-  if (support) {
+  if (vod) {
     try {
       const { hostname } = new URL(info.url ?? '')
 
