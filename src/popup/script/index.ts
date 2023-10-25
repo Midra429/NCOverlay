@@ -72,6 +72,16 @@ const init = async () => {
     await ChromeStorageApi.set({ lowPerformance: this.checked })
   })
 
+  // allowWeakMatch
+  const settingAllowWeakMatch = document.querySelector<HTMLInputElement>(
+    '#SettingAllowWeakMatch'
+  )!
+
+  settingAllowWeakMatch.checked = settings.allowWeakMatch
+  settingAllowWeakMatch.addEventListener('change', async function () {
+    await ChromeStorageApi.set({ allowWeakMatch: this.checked })
+  })
+
   // showChangelog
   const settingShowChangelog = document.querySelector<HTMLInputElement>(
     '#SettingShowChangelog'
@@ -127,6 +137,13 @@ const init = async () => {
         settingLowPerformance.checked !== changes.lowPerformance.newValue
       ) {
         settingLowPerformance.checked = changes.lowPerformance.newValue
+      }
+
+      if (
+        typeof changes.allowWeakMatch?.newValue !== 'undefined' &&
+        settingAllowWeakMatch.checked !== changes.allowWeakMatch.newValue
+      ) {
+        settingAllowWeakMatch.checked = changes.allowWeakMatch.newValue
       }
 
       if (

@@ -1,8 +1,6 @@
 import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
 import {
-  VODS,
-  VODS_ALLOW_CAPTURE,
   ACTION_ICONS_ENABLE,
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
@@ -35,6 +33,28 @@ chrome.action.setIcon({ path: ACTION_ICONS_DISABLE })
 chrome.action.setBadgeBackgroundColor({ color: '#2389FF' })
 chrome.action.setBadgeTextColor({ color: '#FFF' })
 
+chrome.contextMenus.removeAll(() => {
+  chrome.contextMenus.create({
+    id: 'ncoverlay:capture',
+    title: 'スクリーンショット',
+    contexts: ['action'],
+    enabled: false,
+  })
+})
+
+chrome.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
+  if (typeof tab?.id === 'undefined') return
+
+  const { capture } = await getSupportStatus(tab.id)
+
+  if (menuItemId === 'ncoverlay:capture' && capture) {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+      func: () => document.dispatchEvent(new Event('ncoverlay:capture')),
+    })
+  }
+})
+
 chrome.runtime.onInstalled.addListener(async (details) => {
   const { version } = manifest
   const settings = await ChromeStorageApi.getSettings()
@@ -48,56 +68,6 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     settings.showChangelog
   ) {
     chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
-  }
-})
-
-chrome.contextMenus.removeAll(() => {
-  chrome.contextMenus.create({
-    id: 'ncoverlay:capture',
-    title: 'スクリーンショット',
-    contexts: ['action'],
-    enabled: false,
-  })
-})
-
-chrome.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
-  if (typeof tab?.id === 'undefined') return
-
-  const permissions = await chrome.permissions.contains({
-    origins: [tab.url!],
-  })
-
-  if (!permissions) return
-
-  if (menuItemId === 'ncoverlay:capture') {
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      args: [VODS, VODS_ALLOW_CAPTURE],
-      func: (
-        vods: typeof VODS,
-        vodsAllowCapture: typeof VODS_ALLOW_CAPTURE
-      ) => {
-        const vod = document.documentElement.dataset.ncoVod as
-          | keyof typeof VODS
-          | undefined
-
-        if (vod) {
-          if (vodsAllowCapture.includes(vod)) {
-            document.dispatchEvent(new Event('ncoverlay:capture'))
-          } else {
-            const vodName = vods[vod]
-            const suppotedLists = vodsAllowCapture
-              .map((v) => vods[v])
-              .filter(Boolean)
-              .join(' / ')
-
-            alert(
-              `${vodName}はスクリーンショット非対応です\n対応リスト: ${suppotedLists}`
-            )
-          }
-        }
-      },
-    })
   }
 })
 

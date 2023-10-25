@@ -4,7 +4,7 @@
  * @returns シーズン表記を最適化したタイトル
  */
 export const season = (title: string) => {
-  title = title.replace(/シーズン(\d+)|season(\d+)/gi, (_, p1, p2) => {
+  title = title.replace(/シーズン(\d+)|season\s?(\d+)/gi, (_, p1, p2) => {
     const num = Number(p1 || p2)
 
     return ` シーズン${num} OR Season${num} `

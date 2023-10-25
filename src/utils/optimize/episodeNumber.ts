@@ -1,3 +1,4 @@
+import { EPISODE_NUMBER_REGEXP } from '@/constants'
 import { kanji2number, number2kanji } from '@geolonia/japanese-numeral'
 import { zeroPadding } from '../zeroPadding'
 
@@ -17,7 +18,7 @@ export const episodeNumber = (title: string): string => {
   }
 
   title = title.replace(
-    /第?(\d+|[一二三四五六七八九十百千万]+)話|episode(\d+)|#(\d+)/gi,
+    new RegExp(EPISODE_NUMBER_REGEXP, 'g'),
     (_, p1, p2, p3) => {
       let num = Number(p1 || p2 || p3)
       if (Number.isNaN(num)) {

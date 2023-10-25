@@ -5,6 +5,7 @@ export const SETTINGS_DEFAULT: ChromeStorageSettings = {
   enable: true,
   opacity: 100,
   lowPerformance: false,
+  allowWeakMatch: false,
   showChangelog: true,
 }
 
@@ -96,3 +97,8 @@ export const COLOR_COMMANDS_DARKER = [
   'nobleviolet',
   'black2',
 ]
+
+export const EPISODE_NUMBER_REGEXP =
+  /第?(\d+|[一二三四五六七八九十百千万]+)話|episode\s?(\d+)|#(\d+)/i
+
+export const KAWAII_REGEXP = /kawaii|かわいい|可愛い/i

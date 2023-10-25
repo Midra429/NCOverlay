@@ -7,14 +7,13 @@ import type {
 } from '@/types/chrome/message'
 import type { VideoData } from '@/types/niconico/video'
 import { ChromeMessageTypeCheck } from '@/types/chrome/message'
+import { KAWAII_REGEXP } from '@/constants'
 import NiconiComments from '@xpadev-net/niconicomments'
 import { ChromeStorageApi } from '@/utils/chrome/storage'
 import { setActionBadge } from './utils/setActionBadge'
 import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
 import { sendToSidePanel } from './utils/sendToSidePanel'
-
-const kawaiiRegExp = /kawaii|かわいい|可愛い/i
 
 export class NCOverlay {
   #video: HTMLVideoElement
@@ -77,9 +76,7 @@ export class NCOverlay {
     if (HTMLMediaElement.HAVE_METADATA <= this.#video.readyState) {
       console.log('[NCOverlay] video.readyState >= HAVE_METADATA')
 
-      setTimeout(() => {
-        this.#listener.loadedmetadata(new Event('loadedmetadata'))
-      }, 100)
+      this.#listener.loadedmetadata(new Event('loadedmetadata'))
     }
 
     chrome.storage.local.onChanged.addListener(
@@ -93,7 +90,9 @@ export class NCOverlay {
     setTimeout(async () => {
       const settings = await ChromeStorageApi.getSettings()
 
-      if (!settings.enable) {
+      if (settings.enable) {
+        this.#canvas.style.display = 'block'
+      } else {
         this.#canvas.style.display = 'none'
       }
 
@@ -139,7 +138,7 @@ export class NCOverlay {
         for (const data of input.comments) {
           this.#commentsCount += data.comments.length
           kawaiiCount += data.comments.filter((v) =>
-            kawaiiRegExp.test(v.body)
+            KAWAII_REGEXP.test(v.body)
           ).length
         }
       }
@@ -337,7 +336,9 @@ export class NCOverlay {
       this.onLoadedmetadata?.(e)
     },
 
-    capture: () => this.capture(),
+    capture: (e: Event) => {
+      this.capture()
+    },
 
     chromeOnMessage: (
       message: ChromeMessage,

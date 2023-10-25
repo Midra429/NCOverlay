@@ -6,7 +6,7 @@ export const getThreadsData = async (videoData: {
   normal?: VideoData[]
   splited?: VideoData[]
 }): Promise<{
-  [id: string]: ThreadsData
+  [videoId: string]: ThreadsData
 } | null> => {
   videoData.normal ??= []
   videoData.splited ??= []
@@ -37,8 +37,7 @@ export const getThreadsData = async (videoData: {
   if (0 < videoData.splited.length) {
     let tmpOffset = 0
 
-    for (let i = 0; i < videoData.splited.length; i++) {
-      const data = videoData.splited[i]
+    for (const data of videoData.splited) {
       const res = await NiconicoApi.threads({
         nvComment: {
           additionals: {},

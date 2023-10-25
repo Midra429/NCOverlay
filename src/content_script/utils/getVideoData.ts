@@ -1,6 +1,17 @@
 import type { VideoData } from '@/types/niconico/video'
 import { NiconicoApi } from '@/content_script/api/niconico'
 
+const filterVideoData = (videoData: VideoData[]) => {
+  return videoData.filter((v) => {
+    return (
+      // コメントあり
+      0 < v.video.count.comment &&
+      // 公式アニメチャンネル
+      v.channel?.isOfficialAnime
+    )
+  })
+}
+
 export const getVideoData = async (ids: {
   normal?: string[]
   splited?: string[]
@@ -11,8 +22,8 @@ export const getVideoData = async (ids: {
   ids.normal = ids.normal?.filter(Boolean) ?? []
   ids.splited = ids.splited?.filter(Boolean) ?? []
 
-  const videoDataNormal: VideoData[] = []
-  const videoDataSplited: VideoData[] = []
+  let videoDataNormal: VideoData[] = []
+  let videoDataSplited: VideoData[] = []
 
   // 通常の動画
   if (0 < ids.normal.length) {
@@ -21,7 +32,7 @@ export const getVideoData = async (ids: {
     for (const id of ids.normal) {
       const res = await NiconicoApi.video({ videoId: id })
 
-      if (res && 0 < res.video.count.comment) {
+      if (res) {
         videoData.push(res)
       }
     }
@@ -32,7 +43,7 @@ export const getVideoData = async (ids: {
       for (const id of ids.normal) {
         const res = await NiconicoApi.video({ videoId: id, guest: true })
 
-        if (res && 0 < res.video.count.comment) {
+        if (res) {
           videoData.push(res)
         }
       }
@@ -54,7 +65,7 @@ export const getVideoData = async (ids: {
     for (const id of ids.splited) {
       const res = await NiconicoApi.video({ videoId: id })
 
-      if (res && 0 < res.video.count.comment) {
+      if (res) {
         videoData.push(res)
       }
     }
@@ -67,6 +78,9 @@ export const getVideoData = async (ids: {
 
     videoDataSplited.push(...videoData)
   }
+
+  videoDataNormal = filterVideoData(videoDataNormal)
+  videoDataSplited = filterVideoData(videoDataSplited)
 
   if (0 < videoDataNormal.length || 0 < videoDataSplited.length) {
     return {
