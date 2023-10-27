@@ -57,9 +57,12 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 2. ダウンロードしたファイルを `chrome://extensions` (デベロッパー モード: ON) にドラッグ&ドロップ
 
 ## 不具合報告・機能提案など
+- Misskey ([@Midra@submarin.online](https://submarin.online/@Midra))にメンションやDM
+- X ([@Midra429](https://x.com/Midra429))にメンションやDM
 - GitHub > [Issues](https://github.com/Midra429/NCOverlay/issues)
-- [Chrome Web Store](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe) > サポート
-- [X (@Midra429)](https://x.com/Midra429) に [メンション](https://x.com/intent/tweet?screen_name=Midra429) や [DM](https://x.com/messages/compose?recipient_id=1052566817279864837)
+- [Midraの掲示板](https://midra.me/board)
+- ~~[Chrome Web Store](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe) > サポート~~<br>
+  気付けない可能性高いので非推奨
 
 ---
 
