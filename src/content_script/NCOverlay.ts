@@ -76,7 +76,9 @@ export class NCOverlay {
     if (HTMLMediaElement.HAVE_METADATA <= this.#video.readyState) {
       console.log('[NCOverlay] video.readyState >= HAVE_METADATA')
 
-      this.#listener.loadedmetadata(new Event('loadedmetadata'))
+      setTimeout(() => {
+        this.#listener.loadedmetadata(new Event('loadedmetadata'))
+      }, 100)
     }
 
     chrome.storage.local.onChanged.addListener(

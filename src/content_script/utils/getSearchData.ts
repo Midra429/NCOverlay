@@ -1,11 +1,9 @@
 import type { SearchQuery, SearchData } from '@/types/niconico/search'
-import { DANIME_CHANNEL_ID, EPISODE_NUMBER_REGEXP } from '@/constants'
+import { DANIME_CHANNEL_ID } from '@/constants'
 import deepmerge from 'deepmerge'
 import { NiconicoApi } from '@/content_script/api/niconico'
-import { normalize } from '@/utils/normalize'
-import { optimize } from '@/utils/optimize'
-import { isEqualTitle } from '@/utils/isEqualTitle'
-import { extractEpisodeNumber } from '@/utils/extractEpisodeNumber'
+import { Parser } from '@/utils/parser'
+import { Optimizer } from '@/utils/optimizer'
 
 const searchQueryBase: Partial<SearchQuery> = {
   targets: ['title'],
@@ -15,23 +13,8 @@ const searchQueryBase: Partial<SearchQuery> = {
       '0': 'アニメ',
     },
   },
-  _limit: 10,
-}
-
-const getMatchPct = (strA: string, strB: string) => {
-  let result = 0
-
-  if (strA.startsWith(strB)) {
-    const leftover = strA.replace(strB, '')
-
-    result = 100 - (leftover.length / strA.length) * 100
-  } else if (strB.startsWith(strA)) {
-    const leftover = strB.replace(strA, '')
-
-    result = 100 - (leftover.length / strB.length) * 100
-  }
-
-  return result
+  _sort: '-startTime',
+  _limit: 20,
 }
 
 export const getSearchData = async (info: {
@@ -39,32 +22,13 @@ export const getSearchData = async (info: {
   title: string
   /** 検索対象の動画の長さ用 */
   duration: number
-  /** 作品のタイトル (あいまい検索用) */
-  workTitle?: string
-  /** エピソードのサブタイトル (あいまい検索用) */
-  subTitle?: string
   /** 弱めの一致を有効にするかどうか */
-  allowWeakMatch?: boolean
+  weakMatch?: boolean
 }): Promise<{
   normal: SearchData[]
   splited: SearchData[]
 } | null> => {
-  let optimizedTitle = optimize.title(info.title)
-
-  // 弱めの一致用の検索タイトル
-  if (info.allowWeakMatch) {
-    const episodeNum = extractEpisodeNumber(info.title)
-
-    if (episodeNum) {
-      let [workTitle, subTitle] = info.title.split(EPISODE_NUMBER_REGEXP)
-
-      if (workTitle && subTitle) {
-        optimizedTitle = optimize.title(
-          `${workTitle.split(' ')[0]} ${episodeNum}話 ${subTitle}`
-        )
-      }
-    }
-  }
+  const optimizedTitle = Optimizer.search(info.title, info.weakMatch)
 
   console.log(`[NCOverlay] optimizedTitle: ${optimizedTitle}`)
 
@@ -87,44 +51,14 @@ export const getSearchData = async (info: {
   console.log('[NCOverlay] searchData', searchNormal)
 
   if (searchNormal) {
-    const episodeNum = extractEpisodeNumber(info.title)
-    const workTitle = info.workTitle ? normalize.title(info.workTitle) : null
-    const subTitle = info.subTitle ? normalize.title(info.subTitle) : null
-
     const filtered = searchNormal.filter((val) => {
-      const searchedTitle = normalize.title(val.title!)
+      const compareResult = Parser.compare(val.title!, info.title)
 
-      // 完全一致
-      const isMatch = isEqualTitle(val.title!, info.title)
-
-      // 部分一致
-      const isPartialMatch =
-        !!workTitle &&
-        !!subTitle &&
-        searchedTitle.startsWith(workTitle) &&
-        searchedTitle.endsWith(subTitle)
-
-      // 弱めの一致
-      let isWeakMatch = false
-      if (info.allowWeakMatch) {
-        const searchedEpisodeNum = extractEpisodeNumber(val.title!)
-
-        const matched = val
-          .title!.split(EPISODE_NUMBER_REGEXP)
-          .map((v) => normalize.title(v ?? ''))
-
-        const searchedWorkTitle = matched.at(0) ?? ''
-        const searchedSubTitle = matched.at(-1) ?? ''
-
-        isWeakMatch =
-          !!searchedWorkTitle &&
-          !!searchedSubTitle &&
-          70 <= getMatchPct(workTitle ?? '', searchedWorkTitle) &&
-          episodeNum === searchedEpisodeNum &&
-          subTitle === searchedSubTitle
-      }
-
-      return val.channelId != null && (isMatch || isPartialMatch || isWeakMatch)
+      return (
+        val.channelId != null &&
+        (85 <= compareResult.total ||
+          (info.weakMatch && 75 <= compareResult.total))
+      )
     })
 
     console.log('[NCOverlay] searchData (filtered)', filtered)
@@ -162,8 +96,8 @@ export const getSearchData = async (info: {
           return (
             val.channelId === DANIME_CHANNEL_ID &&
             chapterRegExp.test(val.title!) &&
-            isEqualTitle(title_first, info.title) &&
-            (!title_last || isEqualTitle(title_first, title_last))
+            90 <= Parser.compare(title_first, info.title).total &&
+            (!title_last || 90 <= Parser.compare(title_first, title_last).total)
           )
         })
         .sort((a, b) => {

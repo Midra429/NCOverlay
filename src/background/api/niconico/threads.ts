@@ -1,7 +1,6 @@
 import type { NvComment } from '@/types/niconico/video'
 import type { Threads, ThreadsData } from '@/types/niconico/threads'
-
-const API_URL = 'https://nvcomment.nicovideo.jp/v1/threads'
+import { NICONICO_THREADS_API } from '@/constants'
 
 export type NvCommentBody = Omit<NvComment, 'server'> & {
   additionals: { when?: number }
@@ -11,7 +10,7 @@ export const threads = async (
   nvComment: NvCommentBody
 ): Promise<ThreadsData | null> => {
   try {
-    const res = await fetch(API_URL, {
+    const res = await fetch(NICONICO_THREADS_API, {
       method: 'POST',
       headers: {
         'x-client-os-type': 'others',

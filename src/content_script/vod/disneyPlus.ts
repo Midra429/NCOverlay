@@ -17,18 +17,14 @@ export default async () => {
         groupNames.includes('Star') && groupNames.includes('Non-TWDC')
 
       if (isAnime) {
-        const series = dmcVideo.text.title.full.series?.default.content
         const season = dmcVideo.text.title.full.season?.default.content
         const program = dmcVideo.text.title.full.program.default.content
         const episodeNo = dmcVideo.episodeSeriesSequenceNumber
         const duration = dmcVideo.mediaMetadata.runtimeMillis / 1000
 
-        const workTitle = series ?? season ?? program
         const title = season ?? program
 
         return {
-          // 呪術廻戦
-          workTitle: workTitle,
           // 呪術廻戦 懐玉・玉折／渋谷事変（第2期）
           title: title,
           // 25話
@@ -70,8 +66,6 @@ export default async () => {
         await loadComments(this, {
           title: title,
           duration: info.duration ?? 0,
-          workTitle: info.workTitle,
-          subTitle: info.episodeText,
         })
       }
     }

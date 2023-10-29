@@ -1,7 +1,5 @@
 import type { Video, VideoData } from '@/types/niconico/video'
-
-const API_URL = 'https://www.nicovideo.jp/api/watch/v3'
-const API_URL_GUEST = 'https://www.nicovideo.jp/api/watch/v3_guest'
+import { NICONICO_VIDEO_API, NICONICO_VIDEO_GUEST_API } from '@/constants'
 
 const generateRandomStr = (len: number) => {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -26,9 +24,9 @@ export const video = async (
       t: now,
     }
 
-    const url = `${guest ? API_URL_GUEST : API_URL}/${id}?${new URLSearchParams(
-      params
-    )}`
+    const url = `${
+      guest ? NICONICO_VIDEO_GUEST_API : NICONICO_VIDEO_API
+    }/${id}?${new URLSearchParams(params)}`
 
     try {
       const res = await fetch(url, {

@@ -27,8 +27,6 @@ export default async () => {
       title: title,
       // 第25話 懐玉
       episode: episode,
-      // 呪術廻戦 懐玉・玉折／渋谷事変
-      workTitle: title,
     }
   }
 
@@ -47,8 +45,6 @@ export default async () => {
       await loadComments(this, {
         title: title,
         duration: this.video.duration ?? 0,
-        workTitle: info.workTitle,
-        subTitle: info.episode,
       })
     }
   }

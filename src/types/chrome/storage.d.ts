@@ -2,7 +2,7 @@ export type ChromeStorageSettings = {
   enable: boolean
   opacity: number
   lowPerformance: boolean
-  allowWeakMatch: boolean
+  weakMatch: boolean
   showChangelog: boolean
 }
 

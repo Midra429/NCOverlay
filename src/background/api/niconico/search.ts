@@ -1,13 +1,11 @@
 import type { SearchQuery, Search, SearchData } from '@/types/niconico/search'
+import { NICONICO_SEARCH_API } from '@/constants'
 import { filterObject } from '@/utils/filterObject'
-
-const API_URL =
-  'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search'
 
 export const search = async (
   query: SearchQuery
 ): Promise<SearchData[] | null> => {
-  const params = {
+  const params: { [key in keyof SearchQuery]: string } = {
     q: query.q,
     targets: query.targets.join(),
     fields:
@@ -16,7 +14,7 @@ export const search = async (
     _sort: query._sort ?? '+startTime',
     _offset: query._offset?.toString(),
     _limit: query._limit?.toString(),
-    _context: 'NCOverlay',
+    _context: query._context ?? 'NCOverlay',
   }
 
   if (query.filters) {
@@ -35,9 +33,7 @@ export const search = async (
 
   filterObject(params)
 
-  const url = `${API_URL}?${new URLSearchParams(
-    params as Record<string, string>
-  )}`
+  const url = `${NICONICO_SEARCH_API}?${new URLSearchParams(params)}`
 
   try {
     const res = await fetch(url, {

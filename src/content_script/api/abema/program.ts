@@ -1,11 +1,10 @@
 import type { Program } from '@/types/abema/program'
-
-const API_URL = 'https://api.p-c3-e.abema-tv.com/v1/video/programs'
+import { ABEMA_PROGRAMS_API } from '@/constants'
 
 export const program = async (id: string) => {
   const token = localStorage.getItem('abm_token')
 
-  const url = `${API_URL}/${id}?${new URLSearchParams({
+  const url = `${ABEMA_PROGRAMS_API}/${id}?${new URLSearchParams({
     division: '0',
     include: 'tvod',
   })}`

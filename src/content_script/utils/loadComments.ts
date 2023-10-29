@@ -24,7 +24,7 @@ export const loadComments = async (
 ) => {
   const settings = await ChromeStorageApi.getSettings()
 
-  info.allowWeakMatch = settings.allowWeakMatch
+  info.weakMatch = settings.weakMatch
 
   // 検索結果
   const searchData = await getSearchData(info)

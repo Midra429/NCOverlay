@@ -1,6 +1,7 @@
 {
   "name": "ncoverlay",
   "scripts": {
+    "test": "esbuild src/_test.ts --bundle --outdir=dist",
     "build": "tsc -noEmit && node build.js"
   },
   "author": "Midra",
@@ -11,7 +12,9 @@
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {
+    "@types/archiver": "^5.3.4",
     "@types/chrome": "^0.0.246",
+    "@types/clean-css": "^4.2.9",
     "@types/fs-extra": "^11.0.3",
     "archiver": "^6.0.1",
     "clean-css": "^5.3.2",
@@ -19,7 +22,7 @@
     "fs-extra": "^11.1.1",
     "glob": "^10.3.10",
     "html-minifier-terser": "^7.2.0",
-    "sass": "^1.69.4",
+    "sass": "^1.69.5",
     "terser": "^5.22.0",
     "typescript": "^5.2.2"
   }

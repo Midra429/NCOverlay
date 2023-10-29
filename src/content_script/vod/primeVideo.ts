@@ -3,6 +3,7 @@ import { loadComments } from '@/content_script/utils/loadComments'
 import { isVisible } from '@/utils/dom'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { formatedToSeconds } from '@/utils/formatedToSeconds'
+import { REGEXP_EPISODE } from '@/utils/parser/extractor/episode'
 
 export default async () => {
   let nco: NCOverlay | null = null
@@ -44,8 +45,13 @@ export default async () => {
     const timeindicatorElem = await querySelectorAsync<HTMLElement>(
       '.atvwebplayersdk-timeindicator-text:has(span)'
     )
-    // const se_raw =
-    //   subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
+    const se_raw =
+      subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
+
+    const episodeText = subtitleElem?.lastChild?.textContent?.trim()
+
+    // const seasonNum = Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0))
+    const episodeNum = Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0))
 
     const duration = (timeindicatorElem?.textContent?.split('/') ?? [])
       .map(formatedToSeconds)
@@ -55,13 +61,13 @@ export default async () => {
       // 呪術廻戦 懐玉・玉折／渋谷事変 || 呪術廻戦
       title: detail?.title || titleElem?.textContent?.trim(),
       // 第25話 懐玉
-      episode: subtitleElem?.lastChild?.textContent?.trim(),
-      // 呪術廻戦
-      workTitle: detail?.title,
+      episode:
+        !new RegExp(REGEXP_EPISODE).test(episodeText ?? '') &&
+        Number.isFinite(episodeNum)
+          ? `${episodeNum}話 ${episodeText}`
+          : episodeText,
       // 1435
       duration: duration,
-      // season: Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0)),
-      // episode: Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0)),
     }
   }
 
@@ -93,8 +99,6 @@ export default async () => {
           await loadComments(this, {
             title: title,
             duration: info.duration,
-            workTitle: info.workTitle,
-            subTitle: info.episode,
           })
         }
       }

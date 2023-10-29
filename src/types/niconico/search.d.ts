@@ -43,6 +43,8 @@ export type SearchQuery = {
 
   /** 返ってくるコンテンツの最大数。最大:100 */
   _limit?: number
+
+  _context?: string
 }
 
 export type Search = {

@@ -40,8 +40,6 @@ export default async () => {
         await loadComments(this, {
           title: title,
           duration: this.video.duration ?? 0,
-          workTitle: info.title,
-          subTitle: info.episode,
         })
       }
     }

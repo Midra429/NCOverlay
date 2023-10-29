@@ -17,10 +17,16 @@ export default async () => {
 
       if (isAnime) {
         const workTitle = program.series.title
-        const title =
-          1 < program.season.sequence
-            ? `${workTitle} ${program.season.name}`
-            : workTitle
+
+        let title = workTitle
+
+        if (1 < program.season.sequence) {
+          if (program.season.name.indexOf(workTitle) !== -1) {
+            title = program.season.name
+          } else {
+            title = `${workTitle} ${program.season.name}`
+          }
+        }
 
         let episode: string = ''
         if (title !== program.episode.title) {
@@ -28,8 +34,6 @@ export default async () => {
         }
 
         return {
-          // 呪術廻戦
-          workTitle: workTitle,
           // 呪術廻戦 第2期 懐玉・玉折
           title: title,
           // 第25話 懐玉
@@ -69,8 +73,6 @@ export default async () => {
           await loadComments(this, {
             title: title,
             duration: info.duration ?? 0,
-            workTitle: info.workTitle,
-            subTitle: info.episode,
           })
         }
       }

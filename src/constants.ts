@@ -5,7 +5,7 @@ export const SETTINGS_DEFAULT: ChromeStorageSettings = {
   enable: true,
   opacity: 100,
   lowPerformance: false,
-  allowWeakMatch: false,
+  weakMatch: false,
   showChangelog: true,
 }
 
@@ -25,6 +25,44 @@ export const VODS_ALLOW_CAPTURE: (keyof typeof VODS)[] = [
   'tver',
   'bandaiChannel',
 ]
+
+/** ニコニコ スナップショット検索API v2 */
+export const NICONICO_SEARCH_API =
+  'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search'
+
+/** ニコニコ コメント取得 API */
+export const NICONICO_THREADS_API = 'https://nv-comment.nicovideo.jp/v1/threads'
+
+/** ニコニコ 動画情報 API */
+export const NICONICO_VIDEO_API = 'https://www.nicovideo.jp/api/watch/v3'
+
+/** ニコニコ 動画情報 (ゲスト) API */
+export const NICONICO_VIDEO_GUEST_API =
+  'https://www.nicovideo.jp/api/watch/v3_guest'
+
+/** dアニメストア 動画情報 API */
+export const DANIME_PART_API =
+  'https://animestore.docomo.ne.jp/animestore/rest/WS010105'
+
+/** ABEMA 番組情報 API */
+export const ABEMA_PROGRAMS_API =
+  'https://api.p-c3-e.abema-tv.com/v1/video/programs'
+
+/** Disney+ 動画情報 API */
+export const DISNEYPLUS_DMCVIDEO_API =
+  'https://disney.content.edge.bamgrid.com/svc/' +
+  [
+    'content/DmcVideo',
+    'version/5.1',
+    'region/JP',
+    'audience/k-false,l-true',
+    'maturity/1850',
+    'language/ja',
+    'contentId',
+  ].join('/')
+
+/** DMM TV GraphQL URL */
+export const DMMTV_GRAPHQL_URL = 'https://api.tv.dmm.com/graphql'
 
 /** GitHub */
 export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
@@ -97,8 +135,5 @@ export const COLOR_COMMANDS_DARKER = [
   'nobleviolet',
   'black2',
 ]
-
-export const EPISODE_NUMBER_REGEXP =
-  /第?(\d+|[一二三四五六七八九十百千万]+)話|episode\s?(\d+)|#(\d+)/i
 
 export const KAWAII_REGEXP = /kawaii|かわいい|可愛い/i

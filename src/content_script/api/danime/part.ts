@@ -1,11 +1,10 @@
 import type { Part, PartData } from '@/types/danime/part'
-
-const API_URL = 'https://animestore.docomo.ne.jp/animestore/rest/WS010105'
+import { DANIME_PART_API } from '@/constants'
 
 export const part = async (partId: string): Promise<PartData | null> => {
   try {
     const res = await fetch(
-      `${API_URL}?${new URLSearchParams({
+      `${DANIME_PART_API}?${new URLSearchParams({
         viewType: '5',
         partId: partId,
       })}`

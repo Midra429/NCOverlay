@@ -26,8 +26,6 @@ export default async () => {
       await loadComments(this, {
         title: partData.title,
         duration: partData.partMeasureSecond,
-        workTitle: partData.workTitle,
-        subTitle: partData.partTitle,
       })
     }
   }

@@ -1,20 +1,9 @@
 import type { DmcVideo, Video } from '@/types/disneyPlus/dmcVideo'
-
-const API_URL =
-  'https://disney.content.edge.bamgrid.com/svc/' +
-  [
-    'content/DmcVideo',
-    'version/5.1',
-    'region/JP',
-    'audience/k-false,l-true',
-    'maturity/1850',
-    'language/ja',
-    'contentId',
-  ].join('/')
+import { DISNEYPLUS_DMCVIDEO_API } from '@/constants'
 
 export const dmcVideo = async (contentId: string): Promise<Video | null> => {
   try {
-    const res = await fetch(`${API_URL}/${contentId}`)
+    const res = await fetch(`${DISNEYPLUS_DMCVIDEO_API}/${contentId}`)
 
     if (res.ok) {
       const json: DmcVideo = await res.json()

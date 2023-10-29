@@ -28,8 +28,6 @@ export default async () => {
 
       if (isAnime) {
         return {
-          // 呪術廻戦
-          workTitle: dataVideo.titleName,
           // 呪術廻戦 懐玉・玉折／渋谷事変（第2期）
           title: dataVideo.seasonName,
           // 第25話
@@ -71,8 +69,6 @@ export default async () => {
         await loadComments(this, {
           title: title,
           duration: info.duration ?? this.video.duration ?? 0,
-          workTitle: info.workTitle,
-          subTitle: info.episodeText,
         })
       }
     }
