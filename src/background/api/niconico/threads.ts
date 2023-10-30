@@ -7,15 +7,16 @@ export type NvCommentBody = Omit<NvComment, 'server'> & {
 }
 
 export const threads = async (
-  nvComment: NvCommentBody
+  nvComment: NvCommentBody,
+  server?: string
 ): Promise<ThreadsData | null> => {
   try {
-    const res = await fetch(NICONICO_THREADS_API, {
+    const res = await fetch(server || NICONICO_THREADS_API, {
       method: 'POST',
       headers: {
-        'x-client-os-type': 'others',
-        'x-frontend-id': '6',
-        'x-frontend-version': '0',
+        'X-Frontend-Id': '6',
+        'X-Frontend-Version': '0',
+        'X-Client-Os-Type': 'others',
       },
       body: JSON.stringify(nvComment),
     })

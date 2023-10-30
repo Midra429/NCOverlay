@@ -6,6 +6,7 @@ export const SETTINGS_DEFAULT: ChromeStorageSettings = {
   opacity: 100,
   lowPerformance: false,
   weakMatch: false,
+  useNgList: false,
   showChangelog: true,
 }
 

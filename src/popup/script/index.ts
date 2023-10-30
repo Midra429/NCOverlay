@@ -30,66 +30,81 @@ const init = async () => {
 
   const { version } = chrome.runtime.getManifest()
 
-  document.querySelector('#Version')!.textContent = `v${version}`
+  const linkVersion = document.querySelector<HTMLAnchorElement>('#Version')!
+  linkVersion.textContent = `v${version}`
+  linkVersion.href = `${GITHUB_URL}/releases/tag/v${version}`
+  linkVersion.title = `${linkVersion.textContent}の更新内容`
 
   const linkGitHub = document.querySelector<HTMLAnchorElement>('#LinkGitHub')!
   linkGitHub.href = GITHUB_URL
 
   const settings = await ChromeStorageApi.getSettings()
 
-  // enable
-  const settingEnable =
-    document.querySelector<HTMLInputElement>('#SettingEnable')!
+  const settingChangedListeners: {
+    [key in keyof typeof settings]?: (newValue: any) => void
+  } = {}
 
-  settingEnable.checked = settings.enable
-  settingEnable.addEventListener('change', async function () {
-    await ChromeStorageApi.set({ enable: this.checked })
-  })
+  for (const key in settings) {
+    const setting = settings[key]
 
-  // opacity
-  const settingOpacity =
-    document.querySelector<HTMLInputElement>('#SettingOpacity')!
-  const settingOpacityValue = document.querySelector('#SettingOpacityValue')!
+    const inputElem = document.querySelector<HTMLInputElement>(
+      `input[data-setting-key="${key}"]`
+    )
+    const valueElem = document.querySelector<HTMLElement>(
+      `[data-setting-value="${key}"]`
+    )
 
-  settingOpacityValue.textContent = settingOpacity.value =
-    settings.opacity.toString()
+    if (inputElem) {
+      if (inputElem.type === 'checkbox' && typeof setting === 'boolean') {
+        inputElem.checked = setting
 
-  const opacityChanged = async function (this: HTMLInputElement, e: Event) {
-    settingOpacityValue.textContent = this.value
-    await ChromeStorageApi.set({ opacity: Number(this.value) })
+        const onChange = async function () {
+          if (valueElem) {
+            valueElem.textContent = this.value
+          }
+
+          await ChromeStorageApi.set({ [key]: this.checked })
+        }
+
+        inputElem.addEventListener('change', onChange)
+      }
+
+      if (inputElem.type === 'range' && typeof setting === 'number') {
+        inputElem.value = setting.toString()
+
+        const onChange = async function () {
+          if (valueElem) {
+            valueElem.textContent = this.value
+          }
+
+          await ChromeStorageApi.set({ [key]: Number(this.value) })
+        }
+
+        inputElem.addEventListener('input', onChange)
+        inputElem.addEventListener('change', onChange)
+      }
+    }
+
+    if (valueElem) {
+      valueElem.textContent = setting.toString()
+    }
+
+    settingChangedListeners[key] = (newValue: any) => {
+      if (inputElem) {
+        if (inputElem.type === 'checkbox' && typeof newValue === 'boolean') {
+          inputElem.checked = newValue
+        }
+
+        if (inputElem.type === 'range' && typeof newValue === 'number') {
+          inputElem.value = newValue.toString()
+        }
+      }
+
+      if (valueElem) {
+        valueElem.textContent = newValue.toString()
+      }
+    }
   }
-
-  settingOpacity.addEventListener('input', opacityChanged)
-  settingOpacity.addEventListener('change', opacityChanged)
-
-  // lowPerformance
-  const settingLowPerformance = document.querySelector<HTMLInputElement>(
-    '#SettingLowPerformance'
-  )!
-
-  settingLowPerformance.checked = settings.lowPerformance
-  settingLowPerformance.addEventListener('change', async function () {
-    await ChromeStorageApi.set({ lowPerformance: this.checked })
-  })
-
-  // weakMatch
-  const settingWeakMatch =
-    document.querySelector<HTMLInputElement>('#SettingWeakMatch')!
-
-  settingWeakMatch.checked = settings.weakMatch
-  settingWeakMatch.addEventListener('change', async function () {
-    await ChromeStorageApi.set({ weakMatch: this.checked })
-  })
-
-  // showChangelog
-  const settingShowChangelog = document.querySelector<HTMLInputElement>(
-    '#SettingShowChangelog'
-  )!
-
-  settingShowChangelog.checked = settings.showChangelog
-  settingShowChangelog.addEventListener('change', async function () {
-    await ChromeStorageApi.set({ showChangelog: this.checked })
-  })
 
   // コメント件数
   if ('open' in chrome.sidePanel) {
@@ -116,40 +131,12 @@ const init = async () => {
   // 別のポップアップからの設定変更時
   chrome.storage.local.onChanged.addListener(
     (changes: ChromeStorageChanges) => {
-      if (
-        typeof changes.enable?.newValue !== 'undefined' &&
-        settingEnable.checked !== changes.enable.newValue
-      ) {
-        settingEnable.checked = changes.enable.newValue
-      }
+      for (const key in changes) {
+        const newValue = changes[key]?.newValue
 
-      if (
-        typeof changes.opacity?.newValue !== 'undefined' &&
-        settingOpacity.value !== changes.opacity.newValue.toString()
-      ) {
-        settingOpacityValue.textContent = settingOpacity.value =
-          changes.opacity.newValue.toString()
-      }
-
-      if (
-        typeof changes.lowPerformance?.newValue !== 'undefined' &&
-        settingLowPerformance.checked !== changes.lowPerformance.newValue
-      ) {
-        settingLowPerformance.checked = changes.lowPerformance.newValue
-      }
-
-      if (
-        typeof changes.weakMatch?.newValue !== 'undefined' &&
-        settingWeakMatch.checked !== changes.weakMatch.newValue
-      ) {
-        settingWeakMatch.checked = changes.weakMatch.newValue
-      }
-
-      if (
-        typeof changes.showChangelog?.newValue !== 'undefined' &&
-        settingShowChangelog.checked !== changes.showChangelog.newValue
-      ) {
-        settingShowChangelog.checked = changes.showChangelog.newValue
+        if (typeof newValue !== 'undefined') {
+          settingChangedListeners[key]?.(newValue)
+        }
       }
     }
   )
@@ -158,7 +145,7 @@ const init = async () => {
 }
 
 const update = (body: ChromeMessageBody['chrome:sendToPopup']) => {
-  const items = document.querySelector<HTMLElement>('#Items')!
+  const items = document.querySelector<HTMLElement>('#VideoItems')!
 
   if (!body) {
     removeChilds(items)

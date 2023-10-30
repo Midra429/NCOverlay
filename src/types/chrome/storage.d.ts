@@ -3,6 +3,7 @@ export type ChromeStorageSettings = {
   opacity: number
   lowPerformance: boolean
   weakMatch: boolean
+  useNgList: boolean
   showChangelog: boolean
 }
 

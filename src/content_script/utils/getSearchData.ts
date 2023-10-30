@@ -28,8 +28,10 @@ export const getSearchData = async (info: {
   normal: SearchData[]
   splited: SearchData[]
 } | null> => {
-  const optimizedTitle = Optimizer.search(info.title, info.weakMatch)
+  const parseResult = Parser.parse(info.title)
+  const optimizedTitle = Optimizer.search(parseResult, info.weakMatch)
 
+  console.log('[NCOverlay] parseResult', parseResult)
   console.log(`[NCOverlay] optimizedTitle: ${optimizedTitle}`)
 
   const searchDataNormal: SearchData[] = []
@@ -52,7 +54,7 @@ export const getSearchData = async (info: {
 
   if (searchNormal) {
     const filtered = searchNormal.filter((val) => {
-      const compareResult = Parser.compare(val.title!, info.title)
+      const compareResult = Parser.compare(parseResult, val.title!)
 
       return (
         val.channelId != null &&

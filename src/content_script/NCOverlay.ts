@@ -26,6 +26,7 @@ export class NCOverlay {
   #commentsFormat?: InputFormatType
 
   #commentsCount: number = 0
+  #kawaiiPct: number = 0
   #isPlaying: boolean = false
   #loopIntervalMs: number = Math.round(1000 / 60)
 
@@ -131,7 +132,7 @@ export class NCOverlay {
     }
 
     this.#commentsCount = 0
-    let kawaiiPct = 0
+    this.#kawaiiPct = 0
 
     if (!isFirst && !isReset) {
       let kawaiiCount = 0
@@ -148,10 +149,10 @@ export class NCOverlay {
       console.log('[NCOverlay] commentsCount', this.#commentsCount)
       console.log('[NCOverlay] kawaiiCount', kawaiiCount)
 
-      kawaiiPct =
+      this.#kawaiiPct =
         Math.round((kawaiiCount / this.#commentsCount) * 100 * 10) / 10
 
-      console.log(`[NCOverlay] kawaiiPct: ${kawaiiPct}%`)
+      console.log(`[NCOverlay] kawaiiPct: ${this.#kawaiiPct}%`)
     }
 
     this.#videoData = input?.data
@@ -183,7 +184,9 @@ export class NCOverlay {
           : this.#commentsCount.toString()
       )
       setActionTitle(
-        `${this.#commentsCount.toLocaleString()}件のコメント (かわいい率: ${kawaiiPct}%)`
+        `${this.#commentsCount.toLocaleString()}件のコメント (かわいい率: ${
+          this.#kawaiiPct
+        }%)`
       )
     } else {
       setActionBadge('')

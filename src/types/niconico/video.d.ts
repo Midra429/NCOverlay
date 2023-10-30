@@ -1,4 +1,7 @@
-/** NCOverlayによる追加情報 */
+/**
+ * NCOverlayによる追加情報
+ * @example _nco_extra_info: NCOExtraInfo
+ */
 type NCOExtraInfo = {
   type: 'normal' | 'splited'
 }
@@ -40,7 +43,7 @@ export type VideoData = {
   video: DataVideo
   videoAds: VideoAds
   videoLive: null
-  viewer: DataViewer
+  viewer: DataViewer | null
   waku: Waku
 }
 
@@ -50,7 +53,7 @@ export type Channel = {
   isOfficialAnime: boolean
   isDisplayAdBanner: boolean
   thumbnail: ChannelThumbnail
-  viewer: ChannelViewer
+  viewer: ChannelViewer | null
 }
 
 export type ChannelThumbnail = {
@@ -98,14 +101,16 @@ export type Layer = {
 export type ThreadID = {
   id: number
   fork: number
-  forkLabel: string
+  forkLabel: Fork
 }
+
+export type Fork = 'owner' | 'main' | 'easy'
 
 export type Ng = {
   ngScore: NgScore
   channel: any[]
   owner: any[]
-  viewer: NgViewer
+  viewer: NgViewer | null
 }
 
 export type NgScore = {
@@ -124,7 +129,7 @@ export type ViewerItem = {
   registeredAt: Date
 }
 
-export type Type = 'id' | 'command'
+export type Type = 'word' | 'id' | 'command'
 
 export type NvComment = {
   threadKey: string
@@ -139,7 +144,7 @@ export type Params = {
 
 export type Target = {
   id: string
-  fork: string
+  fork: Fork
 }
 
 export type Server = {
@@ -149,7 +154,7 @@ export type Server = {
 export type Thread = {
   id: number
   fork: number
-  forkLabel: string
+  forkLabel: Fork
   videoId: string
   isActive: boolean
   isDefaultPostTarget: boolean
@@ -160,10 +165,12 @@ export type Thread = {
   threadkey: null | string
   is184Forced: boolean
   hasNicoscript: boolean
-  label: string
+  label: Label
   postkeyStatus: number
   server: string
 }
+
+export type Label = 'owner' | 'default' | 'easy' | 'community'
 
 export type EasyComment = {
   phrases: Phrase[]
@@ -208,16 +215,22 @@ export type Marquee = {
 }
 
 export type Media = {
+  domand: null
   delivery: Delivery
   deliveryLegacy: null
 }
 
 export type Delivery = {
   recipeId: string
-  encryption: null
+  encryption: Encryption | null
   movie: Movie
   storyboard: null
   trackingId: string
+}
+
+export type Encryption = {
+  encryptedKey: string
+  keyUri: string
 }
 
 export type Movie = {
@@ -271,7 +284,7 @@ export type Session = {
 }
 
 export type AuthTypes = {
-  http: string
+  http?: string
   hls: string
 }
 
@@ -309,11 +322,7 @@ export type DataOwner = {
   isVideosPublic: boolean
   isMylistsPublic: boolean
   videoLiveNotice: null
-  viewer: OwnerViewer
-}
-
-export type OwnerViewer = {
-  isFollowing: boolean
+  viewer: null
 }
 
 export type Payment = {
@@ -351,18 +360,13 @@ export type VideoEnd = {
 }
 
 export type Player = {
-  initialPlayback: InitialPlayback | null
+  initialPlayback: null
   comment: PlayerComment
   layerMode: number
 }
 
 export type PlayerComment = {
   isDefaultInvisible: boolean
-}
-
-export type InitialPlayback = {
-  type: string
-  positionSec: null
 }
 
 export type Ranking = {
@@ -399,22 +403,24 @@ export type SeriesVideo = {
 }
 
 export type First = {
-  type: string
-  id: string
-  title: string
-  registeredAt: Date
-  count: Count
-  thumbnail: FirstThumbnail
-  duration: number
-  shortDescription: string
-  latestCommentSummary: string
-  isChannelVideo: boolean
-  isPaymentRequired: boolean
-  playbackPosition: number | null
-  owner: FirstOwner
-  requireSensitiveMasking: boolean
-  videoLive: null
-  isMuted: boolean
+  'type': string
+  'id': string
+  'title': string
+  'registeredAt': Date
+  'count': Count
+  'thumbnail': FirstThumbnail
+  'duration': number
+  'shortDescription': string
+  'latestCommentSummary': string
+  'isChannelVideo': boolean
+  'isPaymentRequired': boolean
+  'playbackPosition': null
+  'owner': FirstOwner
+  'requireSensitiveMasking': boolean
+  'videoLive': null
+  'isMuted': boolean
+  '9d091f87': boolean
+  'acf68865': boolean
 }
 
 export type Count = {
@@ -451,13 +457,13 @@ export type Tag = {
   hasR18Tag: boolean
   isPublishedNicoscript: boolean
   edit: Edit
-  viewer: Edit
+  viewer: Edit | null
 }
 
 export type Edit = {
   isEditable: boolean
-  uneditableReason: null | string
-  editKey: string
+  uneditableReason: string
+  editKey: null | string
 }
 
 export type TagItem = {
@@ -469,23 +475,24 @@ export type TagItem = {
 }
 
 export type DataVideo = {
-  id: string
-  title: string
-  description: string
-  count: Count
-  duration: number
-  thumbnail: VideoThumbnail
-  rating: Rating
-  registeredAt: Date
-  isPrivate: boolean
-  isDeleted: boolean
-  isNoBanner: boolean
-  isAuthenticationRequired: boolean
-  isEmbedPlayerAllowed: boolean
-  isGiftAllowed: boolean
-  viewer: VideoViewer
-  watchableUserTypeForPayment: string
-  commentableUserTypeForPayment: string
+  'id': string
+  'title': string
+  'description': string
+  'count': Count
+  'duration': number
+  'thumbnail': VideoThumbnail
+  'rating': Rating
+  'registeredAt': Date
+  'isPrivate': boolean
+  'isDeleted': boolean
+  'isNoBanner': boolean
+  'isAuthenticationRequired': boolean
+  'isEmbedPlayerAllowed': boolean
+  'isGiftAllowed': boolean
+  'viewer': VideoViewer | null
+  'watchableUserTypeForPayment': string
+  'commentableUserTypeForPayment': string
+  '9d091f87': boolean
 }
 
 export type Rating = {
@@ -494,8 +501,8 @@ export type Rating = {
 
 export type VideoThumbnail = {
   url: string
-  middleUrl: string
-  largeUrl: string
+  middleUrl: null | string
+  largeUrl: null | string
   player: string
   ogp: string
 }
@@ -513,7 +520,7 @@ export type Like = {
 export type VideoAds = {
   additionalParams: VideoAdsAdditionalParams
   items: VideoAdsItem[]
-  reason: string
+  reason: null | string
 }
 
 export type VideoAdsAdditionalParams = {
@@ -525,10 +532,10 @@ export type VideoAdsAdditionalParams = {
   nicosid: string
   lang: string
   watchTrackId: string
-  channelId?: string
   genre: string
-  gender: string
-  age: number
+  channelId?: string
+  gender?: string
+  age?: number
 }
 
 export type VideoAdsItem = {

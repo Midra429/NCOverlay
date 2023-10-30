@@ -1,6 +1,72 @@
 import type { VideoData } from '@/types/niconico/video'
 import type { ThreadsData } from '@/types/niconico/threads'
 import { NiconicoApi } from '@/content_script/api/niconico'
+import { ChromeStorageApi } from '@/utils/chrome/storage'
+
+const filterNvComment = (
+  nvComment: VideoData['comment']['nvComment']
+): Parameters<typeof NiconicoApi.threads>[0]['nvComment'] => {
+  let { params, threadKey } = nvComment
+
+  // かんたんコメント除外
+  params.targets = params.targets.filter((v) => v.fork !== 'easy')
+
+  return {
+    additionals: {},
+    params,
+    threadKey,
+  }
+}
+
+const filterThreadsData = (
+  threadsData: ThreadsData,
+  ng?: VideoData['comment']['ng'] | null
+): ThreadsData => {
+  let { globalComments, threads } = threadsData
+
+  if (ng) {
+    // NG設定 (コメント)
+    const ngWords = ng?.viewer?.items
+      .filter((v) => v.type === 'word')
+      .map((v) => v.source)
+
+    // NG設定 (ユーザーID)
+    const ngIds = ng?.viewer?.items
+      .filter((v) => v.type === 'id')
+      .map((v) => v.source)
+
+    // NG設定 (コマンド)
+    const ngCommands = ng?.viewer?.items
+      .filter((v) => v.type === 'command')
+      .map((v) => v.source)
+
+    if (ngWords || ngIds || ngCommands) {
+      const ngComments: (typeof threads)[0]['comments'] = []
+
+      for (const thread of threads) {
+        thread.comments = thread.comments.filter((comment) => {
+          const isNg =
+            // コメント
+            ngWords?.some((v) => comment.body.includes(v)) ||
+            // ユーザーID
+            ngIds?.includes(comment.userId) ||
+            // コマンド
+            comment.commands.some((v) => ngCommands?.includes(v))
+
+          if (isNg) {
+            ngComments.push(comment)
+          }
+
+          return !isNg
+        })
+      }
+
+      console.log('[NCOverlay] ngComments', { ngComments })
+    }
+  }
+
+  return { globalComments, threads }
+}
 
 export const getThreadsData = async (videoData: {
   normal?: VideoData[]
@@ -8,6 +74,8 @@ export const getThreadsData = async (videoData: {
 }): Promise<{
   [videoId: string]: ThreadsData
 } | null> => {
+  const settings = await ChromeStorageApi.getSettings()
+
   videoData.normal ??= []
   videoData.splited ??= []
 
@@ -18,15 +86,15 @@ export const getThreadsData = async (videoData: {
   if (0 < videoData.normal.length) {
     for (const data of videoData.normal) {
       const res = await NiconicoApi.threads({
-        nvComment: {
-          additionals: {},
-          params: data.comment.nvComment.params,
-          threadKey: data.comment.nvComment.threadKey,
-        },
+        nvComment: filterNvComment(data.comment.nvComment),
+        server: data.comment.nvComment.server,
       })
 
       if (res) {
-        threadsDataNormal[data.video.id] = res
+        threadsDataNormal[data.video.id] = filterThreadsData(
+          res,
+          settings.useNgList ? data.comment.ng : null
+        )
       }
     }
 
@@ -39,11 +107,8 @@ export const getThreadsData = async (videoData: {
 
     for (const data of videoData.splited) {
       const res = await NiconicoApi.threads({
-        nvComment: {
-          additionals: {},
-          params: data.comment.nvComment.params,
-          threadKey: data.comment.nvComment.threadKey,
-        },
+        nvComment: filterNvComment(data.comment.nvComment),
+        server: data.comment.nvComment.server,
       })
 
       if (res) {
@@ -57,7 +122,10 @@ export const getThreadsData = async (videoData: {
 
         tmpOffset += data.video.duration * 1000
 
-        threadsDataSplited[data.video.id] = res
+        threadsDataSplited[data.video.id] = filterThreadsData(
+          res,
+          settings.useNgList ? data.comment.ng : null
+        )
       } else {
         threadsDataSplited = {}
         break

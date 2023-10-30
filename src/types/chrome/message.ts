@@ -1,8 +1,8 @@
 import type { InputFormat } from '@xpadev-net/niconicomments'
-import type { NvCommentBody } from '@/background/api/niconico/threads'
-import type { SearchQuery, SearchData } from '@/types/niconico/search'
+import type { search as NiconicoApiSearch } from '@/background/api/niconico/search'
+import type { video as NiconicoApiVideo } from '@/background/api/niconico/video'
+import type { threads as NiconicoApiThreads } from '@/background/api/niconico/threads'
 import type { VideoData } from '@/types/niconico/video'
-import type { ThreadsData } from '@/types/niconico/threads'
 
 export const ChromeMessageTypeCheck = {
   /** ニコニコ 検索 */
@@ -65,14 +65,15 @@ export const ChromeMessageTypeCheck = {
 
 export type ChromeMessageBody = {
   'niconico:search': {
-    query: SearchQuery
+    query: Parameters<typeof NiconicoApiSearch>[0]
   }
   'niconico:video': {
-    videoId: string
-    guest?: boolean
+    videoId: Parameters<typeof NiconicoApiVideo>[0]
+    guest?: Parameters<typeof NiconicoApiVideo>[1]
   }
   'niconico:threads': {
-    nvComment: NvCommentBody
+    nvComment: Parameters<typeof NiconicoApiThreads>[0]
+    server?: Parameters<typeof NiconicoApiThreads>[1]
   }
 
   'chrome:action': boolean
@@ -100,9 +101,9 @@ export type ChromeMessage<T extends keyof ChromeMessageBody = any> = {
 }
 
 export type ChromeResponseResult = {
-  'niconico:search': SearchData[] | null
-  'niconico:video': VideoData | null
-  'niconico:threads': ThreadsData | null
+  'niconico:search': Awaited<ReturnType<typeof NiconicoApiSearch>>
+  'niconico:video': Awaited<ReturnType<typeof NiconicoApiVideo>>
+  'niconico:threads': Awaited<ReturnType<typeof NiconicoApiThreads>>
 
   'chrome:action': boolean
   'chrome:action:badge': void

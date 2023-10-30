@@ -1,9 +1,12 @@
-import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
-import type { ThreadsData } from '@/types/niconico/threads'
+import type {
+  ChromeMessage,
+  ChromeResponse,
+  ChromeResponseResult,
+} from '@/types/chrome/message'
 
 export const threads = async (
   body: ChromeMessage<'niconico:threads'>['body']
-): Promise<ThreadsData | null> => {
+): Promise<ChromeResponseResult['niconico:threads']> => {
   const res = await chrome.runtime.sendMessage<
     ChromeMessage<'niconico:threads'>,
     ChromeResponse<'niconico:threads'>

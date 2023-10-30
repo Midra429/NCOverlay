@@ -21,7 +21,7 @@ export default async () => {
         let title = workTitle
 
         if (1 < program.season.sequence) {
-          if (program.season.name.indexOf(workTitle) !== -1) {
+          if (program.season.name.includes(workTitle)) {
             title = program.season.name
           } else {
             title = `${workTitle} ${program.season.name}`

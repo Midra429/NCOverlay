@@ -17,11 +17,18 @@
   </head>
 
   <body>
-    <main>
+    <div id="Main">
       <header id="Header">
         <h1>
           <span>NCOverlay</span>
-          <small id="Version"></small>
+          <small>
+            <a
+              id="Version"
+              class="is-button"
+              target="_blank"
+              rel="noopener external"
+            ></a>
+          </small>
           <div id="Links">
             <a
               id="LinkGitHub"
@@ -34,7 +41,7 @@
         </h1>
 
         <div class="input-toggle">
-          <input type="checkbox" id="SettingEnable" />
+          <input type="checkbox" id="SettingEnable" data-setting-key="enable" />
           <label for="SettingEnable"></label>
         </div>
       </header>
@@ -57,32 +64,60 @@
                 max="100"
                 step="5"
                 value="100"
+                data-setting-key="opacity"
               />
 
               <span class="input-value">
-                <span id="SettingOpacityValue">100</span>%
+                <span id="SettingOpacityValue" data-setting-value="opacity"
+                  >100</span
+                >%
               </span>
             </div>
           </li>
 
           <li class="setting">
-            <input type="checkbox" id="SettingLowPerformance" />
+            <input
+              type="checkbox"
+              id="SettingLowPerformance"
+              data-setting-key="lowPerformance"
+            />
 
             <label for="SettingLowPerformance">低パフォーマンスモード</label>
           </li>
 
           <li class="setting">
-            <input type="checkbox" id="SettingWeakMatch" />
+            <input
+              type="checkbox"
+              id="SettingWeakMatch"
+              data-setting-key="weakMatch"
+            />
 
             <label for="SettingWeakMatch">タイトルの一致判定を緩くする</label>
           </li>
 
           <li class="setting">
-            <input type="checkbox" id="SettingShowChangelog" checked />
+            <input
+              type="checkbox"
+              id="SettingUseNgList"
+              data-setting-key="useNgList"
+            />
 
-            <label for="SettingShowChangelog">
-              アップデート後に新しいタブで更新内容を確認する
-            </label>
+            <label for="SettingUseNgList"
+              >ニコニコのNG設定を使う (要ログイン)</label
+            >
+          </li>
+
+          <li class="setting">
+            <input
+              type="checkbox"
+              id="SettingShowChangelog"
+              checked
+              data-setting-key="showChangelog"
+            />
+
+            <label for="SettingShowChangelog"
+              >アップデート後に新しいタブで更新内容を確認する</label
+            >
           </li>
         </ul>
       </section>
@@ -92,7 +127,7 @@
           <h2>表示中のコメント<small id="CommentsCount"></small></h2>
         </header>
 
-        <ul id="Items"></ul>
+        <ul id="VideoItems"></ul>
 
         <template id="TemplateItemVideo">
           <li class="item">
@@ -126,6 +161,6 @@
           </li>
         </template>
       </section>
-    </main>
+    </div>
   </body>
 </html>

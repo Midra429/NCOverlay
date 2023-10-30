@@ -1,9 +1,12 @@
-import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
-import type { VideoData } from '@/types/niconico/video'
+import type {
+  ChromeMessage,
+  ChromeResponse,
+  ChromeResponseResult,
+} from '@/types/chrome/message'
 
 export const video = async (
   body: ChromeMessage<'niconico:video'>['body']
-): Promise<VideoData | null> => {
+): Promise<ChromeResponseResult['niconico:video']> => {
   if (body.videoId) {
     const res = await chrome.runtime.sendMessage<
       ChromeMessage<'niconico:video'>,
