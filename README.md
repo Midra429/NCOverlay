@@ -1,6 +1,7 @@
 # <sub><img src="assets/icon.png" width="30px" height="30px"></sub> NCOverlay
 
 [<img src="assets/badges/chrome.png" height="60px">](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe)
+[<img src="assets/badges/firefox.png" height="60px">](https://addons.mozilla.org/ja/firefox/addon/ncoverlay/)
 
 ## 概要
 
@@ -31,14 +32,14 @@ dアニメストア ニコニコ支店のコメントを取得・表示するに
 - 設定
   - 不透明度: コメントの不透明度
   - 低パフォーマンスモード
-    - コメントの描画: 60FPS → 30FPS
+    - コメントの描画: 30FPS固定
     - サイドパネル: 自動スクロールのアニメーション無効化
   - タイトルの一致判定を緩くする
   <!-- - コメント専用動画を表示する -->
   - ニコニコのNG設定を使う (要ログイン)
 - 表示中のコメントの元動画の確認
 
-### サイドパネル
+### サイドパネル (Chromeのみ)
 - コメントの一覧表示
   - 自動スクロール
   - コマンドによる文字装飾を一部反映
@@ -52,8 +53,11 @@ https://github.com/Midra429/NCOverlay/releases/tag/v1.1.0
 
 ## インストール
 
-### Chrome Web Store (推奨)
+### Chrome Web Store
 https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
+
+### Firefox Add-ons
+https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ### 手動
 1. [Releases](https://github.com/Midra429/NCOverlay/releases) から最新バージョンのZIPファイルをダウンロード
