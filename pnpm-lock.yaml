@@ -14,6 +14,9 @@ dependencies:
   deepmerge:
     specifier: ^4.3.1
     version: 4.3.1
+  webextension-polyfill:
+    specifier: ^0.10.0
+    version: 0.10.0
 
 devDependencies:
   '@types/archiver':
@@ -28,6 +31,9 @@ devDependencies:
   '@types/fs-extra':
     specifier: ^11.0.3
     version: 11.0.3
+  '@types/webextension-polyfill':
+    specifier: ^0.10.5
+    version: 0.10.5
   archiver:
     specifier: ^6.0.1
     version: 6.0.1
@@ -374,6 +380,10 @@ packages:
     resolution: {integrity: sha512-trCChHpWDGCJCUPJRwD62eapW4KOru6h4S7n9KUIESaxhyBM/2Jh20P3XrFRQQ6Df78E/rq2DbUCVZlI8CXPnA==}
     dependencies:
       '@types/node': 20.8.9
+    dev: true
+
+  /@types/webextension-polyfill@0.10.5:
+    resolution: {integrity: sha512-LlmbFLUB7+BDrb9nMuM0wlqtx9LZbBV2x3W98o02cD7Y8i10+sBenTlhG56vr47dzC7WIVXbURii+5jMJsyjLw==}
     dev: true
 
   /@xpadev-net/niconicomments@0.2.61:
@@ -1070,6 +1080,10 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /webextension-polyfill@0.10.0:
+    resolution: {integrity: sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==}
+    dev: false
 
   /which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}

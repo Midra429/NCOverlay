@@ -1,8 +1,9 @@
-import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
+import type { WebExtMessageBody } from '@/types/webext/message'
+import webext from '@/webext'
 
-export const sendToPopup = (body: ChromeMessageBody['chrome:sendToPopup']) => {
-  chrome.runtime.sendMessage<ChromeMessage<'chrome:sendToPopup'>>({
-    type: 'chrome:sendToPopup',
+export const sendToPopup = (body: WebExtMessageBody['webext:sendToPopup']) => {
+  webext.runtime.sendMessage<'webext:sendToPopup'>({
+    type: 'webext:sendToPopup',
     body: body,
   })
 }

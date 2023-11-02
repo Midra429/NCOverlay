@@ -1,7 +1,9 @@
+import webext from '@/webext'
+
 export const getCurrentTab = async (
   windowId?: number
-): Promise<chrome.tabs.Tab | undefined> => {
-  const [tab] = await chrome.tabs.query(
+): Promise<webext.Tabs.Tab | undefined> => {
+  const [tab] = await webext.tabs.query(
     typeof windowId === 'undefined'
       ? {
           active: true,

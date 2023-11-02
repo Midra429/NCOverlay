@@ -1,40 +1,49 @@
-import type { ChromeMessage, ChromeResponse } from '@/types/chrome/message'
-import { ChromeMessageTypeCheck } from '@/types/chrome/message'
+import type { WebExtMessage, WebExtResponse } from '@/types/webext/message'
+import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import {
   ACTION_ICONS_ENABLE,
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
 } from '@/constants'
-import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { getSupportStatus } from '@/utils/chrome/getSupportStatus'
-import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
+import webext from '@/webext'
+import { WebExtStorageApi } from '@/utils/webext/storage'
+import { getSupportStatus } from '@/utils/webext/getSupportStatus'
+import { getCurrentTab } from '@/utils/webext/getCurrentTab'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
 
-const manifest = chrome.runtime.getManifest()
+const manifest = webext.runtime.getManifest()
 
 const setContextMenu = (id: string | number, enabled: boolean) => {
-  chrome.contextMenus.update(id, { enabled })
+  webext.contextMenus.update(id, { enabled })
 }
 
 const setSidePanel = (tabId: number, enabled: boolean) => {
-  const { side_panel } = manifest
-
-  return chrome.sidePanel.setOptions({
-    tabId,
-    enabled,
-    path: side_panel.default_path,
-  })
+  // Chrome
+  if (webext.isChrome) {
+    return webext.sidePanel.setOptions({
+      tabId,
+      enabled,
+      path: manifest.side_panel!.default_path,
+    })
+  }
+  // Firefox
+  // else if (webext.isFirefox) {
+  //   return webext.sidebarAction.setPanel({
+  //     tabId,
+  //     panel: enabled ? manifest.sidebar_action!.default_panel : null,
+  //   })
+  // }
 }
 
-chrome.action.disable()
-chrome.action.setIcon({ path: ACTION_ICONS_DISABLE })
-chrome.action.setBadgeBackgroundColor({ color: '#2389FF' })
-chrome.action.setBadgeTextColor({ color: '#FFF' })
+webext.action.disable()
+webext.action.setIcon({ path: ACTION_ICONS_DISABLE })
+webext.action.setBadgeBackgroundColor({ color: '#2389FF' })
+webext.action.setBadgeTextColor({ color: '#FFF' })
 
-chrome.contextMenus.removeAll(() => {
-  chrome.contextMenus.create({
+webext.contextMenus.removeAll().then(() => {
+  webext.contextMenus.create({
     id: 'ncoverlay:capture',
     title: 'スクリーンショット',
     contexts: ['action'],
@@ -42,94 +51,101 @@ chrome.contextMenus.removeAll(() => {
   })
 })
 
-chrome.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
+webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
   if (typeof tab?.id === 'undefined') return
 
   const { capture } = await getSupportStatus(tab.id)
 
   if (menuItemId === 'ncoverlay:capture' && capture) {
-    await chrome.scripting.executeScript({
+    await webext.scripting.executeScript({
       target: { tabId: tab.id! },
       func: () => document.dispatchEvent(new Event('ncoverlay:capture')),
     })
   }
 })
 
-chrome.runtime.onInstalled.addListener(async (details) => {
+webext.runtime.onInstalled.addListener(async (details) => {
   const { version } = manifest
-  const settings = await ChromeStorageApi.getSettings()
+  const settings = await WebExtStorageApi.getSettings()
 
-  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    chrome.tabs.create({ url: `${GITHUB_URL}/blob/v${version}/README.md` })
+  if (details.reason === 'install') {
+    webext.tabs.create({ url: `${GITHUB_URL}/blob/v${version}/README.md` })
   }
 
-  if (
-    details.reason === chrome.runtime.OnInstalledReason.UPDATE &&
-    settings.showChangelog
-  ) {
-    chrome.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
+  if (details.reason === 'update' && settings.showChangelog) {
+    webext.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
   }
 })
 
-chrome.runtime.onMessage.addListener(
+webext.runtime.onMessage.addListener(
   (
-    message: ChromeMessage,
+    message: WebExtMessage,
     sender,
-    sendResponse: (response: ChromeResponse) => void
+    sendResponse: (response: WebExtResponse) => void
   ) => {
     let promise: Promise<any> | null = null
 
     // ニコニコ 検索
-    if (ChromeMessageTypeCheck['niconico:search'](message)) {
+    if (WebExtMessageTypeCheck['niconico:search'](message)) {
       promise = NiconicoApi.search(message.body.query)
     }
 
     // ニコニコ 動画情報
-    if (ChromeMessageTypeCheck['niconico:video'](message)) {
+    if (WebExtMessageTypeCheck['niconico:video'](message)) {
       promise = NiconicoApi.video(message.body.videoId, message.body.guest)
     }
 
     // ニコニコ コメント
-    if (ChromeMessageTypeCheck['niconico:threads'](message)) {
+    if (WebExtMessageTypeCheck['niconico:threads'](message)) {
       promise = NiconicoApi.threads(message.body.nvComment)
     }
 
     // 拡張機能 アクション 有効/無効
-    if (ChromeMessageTypeCheck['chrome:action'](message)) {
+    if (WebExtMessageTypeCheck['webext:action'](message)) {
       if (message.body) {
-        chrome.action.enable(sender.tab?.id)
+        webext.action.enable(sender.tab?.id)
       } else {
-        chrome.action.disable(sender.tab?.id)
+        webext.action.disable(sender.tab?.id)
       }
 
-      chrome.action.setIcon({
+      webext.action.setIcon({
         tabId: sender.tab?.id,
         path: message.body ? ACTION_ICONS_ENABLE : ACTION_ICONS_DISABLE,
       })
     }
 
     // 拡張機能 アクション バッジ
-    if (ChromeMessageTypeCheck['chrome:action:badge'](message)) {
-      chrome.action.setBadgeText({
+    if (WebExtMessageTypeCheck['webext:action:badge'](message)) {
+      webext.action.setBadgeText({
         tabId: sender.tab?.id,
         text: message.body.toString(),
       })
     }
 
     // 拡張機能 アクション タイトル (ツールチップ)
-    if (ChromeMessageTypeCheck['chrome:action:title'](message)) {
-      chrome.action.setTitle({
+    if (WebExtMessageTypeCheck['webext:action:title'](message)) {
+      webext.action.setTitle({
         tabId: sender.tab?.id,
         title: message.body,
       })
     }
 
     // 拡張機能 サイドパネル 有効/無効
-    if (ChromeMessageTypeCheck['chrome:side_panel'](message)) {
-      chrome.sidePanel.setOptions({
-        tabId: sender.tab?.id,
-        enabled: message.body,
-      })
+    if (WebExtMessageTypeCheck['webext:side_panel'](message)) {
+      // Chrome
+      if (webext.isChrome) {
+        webext.sidePanel.setOptions({
+          tabId: sender.tab?.id,
+          enabled: message.body,
+        })
+      }
+      // Firefox
+      // else if (webext.isFirefox) {
+      //   webext.sidebarAction.setPanel({
+      //     tabId: sender.tab?.id,
+      //     panel: message.body ? manifest.sidebar_action!.default_panel : null,
+      //   })
+      // }
     }
 
     if (promise) {
@@ -151,13 +167,11 @@ chrome.runtime.onMessage.addListener(
 
       return true
     }
-
-    return false
   }
 )
 
 // ウィンドウ変更時
-chrome.windows.onFocusChanged.addListener(async (windowId) => {
+webext.windows.onFocusChanged.addListener(async (windowId) => {
   const tab = await getCurrentTab(windowId)
   const { capture } = await getSupportStatus(tab?.id)
 
@@ -165,7 +179,7 @@ chrome.windows.onFocusChanged.addListener(async (windowId) => {
 })
 
 // タブ変更時
-chrome.tabs.onActivated.addListener(async ({ tabId }) => {
+webext.tabs.onActivated.addListener(async ({ tabId }) => {
   const { vod, capture } = await getSupportStatus(tabId)
 
   setContextMenu('ncoverlay:capture', capture)
@@ -181,7 +195,7 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
 const prevHostnames: { [tabId: number]: string } = {}
 
 // タブ更新時
-chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   const { vod, capture } = await getSupportStatus(tabId)
 
   if (tab.active) {

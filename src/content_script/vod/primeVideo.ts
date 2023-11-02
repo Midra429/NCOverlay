@@ -50,8 +50,8 @@ export default async () => {
 
     const episodeText = subtitleElem?.lastChild?.textContent?.trim()
 
-    // const seasonNum = Number(se_raw.match(/(?<=(シーズン|season))\d+/i)?.at(0))
-    const episodeNum = Number(se_raw.match(/(?<=(エピソード|ep\.))\d+/i)?.at(0))
+    // const seasonNum = Number(se_raw.match(/(?<=シーズン|season)\d+/i)?.at(0))
+    const episodeNum = Number(se_raw.match(/(?<=エピソード|ep\.)\d+/i)?.at(0))
 
     const duration = (timeindicatorElem?.textContent?.split('/') ?? [])
       .map(formatedToSeconds)

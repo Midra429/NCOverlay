@@ -1,3 +1,4 @@
+import webext from '@/webext'
 import { VODS, VODS_ALLOW_CAPTURE } from '@/constants'
 
 export const getSupportStatus = async (
@@ -8,16 +9,16 @@ export const getSupportStatus = async (
 }> => {
   if (typeof tabId !== 'undefined') {
     try {
-      const tab = await chrome.tabs.get(tabId)
+      const tab = await webext.tabs.get(tabId)
 
       const permissions =
         /^https?:\/\/.+/.test(tab.url!) &&
-        (await chrome.permissions.contains({
+        (await webext.permissions.contains({
           origins: [tab.url!],
         }))
 
       if (permissions) {
-        const [{ result }] = await chrome.scripting.executeScript({
+        const [{ result }] = await webext.scripting.executeScript({
           target: { tabId },
           args: [VODS_ALLOW_CAPTURE],
           func: (vodsAllowCapture) => {

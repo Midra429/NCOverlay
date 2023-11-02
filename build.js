@@ -1,6 +1,7 @@
 // @ts-check
 const { globSync } = require('glob')
 const fs = require('fs-extra')
+const deepmerge = require('deepmerge')
 const sass = require('sass')
 const esbuild = require('esbuild')
 const htmlMinifier = require('html-minifier-terser')
@@ -10,8 +11,13 @@ const archiver = require('archiver')
 
 const cleanCSS = new CleanCSS()
 
+const manifestPaths = {
+  base: 'manifest/base.json',
+  chrome: 'manifest/chrome.json',
+  firefox: 'manifest/firefox.json',
+}
+
 const copyPaths = {
-  manifest: 'manifest.json',
   assets: 'assets',
   styles: 'styles',
   popup: 'popup/index.html',
@@ -33,9 +39,22 @@ const jsPaths = {
 
 const inputDir = 'src'
 const outputDir = 'dist/extension'
+const outputDirChrome = `${outputDir}-chrome`
+const outputDirFirefox = `${outputDir}-firefox`
 
-const manifest = fs.readJsonSync(`${inputDir}/${copyPaths.manifest}`)
-const prodDir = `dist/NCOverlay_v${manifest.version}`
+const manifest_base = fs.readJsonSync(`${inputDir}/${manifestPaths.base}`)
+const manifest_chrome = deepmerge(
+  manifest_base,
+  fs.readJsonSync(`${inputDir}/${manifestPaths.chrome}`)
+)
+const manifest_firefox = deepmerge(
+  manifest_base,
+  fs.readJsonSync(`${inputDir}/${manifestPaths.firefox}`)
+)
+
+const prodDir = `dist/NCOverlay_v${manifest_base.version}`
+const prodDirChrome = `${prodDir}-chrome`
+const prodDirFirefox = `${prodDir}-firefox`
 
 /**
  * @param {{ path: string; outfile: string; }} options
@@ -94,8 +113,6 @@ const build = async () => {
  * @param {string} dir
  */
 const minify = async (dir) => {
-  fs.writeFileSync(`${dir}/${copyPaths.manifest}`, JSON.stringify(manifest))
-
   const paths = globSync(`${dir}/**/*.{html,css,js}`)
   for (const path of paths) {
     const file = fs.readFileSync(path, 'utf8')
@@ -131,15 +148,44 @@ const minify = async (dir) => {
 }
 
 const main = async () => {
+  // dist/extension
   await build()
 
   fs.copySync(outputDir, prodDir)
 
+  fs.copySync(outputDir, outputDirChrome)
+  fs.copySync(outputDir, outputDirFirefox)
+
+  fs.removeSync(outputDir)
+  fs.removeSync(`${outputDirFirefox}/side_panel`)
+
+  // dist/NCOverlay_v0.0.0
   await minify(prodDir)
 
+  fs.copySync(prodDir, prodDirChrome)
+  fs.copySync(prodDir, prodDirFirefox)
+
+  fs.removeSync(prodDir)
+  fs.removeSync(`${prodDirFirefox}/side_panel`)
+
+  // manifest.json
+  const manifestChrome = JSON.stringify(manifest_chrome)
+  const manifestFirefox = JSON.stringify(manifest_firefox)
+
+  fs.writeFileSync(`${outputDirChrome}/manifest.json`, manifestChrome)
+  fs.writeFileSync(`${outputDirFirefox}/manifest.json`, manifestFirefox)
+
+  fs.writeFileSync(`${prodDirChrome}/manifest.json`, manifestChrome)
+  fs.writeFileSync(`${prodDirFirefox}/manifest.json`, manifestFirefox)
+
   zip({
-    path: prodDir,
-    outfile: `${prodDir}.zip`,
+    path: `${prodDirChrome}`,
+    outfile: `${prodDirChrome}.zip`,
+  })
+
+  zip({
+    path: `${prodDirFirefox}`,
+    outfile: `${prodDirFirefox}.zip`,
   })
 
   // fs.removeSync(prodDir)

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "NCOverlay",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
-  "homepage_url": "https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe",
+  "homepage_url": "https://github.com/Midra429/NCOverlay",
 
   "icons": {
     "16": "assets/images/icon_16.png",
@@ -15,14 +15,6 @@
   "action": {
     "default_title": "NCOverlay",
     "default_popup": "popup/index.html"
-  },
-
-  "side_panel": {
-    "default_path": "side_panel/index.html"
-  },
-
-  "background": {
-    "service_worker": "background.js"
   },
 
   "content_scripts": [
@@ -55,7 +47,5 @@
     "https://tv.dmm.com/*"
   ],
 
-  "permissions": ["storage", "tabs", "scripting", "contextMenus", "sidePanel"],
-
-  "minimum_chrome_version": "114"
+  "permissions": ["storage", "tabs", "scripting", "contextMenus"]
 }

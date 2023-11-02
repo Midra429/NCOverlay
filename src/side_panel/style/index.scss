@@ -121,6 +121,11 @@ body {
         width: 160px;
         min-width: 160px;
       }
+
+      &-commands {
+        width: 300px;
+        min-width: 300px;
+      }
     }
   }
 
@@ -151,7 +156,8 @@ body {
 
       &-time,
       &-nicoru,
-      &-date {
+      &-date,
+      &-commands {
         font-family: monospace;
       }
     }

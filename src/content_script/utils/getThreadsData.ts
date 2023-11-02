@@ -1,7 +1,7 @@
 import type { VideoData } from '@/types/niconico/video'
 import type { ThreadsData } from '@/types/niconico/threads'
 import { NiconicoApi } from '@/content_script/api/niconico'
-import { ChromeStorageApi } from '@/utils/chrome/storage'
+import { WebExtStorageApi } from '@/utils/webext/storage'
 
 const filterNvComment = (
   nvComment: VideoData['comment']['nvComment']
@@ -74,7 +74,7 @@ export const getThreadsData = async (videoData: {
 }): Promise<{
   [videoId: string]: ThreadsData
 } | null> => {
-  const settings = await ChromeStorageApi.getSettings()
+  const settings = await WebExtStorageApi.getSettings()
 
   videoData.normal ??= []
   videoData.splited ??= []

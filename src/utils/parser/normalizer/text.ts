@@ -16,6 +16,8 @@ export const text = (
     anime?: boolean
   } = {}
 ): string => {
+  str = str.trim()
+
   // 全角 → 半角
   str = fullWidthToHalfWidth(str)
 

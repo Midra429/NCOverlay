@@ -10,9 +10,10 @@ export const checkSupportedVod = async (
     // Prime Video
     if (hostname === 'www.amazon.co.jp') {
       if (
-        pathname.match('/gp/video/') ||
-        pathname.match('/Amazon-Video/') ||
-        (pathname.match('/dp/') && (await querySelectorAsync('#dv-web-player')))
+        pathname.includes('/gp/video/') ||
+        pathname.includes('/Amazon-Video/') ||
+        (pathname.includes('/dp/') &&
+          (await querySelectorAsync('#dv-web-player')))
       ) {
         return 'primeVideo'
       }

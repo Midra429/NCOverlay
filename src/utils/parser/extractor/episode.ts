@@ -5,8 +5,10 @@ export const REGEXP_EPISODE = [
   `第?(?<__NAME__>${regExpKansuji})話`,
   // 第1話 or 1話
   `第?(?<__NAME__>${regExpNum})話`,
+
   // Episode 1 or Episode1
   `Episode\\s?(?<__NAME__>${regExpNum})`,
+
   // #01
   `#(?<__NAME__>${regExpNum})`,
 ]

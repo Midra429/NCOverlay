@@ -1,10 +1,11 @@
-import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
+import type { WebExtMessageBody } from '@/types/webext/message'
+import webext from '@/webext'
 
 export const setActionTitle = (
-  body: ChromeMessageBody['chrome:action:title']
+  body: WebExtMessageBody['webext:action:title']
 ) => {
-  chrome.runtime.sendMessage<ChromeMessage<'chrome:action:title'>>({
-    type: 'chrome:action:title',
+  webext.runtime.sendMessage<'webext:action:title'>({
+    type: 'webext:action:title',
     body: body,
   })
 }

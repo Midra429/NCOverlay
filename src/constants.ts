@@ -1,11 +1,12 @@
-import type { ChromeStorageSettings } from '@/types/chrome/storage'
+import type { WebExtStorageSettings } from '@/types/webext/storage'
 
 /** 設定 (デフォルト) */
-export const SETTINGS_DEFAULT: ChromeStorageSettings = {
+export const SETTINGS_DEFAULT: WebExtStorageSettings = {
   enable: true,
   opacity: 100,
   lowPerformance: false,
   weakMatch: false,
+  szbhMethod: false,
   useNgList: false,
   showChangelog: true,
 }

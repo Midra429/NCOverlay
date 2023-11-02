@@ -1,44 +1,55 @@
-import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
-import type { ChromeStorageChanges } from '@/types/chrome/storage'
-import { ChromeMessageTypeCheck } from '@/types/chrome/message'
+import type { WebExtMessage, WebExtMessageBody } from '@/types/webext/message'
+import type { WebExtStorageChanges } from '@/types/webext/storage'
+import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import { GITHUB_URL } from '@/constants'
-import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { getCurrentTab } from '@/utils/chrome/getCurrentTab'
-import { getFromPage } from '@/utils/chrome/getFromPage'
+import webext from '@/webext'
+import { WebExtStorageApi } from '@/utils/webext/storage'
+import { getCurrentTab } from '@/utils/webext/getCurrentTab'
+import { getFromPage } from '@/utils/webext/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { createVideoItem } from './utils/createVideoItem'
 
 console.log('[NCOverlay] popup.html')
 
-chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
+// const manifest = webext.runtime.getManifest()
+
+webext.runtime.onMessage.addListener((message: WebExtMessage, sender) => {
   if (sender.tab!.active) {
     // ポップアップへ送信
-    if (ChromeMessageTypeCheck['chrome:sendToPopup'](message)) {
-      chrome.windows.getCurrent().then((window) => {
+    if (WebExtMessageTypeCheck['webext:sendToPopup'](message)) {
+      webext.windows.getCurrent().then((window) => {
         if (window.id === sender.tab!.windowId) {
           update(message.body)
         }
       })
     }
   }
-
-  return false
 })
 
 const init = async () => {
   document.body.classList.add('loading')
 
-  const { version } = chrome.runtime.getManifest()
+  const { version } = webext.runtime.getManifest()
 
+  // バージョン
   const linkVersion = document.querySelector<HTMLAnchorElement>('#Version')!
   linkVersion.textContent = `v${version}`
   linkVersion.href = `${GITHUB_URL}/releases/tag/v${version}`
   linkVersion.title = `${linkVersion.textContent}の更新内容`
 
+  // GitHub
   const linkGitHub = document.querySelector<HTMLAnchorElement>('#LinkGitHub')!
   linkGitHub.href = GITHUB_URL
 
-  const settings = await ChromeStorageApi.getSettings()
+  // リセット
+  const buttonReset = document.querySelector<HTMLElement>('#ButtonReset')!
+  buttonReset.addEventListener('click', async () => {
+    if (confirm('設定をリセットしますか？')) {
+      await WebExtStorageApi.clearSettings()
+    }
+  })
+
+  const settings = await WebExtStorageApi.getSettings()
 
   const settingChangedListeners: {
     [key in keyof typeof settings]?: (newValue: any) => void
@@ -63,7 +74,7 @@ const init = async () => {
             valueElem.textContent = this.value
           }
 
-          await ChromeStorageApi.set({ [key]: this.checked })
+          await WebExtStorageApi.set({ [key]: this.checked })
         }
 
         inputElem.addEventListener('change', onChange)
@@ -77,7 +88,7 @@ const init = async () => {
             valueElem.textContent = this.value
           }
 
-          await ChromeStorageApi.set({ [key]: Number(this.value) })
+          await WebExtStorageApi.set({ [key]: Number(this.value) })
         }
 
         inputElem.addEventListener('input', onChange)
@@ -107,30 +118,43 @@ const init = async () => {
   }
 
   // コメント件数
-  if ('open' in chrome.sidePanel) {
+  if (webext.sidePanel?.open) {
     const commentsCount = document.querySelector<HTMLElement>('#CommentsCount')!
     commentsCount.classList.add('is-button')
     commentsCount.title = 'サイドパネルを開く'
-    commentsCount.addEventListener('click', async () => {
-      const tab = await getCurrentTab()
+    commentsCount.addEventListener('click', () => {
+      getCurrentTab().then((tab) => {
+        if (typeof tab?.id !== 'undefined') {
+          // Chrome
+          if (webext.isChrome) {
+            webext.sidePanel.setOptions({
+              tabId: tab.id,
+              enabled: true,
+            })
 
-      if (typeof tab?.id !== 'undefined') {
-        await chrome.sidePanel.setOptions({
-          tabId: tab.id,
-          enabled: true,
-        })
+            webext.sidePanel.open?.({
+              windowId: tab.windowId,
+            })
+          }
+          // Firefox
+          // else if (webext.isFirefox) {
+          //   webext.sidebarAction.setPanel({
+          //     tabId: tab.id,
+          //     panel: manifest.sidebar_action!.default_panel,
+          //   })
+          // }
+        }
+      })
 
-        // @ts-ignore
-        chrome.sidePanel.open({
-          windowId: tab.windowId,
-        })
-      }
+      // if (webext.isFirefox) {
+      //   webext.sidebarAction.open()
+      // }
     })
   }
 
   // 別のポップアップからの設定変更時
-  chrome.storage.local.onChanged.addListener(
-    (changes: ChromeStorageChanges) => {
+  webext.storage.local.onChanged.addListener(
+    (changes: WebExtStorageChanges) => {
       for (const key in changes) {
         const newValue = changes[key]?.newValue
 
@@ -144,7 +168,7 @@ const init = async () => {
   setTimeout(() => document.body.classList.remove('loading'), 100)
 }
 
-const update = (body: ChromeMessageBody['chrome:sendToPopup']) => {
+const update = (body: WebExtMessageBody['webext:sendToPopup']) => {
   const items = document.querySelector<HTMLElement>('#VideoItems')!
 
   if (!body) {

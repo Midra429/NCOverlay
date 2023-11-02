@@ -10,9 +10,13 @@ const template = document.querySelector<HTMLTemplateElement>(
 export const createCommentItem = (comment: V1Comment) => {
   const item = template.firstElementChild!.cloneNode(true) as HTMLElement
 
-  const [commentText, commentTime, commentNicoru, commentDate] = [
-    ...item.children,
-  ] as HTMLElement[]
+  const [
+    commentText,
+    commentTime,
+    commentNicoru,
+    commentDate,
+    commentCommands,
+  ] = [...item.children] as HTMLElement[]
 
   // コメント
   const commentTextSpan = commentText.firstElementChild! as HTMLElement
@@ -54,6 +58,9 @@ export const createCommentItem = (comment: V1Comment) => {
 
   // 投稿日時
   commentDate.textContent = formatDate(comment.postedAt)
+
+  // コマンド
+  commentCommands.textContent = comment.commands.join(' ')
 
   return item
 }

@@ -1,15 +1,16 @@
 import type { InputFormat, InputFormatType } from '@xpadev-net/niconicomments'
-import type { ChromeStorageChanges } from '@/types/chrome/storage'
+import type { WebExtStorageChanges } from '@/types/webext/storage'
 import type {
-  ChromeMessage,
-  ChromeResponse,
-  ChromeResponseResult,
-} from '@/types/chrome/message'
+  WebExtMessage,
+  WebExtResponse,
+  WebExtResponseResult,
+} from '@/types/webext/message'
 import type { VideoData } from '@/types/niconico/video'
-import { ChromeMessageTypeCheck } from '@/types/chrome/message'
+import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import { KAWAII_REGEXP } from '@/constants'
+import webext from '@/webext'
 import NiconiComments from '@xpadev-net/niconicomments'
-import { ChromeStorageApi } from '@/utils/chrome/storage'
+import { WebExtStorageApi } from '@/utils/webext/storage'
 import { setActionBadge } from './utils/setActionBadge'
 import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
@@ -82,23 +83,16 @@ export class NCOverlay {
       }, 100)
     }
 
-    chrome.storage.local.onChanged.addListener(
-      this.#listener.chromeStorageOnChanged
-    )
-    chrome.runtime.onMessage.addListener(this.#listener.chromeOnMessage)
+    webext.storage.local.onChanged.addListener(this.#listener.storageOnChanged)
+    webext.runtime.onMessage.addListener(this.#listener.onMessage)
 
     document.addEventListener('ncoverlay:capture', this.#listener.capture)
 
     // 設定読み込み
     setTimeout(async () => {
-      const settings = await ChromeStorageApi.getSettings()
+      const settings = await WebExtStorageApi.getSettings()
 
-      if (settings.enable) {
-        this.#canvas.style.display = 'block'
-      } else {
-        this.#canvas.style.display = 'none'
-      }
-
+      this.#canvas.style.display = settings.enable ? 'block' : 'none'
       this.#canvas.style.opacity = (settings.opacity / 100).toString()
 
       this.setFPS(settings.lowPerformance ? 30 : 60)
@@ -168,7 +162,10 @@ export class NCOverlay {
     this.#niconiComments = new NiconiComments(
       this.#canvas,
       this.#commentsData,
-      { format: this.#commentsFormat }
+      {
+        mode: 'html5',
+        format: this.#commentsFormat,
+      }
     )
 
     this.#render()
@@ -206,10 +203,10 @@ export class NCOverlay {
   dispose() {
     console.log('[NCOverlay] NCOverlay.dispose()')
 
-    chrome.storage.local.onChanged.removeListener(
-      this.#listener.chromeStorageOnChanged
+    webext.storage.local.onChanged.removeListener(
+      this.#listener.storageOnChanged
     )
-    chrome.runtime.onMessage.removeListener(this.#listener.chromeOnMessage)
+    webext.runtime.onMessage.removeListener(this.#listener.onMessage)
 
     document.removeEventListener('ncoverlay:capture', this.#listener.capture)
 
@@ -266,23 +263,29 @@ export class NCOverlay {
     context!.drawImage(this.#video, 0, 0, canvas.width, canvas.height)
     context!.drawImage(this.#canvas, 0, 0)
 
-    const img = document.createElement('img')
-    img.src = canvas.toDataURL('image/png')
+    const dataUrl = canvas.toDataURL('image/png')
 
-    const ref = window.open()
-    if (ref) {
-      img.style.display = 'block'
-      img.style.maxWidth = '100%'
-      img.style.maxHeight = '100%'
-      img.style.margin = 'auto'
-      img.style.backgroundColor = 'hsl(0, 0%, 90%)'
+    if (webext.isFirefox) {
+      window.open(dataUrl)
+    } else {
+      const img = document.createElement('img')
+      img.src = dataUrl
 
-      ref.document.body.style.display = 'flex'
-      ref.document.body.style.height = '100%'
-      ref.document.body.style.margin = '0px'
-      ref.document.body.style.backgroundColor = 'rgb(14, 14, 14)'
+      const ref = window.open()
+      if (ref) {
+        img.style.display = 'block'
+        img.style.maxWidth = '100%'
+        img.style.maxHeight = '100%'
+        img.style.margin = 'auto'
+        img.style.backgroundColor = 'hsl(0, 0%, 90%)'
 
-      ref.document.body.appendChild(img)
+        ref.document.body.style.display = 'flex'
+        ref.document.body.style.height = '100%'
+        ref.document.body.style.margin = '0px'
+        ref.document.body.style.backgroundColor = 'rgb(14, 14, 14)'
+
+        ref.document.body.appendChild(img)
+      }
     }
   }
 
@@ -345,15 +348,15 @@ export class NCOverlay {
       this.capture()
     },
 
-    chromeOnMessage: (
-      message: ChromeMessage,
-      sender: chrome.runtime.MessageSender,
-      sendResponse: <T extends keyof ChromeResponseResult = any>(
-        response: ChromeResponse<T>
+    onMessage: (
+      message: WebExtMessage,
+      sender: webext.Runtime.MessageSender,
+      sendResponse: <T extends keyof WebExtResponseResult = any>(
+        response: WebExtResponse<T>
       ) => void
     ) => {
       // ページから取得
-      if (ChromeMessageTypeCheck['chrome:getFromPage'](message)) {
+      if (WebExtMessageTypeCheck['webext:getFromPage'](message)) {
         sendResponse({
           type: message.type,
           result: {
@@ -366,17 +369,11 @@ export class NCOverlay {
 
         return true
       }
-
-      return false
     },
 
-    chromeStorageOnChanged: (changes: ChromeStorageChanges) => {
+    storageOnChanged: (changes: WebExtStorageChanges) => {
       if (typeof changes.enable?.newValue !== 'undefined') {
-        if (changes.enable.newValue) {
-          this.#canvas.style.display = 'block'
-        } else {
-          this.#canvas.style.display = 'none'
-        }
+        this.#canvas.style.display = changes.enable.newValue ? 'block' : 'none'
       }
 
       if (typeof changes.opacity?.newValue !== 'undefined') {

@@ -1,6 +1,6 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { NCOverlay } from '@/content_script/NCOverlay'
-import { ChromeStorageApi } from '@/utils/chrome/storage'
+import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getSearchData } from './getSearchData'
 import { getVideoData } from './getVideoData'
 import { getThreadsData } from './getThreadsData'
@@ -22,7 +22,7 @@ export const loadComments = async (
   nco: NCOverlay,
   info: Parameters<typeof getSearchData>[0]
 ) => {
-  const settings = await ChromeStorageApi.getSettings()
+  const settings = await WebExtStorageApi.getSettings()
 
   info.weakMatch = settings.weakMatch
 

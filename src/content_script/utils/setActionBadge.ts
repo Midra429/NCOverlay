@@ -1,10 +1,11 @@
-import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
+import type { WebExtMessageBody } from '@/types/webext/message'
+import webext from '@/webext'
 
 export const setActionBadge = (
-  body: ChromeMessageBody['chrome:action:badge']
+  body: WebExtMessageBody['webext:action:badge']
 ) => {
-  chrome.runtime.sendMessage<ChromeMessage<'chrome:action:badge'>>({
-    type: 'chrome:action:badge',
+  webext.runtime.sendMessage<'webext:action:badge'>({
+    type: 'webext:action:badge',
     body: body,
   })
 }

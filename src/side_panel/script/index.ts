@@ -1,47 +1,46 @@
 import type {
-  ChromeStorageSettings,
-  ChromeStorageChanges,
-} from '@/types/chrome/storage'
-import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
-import { ChromeMessageTypeCheck } from '@/types/chrome/message'
+  WebExtStorageSettings,
+  WebExtStorageChanges,
+} from '@/types/webext/storage'
+import type { WebExtMessage, WebExtMessageBody } from '@/types/webext/message'
+import { WebExtMessageTypeCheck } from '@/types/webext/message'
+import webext from '@/webext'
 import NiconiComments from '@xpadev-net/niconicomments'
-import { ChromeStorageApi } from '@/utils/chrome/storage'
-import { getFromPage } from '@/utils/chrome/getFromPage'
+import { WebExtStorageApi } from '@/utils/webext/storage'
+import { getFromPage } from '@/utils/webext/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { createCommentItem } from './utils/createCommentItem'
 
 console.log('[NCOverlay] side_panel.html')
 
-let settings: ChromeStorageSettings
+let settings: WebExtStorageSettings
 let timeIdxPairs: number[][] = []
 let prevIdx: number | null = null
 
-chrome.runtime.onMessage.addListener((message: ChromeMessage, sender) => {
+webext.runtime.onMessage.addListener((message: WebExtMessage, sender) => {
   if (sender.tab!.active) {
     // サイドパネルへ送信
-    if (ChromeMessageTypeCheck['chrome:sendToSidePanel'](message)) {
-      chrome.windows.getCurrent().then((window) => {
+    if (WebExtMessageTypeCheck['webext:sendToSidePanel'](message)) {
+      webext.windows.getCurrent().then((window) => {
         if (window.id === sender.tab!.windowId) {
           update(message.body)
         }
       })
     }
   }
-
-  return false
 })
 
-chrome.storage.local.onChanged.addListener((changes: ChromeStorageChanges) => {
+webext.storage.local.onChanged.addListener((changes: WebExtStorageChanges) => {
   if (typeof changes.lowPerformance?.newValue !== 'undefined') {
     settings.lowPerformance = changes.lowPerformance.newValue
   }
 })
 
 const init = async () => {
-  settings = await ChromeStorageApi.getSettings()
+  settings = await WebExtStorageApi.getSettings()
 }
 
-const update = async (body: ChromeMessageBody['chrome:sendToSidePanel']) => {
+const update = async (body: WebExtMessageBody['webext:sendToSidePanel']) => {
   const items = document.querySelector<HTMLElement>('#Items')!
 
   if (!body) {

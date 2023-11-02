@@ -22,7 +22,7 @@ export const getSearchData = async (info: {
   title: string
   /** 検索対象の動画の長さ用 */
   duration: number
-  /** 弱めの一致を有効にするかどうか */
+  /** タイトルの一致判定を緩くする */
   weakMatch?: boolean
 }): Promise<{
   normal: SearchData[]
@@ -71,7 +71,7 @@ export const getSearchData = async (info: {
   // 検索 (分割)
   if (
     !searchDataNormal.some((v) => v.channelId === DANIME_CHANNEL_ID) &&
-    (info.title.match(/(劇場|映画)/) || 3600 <= info.duration)
+    (/劇場|映画/.test(info.title) || 3600 <= info.duration)
   ) {
     const searchSplited = await NiconicoApi.search({
       query: deepmerge(searchQueryBase, {

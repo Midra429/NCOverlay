@@ -1,11 +1,12 @@
 import { VODS } from '@/constants'
+import webext from '@/webext'
 import { checkSupportedVod } from '@/content_script/utils/checkSupportedVod'
 import { setAction } from './utils/setAction'
 import { setSidePanel } from './utils/setSidePanel'
 
 console.log('[NCOverlay] content_script.js')
 
-chrome.runtime.onMessage.addListener(() => false)
+webext.runtime.onMessage.addListener(() => {})
 
 const vodFunc: {
   [key in keyof typeof VODS]: Promise<{ default: () => Promise<void> }>

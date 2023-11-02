@@ -1,10 +1,11 @@
-import type { ChromeMessage, ChromeMessageBody } from '@/types/chrome/message'
+import type { WebExtMessageBody } from '@/types/webext/message'
+import webext from '@/webext'
 
 export const sendToSidePanel = (
-  body: ChromeMessageBody['chrome:sendToSidePanel']
+  body: WebExtMessageBody['webext:sendToSidePanel']
 ) => {
-  chrome.runtime.sendMessage<ChromeMessage<'chrome:sendToSidePanel'>>({
-    type: 'chrome:sendToSidePanel',
+  webext.runtime.sendMessage<'webext:sendToSidePanel'>({
+    type: 'webext:sendToSidePanel',
     body: body,
   })
 }
