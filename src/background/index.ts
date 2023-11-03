@@ -1,4 +1,7 @@
-import type { WebExtMessage, WebExtResponse } from '@/types/webext/message'
+import type {
+  WebExtMessage,
+  WebExtMessageResponse,
+} from '@/types/webext/message'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import {
   ACTION_ICONS_ENABLE,
@@ -15,11 +18,24 @@ console.log('[NCOverlay] background.js')
 
 const manifest = webext.runtime.getManifest()
 
-const setContextMenu = (id: string | number, enabled: boolean) => {
-  webext.contextMenus.update(id, { enabled })
+const setAction = async (enabled: boolean, tabId?: number) => {
+  if (enabled) {
+    await webext.action.enable(tabId)
+  } else {
+    await webext.action.disable(tabId)
+  }
+
+  await webext.action.setIcon({
+    tabId,
+    path: enabled ? ACTION_ICONS_ENABLE : ACTION_ICONS_DISABLE,
+  })
 }
 
-const setSidePanel = (tabId: number, enabled: boolean) => {
+const setContextMenu = (id: string | number, enabled: boolean) => {
+  return webext.contextMenus.update(id, { enabled })
+}
+
+const setSidePanel = (enabled: boolean, tabId?: number) => {
   // Chrome
   if (webext.isChrome) {
     return webext.sidePanel.setOptions({
@@ -65,15 +81,60 @@ webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
 })
 
 webext.runtime.onInstalled.addListener(async (details) => {
-  const { version } = manifest
   const settings = await WebExtStorageApi.getSettings()
 
+  // 権限を要求 (Firefoxのみ)
+  if (
+    webext.isFirefox &&
+    (details.reason === 'install' || details.reason === 'update')
+  ) {
+    const permitted = await webext.permissions.contains({
+      origins: manifest.host_permissions,
+    })
+
+    if (!permitted) {
+      const requestPermissions = async () => {
+        if (
+          await webext.permissions.request({
+            origins: manifest.host_permissions,
+          })
+        ) {
+          await setAction(false)
+          webext.action.setPopup({ popup: manifest.action!.default_popup! })
+          webext.action.onClicked.removeListener(requestPermissions)
+
+          try {
+            const tab = await getCurrentTab()
+            if (
+              manifest
+                .host_permissions!.map((v) =>
+                  v.match(/^https?:\/\/(.*)\//)?.at(1)
+                )
+                .filter(Boolean)
+                .includes(new URL(tab?.url ?? '').hostname)
+            ) {
+              webext.tabs.reload()
+            }
+          } catch {}
+        }
+      }
+
+      await setAction(true)
+      webext.action.setPopup({ popup: '' })
+      webext.action.onClicked.addListener(requestPermissions)
+    }
+  }
+
   if (details.reason === 'install') {
-    webext.tabs.create({ url: `${GITHUB_URL}/blob/v${version}/README.md` })
+    webext.tabs.create({
+      url: `${GITHUB_URL}/blob/v${manifest.version}/README.md`,
+    })
   }
 
   if (details.reason === 'update' && settings.showChangelog) {
-    webext.tabs.create({ url: `${GITHUB_URL}/releases/tag/v${version}` })
+    webext.tabs.create({
+      url: `${GITHUB_URL}/releases/tag/v${manifest.version}`,
+    })
   }
 })
 
@@ -81,41 +142,32 @@ webext.runtime.onMessage.addListener(
   (
     message: WebExtMessage,
     sender,
-    sendResponse: (response: WebExtResponse) => void
+    sendResponse: (response: WebExtMessageResponse) => void
   ) => {
     let promise: Promise<any> | null = null
 
     // ニコニコ 検索
-    if (WebExtMessageTypeCheck['niconico:search'](message)) {
-      promise = NiconicoApi.search(message.body.query)
+    if (WebExtMessageTypeCheck('niconico:search', message)) {
+      promise = NiconicoApi.search(...message.body)
     }
 
     // ニコニコ 動画情報
-    if (WebExtMessageTypeCheck['niconico:video'](message)) {
-      promise = NiconicoApi.video(message.body.videoId, message.body.guest)
+    if (WebExtMessageTypeCheck('niconico:video', message)) {
+      promise = NiconicoApi.video(...message.body)
     }
 
     // ニコニコ コメント
-    if (WebExtMessageTypeCheck['niconico:threads'](message)) {
-      promise = NiconicoApi.threads(message.body.nvComment)
+    if (WebExtMessageTypeCheck('niconico:threads', message)) {
+      promise = NiconicoApi.threads(...message.body)
     }
 
     // 拡張機能 アクション 有効/無効
-    if (WebExtMessageTypeCheck['webext:action'](message)) {
-      if (message.body) {
-        webext.action.enable(sender.tab?.id)
-      } else {
-        webext.action.disable(sender.tab?.id)
-      }
-
-      webext.action.setIcon({
-        tabId: sender.tab?.id,
-        path: message.body ? ACTION_ICONS_ENABLE : ACTION_ICONS_DISABLE,
-      })
+    if (WebExtMessageTypeCheck('webext:action', message)) {
+      setAction(message.body, sender.tab?.id)
     }
 
     // 拡張機能 アクション バッジ
-    if (WebExtMessageTypeCheck['webext:action:badge'](message)) {
+    if (WebExtMessageTypeCheck('webext:action:badge', message)) {
       webext.action.setBadgeText({
         tabId: sender.tab?.id,
         text: message.body.toString(),
@@ -123,7 +175,7 @@ webext.runtime.onMessage.addListener(
     }
 
     // 拡張機能 アクション タイトル (ツールチップ)
-    if (WebExtMessageTypeCheck['webext:action:title'](message)) {
+    if (WebExtMessageTypeCheck('webext:action:title', message)) {
       webext.action.setTitle({
         tabId: sender.tab?.id,
         title: message.body,
@@ -131,7 +183,7 @@ webext.runtime.onMessage.addListener(
     }
 
     // 拡張機能 サイドパネル 有効/無効
-    if (WebExtMessageTypeCheck['webext:side_panel'](message)) {
+    if (WebExtMessageTypeCheck('webext:side_panel', message)) {
       // Chrome
       if (webext.isChrome) {
         webext.sidePanel.setOptions({
@@ -185,10 +237,10 @@ webext.tabs.onActivated.addListener(async ({ tabId }) => {
   setContextMenu('ncoverlay:capture', capture)
 
   if (vod) {
-    await setSidePanel(tabId, false)
-    await setSidePanel(tabId, true)
+    await setSidePanel(false, tabId)
+    await setSidePanel(true, tabId)
   } else {
-    await setSidePanel(tabId, false)
+    await setSidePanel(false, tabId)
   }
 })
 
@@ -207,15 +259,15 @@ webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
       const { hostname } = new URL(info.url ?? '')
 
       if (hostname !== prevHostnames[tabId]) {
-        await setSidePanel(tabId, false)
+        await setSidePanel(false, tabId)
       }
 
       prevHostnames[tabId] = hostname
     } catch {}
 
-    await setSidePanel(tabId, true)
+    await setSidePanel(true, tabId)
   } else {
-    await setSidePanel(tabId, false)
+    await setSidePanel(false, tabId)
 
     delete prevHostnames[tabId]
   }

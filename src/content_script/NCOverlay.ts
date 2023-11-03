@@ -1,9 +1,9 @@
 import type { InputFormat, InputFormatType } from '@xpadev-net/niconicomments'
 import type { WebExtStorageChanges } from '@/types/webext/storage'
 import type {
+  WebExtMessageType,
   WebExtMessage,
-  WebExtResponse,
-  WebExtResponseResult,
+  WebExtMessageResponse,
 } from '@/types/webext/message'
 import type { VideoData } from '@/types/niconico/video'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
@@ -29,7 +29,8 @@ export class NCOverlay {
   #commentsCount: number = 0
   #kawaiiPct: number = 0
   #isPlaying: boolean = false
-  #loopIntervalMs: number = Math.round(1000 / 60)
+  #isLowPerformance: boolean = false
+  // #loopIntervalMs: number = Math.floor(1000 / 60)
 
   onPlaying?: (this: this, e: Event) => void
   onPause?: (this: this, e: Event) => void
@@ -95,7 +96,8 @@ export class NCOverlay {
       this.#canvas.style.display = settings.enable ? 'block' : 'none'
       this.#canvas.style.opacity = (settings.opacity / 100).toString()
 
-      this.setFPS(settings.lowPerformance ? 30 : 60)
+      this.#isLowPerformance = settings.lowPerformance
+      // this.setFPS(settings.lowPerformance ? 30 : 60)
     }, 0)
 
     console.log('[NCOverlay] new NCOverlay()', this)
@@ -249,19 +251,19 @@ export class NCOverlay {
     }
   }
 
-  setFPS(fps: number) {
-    this.#loopIntervalMs = Math.round(1000 / fps)
-  }
+  // setFPS(fps: number) {
+  //   this.#loopIntervalMs = Math.floor(1000 / fps)
+  // }
 
   capture() {
     const canvas = document.createElement('canvas')
     canvas.width = this.#canvas.width
     canvas.height = this.#canvas.height
 
-    const context = canvas.getContext('2d')
+    const context = canvas.getContext('2d')!
 
-    context!.drawImage(this.#video, 0, 0, canvas.width, canvas.height)
-    context!.drawImage(this.#canvas, 0, 0)
+    context.drawImage(this.#video, 0, 0, canvas.width, canvas.height)
+    context.drawImage(this.#canvas, 0, 0)
 
     const dataUrl = canvas.toDataURL('image/png')
 
@@ -293,19 +295,23 @@ export class NCOverlay {
     this.#niconiComments.drawCanvas(Math.floor(this.#video.currentTime * 100))
   }
 
-  #_tmp_time: number = -1
+  #_time: number = -1
 
   #loop() {
     if (this.#isPlaying && 0 < this.#commentsCount) {
       this.#render()
 
       const currentTime = Math.floor(this.#video.currentTime)
-      if (this.#_tmp_time !== currentTime) {
-        this.#_tmp_time = currentTime
+      if (this.#_time !== currentTime) {
+        this.#_time = currentTime
         sendToSidePanel({ currentTime })
       }
 
-      setTimeout(() => this.#loop(), this.#loopIntervalMs)
+      if (this.#isLowPerformance) {
+        setTimeout(() => this.#loop(), 33)
+      } else {
+        requestAnimationFrame(() => this.#loop())
+      }
     }
   }
 
@@ -351,12 +357,12 @@ export class NCOverlay {
     onMessage: (
       message: WebExtMessage,
       sender: webext.Runtime.MessageSender,
-      sendResponse: <T extends keyof WebExtResponseResult = any>(
-        response: WebExtResponse<T>
+      sendResponse: <T extends keyof WebExtMessageType>(
+        response: WebExtMessageResponse<T>
       ) => void
     ) => {
       // ページから取得
-      if (WebExtMessageTypeCheck['webext:getFromPage'](message)) {
+      if (WebExtMessageTypeCheck('webext:getFromPage', message)) {
         sendResponse({
           type: message.type,
           result: {
@@ -381,7 +387,8 @@ export class NCOverlay {
       }
 
       if (typeof changes.lowPerformance?.newValue !== 'undefined') {
-        this.setFPS(changes.lowPerformance.newValue ? 30 : 60)
+        this.#isLowPerformance = changes.lowPerformance.newValue
+        // this.setFPS(changes.lowPerformance.newValue ? 30 : 60)
       }
     },
   }

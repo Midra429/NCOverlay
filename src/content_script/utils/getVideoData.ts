@@ -30,7 +30,7 @@ export const getVideoData = async (ids: {
     const videoData: VideoData[] = []
 
     for (const id of ids.normal) {
-      const res = await NiconicoApi.video({ videoId: id })
+      const res = await NiconicoApi.video([id])
 
       if (res) {
         videoData.push(res)
@@ -41,7 +41,7 @@ export const getVideoData = async (ids: {
 
     if (videoData.length === 0) {
       for (const id of ids.normal) {
-        const res = await NiconicoApi.video({ videoId: id, guest: true })
+        const res = await NiconicoApi.video([id, true])
 
         if (res) {
           videoData.push(res)
@@ -63,7 +63,7 @@ export const getVideoData = async (ids: {
     const videoData: VideoData[] = []
 
     for (const id of ids.splited) {
-      const res = await NiconicoApi.video({ videoId: id })
+      const res = await NiconicoApi.video([id])
 
       if (res) {
         videoData.push(res)

@@ -5,7 +5,7 @@ import { WebExtStorageApi } from '@/utils/webext/storage'
 
 const filterNvComment = (
   nvComment: VideoData['comment']['nvComment']
-): Parameters<typeof NiconicoApi.threads>[0]['nvComment'] => {
+): Parameters<typeof NiconicoApi.threads>[0][0] => {
   let { params, threadKey } = nvComment
 
   // かんたんコメント除外
@@ -85,10 +85,10 @@ export const getThreadsData = async (videoData: {
   // 通常の動画
   if (0 < videoData.normal.length) {
     for (const data of videoData.normal) {
-      const res = await NiconicoApi.threads({
-        nvComment: filterNvComment(data.comment.nvComment),
-        server: data.comment.nvComment.server,
-      })
+      const res = await NiconicoApi.threads([
+        filterNvComment(data.comment.nvComment),
+        data.comment.nvComment.server,
+      ])
 
       if (res) {
         threadsDataNormal[data.video.id] = filterThreadsData(
@@ -106,10 +106,10 @@ export const getThreadsData = async (videoData: {
     let tmpOffset = 0
 
     for (const data of videoData.splited) {
-      const res = await NiconicoApi.threads({
-        nvComment: filterNvComment(data.comment.nvComment),
-        server: data.comment.nvComment.server,
-      })
+      const res = await NiconicoApi.threads([
+        filterNvComment(data.comment.nvComment),
+        data.comment.nvComment.server,
+      ])
 
       if (res) {
         if (0 < tmpOffset) {

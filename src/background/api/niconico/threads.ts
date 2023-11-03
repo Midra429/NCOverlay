@@ -11,15 +11,18 @@ export const threads = async (
   server?: string
 ): Promise<ThreadsData | null> => {
   try {
-    const res = await fetch(server || NICONICO_THREADS_API, {
-      method: 'POST',
-      headers: {
-        'X-Frontend-Id': '6',
-        'X-Frontend-Version': '0',
-        'X-Client-Os-Type': 'others',
-      },
-      body: JSON.stringify(nvComment),
-    })
+    const res = await fetch(
+      server ? `${server}/v1/threads` : NICONICO_THREADS_API,
+      {
+        method: 'POST',
+        headers: {
+          'X-Frontend-Id': '6',
+          'X-Frontend-Version': '0',
+          'X-Client-Os-Type': 'others',
+        },
+        body: JSON.stringify(nvComment),
+      }
+    )
     const json: Threads = await res.json()
 
     if (res.ok) {

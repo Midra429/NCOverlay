@@ -38,8 +38,8 @@ export const getSearchData = async (info: {
   const searchDataSplited: SearchData[] = []
 
   // 検索 (通常)
-  const searchNormal = await NiconicoApi.search({
-    query: deepmerge(searchQueryBase, {
+  const searchNormal = await NiconicoApi.search([
+    deepmerge(searchQueryBase, {
       q: optimizedTitle,
       filters: {
         lengthSeconds: {
@@ -48,7 +48,7 @@ export const getSearchData = async (info: {
         },
       },
     }),
-  })
+  ])
 
   console.log('[NCOverlay] searchData', searchNormal)
 
@@ -73,8 +73,8 @@ export const getSearchData = async (info: {
     !searchDataNormal.some((v) => v.channelId === DANIME_CHANNEL_ID) &&
     (/劇場|映画/.test(info.title) || 3600 <= info.duration)
   ) {
-    const searchSplited = await NiconicoApi.search({
-      query: deepmerge(searchQueryBase, {
+    const searchSplited = await NiconicoApi.search([
+      deepmerge(searchQueryBase, {
         q: `${optimizedTitle} Chapter.`,
         filters: {
           tagsExact: {
@@ -82,7 +82,7 @@ export const getSearchData = async (info: {
           },
         },
       }),
-    })
+    ])
 
     console.log('[NCOverlay] searchData (splited)', searchSplited)
 

@@ -1,14 +1,10 @@
-import type {
-  WebExtMessage,
-  WebExtMessageBody,
-  WebExtResponseResult,
-} from '@/types/webext/message'
+import type { WebExtMessageType } from '@/types/webext/message'
 import webext from '@/webext'
 
-const proxy = async <T extends keyof WebExtMessageBody>(
+const proxy = async <T extends keyof WebExtMessageType>(
   type: T,
-  body: WebExtMessage<T>['body']
-): Promise<WebExtResponseResult[T] | null> => {
+  body: WebExtMessageType[T]['body']
+): Promise<WebExtMessageType[T]['result'] | null> => {
   const res = await webext.runtime.sendMessage<T>({
     type: type,
     body: body,
@@ -22,15 +18,15 @@ const proxy = async <T extends keyof WebExtMessageBody>(
 }
 
 export const NiconicoApi = {
-  search: (body: WebExtMessageBody['niconico:search']) => {
+  search: (body: WebExtMessageType['niconico:search']['body']) => {
     return proxy('niconico:search', body)
   },
 
-  video: (body: WebExtMessageBody['niconico:video']) => {
+  video: (body: WebExtMessageType['niconico:video']['body']) => {
     return proxy('niconico:video', body)
   },
 
-  threads: (body: WebExtMessageBody['niconico:threads']) => {
+  threads: (body: WebExtMessageType['niconico:threads']['body']) => {
     return proxy('niconico:threads', body)
   },
 }

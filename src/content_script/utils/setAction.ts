@@ -1,8 +1,8 @@
-import type { WebExtMessageBody } from '@/types/webext/message'
+import type { WebExtMessageType } from '@/types/webext/message'
 import webext from '@/webext'
 
-export const setAction = (body: WebExtMessageBody['webext:action']) => {
-  webext.runtime.sendMessage<'webext:action'>({
+export const setAction = (body: WebExtMessageType['webext:action']['body']) => {
+  webext.runtime.sendMessage({
     type: 'webext:action',
     body: body,
   })

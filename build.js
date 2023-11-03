@@ -151,6 +151,8 @@ const main = async () => {
   // dist/extension
   await build()
 
+  globSync('dist/**/.DS_Store').forEach(fs.removeSync)
+
   fs.copySync(outputDir, prodDir)
 
   fs.copySync(outputDir, outputDirChrome)

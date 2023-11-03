@@ -1,10 +1,10 @@
-import type { WebExtMessageBody } from '@/types/webext/message'
+import type { WebExtMessageType } from '@/types/webext/message'
 import webext from '@/webext'
 
 export const setActionBadge = (
-  body: WebExtMessageBody['webext:action:badge']
+  body: WebExtMessageType['webext:action:badge']['body']
 ) => {
-  webext.runtime.sendMessage<'webext:action:badge'>({
+  webext.runtime.sendMessage({
     type: 'webext:action:badge',
     body: body,
   })

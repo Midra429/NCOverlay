@@ -2,7 +2,7 @@ import type {
   WebExtStorageSettings,
   WebExtStorageChanges,
 } from '@/types/webext/storage'
-import type { WebExtMessage, WebExtMessageBody } from '@/types/webext/message'
+import type { WebExtMessage } from '@/types/webext/message'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import webext from '@/webext'
 import NiconiComments from '@xpadev-net/niconicomments'
@@ -20,7 +20,7 @@ let prevIdx: number | null = null
 webext.runtime.onMessage.addListener((message: WebExtMessage, sender) => {
   if (sender.tab!.active) {
     // サイドパネルへ送信
-    if (WebExtMessageTypeCheck['webext:sendToSidePanel'](message)) {
+    if (WebExtMessageTypeCheck('webext:sendToSidePanel', message)) {
       webext.windows.getCurrent().then((window) => {
         if (window.id === sender.tab!.windowId) {
           update(message.body)
@@ -40,7 +40,9 @@ const init = async () => {
   settings = await WebExtStorageApi.getSettings()
 }
 
-const update = async (body: WebExtMessageBody['webext:sendToSidePanel']) => {
+const update = async (
+  body: WebExtMessage<'webext:sendToSidePanel'>['body']
+) => {
   const items = document.querySelector<HTMLElement>('#Items')!
 
   if (!body) {

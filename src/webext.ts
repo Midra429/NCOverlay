@@ -1,35 +1,35 @@
 import type {
+  WebExtMessageType,
   WebExtMessage,
-  WebExtMessageBody,
-  WebExtResponse,
+  WebExtMessageResponse,
 } from '@/types/webext/message'
 import browser from 'webextension-polyfill'
 
 declare module 'webextension-polyfill' {
-  namespace Tabs {
-    interface Static {
-      sendMessage<T extends keyof WebExtMessageBody>(
-        tabId: number,
-        message: WebExtMessage<T>,
-        options?: Tabs.SendMessageOptionsType
-      ): Promise<WebExtResponse<T>>
-    }
-  }
-
-  namespace Runtime {
-    interface Static {
-      sendMessage<T extends keyof WebExtMessageBody>(
-        message: WebExtMessage<T>,
-        options?: Runtime.SendMessageOptionsType
-      ): Promise<any>
-    }
-  }
-
   namespace Manifest {
     interface WebExtensionManifest {
       side_panel?: {
         default_path?: string
       }
+    }
+  }
+
+  namespace Tabs {
+    interface Static {
+      sendMessage<T extends keyof WebExtMessageType>(
+        tabId: number,
+        message: WebExtMessage<T>,
+        options?: Tabs.SendMessageOptionsType
+      ): Promise<WebExtMessageResponse<T>>
+    }
+  }
+
+  namespace Runtime {
+    interface Static {
+      sendMessage<T extends keyof WebExtMessageType>(
+        message: WebExtMessage<T>,
+        options?: Runtime.SendMessageOptionsType
+      ): Promise<WebExtMessageResponse<T>>
     }
   }
 

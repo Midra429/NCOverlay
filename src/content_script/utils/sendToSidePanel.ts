@@ -1,10 +1,10 @@
-import type { WebExtMessageBody } from '@/types/webext/message'
+import type { WebExtMessageType } from '@/types/webext/message'
 import webext from '@/webext'
 
 export const sendToSidePanel = (
-  body: WebExtMessageBody['webext:sendToSidePanel']
+  body: WebExtMessageType['webext:sendToSidePanel']['body']
 ) => {
-  webext.runtime.sendMessage<'webext:sendToSidePanel'>({
+  webext.runtime.sendMessage({
     type: 'webext:sendToSidePanel',
     body: body,
   })

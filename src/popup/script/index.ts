@@ -1,4 +1,4 @@
-import type { WebExtMessage, WebExtMessageBody } from '@/types/webext/message'
+import type { WebExtMessage } from '@/types/webext/message'
 import type { WebExtStorageChanges } from '@/types/webext/storage'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import { GITHUB_URL } from '@/constants'
@@ -16,7 +16,7 @@ console.log('[NCOverlay] popup.html')
 webext.runtime.onMessage.addListener((message: WebExtMessage, sender) => {
   if (sender.tab!.active) {
     // ポップアップへ送信
-    if (WebExtMessageTypeCheck['webext:sendToPopup'](message)) {
+    if (WebExtMessageTypeCheck('webext:sendToPopup', message)) {
       webext.windows.getCurrent().then((window) => {
         if (window.id === sender.tab!.windowId) {
           update(message.body)
@@ -168,7 +168,7 @@ const init = async () => {
   setTimeout(() => document.body.classList.remove('loading'), 100)
 }
 
-const update = (body: WebExtMessageBody['webext:sendToPopup']) => {
+const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {
   const items = document.querySelector<HTMLElement>('#VideoItems')!
 
   if (!body) {

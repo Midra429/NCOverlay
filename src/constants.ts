@@ -32,15 +32,15 @@ export const VODS_ALLOW_CAPTURE: (keyof typeof VODS)[] = [
 export const NICONICO_SEARCH_API =
   'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search'
 
-/** ニコニコ コメント取得 API */
-export const NICONICO_THREADS_API = 'https://nv-comment.nicovideo.jp/v1/threads'
-
 /** ニコニコ 動画情報 API */
 export const NICONICO_VIDEO_API = 'https://www.nicovideo.jp/api/watch/v3'
 
 /** ニコニコ 動画情報 (ゲスト) API */
 export const NICONICO_VIDEO_GUEST_API =
   'https://www.nicovideo.jp/api/watch/v3_guest'
+
+/** ニコニコ コメント取得 API */
+export const NICONICO_THREADS_API = 'https://nv-comment.nicovideo.jp/v1/threads'
 
 /** dアニメストア 動画情報 API */
 export const DANIME_PART_API =
@@ -138,4 +138,4 @@ export const COLOR_COMMANDS_DARKER = [
   'black2',
 ]
 
-export const KAWAII_REGEXP = /kawaii|かわいい|可愛い/i
+export const KAWAII_REGEXP = /かわいい|可愛い|^かーいー$/
