@@ -1,5 +1,6 @@
 import type { ParseResult } from './parse'
 import { normalizer } from './normalizer'
+import { extractor } from './extractor'
 import { parse } from './parse'
 import { equal } from './equal'
 import { match } from './match'
@@ -92,6 +93,49 @@ export const compare = (
   result.total = Math.round(
     result.workTitle * 0.5 + result.episode * 0.3 + result.subTitle * 0.2
   )
+
+  if (result.total === 0) {
+    const splitedA = normalizer
+      .text(targetA.input, { bracket: true, anime: true })
+      .split(' ')
+      .filter(Boolean)
+    const splitedB = normalizer
+      .text(targetB.input, { bracket: true, anime: true })
+      .split(' ')
+      .filter(Boolean)
+
+    const splitedShort = splitedA.length < splitedB.length ? splitedA : splitedB
+    const splitedLong = splitedA.length < splitedB.length ? splitedB : splitedA
+
+    const strLong = splitedLong.join('')
+
+    let pct = 0
+
+    for (const long of splitedLong) {
+      for (let i = 0; i < splitedShort.length; i++) {
+        if (equal(long, splitedShort[i])) {
+          pct += (splitedShort[i].length / strLong.length) * 100
+
+          splitedShort[i] = ''
+        } else {
+          const epNumA = extractor.episode(long)[0]?.number
+          const epNumB = extractor.episode(splitedShort[i])[0]?.number
+
+          if (
+            Number.isFinite(epNumA) &&
+            Number.isFinite(epNumB) &&
+            epNumA === epNumB
+          ) {
+            pct += (long.length / strLong.length) * 100
+
+            splitedShort[i] = ''
+          }
+        }
+      }
+    }
+
+    result.total = Math.round(pct)
+  }
 
   return result
 }

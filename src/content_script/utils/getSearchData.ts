@@ -56,10 +56,12 @@ export const getSearchData = async (info: {
     const filtered = searchNormal.filter((val) => {
       const compareResult = Parser.compare(parseResult, val.title!)
 
+      console.log('[NCOverlay] compareResult', compareResult.total, val.title)
+
       return (
         val.channelId != null &&
         (85 <= compareResult.total ||
-          (info.weakMatch && 75 <= compareResult.total))
+          (info.weakMatch && 70 <= compareResult.total))
       )
     })
 

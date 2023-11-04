@@ -16,7 +16,7 @@ export const search = (target: string | ParseResult, weak: boolean = false) => {
 
   let optimized = ''
 
-  if (workTitle && episode && (weak || subTitle)) {
+  if (seriesTitle && workTitle && episode && (weak || subTitle)) {
     const seasonStr =
       season &&
       [
@@ -37,7 +37,7 @@ export const search = (target: string | ParseResult, weak: boolean = false) => {
 
     optimized = [
       // 作品名
-      weak ? workTitle.split(' ')[0] : seasonStr ? seriesTitle : workTitle,
+      weak ? seriesTitle.split(' ').join(' OR ') : workTitle,
       // シーズン
       seasonStr,
       // エピソード

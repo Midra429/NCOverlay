@@ -94,26 +94,24 @@ webext.runtime.onInstalled.addListener(async (details) => {
 
     if (!permitted) {
       const requestPermissions = async () => {
-        if (
-          await webext.permissions.request({
-            origins: manifest.host_permissions,
-          })
-        ) {
+        const permitted = await webext.permissions.request({
+          origins: manifest.host_permissions,
+        })
+
+        if (permitted) {
           await setAction(false)
           webext.action.setPopup({ popup: manifest.action!.default_popup! })
           webext.action.onClicked.removeListener(requestPermissions)
 
           try {
             const tab = await getCurrentTab()
-            if (
-              manifest
-                .host_permissions!.map((v) =>
-                  v.match(/^https?:\/\/(.*)\//)?.at(1)
-                )
-                .filter(Boolean)
-                .includes(new URL(tab?.url ?? '').hostname)
-            ) {
-              webext.tabs.reload()
+            const isPermittedSite = manifest
+              .host_permissions!.map((v) => v.match(/^https?:\/\/(.*)\//)?.[1])
+              .filter(Boolean)
+              .includes(new URL(tab?.url ?? '').hostname)
+
+            if (isPermittedSite) {
+              webext.tabs.reload(tab!.id)
             }
           } catch {}
         }

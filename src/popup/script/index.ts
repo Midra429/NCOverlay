@@ -66,6 +66,7 @@ const init = async () => {
     )
 
     if (inputElem) {
+      // チェックボックス
       if (inputElem.type === 'checkbox' && typeof setting === 'boolean') {
         inputElem.checked = setting
 
@@ -80,6 +81,7 @@ const init = async () => {
         inputElem.addEventListener('change', onChange)
       }
 
+      // スライダー
       if (inputElem.type === 'range' && typeof setting === 'number') {
         inputElem.value = setting.toString()
 
@@ -100,6 +102,7 @@ const init = async () => {
       valueElem.textContent = setting.toString()
     }
 
+    // 設定変更時のイベントリスナー
     settingChangedListeners[key] = (newValue: any) => {
       if (inputElem) {
         if (inputElem.type === 'checkbox' && typeof newValue === 'boolean') {
