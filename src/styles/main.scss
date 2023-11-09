@@ -57,4 +57,18 @@
   // DMM TV
   // &[data-nco-vod='dmmTv'] {
   // }
+
+  // Hulu
+  &[data-nco-vod='hulu'] {
+    .NCOverlay-Canvas {
+      z-index: 1;
+    }
+  }
+
+  // Lemino
+  &[data-nco-vod='lemino'] {
+    .NCOverlay-Canvas {
+      z-index: 50;
+    }
+  }
 }

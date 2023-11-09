@@ -19,6 +19,8 @@ const vodFunc: {
   bandaiChannel: import('./vod/bandaiChannel'),
   unext: import('./vod/unext'),
   dmmTv: import('./vod/dmmTv'),
+  hulu: import('./vod/hulu'),
+  lemino: import('./vod/lemino'),
 }
 
 const main = async () => {

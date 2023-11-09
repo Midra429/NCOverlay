@@ -20,6 +20,8 @@ export const VODS = {
   bandaiChannel: 'バンダイチャンネル',
   unext: 'U-NEXT',
   dmmTv: 'DMM TV',
+  hulu: 'Hulu',
+  lemino: 'Lemino',
 }
 
 export const VODS_ALLOW_CAPTURE: (keyof typeof VODS)[] = [

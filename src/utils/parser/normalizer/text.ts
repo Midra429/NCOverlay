@@ -47,6 +47,12 @@ export const text = (
   // 映画
   str = str.replace(/\s(吹き?替え?|字幕)版?$/, '').trim()
 
+  // 映画タイトル 本編 映画タイトル
+  const splited = str.split(/\s本編\s/).map((v) => v.trim())
+  if (splited.length === 2 && splited[0] === splited[1]) {
+    str = splited[0]
+  }
+
   // コメント専用動画
   str = str.replace(/コメント専用(動画)?|SZBH方式/gi, '').trim()
   str = str.replace(/\sDVD\/Blu[\-\s]?Ray用?$/i, '').trim()

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NCOverlay",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
   "homepage_url": "https://github.com/Midra429/NCOverlay",
 
@@ -27,7 +27,9 @@
         "https://tver.jp/*",
         "https://www.b-ch.com/*",
         "https://video.unext.jp/*",
-        "https://tv.dmm.com/*"
+        "https://tv.dmm.com/*",
+        "https://www.hulu.jp/*",
+        "https://lemino.docomo.ne.jp/*"
       ],
       "css": ["styles/main.css"],
       "js": ["content_script.js"],
@@ -44,7 +46,9 @@
     "https://tver.jp/*",
     "https://www.b-ch.com/*",
     "https://video.unext.jp/*",
-    "https://tv.dmm.com/*"
+    "https://tv.dmm.com/*",
+    "https://www.hulu.jp/*",
+    "https://lemino.docomo.ne.jp/*"
   ],
 
   "permissions": ["storage", "tabs", "scripting", "contextMenus"]

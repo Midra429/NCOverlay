@@ -21,6 +21,8 @@
 - [バンダイチャンネル](https://www.b-ch.com/)
 - [U-NEXT](https://video.unext.jp/)
 - [DMM TV](https://tv.dmm.com/vod/)
+- [Hulu](https://www.hulu.jp/)
+- [Lemino](https://lemino.docomo.ne.jp/)
 
 ※ 増減する可能性あり
 

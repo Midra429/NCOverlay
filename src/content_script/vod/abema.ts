@@ -63,10 +63,12 @@ export default async () => {
         console.log('[NCOverlay] info', info)
 
         if (info) {
-          let title = info.title
+          const words: string[] = [info.title]
           if (info.episode) {
-            title += ` ${info.episode}`
+            words.push(info.episode)
           }
+
+          const title = words.join(' ')
 
           console.log('[NCOverlay] title', title)
 

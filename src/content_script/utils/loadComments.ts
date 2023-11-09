@@ -132,8 +132,10 @@ const loadCommentsNormal = async (
     const offsetMs = Math.floor((diff / 2) * 1000)
 
     if (1000 <= Math.abs(offsetMs)) {
-      for (const { comments } of threads) {
-        comments.forEach((v) => (v.vposMs += offsetMs))
+      for (const thread of threads) {
+        for (const comment of thread.comments) {
+          comment.vposMs += offsetMs
+        }
       }
     }
 
@@ -201,15 +203,20 @@ const loadCommentsSZBH = async (
     if (!threads) continue
 
     // コメントの位置を調整
-    const offsetMs = Math.floor(
-      (SZBH_USER_IDS.includes(data.owner?.id ?? -1)
-        ? -60
-        : (info.duration - data.video.duration) / 2) * 1000
-    )
+    const offsetMs =
+      Math.floor(
+        SZBH_USER_IDS.includes(data.owner?.id ?? -1)
+          ? // 終わりを揃える
+            info.duration - data.video.duration
+          : // 中央を基準にする
+            (info.duration - data.video.duration) / 2
+      ) * 1000
 
     if (1000 <= Math.abs(offsetMs)) {
-      for (const { comments } of threads) {
-        comments.forEach((v) => (v.vposMs += offsetMs))
+      for (const thread of threads) {
+        for (const comment of thread.comments) {
+          comment.vposMs += offsetMs
+        }
       }
     }
 

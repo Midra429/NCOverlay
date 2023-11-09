@@ -53,6 +53,16 @@ export const checkSupportedVod = async (
     if (hostname === 'tv.dmm.com') {
       return 'dmmTv'
     }
+
+    // Hulu
+    if (hostname === 'www.hulu.jp') {
+      return 'hulu'
+    }
+
+    // Lemino
+    if (hostname === 'lemino.docomo.ne.jp') {
+      return 'lemino'
+    }
   } catch {}
 
   return null

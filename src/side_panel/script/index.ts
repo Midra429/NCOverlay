@@ -52,16 +52,17 @@ const update = async (
   }
 
   const { initData, currentTime } = body
-  const threads = initData
-    ?.map((v) => v.threads)
-    .flat()
-    .filter((val, idx, ary) => {
-      return (
-        idx === ary.findIndex((v) => v.id === val.id && v.fork === val.fork)
-      )
-    })
 
-  if (typeof threads !== 'undefined') {
+  if (typeof initData !== 'undefined') {
+    const threads = initData
+      ?.map((v) => v.threads)
+      .flat()
+      .filter((val, idx, ary) => {
+        return (
+          idx === ary.findIndex((v) => v.id === val.id && v.fork === val.fork)
+        )
+      })
+
     const comments = threads
       .map((v) => v.comments)
       .flat()
