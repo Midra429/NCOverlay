@@ -129,7 +129,7 @@ const init = async () => {
       getCurrentTab().then((tab) => {
         if (typeof tab?.id !== 'undefined') {
           // Chrome
-          if (webext.isChrome) {
+          if (webext.isChrome && webext.sidePanel) {
             webext.sidePanel.setOptions({
               tabId: tab.id,
               enabled: true,
@@ -180,9 +180,10 @@ const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {
     return
   }
 
-  const { videoData, commentsCount } = body
+  const { initData, commentsCount } = body
+  const videoData = initData?.map((v) => v.videoData)
 
-  if (typeof videoData !== 'undefined') {
+  if (videoData) {
     const fragment = document.createDocumentFragment()
     for (const data of videoData) {
       fragment.appendChild(createVideoItem(data))

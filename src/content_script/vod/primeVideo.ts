@@ -54,7 +54,7 @@ export default async () => {
 
     const duration = (timeindicatorElem?.textContent?.split('/') ?? [])
       .map(formatedToSeconds)
-      .reduce((sum, val) => sum + val, 0)
+      .reduce((s, v) => s + v, 0)
 
     return {
       // 呪術廻戦 懐玉・玉折／渋谷事変 || 呪術廻戦

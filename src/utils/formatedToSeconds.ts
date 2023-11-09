@@ -10,7 +10,7 @@ export const formatedToSeconds = (formated?: string): number => {
       .split(':')
       .map((v) => Number(v.trim()))
 
-    if (!splited.some((v) => Number.isNaN(v))) {
+    if (splited.every(Number.isFinite)) {
       const [sec, min, hour] = [
         ...splited.reverse(),
         ...Array<number>(3 - splited.length).fill(0),

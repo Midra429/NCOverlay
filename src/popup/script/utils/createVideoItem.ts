@@ -17,8 +17,16 @@ export const createVideoItem = (data: VideoData) => {
   const videoThumbnail = item.querySelector<HTMLElement>('.video-thumbnail')!
   videoThumbnail.style.backgroundImage = `url(${data.video.thumbnail.url})`
 
-  if (data.channel?.id === `ch${DANIME_CHANNEL_ID}`) {
-    videoThumbnail.classList.add('video-thumbnail-danime')
+  if (data.channel?.id) {
+    if (data.channel.id === `ch${DANIME_CHANNEL_ID}`) {
+      videoThumbnail.classList.add('video-thumbnail-danime')
+    } else {
+      videoThumbnail.classList.add('video-thumbnail-channel')
+    }
+  }
+
+  if (data.video.watchableUserTypeForPayment === 'purchaser') {
+    videoThumbnail.classList.add('video-thumbnail-payment')
   }
 
   // 動画の長さ

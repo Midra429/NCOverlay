@@ -83,7 +83,8 @@ body {
 
       &-text {
         width: 100%;
-        min-width: $sidepanel-min-width - $scrollbar-width;
+        // min-width: $sidepanel-min-width - $scrollbar-width;
+        min-width: 100%;
 
         > span.command {
           &-color {

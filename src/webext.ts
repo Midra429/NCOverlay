@@ -36,9 +36,11 @@ declare module 'webextension-polyfill' {
   export var isChrome: boolean
   export var isFirefox: boolean
 
-  export var sidePanel: typeof chrome.sidePanel & {
-    open?(options: { windowId?: number }): void
-  }
+  export var sidePanel:
+    | (typeof chrome.sidePanel & {
+        open?(options: { windowId?: number }): void
+      })
+    | undefined
 }
 
 const extUrl = browser.runtime.getURL('/')

@@ -7,21 +7,28 @@ import { Optimizer } from '@/utils/optimizer'
 
 const searchQueryBase: Partial<SearchQuery> = {
   targets: ['title'],
-  fields: ['contentId', 'title', 'channelId', 'lengthSeconds'],
+  fields: ['contentId', 'title', 'lengthSeconds', 'channelId', 'userId'],
   filters: {
-    'genre.keyword': {
-      '0': 'アニメ',
-    },
+    'genre.keyword': { '0': 'アニメ' },
   },
   _sort: '-startTime',
   _limit: 20,
 }
 
+const searchQueryBaseWeakMatch = deepmerge(searchQueryBase, {
+  targets: ['description'],
+  _limit: 30,
+})
+
 export const getSearchData = async (info: {
   /** 検索タイトル */
   title: string
-  /** 検索対象の動画の長さ用 */
+  /** 再生時間 */
   duration: number
+  /** 再生時間の差 */
+  durationDiff?: number
+  /** 検索条件 */
+  filters?: SearchQuery['filters']
   /** タイトルの一致判定を緩くする */
   weakMatch?: boolean
 }): Promise<{
@@ -39,14 +46,17 @@ export const getSearchData = async (info: {
 
   // 検索 (通常)
   const searchNormal = await NiconicoApi.search([
-    deepmerge(searchQueryBase, {
+    deepmerge(info.weakMatch ? searchQueryBaseWeakMatch : searchQueryBase, {
       q: optimizedTitle,
-      filters: {
-        lengthSeconds: {
-          gte: info.duration - 15,
-          lte: info.duration + 15,
+      filters: deepmerge(
+        {
+          lengthSeconds: {
+            gte: info.duration - (info.durationDiff ?? 15),
+            lte: info.duration + (info.durationDiff ?? 15),
+          },
         },
-      },
+        { ...info.filters }
+      ),
     }),
   ])
 
@@ -56,12 +66,10 @@ export const getSearchData = async (info: {
     const filtered = searchNormal.filter((val) => {
       const compareResult = Parser.compare(parseResult, val.title!)
 
-      console.log('[NCOverlay] compareResult', compareResult.total, val.title)
-
       return (
-        val.channelId != null &&
-        (85 <= compareResult.total ||
-          (info.weakMatch && 70 <= compareResult.total))
+        // val.channelId != null &&
+        85 <= compareResult.total ||
+        (info.weakMatch && 70 <= compareResult.total)
       )
     })
 
@@ -72,17 +80,18 @@ export const getSearchData = async (info: {
 
   // 検索 (分割)
   if (
-    !searchDataNormal.some((v) => v.channelId === DANIME_CHANNEL_ID) &&
+    searchDataNormal.every((v) => v.channelId !== DANIME_CHANNEL_ID) &&
     (/劇場|映画/.test(info.title) || 3600 <= info.duration)
   ) {
     const searchSplited = await NiconicoApi.search([
-      deepmerge(searchQueryBase, {
+      deepmerge(info.weakMatch ? searchQueryBaseWeakMatch : searchQueryBase, {
         q: `${optimizedTitle} Chapter.`,
-        filters: {
-          tagsExact: {
-            '0': 'dアニメストア',
+        filters: deepmerge(
+          {
+            tagsExact: { '0': 'dアニメストア' },
           },
-        },
+          { ...info.filters }
+        ),
       }),
     ])
 
@@ -111,19 +120,17 @@ export const getSearchData = async (info: {
         })
 
       // Chapterが連続しているかどうか
-      const isOrdered = !filtered.some((val, idx, ary) => {
-        if (0 < idx) {
-          const prev = Number(ary[idx - 1].title!.match(chapterRegExp)?.[1])
-          const now = Number(val.title!.match(chapterRegExp)?.[1])
-          return now - prev !== 1
-        }
+      const isOrdered = filtered.every((val, idx, ary) => {
+        const prev =
+          0 < idx ? Number(ary[idx - 1].title!.match(chapterRegExp)?.[1]) : 0
+        const now = Number(val.title!.match(chapterRegExp)?.[1])
+        return now - prev === 1
       })
 
       if (isOrdered) {
-        const totalDuration = filtered.reduce(
-          (sum, val) => sum + val.lengthSeconds!,
-          0
-        )
+        const totalDuration = filtered
+          .map((v) => v.lengthSeconds!)
+          .reduce((s, v) => s + v, 0)
 
         console.log('[NCOverlay] duration', info.duration)
         console.log('[NCOverlay] duration (splited)', totalDuration)

@@ -68,7 +68,7 @@ const zip = (options) => {
   archive.pipe(output)
   archive.directory(options.path, false)
 
-  archive.finalize()
+  return archive.finalize()
 }
 
 const build = async () => {
@@ -148,6 +148,8 @@ const minify = async (dir) => {
 }
 
 const main = async () => {
+  const start = performance.now()
+
   // dist/extension
   await build()
 
@@ -180,17 +182,20 @@ const main = async () => {
   fs.writeFileSync(`${prodDirChrome}/manifest.json`, manifestChrome)
   fs.writeFileSync(`${prodDirFirefox}/manifest.json`, manifestFirefox)
 
-  zip({
+  await zip({
     path: `${prodDirChrome}`,
     outfile: `${prodDirChrome}.zip`,
   })
-
-  zip({
+  await zip({
     path: `${prodDirFirefox}`,
     outfile: `${prodDirFirefox}.zip`,
   })
 
-  // fs.removeSync(prodDir)
+  const end = performance.now()
+
+  console.log(`time: ${Math.round((end - start) * 100) / 100}ms`)
+
+  process.exit()
 }
 
 main()

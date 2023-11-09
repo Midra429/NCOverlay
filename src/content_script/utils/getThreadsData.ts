@@ -6,7 +6,7 @@ import { WebExtStorageApi } from '@/utils/webext/storage'
 const filterNvComment = (
   nvComment: VideoData['comment']['nvComment']
 ): Parameters<typeof NiconicoApi.threads>[0][0] => {
-  let { params, threadKey } = nvComment
+  const { params, threadKey } = nvComment
 
   // かんたんコメント除外
   params.targets = params.targets.filter((v) => v.fork !== 'easy')

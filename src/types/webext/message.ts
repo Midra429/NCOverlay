@@ -1,8 +1,7 @@
-import type { InputFormat } from '@xpadev-net/niconicomments'
 import type { search as NiconicoApiSearch } from '@/background/api/niconico/search'
 import type { video as NiconicoApiVideo } from '@/background/api/niconico/video'
 import type { threads as NiconicoApiThreads } from '@/background/api/niconico/threads'
-import type { VideoData } from '@/types/niconico/video'
+import type { InitData } from '@/content_script/NCOverlay'
 
 export type WebExtMessageType = {
   'niconico:search': {
@@ -38,7 +37,7 @@ export type WebExtMessageType = {
 
   'webext:sendToPopup': {
     body: {
-      videoData?: VideoData[]
+      initData?: InitData[]
       commentsCount?: number
     } | null
     result: void
@@ -46,7 +45,7 @@ export type WebExtMessageType = {
 
   'webext:sendToSidePanel': {
     body: {
-      commentsData?: InputFormat
+      initData?: InitData[]
       currentTime?: number
     } | null
     result: void
@@ -55,8 +54,7 @@ export type WebExtMessageType = {
   'webext:getFromPage': {
     body: void
     result: {
-      videoData?: VideoData[]
-      commentsData?: InputFormat
+      initData?: InitData[]
       commentsCount?: number
       currentTime?: number
     }

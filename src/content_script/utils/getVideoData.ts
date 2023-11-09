@@ -2,12 +2,10 @@ import type { VideoData } from '@/types/niconico/video'
 import { NiconicoApi } from '@/content_script/api/niconico'
 
 const filterVideoData = (videoData: VideoData[]) => {
-  return videoData.filter((v) => {
+  return videoData.filter((val, idx, ary) => {
     return (
       // コメントあり
-      0 < v.video.count.comment &&
-      // 公式アニメチャンネル
-      v.channel?.isOfficialAnime
+      0 < val.video.count.comment
     )
   })
 }

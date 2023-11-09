@@ -33,14 +33,23 @@ export const text = (
 
   // 括弧除去
   if (option.bracket || option.all) {
-    str = str.replace(/[\-~\|\(\)｢｣「」『』【】〈〉《》〔〕{}\[\]]/g, ' ')
+    str = str
+      .replace(/[\-~\|\(\)｢｣「」『』【】〈〉《》〔〕{}\[\]]/g, ' ')
+      .trim()
   }
 
   // アニメ特有の要素除去
   if (option.anime || option.all) {
-    str = str.replace(/^(TV|テレビ)?アニメ(ーション)?\s/i, '')
-    str = str.replace(/\s本編$/, '')
+    str = str.replace(/^(TV|テレビ)?アニメ(ーション)?\s/i, '').trim()
+    str = str.replace(/\s本編$/, '').trim()
   }
+
+  // 映画
+  str = str.replace(/\s(吹き?替え?|字幕)版?$/, '').trim()
+
+  // コメント専用動画
+  str = str.replace(/コメント専用(動画)?|SZBH方式/gi, '').trim()
+  str = str.replace(/\sDVD\/Blu[\-\s]?Ray用?$/i, '').trim()
 
   // スペース除去
   if (option.space || option.all) {

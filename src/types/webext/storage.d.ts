@@ -7,11 +7,11 @@ export type WebExtStorageSettings = {
   lowPerformance: boolean
   /** タイトルの一致判定を緩くする */
   weakMatch: boolean
-  /** コメント専用動画を表示する */
+  /** コメント専用動画のコメントを表示 */
   szbhMethod: boolean
-  /** ニコニコのNG設定を使う */
+  /** ニコニコのNG設定を使用 */
   useNgList: boolean
-  /** アップデート後に更新内容を表示する */
+  /** アップデート後に更新内容を表示 */
   showChangelog: boolean
 }
 

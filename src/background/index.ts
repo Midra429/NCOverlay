@@ -37,7 +37,7 @@ const setContextMenu = (id: string | number, enabled: boolean) => {
 
 const setSidePanel = (enabled: boolean, tabId?: number) => {
   // Chrome
-  if (webext.isChrome) {
+  if (webext.isChrome && webext.sidePanel) {
     return webext.sidePanel.setOptions({
       tabId,
       enabled,
@@ -183,7 +183,7 @@ webext.runtime.onMessage.addListener(
     // 拡張機能 サイドパネル 有効/無効
     if (WebExtMessageTypeCheck('webext:side_panel', message)) {
       // Chrome
-      if (webext.isChrome) {
+      if (webext.isChrome && webext.sidePanel) {
         webext.sidePanel.setOptions({
           tabId: sender.tab?.id,
           enabled: message.body,

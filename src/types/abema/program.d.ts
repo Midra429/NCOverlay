@@ -1,7 +1,7 @@
 export type Program = {
   id: string
   series: Series
-  season: Season
+  season?: Season
   genre: Genre
   info: Info
   providedInfo: ProvidedInfo

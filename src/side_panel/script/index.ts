@@ -5,7 +5,6 @@ import type {
 import type { WebExtMessage } from '@/types/webext/message'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
 import webext from '@/webext'
-import NiconiComments from '@xpadev-net/niconicomments'
 import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getFromPage } from '@/utils/webext/getFromPage'
 import { removeChilds } from '@/utils/dom'
@@ -52,13 +51,18 @@ const update = async (
     return
   }
 
-  const { commentsData, currentTime } = body
+  const { initData, currentTime } = body
+  const threads = initData
+    ?.map((v) => v.threads)
+    .flat()
+    .filter((val, idx, ary) => {
+      return (
+        idx === ary.findIndex((v) => v.id === val.id && v.fork === val.fork)
+      )
+    })
 
-  if (
-    typeof commentsData !== 'undefined' &&
-    NiconiComments.typeGuard.v1.threads(commentsData)
-  ) {
-    const comments = commentsData
+  if (typeof threads !== 'undefined') {
+    const comments = threads
       .map((v) => v.comments)
       .flat()
       .sort((a, b) => a.vposMs - b.vposMs)

@@ -1,4 +1,4 @@
-import type { InputFormat, InputFormatType } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { WebExtStorageChanges } from '@/types/webext/storage'
 import type {
   WebExtMessageType,
@@ -16,15 +16,22 @@ import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
 import { sendToSidePanel } from './utils/sendToSidePanel'
 
+export type InitData = {
+  videoData: VideoData
+  threads: V1Thread[]
+}
+
 export class NCOverlay {
   #video: HTMLVideoElement
   #canvas: HTMLCanvasElement
 
   #niconiComments: NiconiComments
 
-  #videoData?: VideoData[]
-  #commentsData?: InputFormat
-  #commentsFormat?: InputFormatType
+  // #videoData?: VideoData[]
+  // #commentsData?: InputFormat
+  // #commentsFormat?: InputFormatType
+
+  #initData: InitData[]
 
   #commentsCount: number = 0
   #kawaiiPct: number = 0
@@ -45,14 +52,7 @@ export class NCOverlay {
     return this.#canvas
   }
 
-  constructor(
-    video: HTMLVideoElement,
-    input: {
-      data?: VideoData[]
-      comments?: InputFormat
-      format?: InputFormatType
-    } = {}
-  ) {
+  constructor(video: HTMLVideoElement, initData: InitData[] = []) {
     console.log('[NCOverlay] NCOverlay.video', video)
 
     // Videoにイベント追加
@@ -73,7 +73,7 @@ export class NCOverlay {
     this.#canvas.width = 1920
     this.#canvas.height = 1080
 
-    this.init(input)
+    this.init(initData)
 
     // メタデータを既に持っていた場合
     if (HTMLMediaElement.HAVE_METADATA <= this.#video.readyState) {
@@ -103,19 +103,8 @@ export class NCOverlay {
     console.log('[NCOverlay] new NCOverlay()', this)
   }
 
-  init(input?: {
-    data?: VideoData[]
-    comments?: InputFormat
-    format?: InputFormatType
-  }) {
-    const isReset = typeof input === 'undefined'
-    const isFirst = !isReset && Object.keys(input).length === 0
-
-    if (isReset) {
-      console.log('[NCOverlay] NCOverlay.init()')
-    } else if (!isFirst) {
-      console.log('[NCOverlay] NCOverlay.init(input)')
-    }
+  init(initData?: InitData[]) {
+    console.log('[NCOverlay] NCOverlay.init()', initData)
 
     sendToPopup(null)
     sendToSidePanel(null)
@@ -127,19 +116,24 @@ export class NCOverlay {
       this.clear()
     }
 
+    this.#initData = initData ?? []
     this.#commentsCount = 0
     this.#kawaiiPct = 0
 
-    if (!isFirst && !isReset) {
+    const threads = this.#initData
+      .map((v) => v.threads)
+      .flat()
+      .filter(
+        (val, idx, ary) =>
+          idx === ary.findIndex((v) => v.id === val.id && v.fork === val.fork)
+      )
+
+    if (0 < threads.length) {
       let kawaiiCount = 0
 
-      if (NiconiComments.typeGuard.v1.threads(input.comments)) {
-        for (const data of input.comments) {
-          this.#commentsCount += data.comments.length
-          kawaiiCount += data.comments.filter((v) =>
-            KAWAII_REGEXP.test(v.body)
-          ).length
-        }
+      for (const { comments } of threads) {
+        this.#commentsCount += comments.length
+        kawaiiCount += comments.filter((v) => KAWAII_REGEXP.test(v.body)).length
       }
 
       console.log('[NCOverlay] commentsCount', this.#commentsCount)
@@ -151,22 +145,12 @@ export class NCOverlay {
       console.log(`[NCOverlay] kawaiiPct: ${this.#kawaiiPct}%`)
     }
 
-    this.#videoData = input?.data
-
-    if (0 < this.#commentsCount) {
-      this.#commentsData = input?.comments
-      this.#commentsFormat = input?.format ?? 'v1'
-    } else {
-      this.#commentsData = undefined
-      this.#commentsFormat = 'empty'
-    }
-
     this.#niconiComments = new NiconiComments(
       this.#canvas,
-      this.#commentsData,
+      0 < threads.length ? threads : undefined,
       {
         mode: 'html5',
-        format: this.#commentsFormat,
+        format: 0 < threads.length ? 'v1' : 'empty',
       }
     )
 
@@ -193,11 +177,11 @@ export class NCOverlay {
     }
 
     sendToPopup({
-      videoData: this.#videoData,
+      initData: this.#initData,
       commentsCount: this.#commentsCount,
     })
     sendToSidePanel({
-      commentsData: this.#commentsData,
+      initData: this.#initData,
       currentTime: this.#video.currentTime,
     })
   }
@@ -232,6 +216,37 @@ export class NCOverlay {
 
     sendToPopup(null)
     sendToSidePanel(null)
+  }
+
+  add(initData: InitData[]) {
+    console.log('[NCOverlay] NCOverlay.add()', initData)
+
+    if (0 < initData.length) {
+      this.#initData = [...this.#initData, ...initData].filter(
+        (val, idx, ary) => {
+          return (
+            idx ===
+            ary.findIndex(
+              (v) => v.videoData.video.id === val.videoData.video.id
+            )
+          )
+        }
+      )
+
+      this.init(this.#initData)
+    }
+  }
+
+  remove(...videoIds: string[]) {
+    console.log('[NCOverlay] NCOverlay.remove()', videoIds)
+
+    if (0 < videoIds.length) {
+      this.#initData = this.#initData.filter(
+        (v) => !videoIds.includes(v.videoData.video.id)
+      )
+
+      this.init(this.#initData)
+    }
   }
 
   clear() {
@@ -366,8 +381,7 @@ export class NCOverlay {
         sendResponse({
           type: message.type,
           result: {
-            videoData: this.#videoData,
-            commentsData: this.#commentsData,
+            initData: this.#initData,
             commentsCount: this.#commentsCount,
             currentTime: this.#video.currentTime,
           },

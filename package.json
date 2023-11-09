@@ -1,8 +1,8 @@
 {
   "name": "ncoverlay",
   "scripts": {
-    "test": "esbuild src/_test.ts --bundle --outdir=dist",
-    "build": "tsc -noEmit && node build.js"
+    "build": "tsc -noEmit && node build.js",
+    "build:test": "esbuild src/_test.ts --bundle --outdir=dist"
   },
   "author": "Midra",
   "license": "MIT",
@@ -15,9 +15,9 @@
   "devDependencies": {
     "@types/archiver": "^5.3.4",
     "@types/chrome": "^0.0.246",
-    "@types/clean-css": "^4.2.9",
-    "@types/fs-extra": "^11.0.3",
-    "@types/webextension-polyfill": "^0.10.5",
+    "@types/clean-css": "^4.2.10",
+    "@types/fs-extra": "^11.0.4",
+    "@types/webextension-polyfill": "^0.10.6",
     "archiver": "^6.0.1",
     "clean-css": "^5.3.2",
     "esbuild": "^0.19.5",
