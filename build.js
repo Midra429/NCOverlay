@@ -148,8 +148,6 @@ const minify = async (dir) => {
 }
 
 const main = async () => {
-  const start = performance.now()
-
   // dist/extension
   await build()
 
@@ -186,16 +184,11 @@ const main = async () => {
     path: `${prodDirChrome}`,
     outfile: `${prodDirChrome}.zip`,
   })
+
   await zip({
     path: `${prodDirFirefox}`,
     outfile: `${prodDirFirefox}.zip`,
   })
-
-  const end = performance.now()
-
-  console.log(`time: ${Math.round((end - start) * 100) / 100}ms`)
-
-  process.exit()
 }
 
 main()
