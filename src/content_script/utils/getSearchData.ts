@@ -12,12 +12,12 @@ const searchQueryBase: Partial<SearchQuery> = {
     'genre.keyword': { '0': 'アニメ' },
   },
   _sort: '-startTime',
-  _limit: 20,
+  _limit: 25,
 }
 
 const searchQueryBaseWeakMatch = deepmerge(searchQueryBase, {
-  targets: ['description'],
-  _limit: 30,
+  // targets: ['description'],
+  _limit: 50,
 })
 
 export const getSearchData = async (info: {
