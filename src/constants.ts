@@ -140,4 +140,15 @@ export const COLOR_COMMANDS_DARKER = [
   'black2',
 ]
 
-export const KAWAII_REGEXP = /かわいい|可愛い|^かーいー$/
+export const KAWAII_REGEXP = new RegExp(
+  [
+    'kawaii',
+    'かわ(いい|ぃぃ|E|ii)',
+    '(カワ|ｶﾜ)(イイ|ｲｲ|ィィ|ｨｨ)',
+    '可愛い',
+    'kaわいい',
+    '(可愛|かわい)(すぎ|過ぎ)',
+    'かーいー',
+  ].join('|'),
+  'i'
+)
