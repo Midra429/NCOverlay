@@ -102,7 +102,7 @@ const loadCommentsNormal = async (
   const videoData = await getVideoData(videoIds)
   if (!videoData) return
 
-  videoData.normal = filterVideoData(videoData.normal, { anime: true })
+  videoData.normal = filterVideoData(videoData.normal)
   videoData.splited = filterVideoData(videoData.splited, { anime: true })
 
   // コメント情報
