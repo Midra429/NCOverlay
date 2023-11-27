@@ -71,6 +71,13 @@ export const DMMTV_GRAPHQL_URL = 'https://api.tv.dmm.com/graphql'
 /** GitHub */
 export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
 
+/** Google フォーム */
+export const GOOGLE_FORMS_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform'
+
+/** `?entry.{{ID}}={{VALUE}}` */
+export const GOOGLE_FORMS_ID_VERSION = '412681801'
+
 /** dアニメストア ニコニコ支店のチャンネルID */
 export const DANIME_CHANNEL_ID = 2632720
 

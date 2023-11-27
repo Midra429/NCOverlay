@@ -265,7 +265,8 @@ header {
 
 #Version,
 #CommentsCount,
-#ButtonReset {
+#ButtonReset,
+#LinkForms {
   margin-left: 5px;
   opacity: 0.6;
 }
@@ -291,6 +292,12 @@ header {
         line-height: 30px;
       }
     }
+  }
+}
+
+#Footer {
+  > ul {
+    align-items: end;
   }
 }
 

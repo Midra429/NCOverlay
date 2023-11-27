@@ -1,7 +1,11 @@
 import type { WebExtMessage } from '@/types/webext/message'
 import type { WebExtStorageChanges } from '@/types/webext/storage'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
-import { GITHUB_URL } from '@/constants'
+import {
+  GITHUB_URL,
+  GOOGLE_FORMS_URL,
+  GOOGLE_FORMS_ID_VERSION,
+} from '@/constants'
 import webext from '@/webext'
 import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getCurrentTab } from '@/utils/webext/getCurrentTab'
@@ -48,6 +52,10 @@ const init = async () => {
       await WebExtStorageApi.clearSettings()
     }
   })
+
+  // 不具合報告・機能提案・その他
+  const linkForms = document.querySelector<HTMLAnchorElement>('#LinkForms')!
+  linkForms.href = `${GOOGLE_FORMS_URL}?entry.${GOOGLE_FORMS_ID_VERSION}=${version}`
 
   const settings = await WebExtStorageApi.getSettings()
 
