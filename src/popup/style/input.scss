@@ -1,3 +1,5 @@
+@use '../../styles/colors.scss';
+
 input {
   &[type='range'] {
     cursor: ew-resize;
@@ -26,12 +28,12 @@ input {
 
     &:checked {
       + label {
-        border-color: hsl(210, 100%, 80%);
-        background-color: hsl(210, 100%, 90%);
+        border-color: colors.$primary;
+        background-color: rgb(35 137 255 / 25%);
 
         &::after {
           left: $width - $height + 2px;
-          background-color: hsl(210, 100%, 55%);
+          background-color: colors.$primary;
         }
       }
     }
@@ -42,10 +44,10 @@ input {
     display: block;
     width: $width + 2px;
     height: $height + 2px;
-    border: 1px solid hsl(0, 0%, 80%);
+    border: 1px solid hsl(0 0% 70%);
     border-radius: calc(($height + 2px) / 2);
-    background-color: hsl(0, 0%, 90%);
-    box-shadow: inset 0 0 6px -4px rgb(0, 0, 0, 60%);
+    background-color: hsl(0 0% 70% / 15%);
+    box-shadow: inset 0 0 6px -4px rgb(0 0 0 / 60%);
     cursor: pointer;
 
     body:not(.loading) & {
@@ -62,8 +64,8 @@ input {
       width: $height - 4px;
       height: $height - 4px;
       border-radius: 50%;
-      background-color: hsl(0, 0%, 70%);
-      box-shadow: 0 0 5px -2px rgb(0, 0, 0, 75%);
+      background-color: hsl(0 0% 70%);
+      // box-shadow: 0 0 5px -2px rgb(0 0 0 / 75%);
 
       body:not(.loading) & {
         transition-duration: 0.2s;

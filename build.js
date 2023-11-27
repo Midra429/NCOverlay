@@ -184,7 +184,6 @@ const main = async () => {
     path: `${prodDirChrome}`,
     outfile: `${prodDirChrome}.zip`,
   })
-
   await zip({
     path: `${prodDirFirefox}`,
     outfile: `${prodDirFirefox}.zip`,

@@ -1,4 +1,25 @@
+@use '../../styles/colors.scss';
 @use './input.scss';
+
+$scrollbar-width: 15px;
+
+*::-webkit-scrollbar {
+  width: $scrollbar-width;
+  height: $scrollbar-width;
+}
+*::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  border: 4px solid transparent;
+  border-radius: calc($scrollbar-width / 2);
+  background-color: colors.$fg-tertiary;
+  background-clip: padding-box;
+
+  &:hover {
+    background-color: colors.$fg-tertiary--light;
+  }
+}
 
 * {
   user-select: none;
@@ -11,13 +32,23 @@
   }
 }
 
+svg {
+  fill: colors.$fg-primary;
+}
+
+html {
+  accent-color: colors.$primary;
+}
+
 body {
   display: flex;
   flex-direction: row;
   height: auto;
   max-width: 800px;
-  max-height: 600px;
+  // max-height: 600px;
+  background-color: colors.$bg-secondary;
   font-size: 75%;
+  color: colors.$fg-primary;
 
   > #Side {
     width: 400px;
@@ -67,14 +98,16 @@ header {
 .divider {
   &-horizontal {
     height: 0.5px !important;
+    min-height: 0.5px;
     padding: 0 !important;
-    background-color: hsl(0, 0%, 80%);
+    background-color: colors.$fg-secondary;
   }
 
   &-vertical {
     width: 0.5px !important;
+    min-width: 0.5px;
     padding: 0 !important;
-    background-color: hsl(0, 0%, 80%);
+    background-color: colors.$fg-secondary;
   }
 }
 
@@ -99,7 +132,7 @@ header {
     // overflow: hidden;
 
     &-channel {
-      border-color: #252525;
+      border-color: hsl(0 0% 75%);
     }
 
     &-payment {
@@ -168,7 +201,7 @@ header {
 #Main {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  // height: 100%;
   max-height: inherit;
   overflow: hidden;
 
@@ -253,6 +286,8 @@ header {
       }
 
       > label {
+        display: flex;
+        height: 30px;
         line-height: 30px;
       }
     }
@@ -296,5 +331,11 @@ header {
         }
       }
     }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #LinkGitHub {
+    filter: invert(1);
   }
 }

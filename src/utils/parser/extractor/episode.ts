@@ -12,8 +12,8 @@ export const REGEXP_EPISODE = [
   // #01
   `#(?<__NAME__>${regExpNum})`,
 
-  // ep|01 or ep 01 or ep01
-  `\\sep[|\\s]?(?<__NAME__>${regExpNum})\\s`,
+  // ep|01 or ep.01 or ep 01 or ep01
+  `\\sep[|\\.\\s]?(?<__NAME__>${regExpNum})\\s`,
 ]
   .map((v, i) => v.replace('__NAME__', `_${i}`))
   .join('|')

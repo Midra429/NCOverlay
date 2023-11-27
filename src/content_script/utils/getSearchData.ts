@@ -7,7 +7,7 @@ import { Optimizer } from '@/utils/optimizer'
 
 const searchQueryBase: Partial<SearchQuery> = {
   targets: ['title'],
-  fields: ['contentId', 'title', 'lengthSeconds', 'channelId', 'userId'],
+  fields: ['contentId', 'title', 'userId', 'channelId', 'lengthSeconds'],
   filters: {
     'genre.keyword': { '0': 'アニメ' },
   },

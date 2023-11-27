@@ -65,6 +65,13 @@ webext.contextMenus.removeAll().then(() => {
     contexts: ['action'],
     enabled: false,
   })
+
+  webext.contextMenus.create({
+    id: 'ncoverlay:capture:comments',
+    title: 'スクリーンショット (コメントのみ)',
+    contexts: ['action'],
+    enabled: false,
+  })
 })
 
 webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
@@ -72,10 +79,14 @@ webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
 
   const { capture } = await getSupportStatus(tab.id)
 
-  if (menuItemId === 'ncoverlay:capture' && capture) {
+  if (
+    (menuItemId === 'ncoverlay:capture' && capture) ||
+    menuItemId === 'ncoverlay:capture:comments'
+  ) {
     await webext.scripting.executeScript({
       target: { tabId: tab.id! },
-      func: () => document.dispatchEvent(new Event('ncoverlay:capture')),
+      args: [menuItemId],
+      func: (id) => document.dispatchEvent(new Event(id)),
     })
   }
 })
@@ -223,9 +234,10 @@ webext.runtime.onMessage.addListener(
 // ウィンドウ変更時
 webext.windows.onFocusChanged.addListener(async (windowId) => {
   const tab = await getCurrentTab(windowId)
-  const { capture } = await getSupportStatus(tab?.id)
+  const { vod, capture } = await getSupportStatus(tab?.id)
 
   setContextMenu('ncoverlay:capture', capture)
+  setContextMenu('ncoverlay:capture:comments', !!vod)
 })
 
 // タブ変更時
@@ -233,6 +245,7 @@ webext.tabs.onActivated.addListener(async ({ tabId }) => {
   const { vod, capture } = await getSupportStatus(tabId)
 
   setContextMenu('ncoverlay:capture', capture)
+  setContextMenu('ncoverlay:capture:comments', !!vod)
 
   if (vod) {
     await setSidePanel(false, tabId)
@@ -250,6 +263,7 @@ webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
 
   if (tab.active) {
     setContextMenu('ncoverlay:capture', capture)
+    setContextMenu('ncoverlay:capture:comments', !!vod)
   }
 
   if (vod) {

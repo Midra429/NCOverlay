@@ -7,7 +7,7 @@ import { getSearchData } from './getSearchData'
 import { getVideoData } from './getVideoData'
 import { getThreadsData } from './getThreadsData'
 
-const SZBH_USER_IDS = [289866]
+// const SZBH_USER_IDS = [289866]
 
 const filterSearchData = (
   searchData: SearchData[],
@@ -173,11 +173,12 @@ const loadCommentsSZBH = async (
   const videoIds = {
     normal: filterSearchData(searchData.normal)
       .filter((v) => {
-        if (SZBH_USER_IDS.includes(v.userId ?? -1)) {
-          return v.lengthSeconds! - (info.duration + 60) < 5
-        } else {
-          return Math.abs(v.lengthSeconds! - info.duration) < 5
-        }
+        return v.lengthSeconds! - (info.duration + 60) < 5
+        // if (SZBH_USER_IDS.includes(v.userId ?? -1)) {
+        //   return v.lengthSeconds! - (info.duration + 60) < 5
+        // } else {
+        //   return Math.abs(v.lengthSeconds! - info.duration) < 5
+        // }
       })
       .map((v) => v.contentId!),
   }
@@ -205,11 +206,12 @@ const loadCommentsSZBH = async (
     // コメントの位置を調整
     const offsetMs =
       Math.floor(
-        SZBH_USER_IDS.includes(data.owner?.id ?? -1)
-          ? // 終わりを揃える
-            info.duration - data.video.duration
-          : // 中央を基準にする
-            (info.duration - data.video.duration) / 2
+        info.duration - data.video.duration
+        // SZBH_USER_IDS.includes(data.owner?.id ?? -1)
+        //   ? // 終わりを揃える
+        //     info.duration - data.video.duration
+        //   : // 中央を基準にする
+        //     (info.duration - data.video.duration) / 2
       ) * 1000
 
     if (1000 <= Math.abs(offsetMs)) {

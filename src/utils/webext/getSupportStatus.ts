@@ -28,7 +28,7 @@ export const getSupportStatus = async (
 
             return {
               vod: vod || null,
-              capture: vod ? vodsAllowCapture.includes(vod) : false,
+              capture: !!vod && vodsAllowCapture.includes(vod),
             }
           },
         })

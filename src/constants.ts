@@ -142,12 +142,10 @@ export const COLOR_COMMANDS_DARKER = [
 
 export const KAWAII_REGEXP = new RegExp(
   [
-    'kawaii',
-    'かわ(いい|ぃぃ|E|ii)',
+    '(可愛|かわい)(い|すぎ|過ぎ)',
+    'かわ(ぃぃ|E)',
     '(カワ|ｶﾜ)(イイ|ｲｲ|ィィ|ｨｨ)',
-    '可愛い',
-    'kaわいい',
-    '(可愛|かわい)(すぎ|過ぎ)',
+    'kawaii',
     'かーいー',
   ].join('|'),
   'i'
