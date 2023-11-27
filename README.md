@@ -65,6 +65,7 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ## 不具合報告・機能提案など
+- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)
 - Misskey ([@Midra@submarin.online](https://submarin.online/@Midra))にメンションやDM
 - X ([@Midra429](https://x.com/Midra429))にメンションやDM
 - GitHub > [Issues](https://github.com/Midra429/NCOverlay/issues)
