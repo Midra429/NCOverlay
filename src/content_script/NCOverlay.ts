@@ -294,46 +294,10 @@ export class NCOverlay {
     }
     context.drawImage(this.#canvas, 0, 0)
 
-    const dataUrl = canvas.toDataURL('image/png')
-
-    if (webext.isFirefox) {
-      window.open(dataUrl)
-    } else {
-      const title = `${formatDuration(this.#video.currentTime)} - ${
-        document.title
-      }`
-
-      const anchor = document.createElement('a')
-      anchor.href = dataUrl
-      anchor.download = title
-      anchor.onclick = (e) => e.preventDefault()
-
-      const img = document.createElement('img')
-      img.src = dataUrl
-
-      anchor.appendChild(img)
-
-      const ref = window.open()
-      if (ref) {
-        ref.document.title = title
-
-        anchor.style.margin = 'auto'
-        anchor.style.cursor = 'default'
-
-        img.style.display = 'block'
-        img.style.maxWidth = '100%'
-        img.style.maxHeight = '100%'
-        img.style.margin = 'auto'
-        img.style.backgroundColor = 'hsl(0, 0%, 90%)'
-
-        ref.document.body.style.display = 'flex'
-        ref.document.body.style.height = '100%'
-        ref.document.body.style.margin = '0px'
-        ref.document.body.style.backgroundColor = 'rgb(14, 14, 14)'
-
-        ref.document.body.appendChild(anchor)
-      }
-    }
+    canvas.toBlob(
+      (blob) => blob && window.open(URL.createObjectURL(blob)),
+      'image/jpeg'
+    )
   }
 
   #render() {
