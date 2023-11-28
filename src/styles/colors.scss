@@ -18,24 +18,24 @@
   --blue: #3366ff;
   --yellow: #fff945;
 
-  // --bg--dark: hsl(0 0% 85%);
-  // --bg: hsl(0 0% 95%);
-  // --bg--light: hsl(0 0% 100%);
+  // --bg--dark: hsl(0, 0%, 85%);
+  // --bg: hsl(0, 0%, 95%);
+  // --bg--light: hsl(0, 0%, 100%);
 
-  --bg-primary: hsl(0 0% 100%);
-  --bg-secondary: hsl(0 0% 96%);
+  --bg-primary: hsl(0, 0%, 100%);
+  --bg-secondary: hsl(0, 0%, 96%);
 
-  --fg-primary--dark: hsl(240 5% 0%);
-  --fg-primary: hsl(240 5% 20%);
-  --fg-primary--light: hsl(240 5% 40%);
+  --fg-primary--dark: hsl(240, 5%, 0%);
+  --fg-primary: hsl(240, 5%, 20%);
+  --fg-primary--light: hsl(240, 5%, 40%);
 
-  --fg-secondary--dark: hsl(240 5% 35%);
-  --fg-secondary: hsl(240 5% 50%);
-  --fg-secondary--light: hsl(240 5% 65%);
+  --fg-secondary--dark: hsl(240, 5%, 35%);
+  --fg-secondary: hsl(240, 5%, 50%);
+  --fg-secondary--light: hsl(240, 5%, 65%);
 
-  --fg-tertiary--dark: hsl(240 5% 70%);
-  --fg-tertiary: hsl(240 5% 80%);
-  --fg-tertiary--light: hsl(240 5% 90%);
+  --fg-tertiary--dark: hsl(240, 5%, 70%);
+  --fg-tertiary: hsl(240, 5%, 80%);
+  --fg-tertiary--light: hsl(240, 5%, 90%);
 }
 
 @mixin colorDark {
@@ -48,24 +48,24 @@
   --blue: #6370ff;
   --yellow: #fffa58;
 
-  // --bg--light: hsl(0 0% 15%);
-  // --bg: hsl(0 0% 10%);
-  // --bg--dark: hsl(0 0% 0%);
+  // --bg--light: hsl(0, 0%, 15%);
+  // --bg: hsl(0, 0%, 10%);
+  // --bg--dark: hsl(0, 0%, 0%);
 
-  --bg-primary: hsl(0 0% 8%);
-  --bg-secondary: hsl(0 0% 12%);
+  --bg-primary: hsl(0, 0%, 8%);
+  --bg-secondary: hsl(0, 0%, 12%);
 
-  --fg-primary--light: hsl(240 5% 100%);
-  --fg-primary: hsl(240 5% 80%);
-  --fg-primary--dark: hsl(240 5% 60%);
+  --fg-primary--light: hsl(240, 5%, 100%);
+  --fg-primary: hsl(240, 5%, 80%);
+  --fg-primary--dark: hsl(240, 5%, 60%);
 
-  --fg-secondary--light: hsl(240 5% 65%);
-  --fg-secondary: hsl(240 5% 50%);
-  --fg-secondary--dark: hsl(240 5% 35%);
+  --fg-secondary--light: hsl(240, 5%, 65%);
+  --fg-secondary: hsl(240, 5%, 50%);
+  --fg-secondary--dark: hsl(240, 5%, 35%);
 
-  --fg-tertiary--light: hsl(240 5% 30%);
-  --fg-tertiary: hsl(240 5% 20%);
-  --fg-tertiary--dark: hsl(240 5% 10%);
+  --fg-tertiary--light: hsl(240, 5%, 30%);
+  --fg-tertiary: hsl(240, 5%, 20%);
+  --fg-tertiary--dark: hsl(240, 5%, 10%);
 }
 
 :root {

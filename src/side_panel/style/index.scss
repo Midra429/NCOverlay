@@ -4,19 +4,19 @@ $scrollbar-width: 15px;
 ::-webkit-scrollbar {
   width: $scrollbar-width;
   height: $scrollbar-width;
-  background-color: rgb(120 120 120);
+  background-color: rgb(120, 120, 120);
 }
 ::-webkit-scrollbar-corner {
-  background-color: rgb(120 120 120);
+  background-color: rgb(120, 120, 120);
 }
 ::-webkit-scrollbar-thumb {
   border: 4px solid transparent;
   border-radius: calc($scrollbar-width / 2);
-  background-color: hsl(240 5% 80%);
+  background-color: hsl(240, 5%, 80%);
   background-clip: padding-box;
 
   &:hover {
-    background-color: hsl(240 5% 90%);
+    background-color: hsl(240, 5%, 90%);
   }
 }
 
@@ -47,7 +47,7 @@ body {
     user-select: none;
 
     > .cell {
-      background-color: rgb(120 120 120);
+      background-color: rgb(120, 120, 120);
       color: #ffffff;
       font-weight: bold;
       text-align: center;
@@ -89,7 +89,7 @@ body {
         > span.command {
           &-color {
             padding: 2px 4px;
-            border: 1px solid rgb(150 150 150);
+            border: 1px solid rgb(150, 150, 150);
             border-radius: 5px;
           }
 
