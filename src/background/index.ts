@@ -7,6 +7,8 @@ import {
   ACTION_ICONS_ENABLE,
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
+  GOOGLE_FORMS_URL,
+  GOOGLE_FORMS_ID_VERSION,
 } from '@/constants'
 import webext from '@/webext'
 import { WebExtStorageApi } from '@/utils/webext/storage'
@@ -72,6 +74,12 @@ webext.contextMenus.removeAll().then(() => {
     contexts: ['action'],
     enabled: false,
   })
+
+  webext.contextMenus.create({
+    id: 'ncoverlay:report',
+    title: '不具合報告・機能提案・その他',
+    contexts: ['action'],
+  })
 })
 
 webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
@@ -87,6 +95,12 @@ webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
       target: { tabId: tab.id! },
       args: [menuItemId],
       func: (id) => document.dispatchEvent(new Event(id)),
+    })
+  }
+
+  if (menuItemId === 'ncoverlay:report') {
+    webext.tabs.create({
+      url: `${GOOGLE_FORMS_URL}?entry.${GOOGLE_FORMS_ID_VERSION}=${manifest.version}`,
     })
   }
 })
