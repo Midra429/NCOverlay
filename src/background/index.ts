@@ -7,13 +7,12 @@ import {
   ACTION_ICONS_ENABLE,
   ACTION_ICONS_DISABLE,
   GITHUB_URL,
-  GOOGLE_FORMS_URL,
-  GOOGLE_FORMS_ID_VERSION,
 } from '@/constants'
 import webext from '@/webext'
 import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getSupportStatus } from '@/utils/webext/getSupportStatus'
 import { getCurrentTab } from '@/utils/webext/getCurrentTab'
+import { getFormsUrl } from '@/utils/getFormsUrl'
 import { NiconicoApi } from './api/niconico'
 
 console.log('[NCOverlay] background.js')
@@ -100,7 +99,7 @@ webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
 
   if (menuItemId === 'ncoverlay:report') {
     webext.tabs.create({
-      url: `${GOOGLE_FORMS_URL}?entry.${GOOGLE_FORMS_ID_VERSION}=${manifest.version}`,
+      url: await getFormsUrl(),
     })
   }
 })

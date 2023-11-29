@@ -1,16 +1,13 @@
 import type { WebExtMessage } from '@/types/webext/message'
 import type { WebExtStorageChanges } from '@/types/webext/storage'
 import { WebExtMessageTypeCheck } from '@/types/webext/message'
-import {
-  GITHUB_URL,
-  GOOGLE_FORMS_URL,
-  GOOGLE_FORMS_ID_VERSION,
-} from '@/constants'
+import { GITHUB_URL } from '@/constants'
 import webext from '@/webext'
 import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getCurrentTab } from '@/utils/webext/getCurrentTab'
 import { getFromPage } from '@/utils/webext/getFromPage'
 import { removeChilds } from '@/utils/dom'
+import { getFormsUrl } from '@/utils/getFormsUrl'
 import { createVideoItem } from './utils/createVideoItem'
 
 console.log('[NCOverlay] popup.html')
@@ -55,7 +52,7 @@ const init = async () => {
 
   // 不具合報告・機能提案・その他
   const linkForms = document.querySelector<HTMLAnchorElement>('#LinkForms')!
-  linkForms.href = `${GOOGLE_FORMS_URL}?entry.${GOOGLE_FORMS_ID_VERSION}=${version}`
+  linkForms.href = await getFormsUrl()
 
   const settings = await WebExtStorageApi.getSettings()
 

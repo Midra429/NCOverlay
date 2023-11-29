@@ -75,8 +75,12 @@ export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
 export const GOOGLE_FORMS_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform'
 
-/** `?entry.{{ID}}={{VALUE}}` */
-export const GOOGLE_FORMS_ID_VERSION = '412681801'
+/** `?entry.ID=VALUE&` */
+export const GOOGLE_FORMS_IDS = {
+  VERSION: '412681801',
+  OS: '994779637',
+  BROWSER: '104404822',
+}
 
 /** dアニメストア ニコニコ支店のチャンネルID */
 export const DANIME_CHANNEL_ID = 2632720
