@@ -9,8 +9,8 @@ dependencies:
     specifier: ^1.0.2
     version: 1.0.2
   '@xpadev-net/niconicomments':
-    specifier: ^0.2.61
-    version: 0.2.61
+    specifier: ^0.2.65
+    version: 0.2.65
   deepmerge:
     specifier: ^4.3.1
     version: 4.3.1
@@ -44,8 +44,8 @@ devDependencies:
     specifier: ^0.19.8
     version: 0.19.8
   fs-extra:
-    specifier: ^11.1.1
-    version: 11.1.1
+    specifier: ^11.2.0
+    version: 11.2.0
   glob:
     specifier: ^10.3.10
     version: 10.3.10
@@ -386,8 +386,8 @@ packages:
     resolution: {integrity: sha512-10ql7A0qzBmFB+F+qAke/nP1PIonS0TXZAOMVOxEUsm+lGSW6uwVcISFNa0I4Oyj0884TZVWGGMIWeXOVSNFHw==}
     dev: true
 
-  /@xpadev-net/niconicomments@0.2.61:
-    resolution: {integrity: sha512-1W4IR4moiA46+y+dROJUXG/oZe+SN/wsigtML/0ua26X3vAdGBZuEUZHdi6rwacvM1YG7ae+hqFjUrLx6rMluQ==}
+  /@xpadev-net/niconicomments@0.2.65:
+    resolution: {integrity: sha512-noJvWwvthOTEJuc5kPkRFydGi/dReNG+cdPVpTBT2HkeN2OlqFsh8wiGqtneUWqhEQC8VxRCaGavyURRFy8C1A==}
     dev: false
 
   /acorn@8.11.2:
@@ -653,8 +653,8 @@ packages:
       signal-exit: 4.1.0
     dev: true
 
-  /fs-extra@11.1.1:
-    resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==}
+  /fs-extra@11.2.0:
+    resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
     engines: {node: '>=14.14'}
     dependencies:
       graceful-fs: 4.2.11

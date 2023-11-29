@@ -173,7 +173,7 @@ const init = async () => {
     }
   )
 
-  setTimeout(() => document.body.classList.remove('loading'), 100)
+  window.setTimeout(() => document.body.classList.remove('loading'), 100)
 }
 
 const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {

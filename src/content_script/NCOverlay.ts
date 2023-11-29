@@ -11,7 +11,6 @@ import { KAWAII_REGEXP } from '@/constants'
 import webext from '@/webext'
 import NiconiComments from '@xpadev-net/niconicomments'
 import { WebExtStorageApi } from '@/utils/webext/storage'
-import { formatDuration } from '@/utils/formatDuration'
 import { setActionBadge } from './utils/setActionBadge'
 import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
@@ -27,10 +26,6 @@ export class NCOverlay {
   #canvas: HTMLCanvasElement
 
   #niconiComments: NiconiComments
-
-  // #videoData?: VideoData[]
-  // #commentsData?: InputFormat
-  // #commentsFormat?: InputFormatType
 
   #initData: InitData[]
 
@@ -80,7 +75,7 @@ export class NCOverlay {
     if (HTMLMediaElement.HAVE_METADATA <= this.#video.readyState) {
       console.log('[NCOverlay] video.readyState >= HAVE_METADATA')
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         this.#listener.loadedmetadata(new Event('loadedmetadata'))
       }, 100)
     }
@@ -95,7 +90,7 @@ export class NCOverlay {
     )
 
     // 設定読み込み
-    setTimeout(async () => {
+    window.setTimeout(async () => {
       const settings = await WebExtStorageApi.getSettings()
 
       this.#canvas.style.display = settings.enable ? 'block' : 'none'
@@ -317,9 +312,9 @@ export class NCOverlay {
       }
 
       if (this.#isLowPerformance) {
-        setTimeout(() => this.#loop(), 33)
+        window.setTimeout(() => this.#loop(), 33)
       } else {
-        requestAnimationFrame(() => this.#loop())
+        window.requestAnimationFrame(() => this.#loop())
       }
     }
   }
