@@ -28,7 +28,7 @@ body:
     attributes:
       label: ブラウザ
       options:
-        - Chrome (Chromium)
+        - Chrome
         - Firefox
 
   - type: checkboxes
