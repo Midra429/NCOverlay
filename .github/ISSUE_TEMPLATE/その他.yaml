@@ -1,0 +1,12 @@
+name: その他
+description: 不具合報告や機能提案に該当しない場合
+title: '[その他]: '
+labels: ['その他']
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 詳細
+    validations:
+      required: true
