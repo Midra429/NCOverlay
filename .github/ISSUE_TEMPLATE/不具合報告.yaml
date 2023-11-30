@@ -2,13 +2,12 @@ name: 不具合報告
 description: コメントが表示されない、機能が正しく動作していないなどの問題を報告
 title: '[不具合]: '
 labels: ['不具合']
-
 body:
   - type: input
     id: version
     attributes:
       label: バージョン
-      description: |-
+      description: |
         NCOverlayのバージョン
         ポップアップの NCOverlay の右側に記載されています
     validations:
@@ -25,8 +24,6 @@ body:
         - ChromeOS
         - Android
         - その他
-    validations:
-      required: false
 
   - type: dropdown
     id: browser
@@ -35,8 +32,6 @@ body:
       options:
         - Chrome (Chromium)
         - Firefox
-    validations:
-      required: false
 
   - type: checkboxes
     id: vods
@@ -53,16 +48,12 @@ body:
         - label: DMM TV
         - label: Hulu
         - label: Lemino
-    validations:
-      required: false
 
-  - type: input
+  - type: textarea
     id: video
     attributes:
       label: 該当の動画
       description: タイトルやエピソード、URLなど
-    validations:
-      required: false
 
   - type: textarea
     id: description
