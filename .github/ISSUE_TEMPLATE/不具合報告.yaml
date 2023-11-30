@@ -1,0 +1,63 @@
+name: 不具合報告
+description: コメントが表示されない、機能が正しく動作していないなどの問題を報告
+title: '[不具合]: '
+labels: ['不具合']
+body:
+  - type: input
+    id: version
+    attributes:
+      label: バージョン
+      description: |
+        NCOverlayのバージョン
+        ポップアップの NCOverlay の右側に記載されています
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - ChromeOS
+        - Android
+        - その他
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: ブラウザ
+      options:
+        - Chrome (Chromium)
+        - Firefox
+
+  - type: checkboxes
+    id: vods
+    attributes:
+      label: 動画配信サービス
+      options:
+        - label: dアニメストア
+        - label: Amazon Prime Video
+        - label: ABEMA
+        - label: Disney+
+        - label: TVer
+        - label: バンダイチャンネル
+        - label: U-NEXT
+        - label: DMM TV
+        - label: Hulu
+        - label: Lemino
+
+  - type: textarea
+    id: video
+    attributes:
+      label: 該当の動画
+      description: タイトルやエピソード、URLなど
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 詳細
+    validations:
+      required: true
