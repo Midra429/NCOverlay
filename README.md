@@ -65,13 +65,13 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ## 不具合報告・機能提案など
-- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)
-- Misskey ([@Midra@submarin.online](https://submarin.online/@Midra))にメンションやDM
-- X ([@Midra429](https://x.com/Midra429))にメンションやDM
-- GitHub > [Issues](https://github.com/Midra429/NCOverlay/issues)
-- [Midraの掲示板](https://midra.me/board)
-- ~~[Chrome Web Store](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe) > サポート~~<br>
-  気付けない可能性高いので非推奨
+- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)<br>
+NCOverlay経由でアクセスすると、バージョンやOSなどの情報が自動入力されます
+- GitHubの[Issues](https://github.com/Midra429/NCOverlay/issues)
+- SNSアカウント宛にメッセージやメンション
+  - X (Twitter): [@Midra429](https://x.com/Midra429)
+  - Misskey: [@Midra@submarin.online](https://submarin.online/@Midra)
+  - Mastodon: [@Midra@fedibird.com](https://fedibird.com/@Midra)
 
 ---
 
