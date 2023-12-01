@@ -98,11 +98,11 @@ export const compare = (
     const splitedA = normalizer
       .text(targetA.input, { bracket: true, anime: true })
       .split(' ')
-      .filter(Boolean)
+      .flatMap((v) => v || [])
     const splitedB = normalizer
       .text(targetB.input, { bracket: true, anime: true })
       .split(' ')
-      .filter(Boolean)
+      .flatMap((v) => v || [])
 
     const splitedShort = splitedA.length < splitedB.length ? splitedA : splitedB
     const splitedLong = splitedA.length < splitedB.length ? splitedB : splitedA

@@ -17,7 +17,7 @@
   </head>
 
   <body>
-    <div id="Side">
+    <div id="Side" style="display: none">
       <section id="Comments">
         <header>
           <h2>表示中のコメント<small id="CommentsCount"></small></h2>
@@ -59,7 +59,7 @@
       </section>
     </div>
 
-    <div class="divider-vertical"></div>
+    <!-- <div class="divider-vertical"></div> -->
 
     <div id="Main">
       <header id="Header">
@@ -73,15 +73,6 @@
               rel="noopener external"
             ></a>
           </small>
-          <div id="Links">
-            <a
-              id="LinkGitHub"
-              target="_blank"
-              rel="noopener external"
-              title="GitHub"
-              style="background-image: url('../assets/github-mark.svg')"
-            ></a>
-          </div>
         </h1>
 
         <div class="input-toggle">
@@ -111,7 +102,7 @@
 
         <ul>
           <!-- 不透明度 -->
-          <li class="setting">
+          <li class="setting setting-range">
             <label for="SettingOpacity">不透明度</label>
 
             <div class="input-container">
@@ -135,7 +126,7 @@
           </li>
 
           <!-- 低パフォーマンスモード -->
-          <li class="setting">
+          <li class="setting setting-checkbox">
             <input
               type="checkbox"
               id="SettingLowPerformance"
@@ -148,7 +139,7 @@
           <li class="divider-horizontal"></li>
 
           <!-- タイトルの一致判定を緩くする -->
-          <li class="setting">
+          <li class="setting setting-checkbox">
             <input
               type="checkbox"
               id="SettingWeakMatch"
@@ -159,7 +150,7 @@
           </li>
 
           <!-- コメント専用動画のコメントを表示 -->
-          <li class="setting">
+          <li class="setting setting-checkbox">
             <input
               type="checkbox"
               id="SettingSzbhMethod"
@@ -172,7 +163,7 @@
           </li>
 
           <!-- ニコニコのNG設定を使用 -->
-          <li class="setting">
+          <li class="setting setting-checkbox">
             <input
               type="checkbox"
               id="SettingUseNgList"
@@ -187,7 +178,7 @@
           <li class="divider-horizontal"></li>
 
           <!-- アップデート後に更新内容を表示 -->
-          <li class="setting">
+          <li class="setting setting-checkbox">
             <input
               type="checkbox"
               id="SettingShowChangelog"
@@ -204,18 +195,23 @@
       <div class="divider-horizontal"></div>
 
       <section id="Footer">
-        <ul>
-          <li>
-            <a
-              id="LinkForms"
-              class="is-button"
-              target="_blank"
-              rel="noopener external"
-              title="Google フォーム"
-              >不具合報告・機能提案・その他</a
-            >
-          </li>
-        </ul>
+        <a
+          id="LinkGitHub"
+          class="link"
+          target="_blank"
+          rel="noopener external"
+          title="Midra429/NCOverlay"
+          >GitHub</a
+        >
+
+        <a
+          id="LinkForms"
+          class="link"
+          target="_blank"
+          rel="noopener external"
+          title="Google フォーム"
+          >不具合報告・機能提案・その他</a
+        >
       </section>
     </div>
   </body>

@@ -121,8 +121,7 @@ export class NCOverlay {
     this.#kawaiiPct = 0
 
     const threads = this.#initData
-      .map((v) => v.threads)
-      .flat()
+      .flatMap((v) => v.threads)
       .filter(
         (val, idx, ary) =>
           idx === ary.findIndex((v) => v.id === val.id && v.fork === val.fork)

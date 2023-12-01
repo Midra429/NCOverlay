@@ -107,46 +107,6 @@ webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
 webext.runtime.onInstalled.addListener(async (details) => {
   const settings = await WebExtStorageApi.getSettings()
 
-  // 権限を要求 (Firefoxのみ)
-  if (
-    webext.isFirefox &&
-    (details.reason === 'install' || details.reason === 'update')
-  ) {
-    const permitted = await webext.permissions.contains({
-      origins: manifest.host_permissions,
-    })
-
-    if (!permitted) {
-      const requestPermissions = async () => {
-        const permitted = await webext.permissions.request({
-          origins: manifest.host_permissions,
-        })
-
-        if (permitted) {
-          await setAction(false)
-          webext.action.setPopup({ popup: manifest.action!.default_popup! })
-          webext.action.onClicked.removeListener(requestPermissions)
-
-          try {
-            const tab = await getCurrentTab()
-            const isPermittedSite = manifest
-              .host_permissions!.map((v) => v.match(/^https?:\/\/(.*)\//)?.[1])
-              .filter(Boolean)
-              .includes(new URL(tab?.url ?? '').hostname)
-
-            if (isPermittedSite) {
-              webext.tabs.reload(tab!.id)
-            }
-          } catch {}
-        }
-      }
-
-      await setAction(true)
-      webext.action.setPopup({ popup: '' })
-      webext.action.onClicked.addListener(requestPermissions)
-    }
-  }
-
   if (details.reason === 'install') {
     webext.tabs.create({
       url: `${GITHUB_URL}/blob/v${manifest.version}/README.md`,
@@ -297,3 +257,45 @@ webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     delete prevHostnames[tabId]
   }
 })
+
+const main = async () => {
+  // 権限を要求 (Firefoxのみ)
+  if (webext.isFirefox) {
+    const permitted = await webext.permissions.contains({
+      origins: manifest.host_permissions,
+    })
+
+    if (!permitted) {
+      const requestPermissions = async () => {
+        const permitted = await webext.permissions.request({
+          origins: manifest.host_permissions,
+        })
+
+        if (permitted) {
+          await setAction(false)
+          webext.action.setPopup({ popup: manifest.action!.default_popup! })
+          webext.action.onClicked.removeListener(requestPermissions)
+
+          try {
+            const tab = await getCurrentTab()
+            const isPermittedSite = manifest
+              .host_permissions!.flatMap(
+                (v) => v.match(/^https?:\/\/(.*)\//)?.[1] ?? []
+              )
+              .includes(new URL(tab?.url ?? '').hostname)
+
+            if (isPermittedSite) {
+              webext.tabs.reload(tab!.id)
+            }
+          } catch {}
+        }
+      }
+
+      await setAction(true)
+      webext.action.setPopup({ popup: '' })
+      webext.action.onClicked.addListener(requestPermissions)
+    }
+  }
+}
+
+main()

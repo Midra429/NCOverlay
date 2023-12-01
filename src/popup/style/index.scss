@@ -84,17 +84,6 @@ header {
   }
 }
 
-.is-button {
-  display: flex;
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .divider {
   &-horizontal {
     height: 0.5px !important;
@@ -108,6 +97,26 @@ header {
     min-width: 0.5px;
     padding: 0 !important;
     background-color: colors.$fg-secondary;
+  }
+}
+
+.is-button {
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
@@ -197,6 +206,13 @@ header {
   }
 }
 
+#Version,
+#CommentsCount,
+#ButtonReset {
+  margin-left: 5px;
+  opacity: 0.6;
+}
+
 #Side,
 #Main {
   display: flex;
@@ -238,102 +254,46 @@ header {
 }
 
 #Side {
-  &:has(#VideoItems:empty) {
-    &,
-    & + .divider-vertical {
-      display: none;
-    }
-  }
-}
+  border-right: 0.5px solid colors.$fg-secondary;
 
-#Links {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  margin-left: 10px;
+  // &:has(#VideoItems:empty) {
+  //   display: none;
+  // }
 
-  > a {
-    display: block;
-    width: 26px;
-    height: 26px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    text-decoration: none;
-  }
-}
+  #Comments {
+    overflow: hidden;
 
-#Version,
-#CommentsCount,
-#ButtonReset,
-#LinkForms {
-  margin-left: 5px;
-  opacity: 0.6;
-}
+    > ul {
+      gap: 10px;
+      padding: 1px !important;
+      overflow: auto;
 
-#Settings {
-  > ul {
-    margin-left: 15px !important;
-
-    > li.setting {
-      display: grid;
-      justify-content: start;
-      grid-template-columns: repeat(2, auto);
-      gap: 8px;
-      font-size: 110%;
-
-      &:has(input[type='range']) {
-        grid-template-columns: 1fr 3fr;
-      }
-
-      > label {
-        display: flex;
-        height: 30px;
-        line-height: 30px;
-      }
-    }
-  }
-}
-
-#Footer {
-  > ul {
-    align-items: end;
-  }
-}
-
-#Comments {
-  overflow: hidden;
-
-  > ul {
-    gap: 10px;
-    padding: 1px !important;
-    overflow: auto;
-
-    > li.item {
-      > * {
-        width: 100%;
-      }
-    }
-
-    > li.item-splited + li.item-splited {
-      margin-top: -5px;
-
-      .video-thumbnail {
-        &::after {
-          content: '';
-          position: absolute;
-          top: -11px;
-          left: calc(50% - 3px);
-          z-index: -1;
-          display: block;
-          width: 6px;
-          height: 11px;
-          background-color: #252525;
+      > li.item {
+        > * {
+          width: 100%;
         }
+      }
 
-        &-danime {
+      > li.item-splited + li.item-splited {
+        margin-top: -5px;
+
+        .video-thumbnail {
           &::after {
-            background-color: #eb5528;
+            content: '';
+            position: absolute;
+            top: -11px;
+            left: calc(50% - 3px);
+            z-index: -1;
+            display: block;
+            width: 6px;
+            height: 11px;
+            background-color: #252525;
+          }
+
+          &-danime {
+            &::after {
+              background-color: #eb5528;
+            }
           }
         }
       }
@@ -341,8 +301,38 @@ header {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  #LinkGitHub {
-    filter: invert(1);
+#Main {
+  #Settings {
+    > ul {
+      margin-left: 15px !important;
+
+      > li.setting {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(2, auto);
+        gap: 8px;
+        font-size: 110%;
+
+        &-range {
+          grid-template-columns: 1fr 3fr;
+        }
+
+        > label {
+          display: flex;
+          height: 30px;
+          line-height: 30px;
+        }
+      }
+    }
+  }
+
+  #Footer {
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 0;
+
+    .link {
+      opacity: 0.6;
+    }
   }
 }

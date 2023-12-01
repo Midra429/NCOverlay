@@ -17,8 +17,8 @@ export const getVideoData = async (ids: {
   normal: VideoData[]
   splited: VideoData[]
 } | null> => {
-  ids.normal = ids.normal?.filter(Boolean) ?? []
-  ids.splited = ids.splited?.filter(Boolean) ?? []
+  ids.normal = ids.normal?.flatMap((v) => v || []) ?? []
+  ids.splited = ids.splited?.flatMap((v) => v || []) ?? []
 
   let videoDataNormal: VideoData[] = []
   let videoDataSplited: VideoData[] = []

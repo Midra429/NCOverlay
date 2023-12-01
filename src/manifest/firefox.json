@@ -6,7 +6,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "ncoverlay@midra.me",
-      "strict_min_version": "109.0"
+      "strict_min_version": "113.0"
+    },
+    "gecko_android": {
+      "id": "ncoverlay@midra.me",
+      "strict_min_version": "113.0"
     }
   }
 }

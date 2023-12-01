@@ -38,7 +38,7 @@ declare module 'webextension-polyfill' {
 
   export var sidePanel:
     | (typeof chrome.sidePanel & {
-        open?(options: { windowId?: number }): void
+        open?(options: { windowId?: number }): Promise<void>
       })
     | undefined
 }

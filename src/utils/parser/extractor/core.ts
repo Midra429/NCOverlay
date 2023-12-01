@@ -13,22 +13,22 @@ export const core = (
 ): { number: number; text: string }[] => {
   const matches = [...str.matchAll(new RegExp(regExp, 'gi'))]
 
-  return matches
-    .map((val) => {
-      try {
-        const matched = Object.values(val.groups!).find(Boolean)!
+  return matches.flatMap((val) => {
+    try {
+      const matched = Object.values(val.groups!).find(Boolean)!
 
-        const num = new RegExp(regExpKansuji).test(matched)
-          ? kanji2number(matched)
-          : Number(matched)
+      const num = new RegExp(regExpKansuji).test(matched)
+        ? kanji2number(matched)
+        : Number(matched)
 
-        if (Number.isFinite(num)) {
-          return {
-            number: num,
-            text: val[0],
-          }
+      if (Number.isFinite(num)) {
+        return {
+          number: num,
+          text: val[0],
         }
-      } catch {}
-    })
-    .filter(Boolean) as { number: number; text: string }[]
+      }
+    } catch {}
+
+    return []
+  })
 }

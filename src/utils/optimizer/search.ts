@@ -32,7 +32,7 @@ export const search = (target: string | ParseResult, weak: boolean = false) => {
       episode.number < 10 && zeroPadding(episode.number, 2),
       number2kanji(episode.number),
     ]
-      .filter(Boolean)
+      .flatMap((v) => v || [])
       .join(' OR ')
 
     optimized = [
@@ -45,7 +45,7 @@ export const search = (target: string | ParseResult, weak: boolean = false) => {
       // サブタイトル
       weak ? '' : subTitle,
     ]
-      .filter(Boolean)
+      .flatMap((v) => v || [])
       .join(' ')
   } else {
     optimized = normalizer.text(target.input, {

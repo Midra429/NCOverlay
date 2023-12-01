@@ -27,6 +27,14 @@ webext.runtime.onMessage.addListener((message: WebExtMessage, sender) => {
   }
 })
 
+const showPopupSide = () => {
+  document.querySelector<HTMLElement>('#Side')!.style.display = 'flex'
+}
+
+const hidePopupSide = () => {
+  document.querySelector<HTMLElement>('#Side')!.style.display = 'none'
+}
+
 const init = async () => {
   document.body.classList.add('loading')
 
@@ -180,6 +188,7 @@ const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {
   const items = document.querySelector<HTMLElement>('#VideoItems')!
 
   if (!body) {
+    hidePopupSide()
     removeChilds(items)
 
     return
@@ -189,11 +198,18 @@ const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {
   const videoData = initData?.map((v) => v.videoData)
 
   if (videoData) {
+    hidePopupSide()
+    removeChilds(items)
+
     const fragment = document.createDocumentFragment()
     for (const data of videoData) {
       fragment.appendChild(createVideoItem(data))
     }
     items.appendChild(fragment)
+
+    if (0 < items.children.length) {
+      showPopupSide()
+    }
   }
 
   document.querySelector('#CommentsCount')!.textContent = commentsCount
