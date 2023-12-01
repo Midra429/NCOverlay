@@ -3,6 +3,8 @@
     "scripts": ["background.js"]
   },
 
+  "host_permissions": ["<all_urls>"],
+
   "browser_specific_settings": {
     "gecko": {
       "id": "ncoverlay@midra.me",

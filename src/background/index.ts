@@ -33,7 +33,7 @@ const setAction = async (enabled: boolean, tabId?: number) => {
 }
 
 const setContextMenu = (id: string | number, enabled: boolean) => {
-  return webext.contextMenus.update(id, { enabled })
+  return webext.contextMenus?.update(id, { enabled })
 }
 
 const setSidePanel = (enabled: boolean, tabId?: number) => {
@@ -59,29 +59,29 @@ webext.action.setIcon({ path: ACTION_ICONS_DISABLE })
 webext.action.setBadgeBackgroundColor({ color: '#2389FF' })
 webext.action.setBadgeTextColor({ color: '#FFF' })
 
-webext.contextMenus.removeAll().then(() => {
-  webext.contextMenus.create({
+webext.contextMenus?.removeAll().then(() => {
+  webext.contextMenus?.create({
     id: 'ncoverlay:capture',
     title: 'スクリーンショット',
     contexts: ['action'],
     enabled: false,
   })
 
-  webext.contextMenus.create({
+  webext.contextMenus?.create({
     id: 'ncoverlay:capture:comments',
     title: 'スクリーンショット (コメントのみ)',
     contexts: ['action'],
     enabled: false,
   })
 
-  webext.contextMenus.create({
+  webext.contextMenus?.create({
     id: 'ncoverlay:report',
     title: '不具合報告・機能提案・その他',
     contexts: ['action'],
   })
 })
 
-webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
+webext.contextMenus?.onClicked.addListener(async ({ menuItemId }, tab) => {
   if (typeof tab?.id === 'undefined') return
 
   const { capture } = await getSupportStatus(tab.id)
@@ -106,6 +106,48 @@ webext.contextMenus.onClicked.addListener(async ({ menuItemId }, tab) => {
 
 webext.runtime.onInstalled.addListener(async (details) => {
   const settings = await WebExtStorageApi.getSettings()
+
+  // 権限を要求 (Firefoxのみ)
+  if (webext.isFirefox) {
+    const permitted = await webext.permissions.contains({
+      origins: manifest.host_permissions,
+    })
+
+    if (!permitted) {
+      const requestPermissions = async () => {
+        const permitted = await webext.permissions.request({
+          origins: manifest.host_permissions,
+        })
+
+        if (permitted) {
+          await setAction(false)
+          webext.action.setPopup({ popup: manifest.action!.default_popup! })
+          webext.action.onClicked.removeListener(requestPermissions)
+
+          try {
+            const tab = await getCurrentTab()
+            const isContentScriptTarget = manifest
+              .content_scripts!.flatMap((val) => {
+                return val.matches.map((val) => {
+                  try {
+                    return new URL(val).hostname
+                  } catch {}
+                })
+              })
+              .includes(new URL(tab?.url ?? '').hostname)
+
+            if (isContentScriptTarget) {
+              webext.tabs.reload(tab!.id)
+            }
+          } catch {}
+        }
+      }
+
+      await setAction(true)
+      webext.action.setPopup({ popup: '' })
+      webext.action.onClicked.addListener(requestPermissions)
+    }
+  }
 
   if (details.reason === 'install') {
     webext.tabs.create({
@@ -160,15 +202,15 @@ webext.runtime.onMessage.addListener(
     if (WebExtMessageTypeCheck('webext:action:title', message)) {
       webext.action.setTitle({
         tabId: sender.tab?.id,
-        title: message.body,
+        title: message.body ? `NCOverlay | ${message.body}` : 'NCOverlay',
       })
     }
 
     // 拡張機能 サイドパネル 有効/無効
     if (WebExtMessageTypeCheck('webext:side_panel', message)) {
       // Chrome
-      if (webext.isChrome && webext.sidePanel) {
-        webext.sidePanel.setOptions({
+      if (webext.isChrome) {
+        webext.sidePanel?.setOptions({
           tabId: sender.tab?.id,
           enabled: message.body,
         })
@@ -205,7 +247,7 @@ webext.runtime.onMessage.addListener(
 )
 
 // ウィンドウ変更時
-webext.windows.onFocusChanged.addListener(async (windowId) => {
+webext.windows.onFocusChanged?.addListener(async (windowId) => {
   const tab = await getCurrentTab(windowId)
   const { vod, capture } = await getSupportStatus(tab?.id)
 
@@ -257,45 +299,3 @@ webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     delete prevHostnames[tabId]
   }
 })
-
-const main = async () => {
-  // 権限を要求 (Firefoxのみ)
-  if (webext.isFirefox) {
-    const permitted = await webext.permissions.contains({
-      origins: manifest.host_permissions,
-    })
-
-    if (!permitted) {
-      const requestPermissions = async () => {
-        const permitted = await webext.permissions.request({
-          origins: manifest.host_permissions,
-        })
-
-        if (permitted) {
-          await setAction(false)
-          webext.action.setPopup({ popup: manifest.action!.default_popup! })
-          webext.action.onClicked.removeListener(requestPermissions)
-
-          try {
-            const tab = await getCurrentTab()
-            const isPermittedSite = manifest
-              .host_permissions!.flatMap(
-                (v) => v.match(/^https?:\/\/(.*)\//)?.[1] ?? []
-              )
-              .includes(new URL(tab?.url ?? '').hostname)
-
-            if (isPermittedSite) {
-              webext.tabs.reload(tab!.id)
-            }
-          } catch {}
-        }
-      }
-
-      await setAction(true)
-      webext.action.setPopup({ popup: '' })
-      webext.action.onClicked.addListener(requestPermissions)
-    }
-  }
-}
-
-main()
