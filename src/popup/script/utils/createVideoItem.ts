@@ -4,7 +4,7 @@ import { formatDuration } from '@/utils/formatDuration'
 import { formatDate } from '@/utils/formatDate'
 
 const template =
-  document.querySelector<HTMLTemplateElement>('#TemplateItemVideo')!.content
+  document.querySelector<HTMLTemplateElement>('#TemplateVideoItem')!.content
 
 export const createVideoItem = (data: VideoData) => {
   const item = template.firstElementChild!.cloneNode(true) as HTMLElement

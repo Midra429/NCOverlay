@@ -17,50 +17,6 @@
   </head>
 
   <body>
-    <div id="Side" style="display: none">
-      <section id="Comments">
-        <header>
-          <h2>表示中のコメント<small id="CommentsCount"></small></h2>
-        </header>
-
-        <ul id="VideoItems"></ul>
-
-        <template id="TemplateItemVideo">
-          <li class="item">
-            <article class="video">
-              <div class="video-thumbnail">
-                <span class="video-duration"></span>
-              </div>
-
-              <a
-                class="video-title"
-                target="_blank"
-                rel="noopener external"
-                title=""
-              ></a>
-
-              <div class="video-info">
-                <div>
-                  <p>投稿日時</p>
-                  <p class="video-info-date"></p>
-                </div>
-                <div>
-                  <p>再生数</p>
-                  <p class="video-info-view"></p>
-                </div>
-                <div>
-                  <p>コメント</p>
-                  <p class="video-info-comments"></p>
-                </div>
-              </div>
-            </article>
-          </li>
-        </template>
-      </section>
-    </div>
-
-    <!-- <div class="divider-vertical"></div> -->
-
     <div id="Main">
       <header id="Header">
         <h1>
@@ -80,8 +36,6 @@
           <label for="SettingEnable"></label>
         </div>
       </header>
-
-      <div class="divider-horizontal"></div>
 
       <section id="Settings">
         <header>
@@ -192,7 +146,45 @@
         </ul>
       </section>
 
-      <div class="divider-horizontal"></div>
+      <section id="Videos">
+        <header>
+          <h2>表示中のコメント<small id="CommentsCount"></small></h2>
+        </header>
+
+        <ul id="VideoItems"></ul>
+
+        <template id="TemplateVideoItem">
+          <li class="item">
+            <article class="video">
+              <div class="video-thumbnail">
+                <span class="video-duration"></span>
+              </div>
+
+              <a
+                class="video-title"
+                target="_blank"
+                rel="noopener external"
+                title=""
+              ></a>
+
+              <div class="video-info">
+                <div>
+                  <p>投稿日時</p>
+                  <p class="video-info-date"></p>
+                </div>
+                <div>
+                  <p>再生数</p>
+                  <p class="video-info-view"></p>
+                </div>
+                <div>
+                  <p>コメント</p>
+                  <p class="video-info-comments"></p>
+                </div>
+              </div>
+            </article>
+          </li>
+        </template>
+      </section>
 
       <section id="Footer">
         <a

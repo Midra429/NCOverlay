@@ -41,22 +41,12 @@ html {
 }
 
 body {
-  display: flex;
-  flex-direction: row;
-  height: auto;
-  max-width: 800px;
-  // max-height: 600px;
+  width: fit-content;
+  height: fit-content;
+  overflow: hidden;
   background-color: colors.$bg-secondary;
   font-size: 75%;
   color: colors.$fg-primary;
-
-  > #Side {
-    width: 400px;
-  }
-
-  > #Main {
-    width: 350px;
-  }
 }
 
 header {
@@ -132,6 +122,7 @@ header {
 
     position: relative;
     aspect-ratio: 16 / 9;
+    max-width: 120px;
     border: 3px solid #b0b0b0;
     border-radius: 8px;
     background-color: #000;
@@ -206,6 +197,87 @@ header {
   }
 }
 
+/* レイアウト */
+body {
+  width: 350px;
+  max-width: 800px;
+  // max-height: 600px;
+
+  &.has-comments {
+    width: calc(400px + 350px);
+  }
+}
+
+#Main {
+  display: grid;
+  align-content: center;
+  grid-template-columns: 350px;
+  grid-template-rows: repeat(4, auto);
+  grid-template-areas:
+    'header'
+    'settings'
+    'settings'
+    'footer';
+
+  .has-comments & {
+    grid-template-columns: 400px 350px;
+    grid-template-areas:
+      'videos header'
+      'videos settings'
+      'videos settings'
+      'videos footer';
+  }
+
+  #Header {
+    grid-area: header;
+  }
+
+  #Settings {
+    grid-area: settings;
+  }
+
+  #Videos {
+    grid-area: videos;
+    display: none;
+    margin-right: 0;
+    padding-right: 15px;
+    border-right: 0.5px solid colors.$fg-secondary;
+
+    .has-comments & {
+      display: flex;
+    }
+  }
+
+  #Footer {
+    grid-area: footer;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  body.device-sp {
+    width: 100dvw;
+    height: 100dvh;
+    max-width: 100dvw;
+    max-height: 100dvh;
+
+    #Main {
+      grid-template-columns: inherit;
+      grid-template-areas:
+        'header'
+        'settings'
+        'videos'
+        'footer';
+    }
+
+    #Videos {
+      margin-right: 15px;
+      padding-right: 0;
+      border-right: unset;
+      border-top: 0.5px solid colors.$fg-secondary;
+    }
+  }
+}
+
 #Version,
 #CommentsCount,
 #ButtonReset {
@@ -213,16 +285,13 @@ header {
   opacity: 0.6;
 }
 
-#Side,
 #Main {
-  display: flex;
-  flex-direction: column;
-  // height: 100%;
-  max-height: inherit;
+  height: 100%;
+  max-height: 100%;
   overflow: hidden;
 
   > * {
-    width: calc(100% - 30px);
+    // width: calc(100% - 30px);
     margin: 0 15px;
     padding: 15px 0;
   }
@@ -253,14 +322,36 @@ header {
   }
 }
 
-#Side {
-  border-right: 0.5px solid colors.$fg-secondary;
+#Main {
+  #Header {
+    border-bottom: 0.5px solid colors.$fg-secondary;
+  }
 
-  // &:has(#VideoItems:empty) {
-  //   display: none;
-  // }
+  #Settings {
+    > ul {
+      margin-left: 15px !important;
 
-  #Comments {
+      > li.setting {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: repeat(2, auto);
+        gap: 8px;
+        font-size: 110%;
+
+        &-range {
+          grid-template-columns: 1fr 3fr;
+        }
+
+        > label {
+          display: flex;
+          height: 30px;
+          line-height: 30px;
+        }
+      }
+    }
+  }
+
+  #Videos {
     overflow: hidden;
 
     > ul {
@@ -299,37 +390,12 @@ header {
       }
     }
   }
-}
-
-#Main {
-  #Settings {
-    > ul {
-      margin-left: 15px !important;
-
-      > li.setting {
-        display: grid;
-        justify-content: start;
-        grid-template-columns: repeat(2, auto);
-        gap: 8px;
-        font-size: 110%;
-
-        &-range {
-          grid-template-columns: 1fr 3fr;
-        }
-
-        > label {
-          display: flex;
-          height: 30px;
-          line-height: 30px;
-        }
-      }
-    }
-  }
 
   #Footer {
     flex-direction: row;
     justify-content: space-evenly;
     gap: 0;
+    border-top: 0.5px solid colors.$fg-secondary;
 
     .link {
       opacity: 0.6;

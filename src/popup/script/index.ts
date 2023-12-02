@@ -27,18 +27,23 @@ webext.runtime.onMessage.addListener((message: WebExtMessage, sender) => {
   }
 })
 
-const showPopupSide = () => {
-  document.querySelector<HTMLElement>('#Side')!.style.display = 'flex'
+const showPopupVideos = () => {
+  document.body.classList.add('has-comments')
 }
 
-const hidePopupSide = () => {
-  document.querySelector<HTMLElement>('#Side')!.style.display = 'none'
+const hidePopupVideos = () => {
+  document.body.classList.remove('has-comments')
 }
 
 const init = async () => {
   document.body.classList.add('loading')
 
+  hidePopupVideos()
+
   const { version } = webext.runtime.getManifest()
+  const { os } = await webext.runtime.getPlatformInfo()
+
+  document.body.classList.add(os === 'android' ? 'device-sp' : 'device-pc')
 
   // バージョン
   const linkVersion = document.querySelector<HTMLAnchorElement>('#Version')!
@@ -185,11 +190,11 @@ const init = async () => {
 }
 
 const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {
-  const items = document.querySelector<HTMLElement>('#VideoItems')!
+  const videoItems = document.querySelector<HTMLElement>('#VideoItems')!
 
   if (!body) {
-    hidePopupSide()
-    removeChilds(items)
+    hidePopupVideos()
+    removeChilds(videoItems)
 
     return
   }
@@ -198,17 +203,15 @@ const update = (body: WebExtMessage<'webext:sendToPopup'>['body']) => {
   const videoData = initData?.map((v) => v.videoData)
 
   if (videoData) {
-    hidePopupSide()
-    removeChilds(items)
+    hidePopupVideos()
+    removeChilds(videoItems)
 
-    const fragment = document.createDocumentFragment()
     for (const data of videoData) {
-      fragment.appendChild(createVideoItem(data))
+      videoItems.appendChild(createVideoItem(data))
     }
-    items.appendChild(fragment)
 
-    if (0 < items.children.length) {
-      showPopupSide()
+    if (0 < videoItems.children.length) {
+      showPopupVideos()
     }
   }
 

@@ -20,7 +20,8 @@ export const createCommentItem = (comment: V1Comment) => {
 
   // コメント
   const commentTextSpan = commentText.firstElementChild! as HTMLElement
-  commentText.title = commentTextSpan.textContent = comment.body
+  commentTextSpan.textContent = comment.body
+  commentText.title = commentTextSpan.textContent
 
   for (const command of comment.commands) {
     if (['white'].includes(command)) continue
@@ -61,6 +62,7 @@ export const createCommentItem = (comment: V1Comment) => {
 
   // コマンド
   commentCommands.textContent = comment.commands.join(' ')
+  commentCommands.title = commentCommands.textContent
 
   return item
 }
