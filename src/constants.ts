@@ -5,7 +5,7 @@ export const SETTINGS_DEFAULT: WebExtStorageSettings = {
   enable: true,
   opacity: 100,
   lowPerformance: false,
-  weakMatch: false,
+  weakMatch: true,
   szbhMethod: false,
   useNgList: false,
   showChangelog: true,
