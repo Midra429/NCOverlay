@@ -267,13 +267,13 @@ body {
         'settings'
         'videos'
         'footer';
-    }
 
-    #Videos {
-      margin-right: 15px;
-      padding-right: 0;
-      border-right: unset;
-      border-top: 0.5px solid colors.$fg-secondary;
+      #Videos {
+        margin-right: 15px;
+        padding-right: 0;
+        border-right: unset;
+        border-top: 0.5px solid colors.$fg-secondary;
+      }
     }
   }
 }
