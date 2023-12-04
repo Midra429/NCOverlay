@@ -25,20 +25,31 @@ export const getSearchData = async (info: {
   title: string
   /** 再生時間 */
   duration: number
+  /** エピソード番号 */
+  episodeNumber?: number
   /** 再生時間の差 */
   durationDiff?: number
   /** 検索条件 */
   filters?: SearchQuery['filters']
-  /** タイトルの一致判定を緩くする */
-  weakMatch?: boolean
+  /** タイトルの一致判定を厳密にする */
+  strictMatch?: boolean
 }): Promise<{
   normal: SearchData[]
   splited: SearchData[]
 } | null> => {
   const parseResult = Parser.parse(info.title)
-  const optimizedTitle = Optimizer.search(parseResult, info.weakMatch)
+
+  if (!info.strictMatch && info.episodeNumber != null) {
+    parseResult.episode ??= {
+      number: info.episodeNumber,
+      text: `${info.episodeNumber}話`,
+    }
+  }
 
   console.log('[NCOverlay] parseResult', parseResult)
+
+  const optimizedTitle = Optimizer.search(parseResult, info.strictMatch)
+
   console.log(`[NCOverlay] optimizedTitle: ${optimizedTitle}`)
 
   const searchDataNormal: SearchData[] = []
@@ -46,7 +57,7 @@ export const getSearchData = async (info: {
 
   // 検索 (通常)
   const searchNormal = await NiconicoApi.search([
-    deepmerge(info.weakMatch ? searchQueryBaseWeakMatch : searchQueryBase, {
+    deepmerge(info.strictMatch ? searchQueryBase : searchQueryBaseWeakMatch, {
       q: optimizedTitle,
       filters: deepmerge(
         {
@@ -68,8 +79,7 @@ export const getSearchData = async (info: {
 
       return (
         // val.channelId != null &&
-        85 <= compareResult.total ||
-        (info.weakMatch && 70 <= compareResult.total)
+        (info.strictMatch ? 85 : 70) <= compareResult.total
       )
     })
 
@@ -84,7 +94,7 @@ export const getSearchData = async (info: {
     (/劇場|映画/.test(info.title) || 3600 <= info.duration)
   ) {
     const searchSplited = await NiconicoApi.search([
-      deepmerge(info.weakMatch ? searchQueryBaseWeakMatch : searchQueryBase, {
+      deepmerge(info.strictMatch ? searchQueryBase : searchQueryBaseWeakMatch, {
         q: `${optimizedTitle} Chapter.`,
         filters: deepmerge(
           {

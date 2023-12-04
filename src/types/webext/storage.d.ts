@@ -5,8 +5,10 @@ export type WebExtStorageSettings = {
   opacity: number
   /** 低パフォーマンスモード */
   lowPerformance: boolean
-  /** タイトルの一致判定を緩くする */
-  weakMatch: boolean
+  // /** タイトルの一致判定を緩くする */
+  // weakMatch: boolean
+  /** タイトルの一致判定を厳密にする */
+  strictMatch: boolean
   /** コメント専用動画のコメントを表示 */
   szbhMethod: boolean
   /** ニコニコのNG設定を使用 */

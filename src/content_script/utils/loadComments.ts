@@ -54,7 +54,7 @@ export const loadComments = async (
 ) => {
   const settings = await WebExtStorageApi.getSettings()
 
-  info.weakMatch = settings.weakMatch
+  info.strictMatch = settings.strictMatch
 
   const initData: InitData[] = []
 
@@ -164,7 +164,7 @@ const loadCommentsSZBH = async (
       'tagsExact': { '0': 'コメント専用動画' },
     },
   }
-  info.weakMatch = true
+  info.strictMatch = false
 
   // 検索結果
   const searchData = await getSearchData(info)

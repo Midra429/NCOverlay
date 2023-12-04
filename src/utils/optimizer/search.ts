@@ -7,16 +7,19 @@ import { normalizer } from '../parser/normalizer'
 /**
  * 検索用に最適化
  * @param parseResult 解析結果
- * @param weak あいまい検索
+ * @param strict 厳密な検索
  */
-export const search = (target: string | ParseResult, weak: boolean = false) => {
+export const search = (
+  target: string | ParseResult,
+  strict: boolean = false
+) => {
   if (typeof target === 'string') target = Parser.parse(target)
 
   const { seriesTitle, season, workTitle, episode, subTitle } = target
 
   let optimized = ''
 
-  if (seriesTitle && workTitle && episode && (weak || subTitle)) {
+  if (seriesTitle && workTitle && episode && (!strict || subTitle)) {
     const seasonStr =
       season &&
       [
@@ -37,13 +40,13 @@ export const search = (target: string | ParseResult, weak: boolean = false) => {
 
     optimized = [
       // 作品名
-      weak ? seriesTitle.split(' ').join(' OR ') : workTitle,
+      strict ? workTitle : seriesTitle.split(' ').join(' OR '),
       // シーズン
       seasonStr,
       // エピソード
       episodeStr,
       // サブタイトル
-      weak ? '' : subTitle,
+      strict ? subTitle : '',
     ]
       .flatMap((v) => v || [])
       .join(' ')
