@@ -44,13 +44,13 @@ export default async () => {
     const timeindicatorElem = await querySelectorAsync<HTMLElement>(
       '.atvwebplayersdk-timeindicator-text:has(span)'
     )
-    // const se_raw =
-    //   subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
+    const se_raw =
+      subtitleElem?.firstChild?.textContent?.trim().replace(/\s+/g, '') ?? ''
 
     const episodeText = subtitleElem?.lastChild?.textContent?.trim()
 
-    // const seasonNum = Number(se_raw.match(/(?<=シーズン|season)\d+/i)?.[0])
-    // const episodeNum = Number(se_raw.match(/(?<=エピソード|ep\.)\d+/i)?.[0])
+    // const seasonNum = Number(se_raw.match(/(?<=シーズン|Season)\d+/i)?.[0])
+    const episodeNum = Number(se_raw.match(/(?<=エピソード|Ep\.)\d+/i)?.[0])
 
     const duration = (timeindicatorElem?.textContent?.split('/') ?? [])
       .map(formatedToSeconds)
@@ -61,11 +61,8 @@ export default async () => {
       title: detail?.title || titleElem?.textContent?.trim(),
       // 第25話 懐玉
       episode: episodeText,
-      // episode:
-      //   !new RegExp(REGEXP_EPISODE).test(normalizer.all(episodeText ?? '')) &&
-      //   Number.isFinite(episodeNum)
-      //     ? `${episodeNum}話 ${episodeText}`
-      //     : episodeText,
+      // 25
+      episodeNum: episodeNum,
       // 1435
       duration: duration,
     }
@@ -101,6 +98,7 @@ export default async () => {
           await loadComments(this, {
             title: title,
             duration: info.duration,
+            episodeNumber: info.episodeNum,
           })
         }
       }
