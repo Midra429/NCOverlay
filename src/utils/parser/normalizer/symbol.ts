@@ -32,12 +32,18 @@ const dots = [
   0x2e31, 0x2219, 0x10101, 0x30fb,
 ]
 
+const exclamation = [
+  // エクスクラメーション
+  0x0021, 0x2d51, 0x01c3, 0xff01,
+]
+
 export const CODE_POINTS = {
   HYPHEN: '-'.codePointAt(0)!,
   TILDE: '~'.codePointAt(0)!,
   APOSTROPHE: "'".codePointAt(0)!,
   QUOTATION: '”'.codePointAt(0)!,
   DOT: '･'.codePointAt(0)!,
+  EXCLAMATION: '!'.codePointAt(0)!,
 }
 
 /**
@@ -72,6 +78,11 @@ export const symbol = (str: string): string => {
     // ドット
     if (dots.includes(cp)) {
       cp = CODE_POINTS.DOT
+    }
+
+    // エクスクラメーション
+    if (exclamation.includes(cp)) {
+      cp = CODE_POINTS.EXCLAMATION
     }
 
     result[i] = String.fromCodePoint(cp)
