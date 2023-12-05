@@ -1,7 +1,7 @@
 import { fullWidthToHalfWidth } from '../converter/fullWidthToHalfWidth'
 import { romanNum } from './romanNum'
 import { space } from './space'
-import { symbol } from './symbol'
+import { symbol, CODE_POINTS as SYMBOL_CODE_POINTS } from './symbol'
 
 export const text = (
   str: string,
@@ -10,6 +10,8 @@ export const text = (
     all?: boolean
     /** 括弧除去 */
     bracket?: boolean
+    /** 記号除去 */
+    symbol?: boolean
     /** スペース除去 */
     space?: boolean
     /** アニメ特有の要素除去 */
@@ -36,6 +38,13 @@ export const text = (
     str = str
       .replace(/[\-~\|\(\)｢｣「」『』【】〈〉《》〔〕{}\[\]]/g, ' ')
       .trim()
+  }
+
+  // 記号除去
+  if (option.symbol || option.all) {
+    for (const codePoint of Object.values(SYMBOL_CODE_POINTS)) {
+      str = str.replaceAll(String.fromCodePoint(codePoint), '')
+    }
   }
 
   // アニメ特有の要素除去
