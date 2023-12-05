@@ -91,7 +91,8 @@ export const getSearchData = async (info: {
   // 検索 (分割)
   if (
     searchDataNormal.every((v) => v.channelId !== DANIME_CHANNEL_ID) &&
-    (/劇場|映画/.test(info.title) || 3600 <= info.duration)
+    ((1800 < info.duration && /劇場|映画/.test(info.title)) ||
+      3600 < info.duration)
   ) {
     const searchSplited = await NiconicoApi.search([
       deepmerge(info.strictMatch ? searchQueryBase : searchQueryBaseWeakMatch, {

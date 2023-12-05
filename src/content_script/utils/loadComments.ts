@@ -60,16 +60,12 @@ export const loadComments = async (
 
   // 通常
   const normalInitData = await loadCommentsNormal(info)
-  if (normalInitData) {
-    initData.push(...normalInitData)
-  }
+  initData.push(...normalInitData)
 
   // コメント専用動画
   if (settings.szbhMethod) {
     const szbhInitData = await loadCommentsSZBH(info)
-    if (szbhInitData) {
-      initData.push(...szbhInitData)
-    }
+    initData.push(...szbhInitData)
   }
 
   if (0 < initData.length) {
@@ -82,12 +78,12 @@ export const loadComments = async (
  */
 const loadCommentsNormal = async (
   info: Parameters<typeof getSearchData>[0]
-) => {
+): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsNormal()')
 
   // 検索結果
   const searchData = await getSearchData(info)
-  if (!searchData) return
+  if (!searchData) return []
 
   const videoIds = {
     normal: filterSearchData(searchData.normal, { channel: true }).map(
@@ -100,14 +96,14 @@ const loadCommentsNormal = async (
 
   // 動画情報
   const videoData = await getVideoData(videoIds)
-  if (!videoData) return
+  if (!videoData) return []
 
   videoData.normal = filterVideoData(videoData.normal)
   videoData.splited = filterVideoData(videoData.splited, { anime: true })
 
   // コメント情報
   const threadsData = await getThreadsData(videoData)
-  if (!threadsData) return
+  if (!threadsData) return []
 
   const videoDataValues = Object.values(videoData).flat()
 
@@ -153,7 +149,7 @@ const loadCommentsNormal = async (
  */
 const loadCommentsSZBH = async (
   info: Parameters<typeof getSearchData>[0]
-): Promise<InitData[] | undefined> => {
+): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsSZBH()')
 
   info.durationDiff = 65
@@ -168,7 +164,7 @@ const loadCommentsSZBH = async (
 
   // 検索結果
   const searchData = await getSearchData(info)
-  if (!searchData) return
+  if (!searchData) return []
 
   const videoIds = {
     normal: filterSearchData(searchData.normal)
@@ -185,13 +181,13 @@ const loadCommentsSZBH = async (
 
   // 動画情報
   const videoData = await getVideoData(videoIds)
-  if (!videoData) return
+  if (!videoData) return []
 
   videoData.normal = filterVideoData(videoData.normal)
 
   // コメント情報
   const threadsData = await getThreadsData(videoData)
-  if (!threadsData) return
+  if (!threadsData) return []
 
   const videoDataValues = Object.values(videoData).flat()
 
