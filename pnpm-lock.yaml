@@ -38,8 +38,8 @@ devDependencies:
     specifier: ^6.0.1
     version: 6.0.1
   clean-css:
-    specifier: ^5.3.2
-    version: 5.3.2
+    specifier: ^5.3.3
+    version: 5.3.3
   esbuild:
     specifier: ^0.19.8
     version: 0.19.8
@@ -56,8 +56,8 @@ devDependencies:
     specifier: ^1.69.5
     version: 1.69.5
   terser:
-    specifier: ^5.24.0
-    version: 5.24.0
+    specifier: ^5.25.0
+    version: 5.25.0
   typescript:
     specifier: ^5.3.2
     version: 5.3.2
@@ -339,7 +339,7 @@ packages:
   /@types/clean-css@4.2.11:
     resolution: {integrity: sha512-Y8n81lQVTAfP2TOdtJJEsCoYl1AnOkqDqMvXb9/7pfgZZ7r8YrEyurrAvAoAjHOGXKRybay+5CsExqIH6liccw==}
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.10.3
       source-map: 0.6.1
     dev: true
 
@@ -357,7 +357,7 @@ packages:
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 20.10.0
+      '@types/node': 20.10.3
     dev: true
 
   /@types/har-format@1.2.15:
@@ -367,11 +367,11 @@ packages:
   /@types/jsonfile@6.1.4:
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.10.3
     dev: true
 
-  /@types/node@20.10.0:
-    resolution: {integrity: sha512-D0WfRmU9TQ8I9PFx9Yc+EBHw+vSpIub4IDvQivcp26PtPrdMGAq5SDcpXEo/epqa/DXotVpekHiLNTg3iaKXBQ==}
+  /@types/node@20.10.3:
+    resolution: {integrity: sha512-XJavIpZqiXID5Yxnxv3RUDKTN5b81ddNC3ecsA0SoFXz/QU8OGBwZGMomiq0zw+uuqbL/krztv/DINAQ/EV4gg==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -379,7 +379,7 @@ packages:
   /@types/readdir-glob@1.1.5:
     resolution: {integrity: sha512-raiuEPUYqXu+nvtY2Pe8s8FEmZ3x5yAH4VkLdihcPdalvsHltomrRC9BzuStrJ9yk06470hS0Crw0f1pXqD+Hg==}
     dependencies:
-      '@types/node': 20.10.0
+      '@types/node': 20.10.3
     dev: true
 
   /@types/webextension-polyfill@0.10.7:
@@ -511,8 +511,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /clean-css@5.3.2:
-    resolution: {integrity: sha512-JVJbM+f3d3Q704rF4bqQ5UUyTtuJ0JRKNbTKVEeujCCBoMdkEi+V+e8oktO9qGQNSvHrFTM6JZRXrUvGR1czww==}
+  /clean-css@5.3.3:
+    resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
     engines: {node: '>= 10.0'}
     dependencies:
       source-map: 0.6.1
@@ -714,12 +714,12 @@ packages:
     hasBin: true
     dependencies:
       camel-case: 4.1.2
-      clean-css: 5.3.2
+      clean-css: 5.3.3
       commander: 10.0.1
       entities: 4.5.0
       param-case: 3.0.4
       relateurl: 0.2.7
-      terser: 5.24.0
+      terser: 5.25.0
     dev: true
 
   /immutable@4.3.4:
@@ -1040,8 +1040,8 @@ packages:
       streamx: 2.15.5
     dev: true
 
-  /terser@5.24.0:
-    resolution: {integrity: sha512-ZpGR4Hy3+wBEzVEnHvstMvqpD/nABNelQn/z2r0fjVWGQsN3bpOLzQlqDxmb4CDZnXq5lpjnQ+mHQLAOpfM5iw==}
+  /terser@5.25.0:
+    resolution: {integrity: sha512-we0I9SIsfvNUMP77zC9HG+MylwYYsGFSBG8qm+13oud2Yh+O104y614FRbyjpxys16jZwot72Fpi827YvGzuqg==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
