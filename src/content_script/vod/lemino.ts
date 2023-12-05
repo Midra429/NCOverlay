@@ -15,7 +15,7 @@ export default async () => {
         'div[class^="ContentsDetailPlayerIntro__TitleStyle"] > p:last-child'
       )
       const episodeElem = document.querySelector<HTMLElement>(
-        'div[class^="ContentsDetailPlayerIntro__TitleStyle"] > h2:first-child'
+        'div[class^="ContentsDetailPlayerIntro__TitleStyle"] > :is(h1, h2):first-child'
       )
 
       const title = titleElem?.textContent?.trim()
@@ -80,7 +80,7 @@ export default async () => {
       nco.dispose()
       nco = null
     } else if (!nco) {
-      if (location.search.startsWith('?crid=')) {
+      if (new URLSearchParams(location.search).get('crid')) {
         const video = document.querySelector<HTMLVideoElement>(
           '#vod_modal .fullscreen video'
         )
