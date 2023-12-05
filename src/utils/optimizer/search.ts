@@ -46,13 +46,19 @@ export const search = (
       // エピソード
       episodeStr,
       // サブタイトル
-      strict ? subTitle : '',
+      strict
+        ? subTitle &&
+          normalizer.text(subTitle, {
+            symbol: true,
+          })
+        : '',
     ]
       .flatMap((v) => v || [])
       .join(' ')
   } else {
     optimized = normalizer.text(target.input, {
       bracket: true,
+      symbol: true,
       anime: true,
     })
   }
