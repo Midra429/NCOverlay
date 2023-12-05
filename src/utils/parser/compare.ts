@@ -94,19 +94,19 @@ export const compare = (
     result.episode === 100 &&
     [targetA, targetB].some((v) => !v.workTitle && !v.subTitle)
   ) {
-    let isMatch = false
+    const normalizedA = normalizer.all(targetA.input)
+    const normalizedB = normalizer.all(targetB.input)
 
-    if (targetA.workTitle && targetA.subTitle) {
-      isMatch =
-        targetB.input.startsWith(targetA.workTitle) &&
-        targetB.input.endsWith(targetA.subTitle)
-    } else if (targetB.workTitle && targetB.subTitle) {
-      isMatch =
-        targetA.input.startsWith(targetB.workTitle) &&
-        targetA.input.endsWith(targetB.subTitle)
-    }
-
-    if (isMatch) {
+    if (
+      (targetB.workTitle &&
+        targetB.subTitle &&
+        normalizedA.startsWith(normalizer.all(targetB.workTitle)) &&
+        normalizedA.endsWith(normalizer.all(targetB.subTitle))) ||
+      (targetA.workTitle &&
+        targetA.subTitle &&
+        normalizedB.startsWith(normalizer.all(targetA.workTitle)) &&
+        normalizedB.endsWith(normalizer.all(targetA.subTitle)))
+    ) {
       result.workTitle = 80
       result.subTitle = 80
     }

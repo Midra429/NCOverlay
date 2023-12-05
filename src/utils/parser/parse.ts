@@ -54,7 +54,7 @@ export const parse = (str: string): ParseResult => {
   const extractedEpisode = extractor.episode(normalized)
 
   const result: ParseResult = {
-    input: str,
+    input: str.trim(),
   }
 
   if (extractedSeason.length === 1) {
