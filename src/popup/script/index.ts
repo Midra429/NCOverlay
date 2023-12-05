@@ -154,7 +154,7 @@ const init = async () => {
             })
 
             webext.sidePanel.open?.({
-              windowId: tab.windowId,
+              tabId: tab.id,
             })
           }
           // Firefox
