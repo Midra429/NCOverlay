@@ -90,6 +90,28 @@ export const compare = (
     )
   }
 
+  if (
+    result.episode === 100 &&
+    [targetA, targetB].some((v) => !v.workTitle && !v.subTitle)
+  ) {
+    let isMatch = false
+
+    if (targetA.workTitle && targetA.subTitle) {
+      isMatch =
+        targetB.input.startsWith(targetA.workTitle) &&
+        targetB.input.endsWith(targetA.subTitle)
+    } else if (targetB.workTitle && targetB.subTitle) {
+      isMatch =
+        targetA.input.startsWith(targetB.workTitle) &&
+        targetA.input.endsWith(targetB.subTitle)
+    }
+
+    if (isMatch) {
+      result.workTitle = 80
+      result.subTitle = 80
+    }
+  }
+
   result.total = Math.round(
     result.workTitle * 0.5 + result.episode * 0.3 + result.subTitle * 0.2
   )
