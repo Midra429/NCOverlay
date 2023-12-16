@@ -43,7 +43,7 @@ export const text = (
   // 記号除去
   if (option.symbol || option.all) {
     for (const codePoint of Object.values(SYMBOL_CODE_POINTS)) {
-      str = str.replaceAll(String.fromCodePoint(codePoint), '')
+      str = str.replaceAll(String.fromCodePoint(codePoint), ' ')
     }
   }
 

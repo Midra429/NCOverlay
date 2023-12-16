@@ -123,7 +123,7 @@ header {
     position: relative;
     aspect-ratio: 16 / 9;
     max-width: 120px;
-    border: 3px solid #b0b0b0;
+    border: 3px solid colors.$fg-primary;
     border-radius: 8px;
     background-color: #000;
     background-position: center;
@@ -132,7 +132,7 @@ header {
     // overflow: hidden;
 
     &-channel {
-      border-color: hsl(0, 0%, 75%);
+      border-color: hsl(0, 0%, 65%);
     }
 
     &-payment {
