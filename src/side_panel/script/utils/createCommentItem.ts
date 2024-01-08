@@ -2,6 +2,7 @@ import type { V1Comment } from '@xpadev-net/niconicomments'
 import { COLOR_COMMANDS, COLOR_COMMANDS_DARKER } from '@/constants'
 import { formatDuration } from '@/utils/formatDuration'
 import { formatDate } from '@/utils/formatDate'
+import { hexToRGB } from '@/utils/hexToRGB'
 
 const template = document.querySelector<HTMLTemplateElement>(
   '#TemplateItemComment'
@@ -26,6 +27,7 @@ export const createCommentItem = (comment: V1Comment) => {
   for (const command of comment.commands) {
     if (['white'].includes(command)) continue
 
+    // カラー
     if (command in COLOR_COMMANDS) {
       commentTextSpan.classList.add('command-color')
 
@@ -35,8 +37,21 @@ export const createCommentItem = (comment: V1Comment) => {
         commentText.style.color = '#fff'
       }
     }
+    // カラー (16進数)
+    else if (/^#[a-fA-F0-9]{6}$/.test(command)) {
+      const rgb = hexToRGB(command)
+      const brightness =
+        rgb && Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000)
 
-    if (['mincho', 'small', 'big'].includes(command)) {
+      if (brightness !== null) {
+        commentTextSpan.classList.add('command-color', 'command-color-hex')
+
+        commentTextSpan.style.backgroundColor = command
+        commentText.style.color = brightness > 125 ? 'black' : 'white'
+      }
+    }
+    // その他
+    else if (['mincho', 'small', 'big'].includes(command)) {
       commentTextSpan.classList.add(`command-${command}`)
     }
   }
