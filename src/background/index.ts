@@ -263,7 +263,6 @@ webext.tabs.onActivated.addListener(async ({ tabId }) => {
   setContextMenu('ncoverlay:capture:comments', !!vod)
 
   if (vod) {
-    await setSidePanel(false, tabId)
     await setSidePanel(true, tabId)
   } else {
     await setSidePanel(false, tabId)
