@@ -171,14 +171,23 @@ const main = async () => {
   fs.removeSync(`${prodDirFirefox}/side_panel`)
 
   // manifest.json
-  const manifestChrome = JSON.stringify(manifest_chrome)
-  const manifestFirefox = JSON.stringify(manifest_firefox)
+  fs.writeFileSync(
+    `${outputDirChrome}/manifest.json`,
+    JSON.stringify(manifest_chrome, null, 2)
+  )
+  fs.writeFileSync(
+    `${outputDirFirefox}/manifest.json`,
+    JSON.stringify(manifest_firefox, null, 2)
+  )
 
-  fs.writeFileSync(`${outputDirChrome}/manifest.json`, manifestChrome)
-  fs.writeFileSync(`${outputDirFirefox}/manifest.json`, manifestFirefox)
-
-  fs.writeFileSync(`${prodDirChrome}/manifest.json`, manifestChrome)
-  fs.writeFileSync(`${prodDirFirefox}/manifest.json`, manifestFirefox)
+  fs.writeFileSync(
+    `${prodDirChrome}/manifest.json`,
+    JSON.stringify(manifest_chrome)
+  )
+  fs.writeFileSync(
+    `${prodDirFirefox}/manifest.json`,
+    JSON.stringify(manifest_firefox)
+  )
 
   await zip({
     path: `${prodDirChrome}`,
