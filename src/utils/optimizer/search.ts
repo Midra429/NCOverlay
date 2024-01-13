@@ -42,9 +42,10 @@ export const search = (
       // 作品名
       strict
         ? workTitle
-        : normalizer.text(seriesTitle.split(' ').join(' OR '), {
-            symbol: true,
-          }),
+        : seriesTitle
+            .split(' ')
+            .map((v) => normalizer.text(v, { symbol: true }))
+            .join(' OR '),
       // シーズン
       seasonStr,
       // エピソード
