@@ -40,7 +40,11 @@ export const search = (
 
     optimized = [
       // 作品名
-      strict ? workTitle : seriesTitle.split(' ').join(' OR '),
+      strict
+        ? workTitle
+        : normalizer.text(seriesTitle.split(' ').join(' OR '), {
+            symbol: true,
+          }),
       // シーズン
       seasonStr,
       // エピソード
