@@ -133,25 +133,6 @@ export const COLOR_COMMANDS = {
   black2: '#666666',
 }
 
-export const COLOR_COMMANDS_DARKER = [
-  'red',
-  'blue',
-  'purple',
-  'black',
-  'red2',
-  'truered',
-  'pink2',
-  'orange2',
-  'passionorange',
-  'yellow2',
-  'madyellow',
-  'blue2',
-  'marinblue',
-  'purple2',
-  'nobleviolet',
-  'black2',
-]
-
 export const KAWAII_REGEXP = new RegExp(
   [
     '(可愛|かわい)(い|すぎ|過ぎ)',

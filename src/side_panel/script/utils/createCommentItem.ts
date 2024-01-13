@@ -1,5 +1,5 @@
 import type { V1Comment } from '@xpadev-net/niconicomments'
-import { COLOR_COMMANDS, COLOR_COMMANDS_DARKER } from '@/constants'
+import { COLOR_COMMANDS } from '@/constants'
 import { formatDuration } from '@/utils/formatDuration'
 import { formatDate } from '@/utils/formatDate'
 import { hexToRGB } from '@/utils/hexToRGB'
@@ -8,8 +8,33 @@ const template = document.querySelector<HTMLTemplateElement>(
   '#TemplateItemComment'
 )!.content
 
+const itemMouseEnterHandler: (this: HTMLElement, ev: MouseEvent) => any =
+  function () {
+    const items = this.parentElement?.querySelectorAll<HTMLElement>(
+      `.item[data-user-id="${this.dataset.userId}"]`
+    )
+    if (items) {
+      ;[...items].forEach((val) => val.classList.add('hover'))
+    }
+  }
+
+const itemMouseLeaveHandler: (this: HTMLElement, ev: MouseEvent) => any =
+  function () {
+    const items = this.parentElement?.querySelectorAll<HTMLElement>(
+      `.item[data-user-id="${this.dataset.userId}"]`
+    )
+    if (items) {
+      ;[...items].forEach((val) => val.classList.remove('hover'))
+    }
+  }
+
 export const createCommentItem = (comment: V1Comment) => {
   const item = template.firstElementChild!.cloneNode(true) as HTMLElement
+
+  item.dataset.userId = comment.userId
+
+  item.addEventListener('mouseenter', itemMouseEnterHandler)
+  item.addEventListener('mouseleave', itemMouseLeaveHandler)
 
   const [
     commentText,
@@ -28,25 +53,16 @@ export const createCommentItem = (comment: V1Comment) => {
     if (['white'].includes(command)) continue
 
     // カラー
-    if (command in COLOR_COMMANDS) {
-      commentTextSpan.classList.add('command-color')
-
-      commentTextSpan.style.backgroundColor = COLOR_COMMANDS[command]
-
-      if (COLOR_COMMANDS_DARKER.includes(command)) {
-        commentText.style.color = '#fff'
-      }
-    }
-    // カラー (16進数)
-    else if (/^#[a-fA-F0-9]{6}$/.test(command)) {
-      const rgb = hexToRGB(command)
+    if (command in COLOR_COMMANDS || /^#[a-fA-F0-9]{6}$/.test(command)) {
+      const hex: string = COLOR_COMMANDS[command] ?? command
+      const rgb = hexToRGB(hex)
       const brightness =
         rgb && Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000)
 
       if (brightness !== null) {
-        commentTextSpan.classList.add('command-color', 'command-color-hex')
+        commentTextSpan.classList.add('command-color')
 
-        commentTextSpan.style.backgroundColor = command
+        commentTextSpan.style.backgroundColor = hex
         commentText.style.color = brightness > 125 ? 'black' : 'white'
       }
     }

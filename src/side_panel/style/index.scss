@@ -131,6 +131,12 @@ body {
   }
 
   .item {
+    &.hover {
+      > .cell {
+        background-color: #cee5ff !important;
+      }
+    }
+
     &.nicoru {
       &-lv1 .cell {
         background: #fefbec;
