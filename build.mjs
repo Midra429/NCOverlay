@@ -1,13 +1,13 @@
 // @ts-check
-const { globSync } = require('glob')
-const fs = require('fs-extra')
-const deepmerge = require('deepmerge')
-const sass = require('sass')
-const esbuild = require('esbuild')
-const htmlMinifier = require('html-minifier-terser')
-const CleanCSS = require('clean-css')
-const terser = require('terser')
-const archiver = require('archiver')
+import { globSync } from 'glob'
+import fs from 'fs-extra'
+import deepmerge from 'deepmerge'
+import * as sass from 'sass'
+import esbuild from 'esbuild'
+import htmlMinifier from 'html-minifier-terser'
+import CleanCSS from 'clean-css'
+import archiver from 'archiver'
+const terser = await import('terser')
 
 const cleanCSS = new CleanCSS()
 
@@ -147,56 +147,52 @@ const minify = async (dir) => {
   }
 }
 
-const main = async () => {
-  // dist/extension
-  await build()
+// dist/extension
+await build()
 
-  globSync('dist/**/.DS_Store').forEach(fs.removeSync)
+globSync('dist/**/.DS_Store').forEach(fs.removeSync)
 
-  fs.copySync(outputDir, prodDir)
+fs.copySync(outputDir, prodDir)
 
-  fs.copySync(outputDir, outputDirChrome)
-  fs.copySync(outputDir, outputDirFirefox)
+fs.copySync(outputDir, outputDirChrome)
+fs.copySync(outputDir, outputDirFirefox)
 
-  fs.removeSync(outputDir)
-  fs.removeSync(`${outputDirFirefox}/side_panel`)
+fs.removeSync(outputDir)
+fs.removeSync(`${outputDirFirefox}/side_panel`)
 
-  // dist/NCOverlay_v0.0.0
-  await minify(prodDir)
+// dist/NCOverlay_v0.0.0
+await minify(prodDir)
 
-  fs.copySync(prodDir, prodDirChrome)
-  fs.copySync(prodDir, prodDirFirefox)
+fs.copySync(prodDir, prodDirChrome)
+fs.copySync(prodDir, prodDirFirefox)
 
-  fs.removeSync(prodDir)
-  fs.removeSync(`${prodDirFirefox}/side_panel`)
+fs.removeSync(prodDir)
+fs.removeSync(`${prodDirFirefox}/side_panel`)
 
-  // manifest.json
-  fs.writeFileSync(
-    `${outputDirChrome}/manifest.json`,
-    JSON.stringify(manifest_chrome, null, 2)
-  )
-  fs.writeFileSync(
-    `${outputDirFirefox}/manifest.json`,
-    JSON.stringify(manifest_firefox, null, 2)
-  )
+// manifest.json
+fs.writeFileSync(
+  `${outputDirChrome}/manifest.json`,
+  JSON.stringify(manifest_chrome, null, 2)
+)
+fs.writeFileSync(
+  `${outputDirFirefox}/manifest.json`,
+  JSON.stringify(manifest_firefox, null, 2)
+)
 
-  fs.writeFileSync(
-    `${prodDirChrome}/manifest.json`,
-    JSON.stringify(manifest_chrome)
-  )
-  fs.writeFileSync(
-    `${prodDirFirefox}/manifest.json`,
-    JSON.stringify(manifest_firefox)
-  )
+fs.writeFileSync(
+  `${prodDirChrome}/manifest.json`,
+  JSON.stringify(manifest_chrome)
+)
+fs.writeFileSync(
+  `${prodDirFirefox}/manifest.json`,
+  JSON.stringify(manifest_firefox)
+)
 
-  await zip({
-    path: `${prodDirChrome}`,
-    outfile: `${prodDirChrome}.zip`,
-  })
-  await zip({
-    path: `${prodDirFirefox}`,
-    outfile: `${prodDirFirefox}.zip`,
-  })
-}
-
-main()
+await zip({
+  path: `${prodDirChrome}`,
+  outfile: `${prodDirChrome}.zip`,
+})
+await zip({
+  path: `${prodDirFirefox}`,
+  outfile: `${prodDirFirefox}.zip`,
+})

@@ -83,9 +83,9 @@ pnpm run build
 ### 出力
 ```
 dist
-  ├ extension             開発用
-  ├ NCOverlay_v0.0.0      minified
-  └ NCOverlay_v0.0.0.zip  ストア用, minified
+  ├ extension-*****             開発用
+  ├ NCOverlay_v0.0.0-*****      minified
+  └ NCOverlay_v0.0.0-*****.zip  ストア用, minified
 ```
 
 ### 使用ライブラリ
