@@ -52,6 +52,9 @@ devDependencies:
   esbuild:
     specifier: ^0.19.11
     version: 0.19.11
+  formdata-node:
+    specifier: ^6.0.3
+    version: 6.0.3
   fs-extra:
     specifier: ^11.2.0
     version: 11.2.0
@@ -766,6 +769,11 @@ packages:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 4.0.0-beta.3
+    dev: true
+
+  /formdata-node@6.0.3:
+    resolution: {integrity: sha512-8e1++BCiTzUno9v5IZ2J6bv4RU+3UKDmqWUQD0MIMVCd9AdhWkO1gw57oo1mNEX1dMq2EGI+FbWz4B92pscSQg==}
+    engines: {node: '>= 18'}
     dev: true
 
   /fs-extra@11.2.0:

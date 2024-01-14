@@ -2,6 +2,7 @@
 import { globSync } from 'glob'
 import fs from 'fs-extra'
 import archiver from 'archiver'
+import { fileFromPath } from 'formdata-node/file-from-path'
 import { ChromeWebstoreAPI } from '@plasmohq/chrome-webstore-api'
 import { MozillaAddonsAPI } from '@plasmohq/mozilla-addons-api'
 
@@ -40,15 +41,15 @@ if (chromeExtPath) {
     refreshToken: process.env.CWS_REFRESH_TOKEN ?? '',
   })
 
-  const zipFile = fs.createReadStream(chromeExtPath)
-
-  client.upload({ readStream: zipFile }).then((val) => {
-    if (val.uploadState === 'FAILURE' || val.uploadState === 'NOT_FOUND') {
-      console.error(val)
-    } else {
-      console.log('Uploaded. (Chrome Web Store)', val)
-    }
+  const result = await client.upload({
+    readStream: fs.createReadStream(chromeExtPath),
   })
+
+  if (result.uploadState === 'FAILURE' || result.uploadState === 'NOT_FOUND') {
+    console.error(result)
+  } else {
+    console.log('[Chrome Web Store]', result.uploadState)
+  }
 }
 
 /**
@@ -59,6 +60,7 @@ if (firefoxExtPath) {
     extId: process.env.AMO_EXTENSION_ID ?? '',
     apiKey: process.env.AMO_API_KEY ?? '',
     apiSecret: process.env.AMO_API_SECRET ?? '',
+    license: process.env.WEBEXT_LICENSE,
   })
 
   // 拡張機能のファイルをアップロード
@@ -81,17 +83,19 @@ if (firefoxExtPath) {
 
   fs.removeSync(tmpSourcePath)
 
-  try {
-    // ソースコードをアップロード
-    const formData = new FormData()
-    formData.append('source', new Blob([fs.readFileSync(sourceZipPath)]))
-    formData.append('upload', uploadResponse.uuid)
+  // ソースコードをアップロード
+  const formData = new FormData()
+  formData.append('source', await fileFromPath(sourceZipPath))
+  formData.append('upload', uploadResponse.uuid)
+  if (process.env.WEBEXT_LICENSE) {
+    formData.append('license', process.env.WEBEXT_LICENSE)
+  }
 
+  try {
     await fetch(new URL('/versions/', client.productEndpoint), {
       method: 'POST',
       headers: {
-        'Authorization': `JWT ${await client.getAccessToken()}`,
-        'Content-Type': 'multipart/form-data',
+        Authorization: `JWT ${await client.getAccessToken()}`,
       },
       body: formData,
     })
@@ -102,7 +106,7 @@ if (firefoxExtPath) {
       version: uploadResponse.version,
     })
 
-    console.log('Uploaded. (Firefox Add-ons)', versionResponse)
+    console.log('[Firefox Add-ons]', versionResponse)
   } catch (e) {
     console.error(e)
   }

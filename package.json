@@ -4,9 +4,9 @@
     "check": "tsc -noEmit",
     "build": "pnpm run check && node build.mjs",
     "build:test": "esbuild src/_test.ts --bundle --outdir=dist",
-    "upload": "node upload.mjs --chrome --firefox",
-    "upload:chrome": "node upload.mjs --chrome",
-    "upload:firefox": "node upload.mjs --firefox"
+    "upload": "pnpm run build && node upload.mjs --chrome --firefox",
+    "upload:chrome": "pnpm run build && node upload.mjs --chrome",
+    "upload:firefox": "pnpm run build && node upload.mjs --firefox"
   },
   "author": "Midra",
   "license": "MIT",
@@ -28,6 +28,7 @@
     "clean-css": "^5.3.3",
     "dotenv": "^16.3.1",
     "esbuild": "^0.19.11",
+    "formdata-node": "^6.0.3",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "html-minifier-terser": "^7.2.0",
