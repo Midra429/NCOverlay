@@ -2,7 +2,7 @@
 import { globSync } from 'glob'
 import fs from 'fs-extra'
 import archiver from 'archiver'
-import { fileFromPath } from 'formdata-node/file-from-path'
+import open from 'open'
 import { ChromeWebstoreAPI } from '@plasmohq/chrome-webstore-api'
 import { MozillaAddonsAPI } from '@plasmohq/mozilla-addons-api'
 
@@ -42,13 +42,14 @@ if (chromeExtPath) {
   })
 
   try {
+    // 拡張機能をアップロード & 提出
     const result = await client.submit({
       filePath: chromeExtPath,
     })
 
     console.log('[Chrome Web Store]', result)
   } catch (e) {
-    console.error(e)
+    console.error('[Chrome Web Store]', e)
   }
 }
 
@@ -63,14 +64,29 @@ if (firefoxExtPath) {
     license: process.env.WEBEXT_LICENSE,
   })
 
-  // 拡張機能のファイルをアップロード
-  const uploadResponse = await client.uploadFile({
-    filePath: firefoxExtPath,
-  })
+  try {
+    // 拡張機能をアップロード
+    const uploadResponse = await client.uploadFile({
+      filePath: firefoxExtPath,
+    })
 
-  // ソースコードをZIPに圧縮
-  const tmpSourcePath = `../tmp-${crypto.randomUUID()}`
-  const sourceZipPath = `${tmpSourcePath}.zip`
+    // バージョンを作成
+    const versionResponse = await client.createVersion({
+      uploadUuid: uploadResponse.uuid,
+      version: uploadResponse.version,
+    })
+
+    // バージョン管理ページを開く
+    open(versionResponse.edit_url)
+
+    console.log('[Firefox Add-ons]', versionResponse)
+  } catch (e) {
+    console.error('[Firefox Add-ons]', e)
+  }
+
+  // ソースコードをZIPに圧縮 (dist/source.zip)
+  const tmpSourcePath = `../source-${crypto.randomUUID()}`
+  const sourceZipPath = `./dist/source.zip`
 
   fs.copySync('./', tmpSourcePath)
   fs.removeSync(`${tmpSourcePath}/node_modules`)
@@ -82,34 +98,4 @@ if (firefoxExtPath) {
   })
 
   fs.removeSync(tmpSourcePath)
-
-  // ソースコードをアップロード
-  const formData = new FormData()
-  formData.append('source', await fileFromPath(sourceZipPath))
-  formData.append('upload', uploadResponse.uuid)
-  if (process.env.WEBEXT_LICENSE) {
-    formData.append('license', process.env.WEBEXT_LICENSE)
-  }
-
-  try {
-    await fetch(new URL('/versions/', client.productEndpoint), {
-      method: 'POST',
-      headers: {
-        Authorization: `JWT ${await client.getAccessToken()}`,
-      },
-      body: formData,
-    })
-
-    // バージョンを作成
-    const versionResponse = await client.createVersion({
-      uploadUuid: uploadResponse.uuid,
-      version: uploadResponse.version,
-    })
-
-    console.log('[Firefox Add-ons]', versionResponse)
-  } catch (e) {
-    console.error(e)
-  }
-
-  fs.removeSync(sourceZipPath)
 }
