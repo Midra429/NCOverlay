@@ -10,22 +10,20 @@ const template = document.querySelector<HTMLTemplateElement>(
 
 const itemMouseEnterHandler: (this: HTMLElement, ev: MouseEvent) => any =
   function () {
-    const items = this.parentElement?.querySelectorAll<HTMLElement>(
-      `.item[data-user-id="${this.dataset.userId}"]`
-    )
-    if (items) {
-      ;[...items].forEach((val) => val.classList.add('hover'))
-    }
+    this.parentElement
+      ?.querySelectorAll<HTMLElement>(
+        `.item[data-user-id="${this.dataset.userId}"]`
+      )
+      ?.forEach((val) => val.classList.add('hover'))
   }
 
 const itemMouseLeaveHandler: (this: HTMLElement, ev: MouseEvent) => any =
   function () {
-    const items = this.parentElement?.querySelectorAll<HTMLElement>(
-      `.item[data-user-id="${this.dataset.userId}"]`
-    )
-    if (items) {
-      ;[...items].forEach((val) => val.classList.remove('hover'))
-    }
+    this.parentElement
+      ?.querySelectorAll<HTMLElement>(
+        `.item[data-user-id="${this.dataset.userId}"]`
+      )
+      ?.forEach((val) => val.classList.remove('hover'))
   }
 
 export const createCommentItem = (comment: V1Comment) => {

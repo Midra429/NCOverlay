@@ -26,14 +26,14 @@
     "@types/webextension-polyfill": "^0.10.7",
     "archiver": "^6.0.1",
     "clean-css": "^5.3.3",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.3.2",
     "esbuild": "^0.19.11",
     "formdata-node": "^6.0.3",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "html-minifier-terser": "^7.2.0",
-    "sass": "^1.69.7",
-    "terser": "^5.26.0",
+    "sass": "^1.70.0",
+    "terser": "^5.27.0",
     "typescript": "^5.3.3"
   }
 }
