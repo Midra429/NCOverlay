@@ -41,14 +41,14 @@ if (chromeExtPath) {
     refreshToken: process.env.CWS_REFRESH_TOKEN ?? '',
   })
 
-  const result = await client.upload({
-    readStream: fs.createReadStream(chromeExtPath),
-  })
+  try {
+    const result = await client.submit({
+      filePath: chromeExtPath,
+    })
 
-  if (result.uploadState === 'FAILURE' || result.uploadState === 'NOT_FOUND') {
-    console.error(result)
-  } else {
-    console.log('[Chrome Web Store]', result.uploadState)
+    console.log('[Chrome Web Store]', result)
+  } catch (e) {
+    console.error(e)
   }
 }
 
