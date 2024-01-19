@@ -41,12 +41,12 @@ body {
   gap: 1px;
   width: 100%;
 
-  > header.row {
+  header.row {
     position: sticky;
     top: 0;
     user-select: none;
 
-    > .cell {
+    .cell {
       background-color: rgb(120, 120, 120);
       color: #ffffff;
       font-weight: bold;
@@ -57,7 +57,7 @@ body {
         justify-content: center;
         align-items: center;
 
-        > svg {
+        svg {
           height: 1rem;
           filter: grayscale(1) brightness(1.2);
         }
@@ -70,7 +70,7 @@ body {
     flex-direction: row;
     gap: 1px;
 
-    > .cell {
+    .cell {
       display: block;
       height: 30px;
       line-height: 30px;
@@ -86,7 +86,7 @@ body {
         // min-width: $sidepanel-min-width - $scrollbar-width;
         min-width: 100%;
 
-        > span.command {
+        .command {
           &-color {
             padding: 2px 4px;
             border: 1px solid rgb(150, 150, 150);
@@ -132,7 +132,7 @@ body {
 
   .item {
     &.hover {
-      > .cell {
+      .cell {
         background-color: #cee5ff !important;
       }
     }
@@ -155,7 +155,7 @@ body {
       }
     }
 
-    > .cell {
+    .cell {
       &-time,
       &-nicoru {
         text-align: end;

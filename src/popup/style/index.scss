@@ -55,7 +55,7 @@ header {
   justify-content: space-between;
   align-items: center;
 
-  > :is(h1, h2, h3, h4, h5, h6, p) {
+  :is(h1, h2, h3, h4, h5, h6) {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -65,11 +65,11 @@ header {
     text-overflow: ellipsis;
   }
 
-  > h1 {
+  h1 {
     line-height: 30px;
   }
 
-  > h2 {
+  h2 {
     line-height: 25px;
   }
 }
@@ -221,9 +221,9 @@ body {
 
   .has-comments & {
     grid-template-columns: 400px 350px;
+    grid-template-rows: auto 1fr auto;
     grid-template-areas:
       'videos header'
-      'videos settings'
       'videos settings'
       'videos footer';
   }
@@ -262,6 +262,7 @@ body {
 
     #Main {
       grid-template-columns: inherit;
+      grid-template-rows: repeat(4, auto);
       grid-template-areas:
         'header'
         'settings'
@@ -296,19 +297,19 @@ body {
     padding: 15px 0;
   }
 
-  > section {
+  section {
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    > ul {
+    ul {
       display: flex;
       flex-direction: column;
       margin: 0;
       padding: 0;
       list-style: none;
 
-      > li {
+      li {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -324,14 +325,18 @@ body {
 
 #Main {
   #Header {
+    $height: 60px;
+
+    min-height: $height;
+    max-height: $height;
     border-bottom: 0.5px solid colors.$fg-secondary;
   }
 
   #Settings {
-    > ul {
+    ul {
       margin-left: 15px !important;
 
-      > li.setting {
+      li.setting {
         display: grid;
         justify-content: start;
         grid-template-columns: repeat(2, auto);
@@ -342,7 +347,7 @@ body {
           grid-template-columns: 1fr 3fr;
         }
 
-        > label {
+        label {
           display: flex;
           height: 30px;
           line-height: 30px;
@@ -354,18 +359,18 @@ body {
   #Videos {
     overflow: hidden;
 
-    > ul {
+    ul {
       gap: 10px;
       padding: 1px !important;
       overflow: auto;
 
-      > li.item {
+      li.item {
         > * {
           width: 100%;
         }
       }
 
-      > li.item-splited + li.item-splited {
+      li.item-splited + li.item-splited {
         margin-top: -5px;
 
         .video-thumbnail {
@@ -392,9 +397,16 @@ body {
   }
 
   #Footer {
+    $height: 40px;
+
+    align-items: center;
     flex-direction: row;
     justify-content: space-evenly;
     gap: 0;
+
+    min-height: $height;
+    max-height: $height;
+    padding: 0;
     border-top: 0.5px solid colors.$fg-secondary;
 
     .link {

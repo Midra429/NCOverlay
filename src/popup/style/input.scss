@@ -23,7 +23,7 @@ input {
   $width: 50px;
   $height: 24px;
 
-  > input[type='checkbox'] {
+  input[type='checkbox'] {
     display: none;
 
     &:checked {
@@ -39,7 +39,7 @@ input {
     }
   }
 
-  > label {
+  label {
     position: relative;
     display: block;
     width: $width + 2px;
