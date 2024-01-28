@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NCOverlay",
-  "version": "2.5.9",
+  "version": "2.6.0",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
   "homepage_url": "https://github.com/Midra429/NCOverlay",
 
@@ -34,6 +34,13 @@
       "css": ["styles/main.css"],
       "js": ["content_script.js"],
       "run_at": "document_start"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "matches": ["https://animestore.docomo.ne.jp/*"],
+      "resources": ["plugins/dAnime.js"]
     }
   ],
 
