@@ -211,21 +211,18 @@ body {
 #Main {
   display: grid;
   align-content: center;
-  grid-template-columns: 350px;
-  grid-template-rows: repeat(4, auto);
-  grid-template-areas:
-    'header'
-    'settings'
-    'settings'
-    'footer';
+  grid-template:
+    'header' auto
+    'settings' 1fr
+    'footer' auto
+    / 350px;
 
   .has-comments & {
-    grid-template-columns: 400px 350px;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-      'videos header'
-      'videos settings'
-      'videos footer';
+    grid-template:
+      'videos header' auto
+      'videos settings' 1fr
+      'videos footer' auto
+      / 400px 350px;
   }
 
   #Header {
@@ -234,6 +231,7 @@ body {
 
   #Settings {
     grid-area: settings;
+    overflow: auto;
   }
 
   #Videos {
@@ -261,13 +259,12 @@ body {
     max-height: 100dvh;
 
     #Main {
-      grid-template-columns: inherit;
-      grid-template-rows: repeat(4, auto);
-      grid-template-areas:
-        'header'
-        'settings'
-        'videos'
-        'footer';
+      grid-template:
+        'header' auto
+        'settings' 1fr
+        'videos' 1fr
+        'footer' auto
+        / 100%;
 
       #Videos {
         margin-right: 15px;
