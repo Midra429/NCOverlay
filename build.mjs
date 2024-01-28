@@ -20,6 +20,7 @@ const manifestPaths = {
 const copyPaths = {
   assets: 'assets',
   styles: 'styles',
+  plugins: 'plugins',
   popup: 'popup/index.html',
   side_panel: 'side_panel/index.html',
 }
