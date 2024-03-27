@@ -269,7 +269,7 @@ webext.tabs.onActivated.addListener(async ({ tabId }) => {
   }
 })
 
-const prevHostnames: { [tabId: number]: string } = {}
+// const prevHostnames: { [tabId: number]: string } = {}
 
 // タブ更新時
 webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
@@ -281,20 +281,20 @@ webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   }
 
   if (vod) {
-    try {
-      const { hostname } = new URL(info.url ?? '')
+    // try {
+    //   const { hostname } = new URL(info.url ?? '')
 
-      if (hostname !== prevHostnames[tabId]) {
-        await setSidePanel(false, tabId)
-      }
+    //   if (hostname !== prevHostnames[tabId]) {
+    //     await setSidePanel(false, tabId)
+    //   }
 
-      prevHostnames[tabId] = hostname
-    } catch {}
+    //   prevHostnames[tabId] = hostname
+    // } catch {}
 
     await setSidePanel(true, tabId)
   } else {
     await setSidePanel(false, tabId)
 
-    delete prevHostnames[tabId]
+    // delete prevHostnames[tabId]
   }
 })

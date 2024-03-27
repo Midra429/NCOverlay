@@ -71,24 +71,36 @@ body {
     gap: 1px;
 
     .cell {
-      display: block;
-      height: 30px;
-      line-height: 30px;
-      padding: 0 5px;
+      line-height: 1.5;
+      padding: 5px;
+
       background-color: #fff;
-      overflow: hidden;
-      white-space: nowrap;
-      word-break: break-all;
-      text-overflow: ellipsis;
+
+      &:not(&-text) {
+        overflow: hidden;
+        white-space: nowrap;
+        word-break: break-all;
+        text-overflow: ellipsis;
+      }
 
       &-text {
+        display: flex;
+        align-items: center;
+
         width: 100%;
-        // min-width: $sidepanel-min-width - $scrollbar-width;
         min-width: 100%;
+
+        span {
+          display: -webkit-box;
+          display: -moz-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
 
         .command {
           &-color {
-            padding: 2px 4px;
+            padding: 0 0.25em;
             border: 1px solid rgb(150, 150, 150);
             border-radius: 5px;
           }
@@ -109,16 +121,19 @@ body {
       }
 
       &-time {
+        justify-content: end;
         width: 80px;
         min-width: 80px;
       }
 
       &-nicoru {
+        justify-content: end;
         width: 40px;
         min-width: 40px;
       }
 
       &-date {
+        justify-content: end;
         width: 160px;
         min-width: 160px;
       }
