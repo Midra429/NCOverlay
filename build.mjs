@@ -5,11 +5,10 @@ import deepmerge from 'deepmerge'
 import * as sass from 'sass'
 import esbuild from 'esbuild'
 import htmlMinifier from 'html-minifier-terser'
-import CleanCSS from 'clean-css'
+import postcss from 'postcss'
+import cssnano from 'cssnano'
 import archiver from 'archiver'
 const terser = await import('terser')
-
-const cleanCSS = new CleanCSS()
 
 const manifestPaths = {
   base: 'manifest/base.json',
@@ -129,8 +128,11 @@ const minify = async (dir) => {
     }
 
     if (path.endsWith('.css')) {
-      const { styles } = cleanCSS.minify(file)
-      output = styles
+      const { css } = await postcss(cssnano).process(file, {
+        from: undefined,
+        map: false,
+      })
+      output = css
     }
 
     if (path.endsWith('.js')) {

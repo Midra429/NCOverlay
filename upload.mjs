@@ -74,6 +74,8 @@ if (firefoxExtPath) {
     const versionResponse = await client.createVersion({
       uploadUuid: uploadResponse.uuid,
       version: uploadResponse.version,
+      approvalNotes: null,
+      sourcePath: null,
     })
 
     // バージョン管理ページを開く

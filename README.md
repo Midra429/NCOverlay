@@ -70,8 +70,7 @@ NCOverlay経由でアクセスすると、バージョンやOSなどの情報が
 - GitHubの[Issues](https://github.com/Midra429/NCOverlay/issues)
 - SNSアカウント宛にメッセージやメンション
   - X (Twitter): [@Midra429](https://x.com/Midra429)
-  - Misskey: [@Midra@submarin.online](https://submarin.online/@Midra)
-  - Mastodon: [@Midra@fedibird.com](https://fedibird.com/@Midra)
+  - Bluesky: [Midra](https://bsky.app/profile/did:plc:rnbmtecarezy7txgy3pbbprf)
 
 ---
 

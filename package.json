@@ -12,28 +12,28 @@
   "license": "MIT",
   "dependencies": {
     "@geolonia/japanese-numeral": "^1.0.2",
-    "@xpadev-net/niconicomments": "^0.2.70",
+    "@xpadev-net/niconicomments": "^0.2.71",
     "deepmerge": "^4.3.1",
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@plasmohq/chrome-webstore-api": "^2.10.0",
-    "@plasmohq/mozilla-addons-api": "^2.6.2",
+    "@plasmohq/mozilla-addons-api": "^2.7.1",
     "@types/archiver": "^5.3.4",
     "@types/chrome": "^0.0.246",
-    "@types/clean-css": "^4.2.11",
     "@types/fs-extra": "^11.0.4",
     "@types/webextension-polyfill": "^0.10.7",
-    "archiver": "^6.0.1",
-    "clean-css": "^5.3.3",
-    "dotenv": "^16.4.1",
+    "archiver": "^6.0.2",
+    "cssnano": "^6.1.2",
+    "dotenv": "^16.4.5",
     "esbuild": "^0.19.12",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "html-minifier-terser": "^7.2.0",
-    "open": "^10.0.3",
-    "sass": "^1.70.0",
-    "terser": "^5.27.0",
-    "typescript": "^5.3.3"
+    "open": "^10.1.0",
+    "postcss": "^8.4.38",
+    "sass": "^1.72.0",
+    "terser": "^5.29.2",
+    "typescript": "^5.4.3"
   }
 }
