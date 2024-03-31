@@ -25,15 +25,17 @@ export const search = (
       [
         `"${season.text}"`,
         `${season.number}期`,
-        `${number2kanji(season.number)}期`,
+        Number.isInteger(season.number) && `${number2kanji(season.number)}期`,
         `シーズン${season.number}`,
         `Season${season.number}`,
-      ].join(' OR ')
+      ]
+        .flatMap((v) => v || [])
+        .join(' OR ')
 
     const episodeStr = [
       episode.number,
       episode.number < 10 && zeroPadding(episode.number, 2),
-      number2kanji(episode.number),
+      Number.isInteger(episode.number) && number2kanji(episode.number),
     ]
       .flatMap((v) => v || [])
       .join(' OR ')
