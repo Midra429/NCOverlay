@@ -28,12 +28,12 @@
     "dotenv": "^16.4.5",
     "esbuild": "^0.19.12",
     "fs-extra": "^11.2.0",
-    "glob": "^10.3.10",
+    "glob": "^10.3.12",
     "html-minifier-terser": "^7.2.0",
     "open": "^10.1.0",
     "postcss": "^8.4.38",
     "sass": "^1.72.0",
-    "terser": "^5.29.2",
+    "terser": "^5.30.0",
     "typescript": "^5.4.3"
   }
 }
