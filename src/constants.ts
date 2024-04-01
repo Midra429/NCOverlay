@@ -33,7 +33,7 @@ export const VODS_ALLOW_CAPTURE: (keyof typeof VODS)[] = [
 
 /** ニコニコ スナップショット検索API v2 */
 export const NICONICO_SEARCH_API =
-  'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search'
+  'https://snapshot.search.nicovideo.jp/api/v2/snapshot/video/contents/search'
 
 /** ニコニコ 動画情報 API */
 export const NICONICO_VIDEO_API = 'https://www.nicovideo.jp/api/watch/v3'
