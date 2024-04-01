@@ -85,19 +85,19 @@ if (firefoxExtPath) {
   } catch (e) {
     console.error('[Firefox Add-ons]', e)
   }
-
-  // ソースコードをZIPに圧縮 (dist/source.zip)
-  const tmpSourcePath = `../source-${crypto.randomUUID()}`
-  const sourceZipPath = `./dist/source.zip`
-
-  fs.copySync('./', tmpSourcePath)
-  fs.removeSync(`${tmpSourcePath}/node_modules`)
-  fs.removeSync(`${tmpSourcePath}/dist`)
-
-  await zip({
-    path: tmpSourcePath,
-    outfile: sourceZipPath,
-  })
-
-  fs.removeSync(tmpSourcePath)
 }
+
+// ソースコードをZIPに圧縮 (dist/source.zip)
+const tmpSourcePath = `../source-${crypto.randomUUID()}`
+const sourceZipPath = `./dist/source.zip`
+
+fs.copySync('./', tmpSourcePath)
+fs.removeSync(`${tmpSourcePath}/node_modules`)
+fs.removeSync(`${tmpSourcePath}/dist`)
+
+await zip({
+  path: tmpSourcePath,
+  outfile: sourceZipPath,
+})
+
+fs.removeSync(tmpSourcePath)

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NCOverlay",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
   "homepage_url": "https://github.com/Midra429/NCOverlay",
 
