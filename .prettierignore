@@ -1,2 +1,4 @@
-dist/**/*
+.plasmo/**/*
+build/**/*
+node_modules/**/*
 **/*.md
