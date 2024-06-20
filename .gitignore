@@ -236,6 +236,10 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,node
 
-# plasmo
-.plasmo
-build/
+# wxt
+node_modules
+.output
+stats.html
+stats-*.json
+.wxt
+web-ext.config.ts

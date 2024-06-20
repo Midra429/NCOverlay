@@ -1,5 +1,4 @@
 # <sub><img src="assets/icon.png" width="30px" height="30px"></sub> NCOverlay
-
 [![GitHub Release](https://img.shields.io/github/v/release/Midra429/NCOverlay?label=Releases)](https://github.com/Midra429/NCOverlay/releases)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ofhffkmglkibpkgcfhbgajghlkgplafe?label=Chrome%20Web%20Store)](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe)
 [![Firefox Add-ons](https://img.shields.io/amo/v/ncoverlay?label=Firefox%20Add-ons)](https://addons.mozilla.org/ja/firefox/addon/ncoverlay/)
@@ -8,29 +7,30 @@
 [<img src="assets/badges/firefox.png" height="60px">](https://addons.mozilla.org/ja/firefox/addon/ncoverlay/)
 
 ## 概要
-
-動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能です。<br>
+動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能です。
 
 ## 対応している動画配信サービス
-
 - [dアニメストア](https://animestore.docomo.ne.jp/animestore/)
-- [Amazon Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [ABEMA](https://abema.tv/)
+- [バンダイチャンネル](https://www.b-ch.com/)
+- [DMM TV](https://tv.dmm.com/vod/)
+- [U-NEXT](https://video.unext.jp/)
+- [Lemino](https://lemino.docomo.ne.jp/)
+- [Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
+- [Hulu](https://www.hulu.jp/)
 - [Disney+](https://www.disneyplus.com/ja-jp/home)
 - [TVer](https://tver.jp/)
-- [バンダイチャンネル](https://www.b-ch.com/)
-- [U-NEXT](https://video.unext.jp/)
-- [DMM TV](https://tv.dmm.com/vod/)
-- [Hulu](https://www.hulu.jp/)
-- [Lemino](https://lemino.docomo.ne.jp/)
+- [NHKプラス](https://plus.nhk.jp/)
 
 ※ 増減する可能性あり
 
 ## 使い方
-コメントは自動で取得・表示されるので何もしなくてOK。<br>
-取得したコメント数は拡張機能のアイコンに表示されます。<br>
+整備中...
 
-dアニメストア ニコニコ支店のコメントを取得・表示するには、同じブラウザでニコニコにログインしてください。<br>
+<!-- コメントは自動で取得・表示されるので何もしなくてOK。\
+取得したコメント数は拡張機能のアイコンに表示されます。
+
+dアニメストア ニコニコ支店のコメントを取得・表示するには、同じブラウザでニコニコにログインしてください。
 
 ### ポップアップ
 - コメントの表示/非表示
@@ -49,15 +49,14 @@ dアニメストア ニコニコ支店のコメントを取得・表示するに
   - 自動スクロール
   - コマンドによる文字装飾を一部反映
 
-詳しい使い方はこちら<br>
+詳しい使い方はこちら\
 https://github.com/Midra429/NCOverlay/releases/tag/v1.1.0
 
 ### スクリーンショット
-拡張機能のアイコンの右クリックメニュー > スクリーンショット<br>
-※ 一部VODのみ対応 (ABEMA / TVer / バンダイチャンネル)
+拡張機能のアイコンの右クリックメニュー > スクリーンショット\
+※ 一部VODのみ対応 (ABEMA / TVer / バンダイチャンネル) -->
 
 ## インストール
-
 ### Chrome Web Store
 https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 
@@ -65,33 +64,52 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ## 不具合報告・機能提案など
-- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)<br>
-NCOverlay経由でアクセスすると、バージョンやOSなどの情報が自動入力されます
+- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)\
+(NCOverlay経由でアクセスすると、バージョンやOSなどの情報が自動入力されます)
 - GitHubの[Issues](https://github.com/Midra429/NCOverlay/issues)
 - SNSアカウント宛にメッセージやメンション
   - X (Twitter): [@Midra429](https://x.com/Midra429)
-  - Bluesky: [Midra](https://bsky.app/profile/did:plc:rnbmtecarezy7txgy3pbbprf)
 
 ---
 
 ## 開発
+### 環境
+- [Bun](https://bun.sh/)
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Chrome](https://www.google.com/intl/ja/chrome/)
+
+### 開発サーバー
 ```sh
-pnpm run build
+# Chrome
+bun run dev
 ```
+<!-- ```sh
+# Firefox
+bun run dev:firefox
+``` -->
 
 ### 出力
+```sh
+# ./dist/chrome-mv3
+bun run build
 ```
-dist
-  ├ extension-*****             開発用
-  ├ NCOverlay_v0.0.0-*****      minified
-  └ NCOverlay_v0.0.0-*****.zip  ストア用, minified
+```sh
+# ./dist/firefox-mv3
+bun run build:firefox
 ```
 
-### 使用ライブラリ
-- [xpadev-net/niconicomments](https://github.com/xpadev-net/niconicomments)<br>
-  コメントを描画するやつ。これなかったら多分作ってない。
-- [geolonia/japanese-numeral](https://github.com/geolonia/japanese-numeral)<br>
-  数字 ↔ 漢数字を相互変換するやつ。
+### 出力 (ZIP)
+```sh
+# ./dist/ncoverlay-0.0.0-chrome.zip
+bun run zip
+```
+```sh
+# ./dist/ncoverlay-0.0.0-firefox.zip
+bun run zip:firefox
+```
+
+## スペシャルサンクス
+- [**xpadev-net/niconicomments**](https://github.com/xpadev-net/niconicomments)
 
 ## ライセンス
 当ライセンスは [MIT](LICENSE.txt) ライセンスの規約に基づいて付与されています。

@@ -1,0 +1,17 @@
+import { useSettings } from './useSettings'
+import { useSystemTheme } from './useSystemTheme'
+
+export const useTheme = () => {
+  const { loading, value: theme } = useSettings('settings:theme')
+  const systemTheme = useSystemTheme()
+
+  if (loading) {
+    return null
+  }
+
+  if (theme !== 'auto') {
+    return theme
+  }
+
+  return systemTheme
+}
