@@ -407,7 +407,7 @@ export class NCOSearcher {
 
     return markerCounts.map((counts) => {
       const max = Math.max(...counts)
-      const idx = 5 < max ? counts.indexOf(max) : -1
+      const idx = 3 <= max ? counts.indexOf(max) : -1
 
       return idx !== -1
         ? Math.trunc(idx * segmentIntervalMs + segmentIntervalMs / 3)
