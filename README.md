@@ -20,7 +20,7 @@
 - [Hulu](https://www.hulu.jp/)
 - [Disney+](https://www.disneyplus.com/ja-jp/home)
 - [TVer](https://tver.jp/)
-- [NHKプラス](https://plus.nhk.jp/)
+<!-- - [NHKプラス](https://plus.nhk.jp/) -->
 
 ※ 増減する可能性あり
 
