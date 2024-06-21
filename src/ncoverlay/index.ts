@@ -100,6 +100,40 @@ export class NCOverlay {
   }
 
   /**
+   * 指定したスロットのオフセットをセット
+   */
+  setOffset(slotId: string, ms: number | `${'+' | '-'}${number}` | null) {
+    const slot = this.state.slots.get(slotId)
+
+    if (!slot) return
+
+    if (typeof ms === 'string') {
+      slot.offset = (slot.offset ?? 0) + parseInt(ms)
+    } else if (typeof ms === 'number') {
+      slot.offset = ms
+    } else {
+      delete slot.offset
+    }
+
+    this.updateRendererThreads()
+  }
+
+  /**
+   * 全体のオフセットをセット (スロットのオフセットとは別)
+   */
+  setGlobalOffset(ms: number | `${'+' | '-'}${number}` | null) {
+    const offset = this.state.offset.get()
+
+    if (typeof ms === 'string') {
+      this.state.offset.set(offset + parseInt(ms))
+    } else if (typeof ms === 'number') {
+      this.state.offset.set(ms)
+    } else {
+      this.state.offset.clear()
+    }
+  }
+
+  /**
    * 指定したマーカーの位置にジャンプ
    */
   jumpMarker(markerIdx: number | null) {
@@ -123,6 +157,13 @@ export class NCOverlay {
       })
     }
 
+    this.updateRendererThreads()
+  }
+
+  /**
+   * 描画するコメントデータを更新する
+   */
+  updateRendererThreads() {
     const threads = this.state.slots.getThreads()
 
     this.renderer.setThreads(threads)
@@ -186,10 +227,7 @@ export class NCOverlay {
 
     // 検索ステータス 変更時
     this.searcher.addEventListener('ready', () => {
-      const threads = this.state.slots.getThreads()
-
-      this.renderer.setThreads(threads)
-      this.renderer.reload()
+      this.updateRendererThreads()
     })
 
     // 設定 (コメント:表示サイズ)
@@ -223,9 +261,19 @@ export class NCOverlay {
       return this.id
     })
 
+    // メッセージ (オフセット)
+    ncoMessenger.onMessage('p-c:setOffset', ({ data }) => {
+      return this.setOffset(...data)
+    })
+
+    // メッセージ (オフセット 全体)
+    ncoMessenger.onMessage('p-c:setGlobalOffset', ({ data }) => {
+      return this.setGlobalOffset(...data)
+    })
+
     // メッセージ (マーカー)
     ncoMessenger.onMessage('p-c:jumpMarker', ({ data }) => {
-      return this.jumpMarker(data)
+      return this.jumpMarker(...data)
     })
   }
 

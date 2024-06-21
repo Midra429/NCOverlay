@@ -41,7 +41,7 @@ const MarkerButton: React.FC<{
           const tab = await webext.getCurrentActiveTab()
 
           ncoMessenger
-            .sendMessage('p-c:jumpMarker', props.markerIdx, tab?.id)
+            .sendMessage('p-c:jumpMarker', [props.markerIdx], tab?.id)
             .catch(() => {})
         }}
       >

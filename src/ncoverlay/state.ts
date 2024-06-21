@@ -9,6 +9,7 @@ import { deepmerge } from '@/utils/deepmerge'
 
 export type NCOStateJson = {
   _id: string
+  offset: number
   slots: Slot[] | null
 }
 
@@ -71,7 +72,9 @@ export class NCOState {
   readonly key: `tmp:state:${string}`
   readonly sync: boolean
 
+  #offset: number
   #slots: Map<string, Slot>
+
   #tmpSyncOff?: boolean
 
   /**
@@ -83,6 +86,7 @@ export class NCOState {
     this.key = `tmp:state:${id}`
     this.sync = sync
 
+    this.#offset = 0
     this.#slots = new Map()
 
     if (this.sync) {
@@ -99,22 +103,46 @@ export class NCOState {
   }
 
   clear() {
+    this.offset.clear()
     this.slots.clear()
   }
 
   getJSON(): NCOStateJson {
     return {
       _id: this.id,
+      offset: this.offset.get(),
       slots: this.slots.getAll(),
     }
   }
 
   setJSON(json: NCOStateJson | null) {
+    if (json?.offset) {
+      this.offset.set(json.offset)
+    } else {
+      this.offset.clear()
+    }
+
     if (json?.slots) {
       this.slots.set(json.slots)
     } else {
       this.slots.clear()
     }
+  }
+
+  offset = {
+    get: () => this.#offset,
+
+    set: (ms: number) => {
+      if (this.#offset !== ms) {
+        this.#offset = ms
+
+        this.#trigger('change', 'offset')
+      }
+    },
+
+    clear: () => {
+      this.offset.set(0)
+    },
   }
 
   slots = {
@@ -141,7 +169,7 @@ export class NCOState {
         for (const thread of slot.threads) {
           const comments = thread.comments.map((cmt) => ({
             ...cmt,
-            vposMs: cmt.vposMs + (slot.offset ?? 0),
+            vposMs: cmt.vposMs + this.#offset + (slot.offset ?? 0),
             commands: slot.translucent
               ? [...new Set([...cmt.commands, '_live'])]
               : cmt.commands,
@@ -159,13 +187,13 @@ export class NCOState {
     set: (slots: Slot[]) => {
       const old = this.slots.getAll()
 
-      this.#slots.clear()
+      if (!equal(old, slots)) {
+        this.#slots.clear()
 
-      for (const slot of slots) {
-        this.#slots.set(slot.id, slot)
-      }
+        for (const slot of slots) {
+          this.#slots.set(slot.id, slot)
+        }
 
-      if (!equal(slots, old)) {
         this.#trigger('change', 'slots')
       }
     },
@@ -173,11 +201,11 @@ export class NCOState {
     add: (...slots: Slot[]) => {
       const old = this.slots.getAll()
 
-      for (const slot of slots) {
-        this.#slots.set(slot.id, slot)
-      }
+      if (!equal(old, slots)) {
+        for (const slot of slots) {
+          this.#slots.set(slot.id, slot)
+        }
 
-      if (!equal(slots, old)) {
         this.#trigger('change', 'slots')
       }
     },
@@ -189,7 +217,7 @@ export class NCOState {
 
       const newSlot: Slot = deepmerge(slot, data)
 
-      if (!equal(newSlot, slot)) {
+      if (!equal(slot, newSlot)) {
         this.#slots.set(newSlot.id, newSlot)
 
         this.#trigger('change', 'slots')
