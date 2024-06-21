@@ -107,13 +107,18 @@ export class NCOverlay {
 
     if (!slot) return
 
+    let offset = 0
+
     if (typeof ms === 'string') {
-      slot.offset = (slot.offset ?? 0) + parseInt(ms)
+      offset = (slot.offset ?? 0) + parseInt(ms)
     } else if (typeof ms === 'number') {
-      slot.offset = ms
-    } else {
-      delete slot.offset
+      offset = ms
     }
+
+    this.state.slots.update({
+      id: slotId,
+      offset,
+    })
 
     this.updateRendererThreads()
   }
@@ -131,6 +136,8 @@ export class NCOverlay {
     } else {
       this.state.offset.clear()
     }
+
+    this.updateRendererThreads()
   }
 
   /**
@@ -143,7 +150,10 @@ export class NCOverlay {
 
     if (markerIdx === null) {
       slots.forEach((slot) => {
-        delete slot.offset
+        this.state.slots.update({
+          id: slot.id,
+          offset: 0,
+        })
       })
     } else {
       const currentTimeMs = this.renderer.video.currentTime * 1000
@@ -152,7 +162,10 @@ export class NCOverlay {
         const marker = slot.markers?.[markerIdx]
 
         if (marker) {
-          slot.offset = marker * -1 + currentTimeMs
+          this.state.slots.update({
+            id: slot.id,
+            offset: marker * -1 + currentTimeMs,
+          })
         }
       })
     }

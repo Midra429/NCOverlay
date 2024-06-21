@@ -12,7 +12,7 @@ import { PanelItem } from '@/components/panel-item'
 
 import { SourceTag } from './SourceTag'
 import { StatusOverlay } from './StatusOverlay'
-import { ConfigButton } from './ConfigButton'
+import { Config } from './Config'
 
 export type VideoItemProps = {
   slot: Slot
@@ -128,7 +128,7 @@ export const VideoItem: React.FC<VideoItemProps> = ({ slot }) => {
 
       <SourceTag source={slot.type} />
 
-      {/* {slot.status === 'ready' && <ConfigButton />} */}
+      {slot.status === 'ready' && <Config slot={slot} />}
     </PanelItem>
   )
 }

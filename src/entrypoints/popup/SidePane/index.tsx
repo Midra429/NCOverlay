@@ -7,7 +7,7 @@ import { useNcoStateJson } from '@/hooks/useNcoState'
  * サイド
  */
 export const SidePane: React.FC = memo(() => {
-  const [ncoStateJson] = useNcoStateJson()
+  const ncoStateJson = useNcoStateJson()
 
   return (
     <div className="h-full w-full overflow-y-auto p-2">

@@ -8,13 +8,13 @@ import { SettingsInput } from '@/components/settings-input'
 import { PanelItem } from '@/components/panel-item'
 
 import { ShowHideToggle } from './presets/ShowHideToggle'
-import { MarkerButtons } from './presets/MarkerButtons'
+import { PositionControl } from './presets/PositionControl'
 
 type PanelPresetComponentKey = keyof typeof PANEL_PRESET_CONPONENTS
 
 const PANEL_PRESET_CONPONENTS = {
   'panel:showHideToggle': ShowHideToggle,
-  'panel:markerButtons': MarkerButtons,
+  'panel:PositionControl': PositionControl,
 }
 
 /**
@@ -25,7 +25,7 @@ const quickpanelItemKeys: (PanelPresetComponentKey | SettingsKey)[] = [
   'settings:comment:opacity',
   'settings:comment:scale',
   'settings:comment:fps',
-  'panel:markerButtons',
+  'panel:PositionControl',
 ]
 
 /**
