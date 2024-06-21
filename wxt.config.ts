@@ -2,14 +2,15 @@ import { defineConfig } from 'wxt'
 import react from '@vitejs/plugin-react'
 
 import { uid } from './src/utils/uid'
-import { name, version } from './package.json'
+import { displayName, version } from './package.json'
 
-const EXT_BUILD_ID = JSON.stringify(`${name}/${version}-${uid()}`)
+const EXT_BUILD_ID = JSON.stringify(uid())
+const EXT_USER_AGENT = JSON.stringify(`${displayName}/${version}`)
 
 export default defineConfig({
   manifestVersion: 3,
   manifest: ({ browser }) => ({
-    name: 'NCOverlay',
+    name: displayName,
     description:
       '動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能',
     homepage_url: 'https://github.com/Midra429/NCOverlay',
@@ -34,6 +35,7 @@ export default defineConfig({
   vite: () => ({
     define: {
       EXT_BUILD_ID,
+      EXT_USER_AGENT,
     },
     build: {
       chunkSizeWarningLimit: 1024,

@@ -45,17 +45,24 @@ export class NCOSearcher {
 
     const [searchResult, searchSyobocalResult] = await Promise.all([
       // // ニコニコ動画 検索
-      // ncoApiProxy.search(info.title, {
+      // ncoApiProxy.search({
+      //   title: info.title,
       //   duration: info.duration,
       //   chapter: true,
       //   szbh: options.szbh,
+      //   userAgent: EXT_USER_AGENT,
       // }),
 
       // ニコニコが死んでるので
       null,
 
       // ニコニコ実況 過去ログ 検索
-      options.jikkyo ? ncoApiProxy.searchSyobocal(info.title) : null,
+      options.jikkyo
+        ? ncoApiProxy.searchSyobocal({
+            title: info.title,
+            userAgent: EXT_USER_AGENT,
+          })
+        : null,
     ])
 
     this.#trigger('searched')
@@ -363,7 +370,10 @@ export class NCOSearcher {
             endtime,
             format: 'json',
           },
-          true
+          {
+            compatV1Thread: true,
+            userAgent: EXT_USER_AGENT,
+          }
         )
       })
     )
@@ -383,7 +393,7 @@ export class NCOSearcher {
    * マーカーの位置を探す
    */
   findMarkers(threads: V1Thread[]) {
-    const comments = threads
+    const allComments = threads
       .flatMap((thread) => thread.comments)
       .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
 
@@ -391,7 +401,7 @@ export class NCOSearcher {
     const segmentIntervalMs = 5000
     let tmpIdx = 0
 
-    for (const { vposMs, body } of comments) {
+    for (const { vposMs, body } of allComments) {
       if (vposMs < segmentIntervalMs * (tmpIdx + 1)) {
         segmentedComments[tmpIdx].push(body)
       } else {
@@ -400,8 +410,8 @@ export class NCOSearcher {
     }
 
     const markerCounts = MARKERS.map(({ regexp }) => {
-      return segmentedComments.map((val) => {
-        return val.filter((text) => regexp.test(text)).length
+      return segmentedComments.map((comments) => {
+        return comments.filter((text) => regexp.test(text)).length
       })
     })
 
