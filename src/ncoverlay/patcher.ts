@@ -61,7 +61,7 @@ export class NCOPatcher {
         if (values['settings:comment:autoLoad']) {
           const info = await this.#getInfo(this.#video)
 
-          if (info) {
+          if (info?.title) {
             await this.#nco.searcher.autoLoad(info, {
               szbh: values['settings:comment:autoLoadSzbh'],
               jikkyo: values['settings:comment:autoLoadJikkyo'],

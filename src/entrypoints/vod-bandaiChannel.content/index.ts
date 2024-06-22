@@ -2,7 +2,6 @@ import type { ContentScriptContext } from 'wxt/client'
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import { ncoApi } from '@midra/nco-api'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/checkVodEnable'
