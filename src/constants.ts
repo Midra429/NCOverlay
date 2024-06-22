@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 
 /** GitHub */
-export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
+export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay/tree/v3'
 
 /** その他のリンク */
 export const LINKS: {
