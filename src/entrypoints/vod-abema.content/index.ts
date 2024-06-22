@@ -55,6 +55,9 @@ const main = async (ctx: ContentScriptContext) => {
       const title = `${workTitle} ${episode}`.trim()
       const duration = program.info.duration
 
+      Logger.log('title', title)
+      Logger.log('duration', duration)
+
       return { title, duration }
     },
     appendCanvas: (video, canvas) => {

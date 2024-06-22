@@ -26,29 +26,32 @@ const main = async (ctx: ContentScriptContext) => {
 
   const video = document.querySelector<HTMLVideoElement>('video#video')
 
-  if (video) {
-    const patcher = new NCOPatcher({
-      ctx,
-      getInfo: async () => {
-        const partId = new URL(location.href).searchParams.get('partId')
-        const partData = partId ? await ncoApi.danime.part(partId) : null
+  if (!video) return
 
-        Logger.log('danime.part', partData)
+  const patcher = new NCOPatcher({
+    ctx,
+    getInfo: async () => {
+      const partId = new URL(location.href).searchParams.get('partId')
+      const partData = partId ? await ncoApi.danime.part(partId) : null
 
-        if (!partData) {
-          return null
-        }
+      Logger.log('danime.part', partData)
 
-        const title = partData.title
-        const duration = partData.partMeasureSecond
+      if (!partData) {
+        return null
+      }
 
-        return { title, duration }
-      },
-      appendCanvas: (video, canvas) => {
-        video.insertAdjacentElement('afterend', canvas)
-      },
-    })
+      const title = partData.title
+      const duration = partData.partMeasureSecond
 
-    patcher.setVideo(video)
-  }
+      Logger.log('title', title)
+      Logger.log('duration', duration)
+
+      return { title, duration }
+    },
+    appendCanvas: (video, canvas) => {
+      video.insertAdjacentElement('afterend', canvas)
+    },
+  })
+
+  patcher.setVideo(video)
 }

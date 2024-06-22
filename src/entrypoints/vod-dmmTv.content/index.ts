@@ -50,6 +50,9 @@ const main = async (ctx: ContentScriptContext) => {
       const duration =
         dataVideo.episode?.playInfo.duration ?? video?.duration ?? 0
 
+      Logger.log('title', title)
+      Logger.log('duration', duration)
+
       return { title, duration }
     },
     appendCanvas: (video, canvas) => {
