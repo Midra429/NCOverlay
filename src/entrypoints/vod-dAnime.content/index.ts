@@ -14,7 +14,7 @@ import './style.css'
 const vod: VodKey = 'dAnime'
 
 export default defineContentScript({
-  matches: ['https://animestore.docomo.ne.jp/*'],
+  matches: ['https://animestore.docomo.ne.jp/animestore/*'],
   runAt: 'document_end',
   main: (ctx) => void main(ctx),
 })
@@ -35,12 +35,14 @@ const main = async (ctx: ContentScriptContext) => {
 
         Logger.log('danime.part', partData)
 
-        return partData
-          ? {
-              title: partData.title,
-              duration: partData.partMeasureSecond,
-            }
-          : null
+        if (!partData) {
+          return null
+        }
+
+        return {
+          title: partData.title,
+          duration: partData.partMeasureSecond,
+        }
       },
       appendCanvas: (video, canvas) => {
         video.insertAdjacentElement('afterend', canvas)
