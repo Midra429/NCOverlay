@@ -86,22 +86,22 @@ export const MARKERS: {
   {
     label: 'オープニング',
     shortLabel: 'OP',
-    regexp: /^OP|ＯＰ$/,
+    regexp: /^(OP|ＯＰ)$/,
   },
   {
     label: 'Aパート',
     shortLabel: 'A',
-    regexp: /^A|Ａ$/,
+    regexp: /^(A|Ａ)$/,
   },
   {
     label: 'Bパート',
     shortLabel: 'B',
-    regexp: /^B|Ｂ$/,
+    regexp: /^(B|Ｂ)$/,
   },
   {
     label: 'Cパート',
     shortLabel: 'C',
-    regexp: /^C|Ｃ$/,
+    regexp: /^(C|Ｃ)$/,
   },
 ]
 
