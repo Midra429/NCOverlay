@@ -7,7 +7,6 @@ import { SidePane } from './SidePane'
 
 const App: React.FC = () => {
   const isActive = !!ncoState
-  // const isActive = true
 
   return (
     <Layout
