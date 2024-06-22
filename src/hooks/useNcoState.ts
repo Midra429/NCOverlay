@@ -24,6 +24,8 @@ export const useNcoStateJson = () => {
   const [state, setState] = useState<NCOStateJson | null>(null)
 
   useEffect(() => {
+    setState(ncoState?.getJSON() ?? null)
+
     ncoState?.addEventListener('change', () => {
       setState(ncoState?.getJSON() ?? null)
     })
@@ -36,6 +38,8 @@ export const useNcoStateSlot = (id: string) => {
   const [state, setState] = useState<Slot | null>(null)
 
   useEffect(() => {
+    setState(ncoState?.slots.get(id) ?? null)
+
     ncoState?.addEventListener('change', () => {
       setState(ncoState?.slots.get(id) ?? null)
     })
