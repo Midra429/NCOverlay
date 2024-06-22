@@ -55,3 +55,15 @@ export const formatDate = (
       .replace('s', seconds.toString())
   )
 }
+
+export const formatedToSeconds = (formated: string) => {
+  const parts = formated.split(':').map(Number).reverse()
+
+  let seconds = 0
+
+  seconds += parts[0] ?? 0
+  seconds += (parts[1] ?? 0) * 60
+  seconds += (parts[2] ?? 0) * 3600
+
+  return seconds
+}
