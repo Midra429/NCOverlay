@@ -50,11 +50,16 @@ const MarkerButton: React.FC<{
 
 export const PositionControl: React.FC = () => {
   const ncoStateJson = useNcoStateJson()
+
+  const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
   const [slotMarkers, setSlotMarkers] = useState<(number | null)[][]>()
 
   useEffect(() => {
-    setOffset(Math.round((ncoStateJson?.offset ?? 0) / 1000))
+    const ofs = Math.round((ncoStateJson?.offset ?? 0) / 1000)
+
+    setCurrentOffset(ofs)
+    setOffset(ofs)
     setSlotMarkers(ncoStateJson?.slots?.map((v) => v.markers ?? []))
   }, [ncoStateJson])
 
@@ -95,6 +100,7 @@ export const PositionControl: React.FC = () => {
 
       <OffsetControl
         value={offset}
+        isValueChanged={offset !== currentOffset}
         onValueChange={(val) => setOffset(val)}
         onApply={async () => {
           const tab = await webext.getCurrentActiveTab()

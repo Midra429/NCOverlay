@@ -132,16 +132,20 @@ export class NCOState {
   offset = {
     get: () => this.#offset,
 
-    set: (ms: number) => {
+    set: (ms: number): boolean => {
       if (this.#offset !== ms) {
         this.#offset = ms
 
         this.#trigger('change', 'offset')
+
+        return true
       }
+
+      return false
     },
 
     clear: () => {
-      this.offset.set(0)
+      return this.offset.set(0)
     },
   }
 
@@ -184,7 +188,7 @@ export class NCOState {
       return threads.length ? threads : null
     },
 
-    set: (slots: Slot[]) => {
+    set: (slots: Slot[]): boolean => {
       const old = this.slots.getAll()
 
       if (!equal(old, slots)) {
@@ -195,10 +199,14 @@ export class NCOState {
         }
 
         this.#trigger('change', 'slots')
+
+        return true
       }
+
+      return false
     },
 
-    add: (...slots: Slot[]) => {
+    add: (...slots: Slot[]): boolean => {
       const old = this.slots.getAll()
 
       if (!equal(old, slots)) {
@@ -207,24 +215,32 @@ export class NCOState {
         }
 
         this.#trigger('change', 'slots')
+
+        return true
       }
+
+      return false
     },
 
-    update: (data: SlotUpdate) => {
+    update: (data: SlotUpdate): boolean => {
       const slot = this.#slots.get(data.id)
 
-      if (!slot) return
+      if (slot) {
+        const newSlot: Slot = deepmerge(slot, data)
 
-      const newSlot: Slot = deepmerge(slot, data)
+        if (!equal(slot, newSlot)) {
+          this.#slots.set(newSlot.id, newSlot)
 
-      if (!equal(slot, newSlot)) {
-        this.#slots.set(newSlot.id, newSlot)
+          this.#trigger('change', 'slots')
 
-        this.#trigger('change', 'slots')
+          return true
+        }
       }
+
+      return false
     },
 
-    remove: (...ids: string[]) => {
+    remove: (...ids: string[]): boolean => {
       let changed = false
 
       for (const id of ids) {
@@ -233,39 +249,23 @@ export class NCOState {
 
       if (changed) {
         this.#trigger('change', 'slots')
+
+        return true
       }
+
+      return false
     },
 
-    clear: () => {
+    clear: (): boolean => {
       if (this.#slots.size) {
         this.#slots.clear()
 
         this.#trigger('change', 'slots')
+
+        return true
       }
-    },
 
-    show: (id: string) => {
-      const slot = this.#slots.get(id)
-
-      if (!slot) return
-
-      if (slot.hidden) {
-        slot.hidden = false
-
-        this.#trigger('change', 'slots')
-      }
-    },
-
-    hide: (id: string) => {
-      const slot = this.#slots.get(id)
-
-      if (!slot) return
-
-      if (!slot.hidden) {
-        slot.hidden = true
-
-        this.#trigger('change', 'slots')
-      }
+      return false
     },
   }
 

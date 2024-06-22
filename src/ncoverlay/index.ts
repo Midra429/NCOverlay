@@ -1,6 +1,6 @@
 import type { ContentScriptContext } from 'wxt/client'
 import type { StorageOnChangeRemoveListener } from '@/utils/storage'
-import type { Slot } from './state'
+import type { SlotUpdate } from './state'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
@@ -83,61 +83,27 @@ export class NCOverlay {
     }
   }
 
-  /**
-   * データ設定
-   * @description 既存のデータを置き換える
-   */
-  setSlots(slots: Slot[]) {
-    this.state.slots.set(slots)
-  }
+  updateSlot(data: SlotUpdate): boolean {
+    const changed = this.state.slots.update(data)
 
-  /**
-   * データ追加
-   * @description 既存のデータに追加する
-   */
-  addSlot(...slots: Slot[]) {
-    this.state.slots.add(...slots)
-  }
-
-  /**
-   * 指定したスロットのオフセットをセット
-   */
-  setOffset(slotId: string, ms: number | `${'+' | '-'}${number}` | null) {
-    const slot = this.state.slots.get(slotId)
-
-    if (!slot) return
-
-    let offset = 0
-
-    if (typeof ms === 'string') {
-      offset = (slot.offset ?? 0) + parseInt(ms)
-    } else if (typeof ms === 'number') {
-      offset = ms
+    if (changed) {
+      this.updateRendererThreads()
     }
 
-    this.state.slots.update({
-      id: slotId,
-      offset,
-    })
-
-    this.updateRendererThreads()
+    return changed
   }
 
   /**
-   * 全体のオフセットをセット (スロットのオフセットとは別)
+   * 全体のオフセットをセット
    */
-  setGlobalOffset(ms: number | `${'+' | '-'}${number}` | null) {
-    const offset = this.state.offset.get()
+  setGlobalOffset(ms: number | null) {
+    const changed = ms ? this.state.offset.set(ms) : this.state.offset.clear()
 
-    if (typeof ms === 'string') {
-      this.state.offset.set(offset + parseInt(ms))
-    } else if (typeof ms === 'number') {
-      this.state.offset.set(ms)
-    } else {
-      this.state.offset.clear()
+    if (changed) {
+      this.updateRendererThreads()
     }
 
-    this.updateRendererThreads()
+    return changed
   }
 
   /**
@@ -229,15 +195,6 @@ export class NCOverlay {
       this.renderer.video.addEventListener(type, listener)
     }
 
-    // // データ 変更時
-    // this.state.addEventListener('change', (type) => {
-    //   switch (type) {
-    //     case 'slots': {
-    //       break
-    //     }
-    //   }
-    // })
-
     // 検索ステータス 変更時
     this.searcher.addEventListener('ready', () => {
       this.updateRendererThreads()
@@ -274,9 +231,9 @@ export class NCOverlay {
       return this.id
     })
 
-    // メッセージ (オフセット)
-    ncoMessenger.onMessage('p-c:setOffset', ({ data }) => {
-      return this.setOffset(...data)
+    // メッセージ (スロット 更新)
+    ncoMessenger.onMessage('p-c:updateSlot', ({ data }) => {
+      return this.updateSlot(...data)
     })
 
     // メッセージ (オフセット 全体)
@@ -287,6 +244,11 @@ export class NCOverlay {
     // メッセージ (マーカー)
     ncoMessenger.onMessage('p-c:jumpMarker', ({ data }) => {
       return this.jumpMarker(...data)
+    })
+
+    // メッセージ (描画データ 更新)
+    ncoMessenger.onMessage('p-c:updateRendererThreads', () => {
+      return this.updateRendererThreads()
     })
   }
 

@@ -3,15 +3,17 @@ import { RotateCcwIcon, CheckIcon } from 'lucide-react'
 
 export type OffsetControlProps = {
   value: number
+  isValueChanged?: boolean
+  compact?: boolean
   onValueChange: (value: number) => void
   onApply: () => void
-  compact?: boolean
 }
 
 export const OffsetControl: React.FC<OffsetControlProps> = ({
   value,
   onValueChange,
   onApply,
+  isValueChanged,
   compact,
 }) => {
   return (
@@ -64,6 +66,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           variant="flat"
           fullWidth
           isIconOnly={compact}
+          isDisabled={value === 0}
           onPress={() => onValueChange(0)}
         >
           <RotateCcwIcon className="size-4" />
@@ -76,6 +79,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           color="primary"
           fullWidth
           isIconOnly={compact}
+          isDisabled={isValueChanged === false}
           onPress={onApply}
         >
           <CheckIcon className="size-4" />

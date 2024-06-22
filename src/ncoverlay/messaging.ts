@@ -5,11 +5,20 @@ import { defineExtensionMessaging } from '@webext-core/messaging'
 type ProtocolMap = {
   // popup -> content
   'p-c:getId': (args?: null) => string | null
-  'p-c:setOffset': (args: Parameters<NCOverlay['setOffset']>) => void
+
+  'p-c:updateRendererThreads': (args?: null) => void
+
+  'p-c:updateSlot': (
+    args: Parameters<NCOverlay['updateSlot']>
+  ) => ReturnType<NCOverlay['updateSlot']>
+
   'p-c:setGlobalOffset': (
     args: Parameters<NCOverlay['setGlobalOffset']>
-  ) => void
-  'p-c:jumpMarker': (args: Parameters<NCOverlay['jumpMarker']>) => void
+  ) => ReturnType<NCOverlay['setGlobalOffset']>
+
+  'p-c:jumpMarker': (
+    args: Parameters<NCOverlay['jumpMarker']>
+  ) => ReturnType<NCOverlay['jumpMarker']>
 }
 
 export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
