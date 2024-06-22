@@ -11,15 +11,16 @@
 
 ## 対応している動画配信サービス
 - [dアニメストア](https://animestore.docomo.ne.jp/animestore/)
-<!-- - [ABEMA](https://abema.tv/) -->
-<!-- - [バンダイチャンネル](https://www.b-ch.com/) -->
-<!-- - [DMM TV](https://tv.dmm.com/vod/) -->
+- [ABEMA](https://abema.tv/)
+- [バンダイチャンネル](https://www.b-ch.com/)
+- [DMM TV](https://tv.dmm.com/vod/)
+- [TVer](https://tver.jp/)
 <!-- - [U-NEXT](https://video.unext.jp/) -->
 <!-- - [Lemino](https://lemino.docomo.ne.jp/) -->
 <!-- - [Prime Video](https://www.amazon.co.jp/gp/video/storefront/) -->
 <!-- - [Hulu](https://www.hulu.jp/) -->
 <!-- - [Disney+](https://www.disneyplus.com/ja-jp/home) -->
-<!-- - [TVer](https://tver.jp/) -->
+
 <!-- - [NHKプラス](https://plus.nhk.jp/) -->
 
 ※ 増減する可能性あり
