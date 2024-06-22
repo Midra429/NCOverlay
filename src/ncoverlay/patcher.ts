@@ -12,9 +12,15 @@ export class NCOPatcher {
   #video: HTMLVideoElement | null = null
   #nco: NCOverlay | null = null
 
+  get nco() {
+    return this.#nco
+  }
+
   constructor(init: {
     ctx: ContentScriptContext
-    getInfo: () => Promise<{ title: string; duration: number } | null>
+    getInfo: (
+      video: HTMLVideoElement | null
+    ) => Promise<{ title: string; duration: number } | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   }) {
     this.#ctx = init.ctx
@@ -53,7 +59,7 @@ export class NCOPatcher {
 
         // 自動読み込み
         if (values['settings:comment:autoLoad']) {
-          const info = await this.#getInfo()
+          const info = await this.#getInfo(this.#video)
 
           if (info) {
             await this.#nco.searcher.autoLoad(info, {

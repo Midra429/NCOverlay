@@ -39,10 +39,10 @@ const main = async (ctx: ContentScriptContext) => {
           return null
         }
 
-        return {
-          title: partData.title,
-          duration: partData.partMeasureSecond,
-        }
+        const title = partData.title
+        const duration = partData.partMeasureSecond
+
+        return { title, duration }
       },
       appendCanvas: (video, canvas) => {
         video.insertAdjacentElement('afterend', canvas)
