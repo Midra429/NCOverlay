@@ -59,7 +59,7 @@ export const Config: React.FC<ConfigProps> = ({ slot }) => {
 
       <Divider />
 
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-3">
         <Switch
           classNames={{
             base: cn(

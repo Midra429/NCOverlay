@@ -14,8 +14,6 @@ const App: React.FC = () => {
       style={{
         width: 'fit-content',
         height: 'fit-content',
-        maxWidth: 800,
-        maxHeight: 600,
       }}
     >
       {isActive && (
