@@ -14,11 +14,11 @@
 - [ABEMA](https://abema.tv/)
 - [バンダイチャンネル](https://www.b-ch.com/)
 - [DMM TV](https://tv.dmm.com/vod/)
+- [U-NEXT](https://video.unext.jp/)
+- [Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
+- [Hulu](https://www.hulu.jp/)
 - [TVer](https://tver.jp/)
-<!-- - [U-NEXT](https://video.unext.jp/) -->
 <!-- - [Lemino](https://lemino.docomo.ne.jp/) -->
-<!-- - [Prime Video](https://www.amazon.co.jp/gp/video/storefront/) -->
-<!-- - [Hulu](https://www.hulu.jp/) -->
 <!-- - [Disney+](https://www.disneyplus.com/ja-jp/home) -->
 
 <!-- - [NHKプラス](https://plus.nhk.jp/) -->
