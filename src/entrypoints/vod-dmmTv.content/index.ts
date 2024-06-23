@@ -47,6 +47,7 @@ const main = async (ctx: ContentScriptContext) => {
       ]
         .join(' ')
         .trim()
+
       const duration =
         dataVideo.episode?.playInfo.duration ?? video?.duration ?? 0
 
@@ -67,11 +68,11 @@ const main = async (ctx: ContentScriptContext) => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !document.contains(patcher.nco.renderer.video)) {
+    if (patcher.nco && !document.body.contains(patcher.nco.renderer.video)) {
       patcher.dispose()
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/vod/playback/')) {
-        const video = document.querySelector<HTMLVideoElement>(
+        const video = document.body.querySelector<HTMLVideoElement>(
           '#vodWrapper > div > video'
         )
 
@@ -81,8 +82,8 @@ const main = async (ctx: ContentScriptContext) => {
       }
     }
 
-    obs.observe(document, obs_config)
+    obs.observe(document.body, obs_config)
   })
 
-  obs.observe(document, obs_config)
+  obs.observe(document.body, obs_config)
 }

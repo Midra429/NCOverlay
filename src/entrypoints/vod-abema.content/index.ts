@@ -74,11 +74,11 @@ const main = async (ctx: ContentScriptContext) => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !document.contains(patcher.nco.renderer.video)) {
+    if (patcher.nco && !document.body.contains(patcher.nco.renderer.video)) {
       patcher.dispose()
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/video/episode/')) {
-        const video = document.querySelector<HTMLVideoElement>(
+        const video = document.body.querySelector<HTMLVideoElement>(
           '.com-a-Video__video > .com-a-Video__video-element'
         )
 
@@ -88,8 +88,8 @@ const main = async (ctx: ContentScriptContext) => {
       }
     }
 
-    obs.observe(document, obs_config)
+    obs.observe(document.body, obs_config)
   })
 
-  obs.observe(document, obs_config)
+  obs.observe(document.body, obs_config)
 }

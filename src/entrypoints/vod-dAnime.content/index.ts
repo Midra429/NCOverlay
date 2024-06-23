@@ -24,7 +24,7 @@ const main = async (ctx: ContentScriptContext) => {
 
   Logger.log(`vod-${vod}.js`)
 
-  const video = document.querySelector<HTMLVideoElement>('video#video')
+  const video = document.body.querySelector<HTMLVideoElement>('video#video')
 
   if (!video) return
 

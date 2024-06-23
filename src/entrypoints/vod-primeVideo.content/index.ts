@@ -1,0 +1,167 @@
+import type { ContentScriptContext } from 'wxt/client'
+import type { VodKey } from '@/types/constants'
+
+import { defineContentScript } from 'wxt/sandbox'
+import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
+import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
+
+import { Logger } from '@/utils/logger'
+import { checkVodEnable } from '@/utils/checkVodEnable'
+import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
+
+import { NCOPatcher } from '@/ncoverlay/patcher'
+import { formatedToSeconds } from '@/utils/format'
+
+const vod: VodKey = 'primeVideo'
+
+export default defineContentScript({
+  matches: ['https://www.amazon.co.jp/*'],
+  runAt: 'document_end',
+  main: (ctx) => void main(ctx),
+})
+
+const getDetail = (): { title: string } | null => {
+  const canonicalUrl = document.querySelector<HTMLLinkElement>(
+    'link[rel="canonical"]'
+  )?.href
+  const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.[0] ?? ''
+  const titleId1 =
+    location.href?.match(/(?<=\/dp\/)[0-9A-Z]+(?=\/|$)/)?.[0] ?? ''
+  const titleId2 =
+    document.querySelector<HTMLInputElement>(
+      '.dv-dp-node-watchlist input[name="titleID"]'
+    )?.value ?? ''
+
+  const data = JSON.parse(
+    document.querySelector('#a-page > script[type="text/template"]')
+      ?.textContent || '{}'
+  )
+
+  try {
+    const { props } = data.props.body[0]
+
+    if ('atf' in props) {
+      const { headerDetail } = props.atf.state.detail
+      const { title } =
+        headerDetail[asin] || headerDetail[titleId1] || headerDetail[titleId2]
+
+      if (title) {
+        return { title }
+      }
+    }
+
+    if ('landingPage' in props) {
+      const { title } = props.landingPage.containers
+        // @ts-ignore
+        .flatMap((v) => v.entities)
+        // @ts-ignore
+        .find((v) => {
+          return (
+            v.titleID === asin ||
+            v.titleID === titleId1 ||
+            v.titleID === titleId2
+          )
+        })
+
+      if (title) {
+        return { title }
+      }
+    }
+  } catch {}
+
+  return null
+}
+
+const main = async (ctx: ContentScriptContext) => {
+  if (!(await checkVodEnable(vod))) return
+
+  Logger.log(`vod-${vod}.js`)
+
+  const patcher = new NCOPatcher({
+    ctx,
+    getInfo: async () => {
+      const titleElem = document.body.querySelector<HTMLElement>(
+        '.atvwebplayersdk-title-text'
+      )
+      const subtitleElem = document.body.querySelector<HTMLElement>(
+        '.atvwebplayersdk-subtitle-text'
+      )
+      const timeindicatorElem = await querySelectorAsync(
+        document.body,
+        '.atvwebplayersdk-timeindicator-text:has(span)'
+      )
+
+      const workTitle = getDetail()?.title || titleElem?.textContent || ''
+      const season_episode = subtitleElem?.firstChild?.textContent ?? ''
+      const subtitle = subtitleElem?.lastChild?.textContent ?? ''
+
+      const seasonNum = Number(
+        season_episode.match(/(?<=シーズン|Season)\d+/)?.[0]
+      )
+      const episodeNum = Number(
+        season_episode.match(/(?<=エピソード|Ep\.)\d+/)?.[0]
+      )
+
+      const workTitleSeason = extractSeason(workTitle)[0]
+      const subtitleEpisode = extractEpisode(subtitle)[0]
+
+      const title = [
+        workTitle,
+        !workTitleSeason && 1 < seasonNum ? `${seasonNum}期` : '',
+        !subtitleEpisode && 0 < episodeNum ? `${episodeNum}話` : '',
+        subtitle,
+      ]
+        .join(' ')
+        .trim()
+
+      const duration =
+        timeindicatorElem?.textContent
+          ?.split('/')
+          .map(formatedToSeconds)
+          .reduce((a, b) => a + b) ?? 0
+
+      Logger.log('title', title)
+      Logger.log('duration', duration)
+
+      return { title, duration }
+    },
+    appendCanvas: (video, canvas) => {
+      video
+        .closest('.webPlayerSDKContainer')
+        ?.querySelector('.webPlayerUIContainer')
+        ?.insertAdjacentElement('afterbegin', canvas)
+    },
+  })
+
+  const obs_config: MutationObserverInit = {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['src'],
+  }
+  const obs = new MutationObserver(() => {
+    obs.disconnect()
+
+    if (
+      patcher.nco &&
+      !(
+        document.body.contains(patcher.nco.renderer.video) &&
+        patcher.nco.renderer.video.offsetParent
+      )
+    ) {
+      patcher.dispose()
+    } else if (!patcher.nco) {
+      const video = document.body.querySelector<HTMLVideoElement>(
+        '.webPlayerSDKContainer video'
+      )
+
+      if (video?.offsetParent) {
+        patcher.setVideo(video)
+      }
+    }
+
+    obs.observe(document.body, obs_config)
+  })
+
+  obs.observe(document.body, obs_config)
+}

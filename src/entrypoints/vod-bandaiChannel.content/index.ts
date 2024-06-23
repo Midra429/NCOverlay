@@ -21,7 +21,7 @@ const main = async (ctx: ContentScriptContext) => {
 
   Logger.log(`vod-${vod}.js`)
 
-  const video = document.querySelector<HTMLVideoElement>(
+  const video = document.body.querySelector<HTMLVideoElement>(
     'video#bcplayer_html5_api'
   )
 
@@ -31,10 +31,10 @@ const main = async (ctx: ContentScriptContext) => {
     ctx,
     getInfo: async (video) => {
       const seriesTitleElem =
-        document.querySelector<HTMLElement>('#bch-series-title')
+        document.body.querySelector<HTMLElement>('#bch-series-title')
       const storyTitleElem =
-        document.querySelector<HTMLElement>('#bch-story-title')
-      const episodeTextElem = document.querySelector<HTMLElement>(
+        document.body.querySelector<HTMLElement>('#bch-story-title')
+      const episodeTextElem = document.body.querySelector<HTMLElement>(
         '.bch-p-heading-mov__summary'
       )
 

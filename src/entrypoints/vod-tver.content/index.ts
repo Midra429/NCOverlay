@@ -24,10 +24,10 @@ const main = async (ctx: ContentScriptContext) => {
   const patcher = new NCOPatcher({
     ctx,
     getInfo: async (video) => {
-      const seriesTitleElem = document.querySelector<HTMLElement>(
+      const seriesTitleElem = document.body.querySelector<HTMLElement>(
         'h2[class^="titles_seriesTitle"]'
       )
-      const titleElem = document.querySelector<HTMLElement>(
+      const titleElem = document.body.querySelector<HTMLElement>(
         'h1[class^="titles_title"]'
       )
 
@@ -37,6 +37,7 @@ const main = async (ctx: ContentScriptContext) => {
       ]
         .join(' ')
         .trim()
+
       const duration = video?.duration ?? 0
 
       Logger.log('title', title)
@@ -56,11 +57,11 @@ const main = async (ctx: ContentScriptContext) => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !document.contains(patcher.nco.renderer.video)) {
+    if (patcher.nco && !document.body.contains(patcher.nco.renderer.video)) {
       patcher.dispose()
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/episodes/')) {
-        const video = document.querySelector<HTMLVideoElement>(
+        const video = document.body.querySelector<HTMLVideoElement>(
           'div[class^="vod-player_videoContainer"] .video-js > video.vjs-tech'
         )
 
@@ -70,8 +71,8 @@ const main = async (ctx: ContentScriptContext) => {
       }
     }
 
-    obs.observe(document, obs_config)
+    obs.observe(document.body, obs_config)
   })
 
-  obs.observe(document, obs_config)
+  obs.observe(document.body, obs_config)
 }
