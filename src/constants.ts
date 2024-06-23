@@ -50,11 +50,11 @@ export const VODS = {
   bandaiChannel: 'バンダイチャンネル',
   dmmTv: 'DMM TV',
   unext: 'U-NEXT',
-  lemino: 'Lemino',
+  // lemino: 'Lemino',
   primeVideo: 'Prime Video',
   // netflix: 'Netflix',
   hulu: 'Hulu',
-  disneyPlus: 'Disney+',
+  // disneyPlus: 'Disney+',
   tver: 'TVer',
   // nhkplus: 'NHKプラス',
 } as const
