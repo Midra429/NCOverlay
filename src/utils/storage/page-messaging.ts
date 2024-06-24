@@ -2,6 +2,7 @@ import type {
   StorageGetFunction,
   StorageSetFunction,
   StorageRemoveFunction,
+  StorageGetBytesInUseFunction,
 } from '.'
 
 import { defineCustomEventMessaging } from '@webext-core/messaging/page'
@@ -20,6 +21,10 @@ type ProtocolMap = {
   remove: (
     args: Parameters<StorageRemoveFunction>
   ) => Awaited<ReturnType<StorageRemoveFunction>>
+
+  getBytesInUse: (
+    args: Parameters<StorageGetBytesInUseFunction>
+  ) => Awaited<ReturnType<StorageGetBytesInUseFunction>>
 }
 
 export const storagePageMessenger = defineCustomEventMessaging<ProtocolMap>({

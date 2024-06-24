@@ -40,6 +40,17 @@ export type StorageRemoveFunction = {
 }
 
 /**
+ * ストレージの使用量をバイト単位で取得
+ */
+export type StorageGetBytesInUseFunction = {
+  /** 全体の使用量を取得 */
+  (): Promise<number>
+
+  /** 複数のアイテムの使用量を取得 */
+  (...keys: StorageKey[]): Promise<number>
+}
+
+/**
  * ストレージのアイテムが変更
  */
 export type StorageOnChangeFunction = <Key extends StorageKey>(
@@ -72,6 +83,7 @@ export class WebExtStorage<
   readonly get: StorageGetFunction
   readonly set: StorageSetFunction
   readonly remove: StorageRemoveFunction
+  readonly getBytesInUse: StorageGetBytesInUseFunction
   readonly onChange: OnChange
   readonly loadAndWatch: LoadAndWatch
 
@@ -79,12 +91,14 @@ export class WebExtStorage<
     get: StorageGetFunction
     set: StorageSetFunction
     remove: StorageRemoveFunction
+    getBytesInUse: StorageGetBytesInUseFunction
     onChange: OnChange
     loadAndWatch: LoadAndWatch
   }) {
     this.get = init.get
     this.set = init.set
     this.remove = init.remove
+    this.getBytesInUse = init.getBytesInUse
     this.onChange = init.onChange
     this.loadAndWatch = init.loadAndWatch
   }

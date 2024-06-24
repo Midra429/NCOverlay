@@ -47,6 +47,17 @@ export type SettingsRemoveFunction = {
 }
 
 /**
+ * 設定の使用量をバイト単位で取得
+ */
+export type SettingsGetBytesInUseFunction = {
+  /** 全体の使用量を取得 */
+  (): Promise<number>
+
+  /** 複数の設定の使用量を取得 */
+  (...keys: SettingsKey[]): Promise<number>
+}
+
+/**
  * 設定が変更
  */
 export type SettingsOnChangeFunction = <Key extends SettingsKey>(
@@ -111,6 +122,19 @@ export class WebExtSettings<
     }
 
     return this.#storage.remove(...keys)
+  }
+
+  readonly getBytesInUse: SettingsGetBytesInUseFunction = async (
+    ...keys: SettingsKey[]
+  ) => {
+    if (!keys.length) {
+      const values = await this.#storage.get()
+      keys = Object.keys(values).filter((key) =>
+        key.startsWith('settings:')
+      ) as SettingsKey[]
+    }
+
+    return this.#storage.getBytesInUse(...keys)
   }
 
   readonly loadAndWatch = <

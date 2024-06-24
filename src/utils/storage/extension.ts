@@ -1,5 +1,5 @@
 import type { StorageKey } from '@/types/storage'
-import type { StorageOnChangeCallback, StorageOnChangeRemoveListener } from '.'
+import type { StorageOnChangeCallback } from '.'
 
 import { defineExtensionStorage } from '@webext-core/storage'
 import equal from 'fast-deep-equal'
@@ -49,6 +49,19 @@ export const storage = new WebExtStorage({
           })
         )
         break
+    }
+  },
+
+  getBytesInUse(...keys: StorageKey[]) {
+    switch (keys.length) {
+      case 0:
+        return webext.storage.local.getBytesInUse(null)
+
+      case 1:
+        return webext.storage.local.getBytesInUse(keys[0])
+
+      default:
+        return webext.storage.local.getBytesInUse(keys)
     }
   },
 

@@ -2,6 +2,7 @@ import type {
   StorageGetFunction,
   StorageRemoveFunction,
   StorageSetFunction,
+  StorageGetBytesInUseFunction,
 } from '.'
 
 import { WebExtStorage } from '.'
@@ -18,6 +19,10 @@ export const storage = new WebExtStorage({
 
   remove: (...args: Parameters<StorageRemoveFunction>) => {
     return storagePageMessenger.sendMessage('remove', args) as any
+  },
+
+  getBytesInUse: (...args: Parameters<StorageGetBytesInUseFunction>) => {
+    return storagePageMessenger.sendMessage('getBytesInUse', args) as any
   },
 
   onChange: null,
