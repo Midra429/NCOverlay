@@ -1,5 +1,5 @@
 import { defineConfig } from 'wxt'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 
 import { uid } from './src/utils/uid'
 import { displayName, version } from './package.json'
