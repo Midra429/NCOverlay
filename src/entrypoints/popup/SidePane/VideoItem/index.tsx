@@ -85,8 +85,8 @@ export const VideoItem: React.FC<VideoItemProps> = ({ slot }) => {
             <CalendarDaysIcon className="size-3" />
             <span className="text-tiny">
               {slot.type !== 'jikkyo'
-                ? formatDate(slot.info.date, 'YYYY/MM/DD hh:mm')
-                : `${formatDate(slot.info.date[0], 'YYYY/MM/DD hh:mm:ss')} 〜`}
+                ? formatDate(slot.info.date, 'YYYY/MM/DD(d) hh:mm')
+                : `${formatDate(slot.info.date[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}
             </span>
           </div>
         </div>

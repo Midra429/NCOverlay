@@ -20,7 +20,7 @@ export const formatDuration = (seconds: number) => {
 
 export const formatDate = (
   date: Date | number,
-  format: string = 'YYYY/MM/DD hh:mm'
+  format: string = 'YYYY/MM/DD (d) hh:mm'
 ) => {
   if (typeof date === 'number') {
     date = new Date(date)
@@ -29,6 +29,7 @@ export const formatDate = (
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const days = date.getDate()
+  const dow = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]
 
   const hours = date.getHours()
   const minutes = date.getMinutes()
@@ -44,6 +45,9 @@ export const formatDate = (
       // 日
       .replace('DD', zeroPadding(days, 2))
       .replace('D', days.toString())
+      // 曜日
+      .replace('ddd', `${dow}曜日`)
+      .replace('d', dow)
       // 時
       .replace('hh', zeroPadding(hours, 2))
       .replace('h', hours.toString())
