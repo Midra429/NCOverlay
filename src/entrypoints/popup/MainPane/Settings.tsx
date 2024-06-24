@@ -1,8 +1,8 @@
-import { memo } from 'react'
-import { Accordion, AccordionItem, Link, cn } from '@nextui-org/react'
+import { memo, useEffect, useState } from 'react'
+import { Accordion, AccordionItem, Divider, Link, cn } from '@nextui-org/react'
 import {
   InfoIcon,
-  Trash2Icon,
+  DatabaseIcon,
   CircleEllipsisIcon,
   ClipboardPenIcon,
 } from 'lucide-react'
@@ -13,6 +13,7 @@ import { GITHUB_URL, LINKS, SETTINGS_INIT_DATA } from '@/constants'
 import { webext } from '@/utils/webext'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
+import { filesize } from '@/utils/filesize'
 import { getFormsUrl } from '@/utils/getFormsUrl'
 
 import { IconLink } from '@/components/icon-link'
@@ -20,6 +21,36 @@ import { SettingsInput } from '@/components/settings-input'
 import { ItemButton } from '@/components/item-button'
 
 const { name, version } = webext.runtime.getManifest()
+
+const StorageSizes: React.FC = () => {
+  const [storageBytes, setStorageBytes] = useState<number>(0)
+  const [settingsBytes, setSettingsBytes] = useState<number>(0)
+
+  useEffect(() => {
+    storage.getBytesInUse().then((bytes) => {
+      setStorageBytes(bytes)
+    })
+    settings.getBytesInUse().then((bytes) => {
+      setSettingsBytes(bytes)
+    })
+  }, [])
+
+  return (
+    <div className="flex flex-row items-center justify-between py-2">
+      <span className="text-small">全体: {filesize(storageBytes)}</span>
+
+      <Divider className="h-4" orientation="vertical" />
+
+      <span className="text-small">設定: {filesize(settingsBytes)}</span>
+
+      <Divider className="h-4" orientation="vertical" />
+
+      <span className="text-small">
+        その他: {filesize(storageBytes - settingsBytes)}
+      </span>
+    </div>
+  )
+}
 
 /**
  * 情報
@@ -81,10 +112,18 @@ const accordionItemSettings = SETTINGS_INIT_DATA.map(
 )
 
 /**
- * リセット
+ * ストレージ
  */
-const accordionItemReset = (
-  <AccordionItem key="_reset" title="リセット" startContent={<Trash2Icon />}>
+const accordionItemStorage = (
+  <AccordionItem
+    key="_storage"
+    title="ストレージ"
+    startContent={<DatabaseIcon />}
+  >
+    <StorageSizes />
+
+    <Divider />
+
     <div className="flex flex-col gap-2 py-2">
       <ItemButton
         key="settings.remove"
@@ -105,7 +144,7 @@ const accordionItemReset = (
 
       <ItemButton
         key="storage.remove"
-        title="拡張機能を初期化"
+        title="ストレージを初期化"
         description="データを全て消去します。"
         button={{
           variant: 'flat',
@@ -118,7 +157,7 @@ const accordionItemReset = (
         }}
         confirm={{
           placement: 'top-end',
-          title: '拡張機能を初期化しますか？',
+          title: 'ストレージを初期化しますか？',
           description: '全てのデータが消去されます。',
         }}
       />
@@ -181,7 +220,7 @@ export const Settings: React.FC = memo(() => {
       {[
         accordionItemInfo,
         accordionItemSettings,
-        accordionItemReset,
+        accordionItemStorage,
         accordionItemOthers,
       ].flat()}
     </Accordion>
