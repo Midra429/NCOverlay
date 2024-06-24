@@ -1,5 +1,6 @@
 import type { DeepPartial } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 
 import equal from 'fast-deep-equal'
 
@@ -72,10 +73,11 @@ export class NCOState {
   readonly key: `tmp:state:${string}`
   readonly sync: boolean
 
-  #offset: number
-  #slots: Map<string, Slot>
+  #offset: number = 0
+  #slots: Map<string, Slot> = new Map()
 
   #tmpSyncOff?: boolean
+  #onChangeRemoveListener?: StorageOnChangeRemoveListener
 
   /**
    * @param id NCOverlayのID
@@ -86,11 +88,8 @@ export class NCOState {
     this.key = `tmp:state:${id}`
     this.sync = sync
 
-    this.#offset = 0
-    this.#slots = new Map()
-
     if (this.sync) {
-      storage.loadAndWatch(this.key, (json) => {
+      this.#onChangeRemoveListener = storage.loadAndWatch(this.key, (json) => {
         if (json?._id !== this.id) {
           this.#tmpSyncOff = true
 
@@ -100,6 +99,14 @@ export class NCOState {
         }
       })
     }
+  }
+
+  dispose() {
+    this.clear()
+
+    this.#onChangeRemoveListener?.()
+
+    storage.remove(this.key)
   }
 
   clear() {

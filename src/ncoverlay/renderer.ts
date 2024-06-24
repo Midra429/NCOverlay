@@ -1,7 +1,6 @@
 import type { BaseOptions, V1Thread } from '@xpadev-net/niconicomments'
 
 import NiconiComments from '@xpadev-net/niconicomments'
-import equal from 'fast-deep-equal'
 
 type NiconiCommentsOptions = Partial<Omit<BaseOptions, 'mode' | 'format'>>
 
@@ -22,10 +21,23 @@ export class NCORenderer {
 
   constructor(video: HTMLVideoElement) {
     this.video = video
+    this.video.classList.add('NCOverlay-Video')
 
     this.canvas = document.createElement('canvas')
+    this.canvas.classList.add('NCOverlay-Canvas')
     this.canvas.width = 1920
     this.canvas.height = 1080
+  }
+
+  dispose() {
+    this.clear()
+
+    this.#options = null
+
+    this.canvas.remove()
+
+    this.video.classList.remove('NCOverlay-Video')
+    this.canvas.classList.remove('NCOverlay-Canvas')
   }
 
   clear() {
@@ -34,7 +46,6 @@ export class NCORenderer {
     this.#niconicomments?.clear()
     this.#niconicomments = null
     this.#threads = null
-    this.#options = null
   }
 
   /**

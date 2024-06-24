@@ -31,46 +31,44 @@ export class NCOPatcher {
   }
 
   dispose() {
-    this.#nco?.renderer.canvas.remove()
-    this.#nco?.dispose(true)
+    this.#nco?.dispose()
 
     this.#video = null
     this.#nco = null
   }
 
   setVideo(video: HTMLVideoElement) {
-    if (this.#video !== video) {
-      this.dispose()
+    if (this.#video === video) return
 
-      this.#video = video
+    this.dispose()
 
-      this.#nco = new NCOverlay(this.#video, this.#ctx)
+    this.#video = video
+    this.#nco = new NCOverlay(this.#video, this.#ctx)
 
-      this.#nco.addEventListener('loadedmetadata', async () => {
-        if (!this.#nco) return
+    this.#nco.addEventListener('loadedmetadata', async () => {
+      if (!this.#nco) return
 
-        this.#nco.initialize()
+      this.#nco.clear()
 
-        const values = await settings.get(
-          'settings:comment:autoLoad',
-          'settings:comment:autoLoadSzbh',
-          'settings:comment:autoLoadJikkyo'
-        )
+      const values = await settings.get(
+        'settings:comment:autoLoad',
+        'settings:comment:autoLoadSzbh',
+        'settings:comment:autoLoadJikkyo'
+      )
 
-        // 自動読み込み
-        if (values['settings:comment:autoLoad']) {
-          const info = await this.#getInfo(this.#video)
+      // 自動読み込み
+      if (values['settings:comment:autoLoad']) {
+        const info = await this.#getInfo(this.#video)
 
-          if (info?.title) {
-            await this.#nco.searcher.autoLoad(info, {
-              szbh: values['settings:comment:autoLoadSzbh'],
-              jikkyo: values['settings:comment:autoLoadJikkyo'],
-            })
-          }
+        if (info?.title) {
+          await this.#nco.searcher.autoLoad(info, {
+            szbh: values['settings:comment:autoLoadSzbh'],
+            jikkyo: values['settings:comment:autoLoadJikkyo'],
+          })
         }
-      })
+      }
+    })
 
-      this.#appendCanvas(this.#video, this.#nco.renderer.canvas)
-    }
+    this.#appendCanvas(this.#video, this.#nco.renderer.canvas)
   }
 }

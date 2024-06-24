@@ -38,49 +38,31 @@ export class NCOverlay {
     this.searcher = new NCOSearcher(this.state)
     this.renderer = new NCORenderer(video)
 
+    this.#registerEventListener()
+
+    ctx.onInvalidated(() => this.dispose())
+
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
       window.setTimeout(() => {
         this.#trigger('loadedmetadata', new Event('loadedmetadata'))
       })
     }
-
-    ctx.onInvalidated(() => this.dispose(true))
-
-    this.initialize()
   }
 
-  /**
-   * 初期化
-   */
-  initialize() {
-    Logger.log('NCOverlay.initialize()')
+  dispose() {
+    Logger.log('NCOverlay.dispose()')
 
-    this.dispose()
-
-    this.#registerEventListener()
-
-    this.renderer.video.classList.add('NCOverlay-Video')
-    this.renderer.canvas.classList.add('NCOverlay-Canvas')
-  }
-
-  /**
-   * 解放
-   */
-  dispose(force?: boolean) {
-    Logger.log(`NCOverlay.dispose(${force ?? ''})`)
+    this.state.dispose()
+    this.renderer.dispose()
 
     this.#unregisterEventListener()
+    this.removeAllEventListeners()
+  }
 
+  clear() {
     this.state.clear()
     this.renderer.clear()
-
-    if (force) {
-      this.removeAllEventListeners()
-
-      this.renderer.video.classList.remove('NCOverlay-Video')
-      this.renderer.canvas.classList.remove('NCOverlay-Canvas')
-    }
   }
 
   updateSlot(data: SlotUpdate): boolean {
