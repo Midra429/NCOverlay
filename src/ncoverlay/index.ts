@@ -198,6 +198,11 @@ export class NCOverlay {
     // 検索ステータス 変更時
     this.searcher.addEventListener('ready', () => {
       this.updateRendererThreads()
+
+      if (!this.renderer.video.paused) {
+        this.renderer.stop()
+        this.renderer.start()
+      }
     })
 
     // 設定 (コメント:表示サイズ)
