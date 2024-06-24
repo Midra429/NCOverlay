@@ -36,16 +36,16 @@ const StorageSizes: React.FC = () => {
   }, [])
 
   return (
-    <div className="flex flex-row items-center justify-between py-2">
-      <span className="text-small">全体: {filesize(storageBytes)}</span>
+    <div className="flex flex-row items-center justify-evenly py-1.5">
+      <span className="text-tiny">全体: {filesize(storageBytes)}</span>
 
       <Divider className="h-4" orientation="vertical" />
 
-      <span className="text-small">設定: {filesize(settingsBytes)}</span>
+      <span className="text-tiny">設定: {filesize(settingsBytes)}</span>
 
       <Divider className="h-4" orientation="vertical" />
 
-      <span className="text-small">
+      <span className="text-tiny">
         その他: {filesize(storageBytes - settingsBytes)}
       </span>
     </div>
