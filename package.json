@@ -1,7 +1,7 @@
 {
   "name": "ncoverlay",
   "displayName": "NCOverlay",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "author": "Midra <me@midra.me> (https://github.com/Midra429)",
   "license": "MIT",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^9.5.0",
-    "@midra/nco-api": "^0.8.3",
+    "@midra/nco-api": "^0.8.4",
     "@midra/nco-parser": "^0.3.7",
     "@nextui-org/react": "^2.4.2",
     "@webext-core/messaging": "^1.4.0",
