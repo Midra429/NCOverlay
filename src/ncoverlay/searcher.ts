@@ -65,6 +65,14 @@ export class NCOSearcher {
         : null,
     ])
 
+    const currentTime = Date.now() / 1000
+
+    const syobocalPrograms =
+      searchSyobocalResult &&
+      searchSyobocalResult.program.filter(
+        (val) => parseInt(val.EdTime) < currentTime
+      )
+
     this.#trigger('searched')
 
     // Logger.log('searchResult', searchResult)
@@ -104,17 +112,17 @@ export class NCOSearcher {
     // }
 
     // ニコニコ実況 過去ログ
-    if (searchSyobocalResult) {
-      const slots: Slot[] = searchSyobocalResult.program.map((program) => {
-        const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
+    if (syobocalPrograms) {
+      const title = [
+        searchSyobocalResult.title.Title,
+        `#${searchSyobocalResult.subTitleCount}`,
+        searchSyobocalResult.subTitle ?? '',
+      ]
+        .join(' ')
+        .trim()
 
-        const title = [
-          searchSyobocalResult.title.Title,
-          `#${searchSyobocalResult.subTitleCount}`,
-          searchSyobocalResult.subTitle ?? '',
-        ]
-          .join(' ')
-          .trim()
+      const slots: Slot[] = syobocalPrograms.map((program) => {
+        const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
 
         const starttime = parseInt(program.StTime) * 1000
         const endtime = parseInt(program.EdTime) * 1000
@@ -125,7 +133,7 @@ export class NCOSearcher {
           status: 'loading',
           threads: [],
           info: {
-            title: title,
+            title,
             duration: (endtime - starttime) / 1000,
             date: [starttime, endtime],
             count: {
@@ -168,9 +176,9 @@ export class NCOSearcher {
         null,
 
         // ニコニコ実況 過去ログ 取得
-        searchSyobocalResult
+        syobocalPrograms
           ? this.getJikkyoKakologs(
-              searchSyobocalResult.program.map((val) => ({
+              syobocalPrograms.map((val) => ({
                 jkChId: syobocalToJikkyoChId(val.ChID)!,
                 starttime: parseInt(val.StTime),
                 endtime: parseInt(val.EdTime),
@@ -290,11 +298,13 @@ export class NCOSearcher {
       }
     }
 
-    for (const slot of updateSlots) {
-      if (slot.info?.count?.comment) {
-        this.state.slots.update(slot)
+    for (const loadingSlot of loadingSlots) {
+      const updateSlot = updateSlots.find((v) => v.id === loadingSlot.id)
+
+      if (updateSlot?.info?.count?.comment) {
+        this.state.slots.update(updateSlot)
       } else {
-        this.state.slots.remove(slot.id)
+        this.state.slots.remove(loadingSlot.id)
       }
     }
 
