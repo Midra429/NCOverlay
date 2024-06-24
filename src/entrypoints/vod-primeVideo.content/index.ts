@@ -79,15 +79,21 @@ const main = async (ctx: ContentScriptContext) => {
 
   const patcher = new NCOPatcher({
     ctx,
-    getInfo: async () => {
-      const titleElem = document.body.querySelector<HTMLElement>(
+    getInfo: async (video) => {
+      const player = video?.closest<HTMLElement>('.webPlayerSDKContainer')
+
+      if (!player) {
+        return null
+      }
+
+      const titleElem = player.querySelector<HTMLElement>(
         '.atvwebplayersdk-title-text'
       )
-      const subtitleElem = document.body.querySelector<HTMLElement>(
+      const subtitleElem = player.querySelector<HTMLElement>(
         '.atvwebplayersdk-subtitle-text'
       )
       const timeindicatorElem = await querySelectorAsync(
-        document.body,
+        player,
         '.atvwebplayersdk-timeindicator-text:has(span)'
       )
 
@@ -152,7 +158,7 @@ const main = async (ctx: ContentScriptContext) => {
       patcher.dispose()
     } else if (!patcher.nco) {
       const video = document.body.querySelector<HTMLVideoElement>(
-        '.webPlayerSDKContainer video'
+        '.webPlayerSDKContainer video[src]'
       )
 
       if (video?.offsetParent) {
