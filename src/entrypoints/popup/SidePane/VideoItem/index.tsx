@@ -126,7 +126,9 @@ export const VideoItem: React.FC<VideoItemProps> = ({ slot }) => {
         </div>
       </div>
 
-      <SourceTag source={slot.type} />
+      <div className={cn(slot.hidden && 'opacity-50')}>
+        <SourceTag source={slot.type} />
+      </div>
 
       {slot.status === 'ready' && <Config slot={slot} />}
     </PanelItem>
