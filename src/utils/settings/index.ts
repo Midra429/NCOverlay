@@ -108,27 +108,19 @@ export class WebExtSettings<
         }
   }
 
-  readonly remove: SettingsRemoveFunction = async (...keys: SettingsKey[]) => {
+  readonly remove: SettingsRemoveFunction = (...keys: SettingsKey[]) => {
     if (!keys.length) {
-      const values = await this.#storage.get()
-
-      keys = Object.keys(values).filter((key) =>
-        key.startsWith('settings:')
-      ) as SettingsKey[]
+      keys = Object.keys(SETTINGS_DEFAULT) as SettingsKey[]
     }
 
     return this.#storage.remove(...keys)
   }
 
-  readonly getBytesInUse: SettingsGetBytesInUseFunction = async (
+  readonly getBytesInUse: SettingsGetBytesInUseFunction = (
     ...keys: SettingsKey[]
   ) => {
     if (!keys.length) {
-      const values = await this.#storage.get()
-
-      keys = Object.keys(values).filter((key) =>
-        key.startsWith('settings:')
-      ) as SettingsKey[]
+      keys = Object.keys(SETTINGS_DEFAULT) as SettingsKey[]
     }
 
     return this.#storage.getBytesInUse(...keys)

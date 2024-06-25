@@ -8,7 +8,5 @@ export default async () => {
     key.startsWith('tmp:')
   ) as TemporaryKey[]
 
-  for (const key of tmpKeys) {
-    storage.remove(key)
-  }
+  await storage.remove(...tmpKeys)
 }
