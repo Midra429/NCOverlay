@@ -443,10 +443,11 @@ export class NCOSearcher {
     type: Type,
     ...args: Parameters<NCOSearcherEventMap[Type]>
   ) {
-    this.#listeners[type]?.forEach((listener) => {
-      // @ts-ignore
-      listener.call(this, ...args)
-    })
+    if (type in this.#listeners) {
+      for (const listener of this.#listeners[type]!) {
+        listener.call(this, ...args)
+      }
+    }
   }
 
   addEventListener<Type extends keyof NCOSearcherEventMap>(

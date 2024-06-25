@@ -66,11 +66,13 @@ export const PositionControl: React.FC = () => {
   const markerEnableFlags = useMemo(() => {
     const flags: boolean[] = Array(MARKERS.length).fill(false)
 
-    slotMarkers?.forEach((markers) => {
-      markers.forEach((marker, idx) => {
-        flags[idx] ||= !!marker
-      })
-    })
+    if (slotMarkers) {
+      for (const markers of slotMarkers) {
+        for (const [idx, marker] of markers.entries()) {
+          flags[idx] ||= !!marker
+        }
+      }
+    }
 
     return flags
   }, [slotMarkers])
