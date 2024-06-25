@@ -1,7 +1,7 @@
 {
   "name": "ncoverlay",
   "displayName": "NCOverlay",
-  "version": "3.0.12",
+  "version": "3.1.0",
   "author": "Midra <me@midra.me> (https://github.com/Midra429)",
   "license": "MIT",
   "scripts": {
