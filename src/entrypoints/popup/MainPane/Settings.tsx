@@ -11,10 +11,10 @@ import { SiGithub } from '@icons-pack/react-simple-icons'
 import { GITHUB_URL, LINKS, SETTINGS_INIT_DATA } from '@/constants'
 
 import { webext } from '@/utils/webext'
+import { filesize } from '@/utils/filesize'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
-import { filesize } from '@/utils/filesize'
-import { getFormsUrl } from '@/utils/getFormsUrl'
+import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 
 import { IconLink } from '@/components/icon-link'
 import { SettingsInput } from '@/components/settings-input'
@@ -27,12 +27,18 @@ const StorageSizes: React.FC = () => {
   const [settingsBytes, setSettingsBytes] = useState<number>(0)
 
   useEffect(() => {
-    storage.getBytesInUse().then((bytes) => {
-      setStorageBytes(bytes)
-    })
-    settings.getBytesInUse().then((bytes) => {
-      setSettingsBytes(bytes)
-    })
+    const updateStorageSizes = () => {
+      storage.getBytesInUse().then(setStorageBytes)
+      settings.getBytesInUse().then(setSettingsBytes)
+    }
+
+    updateStorageSizes()
+
+    webext.storage.local.onChanged.addListener(updateStorageSizes)
+
+    return () => {
+      webext.storage.local.onChanged.removeListener(updateStorageSizes)
+    }
   }, [])
 
   return (
