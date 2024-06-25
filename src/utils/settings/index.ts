@@ -88,34 +88,30 @@ export class WebExtSettings<
   readonly get: SettingsGetFunction = async (...keys: SettingsKey[]) => {
     const values = await this.#storage.get(...keys)
 
-    switch (keys.length) {
-      case 0:
-        return {
-          ...SETTINGS_DEFAULT,
-          ...Object.fromEntries(
-            Object.entries(values)
-              .filter(([key]) => key.startsWith('settings:'))
-              .map(([key, val]) => {
-                return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
-              })
-          ),
-        } as any
-
-      case 1:
-        return (values ?? SETTINGS_DEFAULT[keys[0]]) as any
-
-      default:
-        return Object.fromEntries(
-          Object.entries(values).map(([key, val]) => {
-            return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
-          })
-        ) as any
+    if (keys.length === 1) {
+      return values as any
     }
+
+    const items = Object.fromEntries(
+      Object.entries(values).map(([key, val]) => {
+        return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
+      })
+    ) as {
+      [key in SettingsKey]: StorageItems[key]
+    }
+
+    return keys.length
+      ? items
+      : {
+          ...SETTINGS_DEFAULT,
+          ...items,
+        }
   }
 
   readonly remove: SettingsRemoveFunction = async (...keys: SettingsKey[]) => {
     if (!keys.length) {
       const values = await this.#storage.get()
+
       keys = Object.keys(values).filter((key) =>
         key.startsWith('settings:')
       ) as SettingsKey[]
@@ -129,6 +125,7 @@ export class WebExtSettings<
   ) => {
     if (!keys.length) {
       const values = await this.#storage.get()
+
       keys = Object.keys(values).filter((key) =>
         key.startsWith('settings:')
       ) as SettingsKey[]

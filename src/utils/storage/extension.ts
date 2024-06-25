@@ -1,84 +1,74 @@
+import type { Storage as WxtStorage } from 'wxt/browser'
 import type { StorageKey } from '@/types/storage'
-import type { StorageOnChangeCallback } from '.'
 
-import { defineExtensionStorage } from '@webext-core/storage'
 import equal from 'fast-deep-equal'
 import { webext } from '@/utils/webext'
 import { WebExtStorage } from '.'
 
-const extensionStorage = defineExtensionStorage(webext.storage.local)
+const extensionStorage = webext.storage.local
 
 export const storage = new WebExtStorage({
   get: async (...keys: StorageKey[]) => {
-    switch (keys.length) {
-      case 0:
-        return webext.storage.local.get() as any
+    if (keys.length === 1) {
+      const key = keys[0]
+      const { [key]: value } = await extensionStorage.get(key)
 
-      case 1:
-        return extensionStorage.getItem(keys[0]) as any
-
-      default:
-        return Object.fromEntries(
-          await Promise.all(
-            keys.map(async (key) => {
-              return [key, await extensionStorage.getItem(key)]
-            })
-          )
-        ) as any
+      return value ?? null
     }
+
+    return keys.length
+      ? extensionStorage.get(Object.fromEntries(keys.map((key) => [key, null])))
+      : extensionStorage.get()
   },
 
   set: async (key, value) => {
     if (value != null) {
-      return extensionStorage.setItem(key, value)
+      return extensionStorage.set({ [key]: value })
     } else {
-      return extensionStorage.removeItem(key)
+      return extensionStorage.remove(key)
     }
   },
 
   remove: async (...keys: StorageKey[]) => {
-    switch (keys.length) {
-      case 0:
-        await extensionStorage.clear()
-        break
-
-      default:
-        await Promise.all(
-          keys.map((key) => {
-            return extensionStorage.removeItem(key)
-          })
-        )
-        break
+    if (keys.length) {
+      await extensionStorage.remove(keys)
+    } else {
+      await extensionStorage.clear()
     }
   },
 
   getBytesInUse(...keys: StorageKey[]) {
     switch (keys.length) {
       case 0:
-        return webext.storage.local.getBytesInUse(null)
+        return extensionStorage.getBytesInUse(null)
 
       case 1:
-        return webext.storage.local.getBytesInUse(keys[0])
+        return extensionStorage.getBytesInUse(keys[0])
 
       default:
-        return webext.storage.local.getBytesInUse(keys)
+        return extensionStorage.getBytesInUse(keys)
     }
   },
 
   onChange(key, callback) {
-    const onChangeCallback: StorageOnChangeCallback<any> = (
-      newValue: any,
-      oldValue: any
-    ) => {
-      const current = newValue ?? null
-      const prev = oldValue ?? null
+    const onChangeCallback = ({
+      [key]: change,
+    }: WxtStorage.StorageAreaOnChangedChangesType) => {
+      if (!change) return
+
+      const current = change.newValue ?? null
+      const prev = change.oldValue ?? null
 
       if (!equal(current, prev)) {
         callback(current, prev)
       }
     }
 
-    return extensionStorage.onChange(key, onChangeCallback)
+    extensionStorage.onChanged.addListener(onChangeCallback)
+
+    return () => {
+      extensionStorage.onChanged.removeListener(onChangeCallback)
+    }
   },
 
   loadAndWatch(key, callback) {

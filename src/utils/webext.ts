@@ -1,4 +1,4 @@
-import type { Storage, Tabs } from 'wxt/browser'
+import type { Tabs } from 'wxt/browser'
 
 import { browser } from 'wxt/browser'
 

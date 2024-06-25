@@ -87,7 +87,7 @@ export class WebExtStorage<
   readonly onChange: OnChange
   readonly loadAndWatch: LoadAndWatch
 
-  constructor(init: {
+  constructor(methods: {
     get: StorageGetFunction
     set: StorageSetFunction
     remove: StorageRemoveFunction
@@ -95,11 +95,11 @@ export class WebExtStorage<
     onChange: OnChange
     loadAndWatch: LoadAndWatch
   }) {
-    this.get = init.get
-    this.set = init.set
-    this.remove = init.remove
-    this.getBytesInUse = init.getBytesInUse
-    this.onChange = init.onChange
-    this.loadAndWatch = init.loadAndWatch
+    this.get = methods.get
+    this.set = methods.set
+    this.remove = methods.remove
+    this.getBytesInUse = methods.getBytesInUse
+    this.onChange = methods.onChange
+    this.loadAndWatch = methods.loadAndWatch
   }
 }
