@@ -1,6 +1,6 @@
 import { memo } from 'react'
 
-import { VideoItem } from './VideoItem'
+import { SlotItem } from './SlotItem'
 import { useNcoStateJson } from '@/hooks/useNcoState'
 
 /**
@@ -14,7 +14,7 @@ export const SidePane: React.FC = memo(() => {
       <div className="flex flex-col gap-2">
         {ncoStateJson?.slots?.length ? (
           ncoStateJson.slots.map((slot) => (
-            <VideoItem key={slot.id} slot={slot} />
+            <SlotItem key={slot.id} slot={slot} />
           ))
         ) : (
           <></>

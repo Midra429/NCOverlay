@@ -14,11 +14,11 @@ import { SourceTag } from './SourceTag'
 import { StatusOverlay } from './StatusOverlay'
 import { Config } from './Config'
 
-export type VideoItemProps = {
+export type SlotItemProps = {
   slot: Slot
 }
 
-export const VideoItem: React.FC<VideoItemProps> = ({ slot }) => {
+export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
   const jkChId =
     slot.type === 'jikkyo' ? (slot.id.split(':')[0] as JikkyoChannelId) : null
 
