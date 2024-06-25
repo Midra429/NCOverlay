@@ -46,9 +46,10 @@ if (browser.isFirefox) {
     let bytes = 0
 
     for (const [key, value] of Object.entries(values)) {
-      bytes += key.length
-      bytes +=
-        typeof value === 'string' ? value.length : JSON.stringify(value).length
+      bytes += new Blob([
+        key,
+        typeof value === 'string' ? value : JSON.stringify(value),
+      ]).size
     }
 
     return bytes
