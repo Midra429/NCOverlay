@@ -5,7 +5,7 @@ import { defineContentScript } from 'wxt/sandbox'
 import { ncoApi } from '@midra/nco-api'
 
 import { Logger } from '@/utils/logger'
-import { checkVodEnable } from '@/utils/checkVodEnable'
+import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 

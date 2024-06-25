@@ -6,7 +6,7 @@ import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
 import { Logger } from '@/utils/logger'
-import { checkVodEnable } from '@/utils/checkVodEnable'
+import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'

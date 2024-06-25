@@ -1,7 +1,7 @@
 import type { PluginVodKey, Plugins } from '@/types/constants'
 
-import { Logger } from './logger'
-import { settings } from './settings/page'
+import { Logger } from '@/utils/logger'
+import { settings } from '@/utils/settings/page'
 
 export const execPlugins = async <VodKey extends PluginVodKey>(
   vod: VodKey,

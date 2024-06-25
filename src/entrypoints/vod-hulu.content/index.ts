@@ -4,7 +4,7 @@ import type { VodKey } from '@/types/constants'
 import { defineContentScript } from 'wxt/sandbox'
 
 import { Logger } from '@/utils/logger'
-import { checkVodEnable } from '@/utils/checkVodEnable'
+import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
