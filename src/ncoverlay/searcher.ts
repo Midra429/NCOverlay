@@ -445,7 +445,11 @@ export class NCOSearcher {
   ) {
     if (type in this.#listeners) {
       for (const listener of this.#listeners[type]!) {
-        listener.call(this, ...args)
+        try {
+          listener.call(this, ...args)
+        } catch (err) {
+          Logger.error(type, err)
+        }
       }
     }
   }

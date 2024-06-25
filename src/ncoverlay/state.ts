@@ -4,6 +4,7 @@ import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 
 import equal from 'fast-deep-equal'
 
+import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { storage } from '@/utils/storage/extension'
 import { deepmerge } from '@/utils/deepmerge'
@@ -290,7 +291,11 @@ export class NCOState {
 
     if (type in this.#listeners) {
       for (const listener of this.#listeners[type]!) {
-        listener.call(this, ...args)
+        try {
+          listener.call(this, ...args)
+        } catch (err) {
+          Logger.error(type, err)
+        }
       }
     }
   }
