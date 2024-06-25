@@ -1,4 +1,4 @@
-import type { Tabs } from 'wxt/browser'
+import type { Storage, Tabs } from 'wxt/browser'
 
 import { browser } from 'wxt/browser'
 
@@ -37,6 +37,22 @@ browser.getCurrentActiveTab = async function () {
     currentWindow: true,
   })
   return tab ?? null
+}
+
+if (browser.isFirefox) {
+  browser.storage.local.getBytesInUse = async function (keys) {
+    const values = await this.get(keys)
+
+    let bytes = 0
+
+    for (const [key, value] of Object.entries(values)) {
+      bytes += key.length
+      bytes +=
+        typeof value === 'string' ? value.length : JSON.stringify(value).length
+    }
+
+    return bytes
+  }
 }
 
 export const webext = browser
