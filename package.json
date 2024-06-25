@@ -1,7 +1,7 @@
 {
   "name": "ncoverlay",
   "displayName": "NCOverlay",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "author": "Midra <me@midra.me> (https://github.com/Midra429)",
   "license": "MIT",
   "scripts": {
@@ -20,7 +20,6 @@
     "@midra/nco-parser": "^0.3.7",
     "@nextui-org/react": "^2.4.2",
     "@webext-core/messaging": "^1.4.0",
-    "@webext-core/storage": "^1.2.0",
     "@xpadev-net/niconicomments": "^0.2.71",
     "deepmerge": "^4.3.1",
     "fast-deep-equal": "^3.1.3",
