@@ -20,7 +20,22 @@ const main = () => {
   Logger.log('background.js')
 
   onNcoApiMessage()
-  clearTemporaryData()
+
+  webext.runtime.onConnect.addListener(async (port) => {
+    let timeoutId: number | null = null
+
+    port.onMessage.addListener((message) => {
+      if (typeof message === 'string' && message.startsWith('heartbeat:')) {
+        if (timeoutId) {
+          window.clearTimeout(timeoutId)
+        }
+
+        timeoutId = window.setTimeout(() => {
+          storage.remove(`tmp:state:${message.split(':')[1]}`)
+        }, 10000)
+      }
+    })
+  })
 
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
     const { version } = webext.runtime.getManifest()
@@ -37,6 +52,7 @@ const main = () => {
       }
 
       case 'update': {
+        await clearTemporaryData()
         await migration()
 
         if (

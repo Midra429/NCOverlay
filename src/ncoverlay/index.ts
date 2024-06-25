@@ -4,6 +4,7 @@ import type { SlotUpdate } from './state'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
+import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
 
 import { ncoMessenger } from './messaging'
@@ -31,6 +32,7 @@ export class NCOverlay {
   readonly renderer: NCORenderer
 
   #storageOnChangeRemoveListeners: StorageOnChangeRemoveListener[] = []
+  #heartbeatIntervalId?: number
 
   constructor(video: HTMLVideoElement, ctx: ContentScriptContext) {
     this.id = `${Date.now()}.${uid()}`
@@ -48,6 +50,17 @@ export class NCOverlay {
         this.#trigger('loadedmetadata', new Event('loadedmetadata'))
       })
     }
+
+    // 生存確認
+    const port = webext.runtime.connect()
+
+    this.#heartbeatIntervalId = window.setInterval(() => {
+      port.postMessage(`heartbeat:${this.id}`)
+    }, 5000)
+
+    port.onDisconnect.addListener(() => {
+      window.clearInterval(this.#heartbeatIntervalId)
+    })
   }
 
   dispose() {
@@ -58,6 +71,8 @@ export class NCOverlay {
 
     this.#unregisterEventListener()
     this.removeAllEventListeners()
+
+    window.clearInterval(this.#heartbeatIntervalId)
   }
 
   clear() {
