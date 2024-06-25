@@ -89,7 +89,7 @@ export class WebExtSettings<
     const values = await this.#storage.get(...keys)
 
     if (keys.length === 1) {
-      return values as any
+      return (values ?? SETTINGS_DEFAULT[keys[0]]) as any
     }
 
     const items = Object.fromEntries(
