@@ -1,11 +1,13 @@
 import type { ContentScriptContext } from 'wxt/client'
 import type { StorageOnChangeRemoveListener } from '@/utils/storage'
+import type { setBadge } from '@/utils/extension/setBadge'
 import type { SlotUpdate } from './state'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
+import { utilsMessenger } from '@/utils/messaging'
 
 import { ncoMessenger } from './messaging'
 import { NCOState } from './state'
@@ -40,6 +42,8 @@ export class NCOverlay {
     this.searcher = new NCOSearcher(this.state)
     this.renderer = new NCORenderer(video)
 
+    this.#setBadge(null)
+
     this.#registerEventListener()
 
     ctx.onInvalidated(() => this.dispose())
@@ -68,6 +72,8 @@ export class NCOverlay {
 
     this.state.dispose()
     this.renderer.dispose()
+
+    this.#setBadge(null)
 
     this.#unregisterEventListener()
     this.removeAllEventListeners()
@@ -147,6 +153,16 @@ export class NCOverlay {
   }
 
   /**
+   * バッジを設定
+   */
+  #setBadge(
+    text: string | null,
+    color?: Parameters<typeof setBadge>[0]['color']
+  ) {
+    utilsMessenger.sendMessage('c-b:setBadge', [{ text, color }])
+  }
+
+  /**
    * イベントリスナー
    */
   #videoEventListeners: {
@@ -192,8 +208,21 @@ export class NCOverlay {
       this.renderer.video.addEventListener(type, listener)
     }
 
-    // 検索ステータス 変更時
+    // 検索ステータス ロード中
+    this.searcher.addEventListener('loading', () => {
+      this.#setBadge(
+        this.state.slots.getAll()?.length?.toString() ?? null,
+        'yellow'
+      )
+    })
+
+    // 検索ステータス 完了
     this.searcher.addEventListener('ready', () => {
+      this.#setBadge(
+        this.state.slots.getAll()?.length?.toString() ?? null,
+        'green'
+      )
+
       this.updateRendererThreads()
 
       if (!this.renderer.video.paused) {
@@ -285,7 +314,11 @@ export class NCOverlay {
   ) {
     if (type in this.#listeners) {
       for (const listener of this.#listeners[type]!) {
-        listener.call(this, ...args)
+        try {
+          listener.call(this, ...args)
+        } catch (err) {
+          Logger.error(type, err)
+        }
       }
     }
   }

@@ -6,8 +6,10 @@ import { Logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
+import { setBadge } from '@/utils/extension/setBadge'
 
 import migration from './migration'
+import onUtilsMessage from './onUtilsMessage'
 import onNcoApiMessage from './onNcoApiMessage'
 import clearTemporaryData from './clearTemporaryData'
 
@@ -19,30 +21,22 @@ export default defineBackground({
 const main = () => {
   Logger.log('background.js')
 
+  onUtilsMessage()
   onNcoApiMessage()
 
-  webext.runtime.onConnect.addListener(async (port) => {
-    let timeoutId: number | null = null
-
-    port.onMessage.addListener((message) => {
-      if (typeof message === 'string' && message.startsWith('heartbeat:')) {
-        if (timeoutId) {
-          window.clearTimeout(timeoutId)
-        }
-
-        timeoutId = window.setTimeout(() => {
-          storage.remove(`tmp:state:${message.split(':')[1]}`)
-        }, 10000)
-      }
-    })
-  })
-
+  // インストール・アップデート時
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
     const { version } = webext.runtime.getManifest()
+
+    setBadge({
+      text: null,
+      color: 'primary',
+    })
 
     switch (reason) {
       case 'install': {
         if (import.meta.env.PROD) {
+          // README
           webext.tabs.create({
             url: `${GITHUB_URL}/blob/v${version}/README.md`,
           })
@@ -59,6 +53,7 @@ const main = () => {
           import.meta.env.PROD &&
           (await settings.get('settings:showChangelog'))
         ) {
+          // リリースノート
           webext.tabs.create({
             url: `${GITHUB_URL}/releases/tag/v${version}`,
           })
@@ -67,6 +62,34 @@ const main = () => {
         break
       }
     }
+  })
+
+  webext.runtime.onConnect.addListener(async (port) => {
+    let timeoutId: NodeJS.Timeout | null = null
+
+    port.onMessage.addListener((message) => {
+      // 生存確認
+      if (typeof message === 'string' && message.startsWith('heartbeat:')) {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
+
+        timeoutId = setTimeout(
+          async (id, tabId) => {
+            // 一時データ削除
+            storage.remove(`tmp:state:${id}`)
+
+            // バッジリセット
+            if (tabId && (await webext.tabs.get(tabId))) {
+              setBadge({ text: null, tabId })
+            }
+          },
+          10000,
+          message.split(':')[1],
+          port.sender?.tab?.id
+        )
+      }
+    })
   })
 
   void (async () => {
