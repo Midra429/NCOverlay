@@ -34,7 +34,12 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
 
         <Input
           classNames={{
-            input: 'text-right [&::-webkit-inner-spin-button]:appearance-none',
+            input: cn(
+              'text-right',
+              '[appearance:textfield]',
+              '[&::-webkit-inner-spin-button]:appearance-none',
+              '[&::-webkit-outer-spin-button]:appearance-none'
+            ),
           }}
           type="number"
           size="sm"

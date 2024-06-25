@@ -31,7 +31,10 @@ export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
       )}
     >
       <div
-        className={cn('relative flex-shrink-0', slot.hidden && 'opacity-50')}
+        className={cn(
+          'relative h-full flex-shrink-0',
+          slot.hidden && 'opacity-50'
+        )}
       >
         {slot.type !== 'jikkyo' ? (
           <Image
