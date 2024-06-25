@@ -8,5 +8,7 @@ export default async () => {
     key.startsWith('tmp:')
   ) as TemporaryKey[]
 
-  await storage.remove(...tmpKeys)
+  if (tmpKeys.length) {
+    await storage.remove(...tmpKeys)
+  }
 }
