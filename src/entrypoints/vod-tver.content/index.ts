@@ -2,6 +2,7 @@ import type { ContentScriptContext } from 'wxt/client'
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
+import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
@@ -31,10 +32,29 @@ const main = async (ctx: ContentScriptContext) => {
         'h1[class^="titles_title"]'
       )
 
-      const title = [
-        seriesTitleElem?.textContent ?? '',
-        titleElem?.textContent ?? '',
+      const seriesTitleText = seriesTitleElem?.textContent
+      const titleText = titleElem?.textContent
+
+      const seasonText = [
+        ...document.body.querySelectorAll(
+          'div[class^="episode-live-list-column_season"] div[class^="episode-row_title"]'
+        ),
       ]
+        .find((v) => v.textContent === titleText)
+        ?.closest('div[class^="episode-live-list-column_season"]')
+        ?.querySelector(
+          'span[class^="episode-live-list-column_title"]'
+        )?.textContent
+
+      const seriesTitleSeason =
+        seriesTitleText && extractSeason(seriesTitleText)[0]
+
+      const title = [
+        seriesTitleText,
+        !seriesTitleSeason && seasonText !== '本編' && seasonText,
+        titleText,
+      ]
+        .flatMap((v) => v || [])
         .join(' ')
         .trim()
 
