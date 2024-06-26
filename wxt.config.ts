@@ -30,6 +30,23 @@ export default defineConfig({
     permissions: ['storage', 'unlimitedStorage', 'tabs'],
   }),
 
+  hooks: {
+    'entrypoints:resolved'(wxt, entrypoints) {
+      if (wxt.config.browser === 'firefox') {
+        for (let i = 0; i < entrypoints.length; i++) {
+          const entrypoint = entrypoints[i]
+
+          if (
+            entrypoint.type === 'content-script' &&
+            entrypoint.options.world === 'MAIN'
+          ) {
+            entrypoints.splice(i, 1)
+          }
+        }
+      }
+    },
+  },
+
   srcDir: 'src',
   imports: false,
   vite: () => ({
