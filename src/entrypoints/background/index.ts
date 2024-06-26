@@ -6,7 +6,6 @@ import { Logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
-import { setBadge } from '@/utils/extension/setBadge'
 
 import migration from './migration'
 import onUtilsMessage from './onUtilsMessage'
@@ -27,11 +26,6 @@ const main = () => {
   // インストール・アップデート時
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
     const { version } = webext.runtime.getManifest()
-
-    setBadge({
-      text: null,
-      color: 'primary',
-    })
 
     switch (reason) {
       case 'install': {
@@ -74,24 +68,22 @@ const main = () => {
           clearTimeout(timeoutId)
         }
 
-        timeoutId = setTimeout(
-          async (id, tabId) => {
-            // 一時データ削除
-            storage.remove(`tmp:state:${id}`)
+        timeoutId = setTimeout(async () => {
+          const ncoId = message.split(':')[1]
 
-            // バッジリセット
-            setBadge({ text: null, tabId })
-          },
-          10000,
-          message.split(':')[1],
-          port.sender?.tab?.id
-        )
+          // 一時データ削除
+          storage.remove(`tmp:state:${ncoId}`)
+
+          timeoutId = null
+        }, 10000)
       }
     })
   })
 
-  void (async () => {
-    Logger.log('storage', await storage.get())
-    Logger.log('settings', await settings.get())
-  })()
+  storage.get().then((values) => {
+    Logger.log('storage', values)
+  })
+  settings.get().then((values) => {
+    Logger.log('settings', values)
+  })
 }
