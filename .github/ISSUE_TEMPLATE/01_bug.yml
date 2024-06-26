@@ -8,7 +8,7 @@ body:
       label: バージョン
       description: |
         NCOverlayのバージョン
-        ポップアップの NCOverlay の右側に記載されています
+        ポップアップの `設定 > 情報` の `NCOverlay` の右側に記載されています
     validations:
       required: true
 
@@ -37,15 +37,13 @@ body:
       label: 動画配信サービス
       options:
         - label: dアニメストア
-        - label: Amazon Prime Video
         - label: ABEMA
-        - label: Disney+
-        - label: TVer
         - label: バンダイチャンネル
-        - label: U-NEXT
         - label: DMM TV
+        - label: U-NEXT
+        - label: Prime Video
         - label: Hulu
-        - label: Lemino
+        - label: TVer
 
   - type: textarea
     id: video
