@@ -84,28 +84,29 @@ https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 # Chrome
 bun run dev
 ```
-<!-- ```sh
+```sh
 # Firefox
 bun run dev:firefox
-``` -->
+```
 
 ### 出力
 ```sh
-# ./dist/chrome-mv3
+# .output/chrome-mv3
 bun run build
 ```
 ```sh
-# ./dist/firefox-mv3
+# .output/firefox-mv3
 bun run build:firefox
 ```
 
 ### 出力 (ZIP)
 ```sh
-# ./dist/ncoverlay-0.0.0-chrome.zip
+# .output/ncoverlay-0.0.0-chrome.zip
 bun run zip
 ```
 ```sh
-# ./dist/ncoverlay-0.0.0-firefox.zip
+# .output/ncoverlay-0.0.0-firefox.zip
+# .output/ncoverlay-0.0.0-sources.zip
 bun run zip:firefox
 ```
 
