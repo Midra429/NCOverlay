@@ -80,9 +80,7 @@ const main = () => {
             storage.remove(`tmp:state:${id}`)
 
             // バッジリセット
-            if (tabId && (await webext.tabs.get(tabId))) {
-              setBadge({ text: null, tabId })
-            }
+            setBadge({ text: null, tabId })
           },
           10000,
           message.split(':')[1],

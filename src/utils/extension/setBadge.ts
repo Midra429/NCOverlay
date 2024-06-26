@@ -8,7 +8,7 @@ const COLORS = {
   yellow: '#ef8511',
 }
 
-export const setBadge = ({
+export const setBadge = async ({
   text,
   color,
   tabId,
@@ -20,18 +20,20 @@ export const setBadge = ({
   const bgColor = COLORS[color ?? 'primary']
   const textColor = '#ffffff'
 
-  webext.action.setBadgeBackgroundColor({
-    color: bgColor,
-    tabId,
-  })
+  await Promise.allSettled([
+    webext.action.setBadgeBackgroundColor({
+      color: bgColor,
+      tabId,
+    }),
 
-  webext.action.setBadgeTextColor({
-    color: textColor,
-    tabId,
-  })
+    webext.action.setBadgeTextColor({
+      color: textColor,
+      tabId,
+    }),
 
-  webext.action.setBadgeText({
-    text,
-    tabId,
-  })
+    webext.action.setBadgeText({
+      text,
+      tabId,
+    }),
+  ])
 }
