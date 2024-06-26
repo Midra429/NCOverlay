@@ -97,26 +97,27 @@ const main = async (ctx: ContentScriptContext) => {
         '.atvwebplayersdk-timeindicator-text:has(span)'
       )
 
-      const workTitle = getDetail()?.title || titleElem?.textContent || ''
-      const season_episode = subtitleElem?.firstChild?.textContent ?? ''
-      const subtitle = subtitleElem?.lastChild?.textContent ?? ''
+      const workTitle = getDetail()?.title || titleElem?.textContent
+      const season_episode = subtitleElem?.firstChild?.textContent
+      const subtitle = subtitleElem?.lastChild?.textContent
 
       const seasonNum = Number(
-        season_episode.match(/(?<=シーズン|Season)\d+/)?.[0]
+        season_episode?.match(/(?<=シーズン|Season)\d+/)?.[0] ?? -1
       )
       const episodeNum = Number(
-        season_episode.match(/(?<=エピソード|Ep\.)\d+/)?.[0]
+        season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
       )
 
-      const workTitleSeason = extractSeason(workTitle)[0]
-      const subtitleEpisode = extractEpisode(subtitle)[0]
+      const workTitleSeason = workTitle && extractSeason(workTitle)[0]
+      const subtitleEpisode = subtitle && extractEpisode(subtitle)[0]
 
       const title = [
         workTitle,
-        !workTitleSeason && 1 < seasonNum ? `${seasonNum}期` : '',
-        !subtitleEpisode && 0 < episodeNum ? `${episodeNum}話` : '',
+        !workTitleSeason && 2 <= seasonNum && `${seasonNum}期`,
+        !subtitleEpisode && 0 <= episodeNum && `${episodeNum}話`,
         subtitle,
       ]
+        .flatMap((v) => v || [])
         .join(' ')
         .trim()
 

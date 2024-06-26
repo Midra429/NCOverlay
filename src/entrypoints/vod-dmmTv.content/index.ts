@@ -42,9 +42,10 @@ const main = async (ctx: ContentScriptContext) => {
 
       const title = [
         dataVideo.seasonName,
-        dataVideo.episode?.episodeNumberName ?? '',
-        dataVideo.episode?.episodeTitle ?? '',
+        dataVideo.episode?.episodeNumberName,
+        dataVideo.episode?.episodeTitle,
       ]
+        .flatMap((v) => v || [])
         .join(' ')
         .trim()
 

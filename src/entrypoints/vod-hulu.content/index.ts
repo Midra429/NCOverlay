@@ -45,10 +45,11 @@ const main = async (ctx: ContentScriptContext) => {
       )
 
       const title = [
-        titleElem?.textContent ?? '',
-        episodeElem?.textContent ?? '',
-        subTitleElem?.textContent ?? '',
+        titleElem?.textContent,
+        episodeElem?.textContent,
+        subTitleElem?.textContent,
       ]
+        .flatMap((v) => v || [])
         .join(' ')
         .trim()
 

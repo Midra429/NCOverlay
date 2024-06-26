@@ -38,11 +38,15 @@ const main = async (ctx: ContentScriptContext) => {
         '.bch-p-heading-mov__summary'
       )
 
-      const seriesTitle = seriesTitleElem?.textContent
-      const storyTitle = storyTitleElem?.firstChild?.textContent
-      const episodeText = episodeTextElem?.textContent
+      const title = [
+        seriesTitleElem?.textContent,
+        storyTitleElem?.firstChild?.textContent,
+        episodeTextElem?.textContent,
+      ]
+        .flatMap((v) => v || [])
+        .join(' ')
+        .trim()
 
-      const title = [seriesTitle, storyTitle, episodeText].join(' ').trim()
       const duration = video?.duration ?? 0
 
       Logger.log('title', title)

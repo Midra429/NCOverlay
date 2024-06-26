@@ -31,10 +31,8 @@ const main = async (ctx: ContentScriptContext) => {
         'button[data-ucn="player-header-back"] + div > span'
       )
 
-      const title = [
-        titleElem?.textContent ?? '',
-        episodeElem?.textContent ?? '',
-      ]
+      const title = [titleElem?.textContent, episodeElem?.textContent]
+        .flatMap((v) => v || [])
         .join(' ')
         .trim()
 
