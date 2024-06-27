@@ -95,7 +95,14 @@ export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
         </div>
 
         <div className="h-full">
-          <span className="line-clamp-2 text-small font-bold">
+          <span
+            className="line-clamp-2 text-small font-bold"
+            title={
+              100 < new Blob([slot.info.title]).size
+                ? slot.info.title
+                : undefined
+            }
+          >
             {slot.info.title}
           </span>
         </div>
