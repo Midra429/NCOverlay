@@ -1,4 +1,5 @@
 import type { ContentScriptContext } from 'wxt/client'
+import type { Runtime } from 'wxt/browser'
 import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 import type { setBadge } from '@/utils/extension/setBadge'
 import type { SlotUpdate } from './state'
@@ -34,7 +35,7 @@ export class NCOverlay {
   readonly renderer: NCORenderer
 
   #storageOnChangeRemoveListeners: StorageOnChangeRemoveListener[] = []
-  #heartbeatIntervalId?: number
+  #port: Runtime.Port
 
   constructor(video: HTMLVideoElement, ctx: ContentScriptContext) {
     this.id = `${Date.now()}.${uid()}`
@@ -42,9 +43,16 @@ export class NCOverlay {
     this.searcher = new NCOSearcher(this.state)
     this.renderer = new NCORenderer(video)
 
-    this.#setBadge(null)
+    this.#port = webext.runtime.connect()
+    this.#port.onMessage.addListener((message) => {
+      if (message === 'ping') {
+        this.#port.postMessage(`pong:${this.id}`)
+      }
+    })
 
     this.#registerEventListener()
+
+    this.#setBadge(null)
 
     ctx.onInvalidated(() => this.dispose())
 
@@ -54,17 +62,6 @@ export class NCOverlay {
         this.#trigger('loadedmetadata', new Event('loadedmetadata'))
       })
     }
-
-    // 生存確認
-    const port = webext.runtime.connect()
-
-    this.#heartbeatIntervalId = window.setInterval(() => {
-      port.postMessage(`heartbeat:${this.id}`)
-    }, 5000)
-
-    port.onDisconnect.addListener(() => {
-      window.clearInterval(this.#heartbeatIntervalId)
-    })
   }
 
   dispose() {
@@ -73,12 +70,12 @@ export class NCOverlay {
     this.state.dispose()
     this.renderer.dispose()
 
-    this.#setBadge(null)
+    this.#port.disconnect()
 
     this.#unregisterEventListener()
     this.removeAllEventListeners()
 
-    window.clearInterval(this.#heartbeatIntervalId)
+    this.#setBadge(null)
   }
 
   clear() {

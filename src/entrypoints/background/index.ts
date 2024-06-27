@@ -6,6 +6,7 @@ import { Logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
+import { setBadge } from '@/utils/extension/setBadge'
 
 import migration from './migration'
 import onUtilsMessage from './onUtilsMessage'
@@ -58,26 +59,47 @@ const main = () => {
     }
   })
 
-  webext.runtime.onConnect.addListener(async (port) => {
-    let timeoutId: NodeJS.Timeout | null = null
+  webext.runtime.onConnect.addListener((port) => {
+    const tabId = port.sender?.tab?.id
+    let ncoId: string | null = null
+
+    let intervalId: NodeJS.Timeout
+    let timeoutId: NodeJS.Timeout
+
+    const dispose = () => {
+      console.log('dispose()')
+
+      // バッジリセット
+      if (tabId) {
+        setBadge({ text: null, tabId })
+      }
+
+      // 一時データ削除
+      if (ncoId) {
+        storage.remove(`tmp:state:${ncoId}`)
+      }
+
+      clearInterval(intervalId)
+      clearTimeout(timeoutId)
+    }
+
+    port.onDisconnect.addListener(dispose)
 
     port.onMessage.addListener((message) => {
-      // 生存確認
-      if (typeof message === 'string' && message.startsWith('heartbeat:')) {
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-        }
+      if (typeof message === 'string' && message.startsWith('pong:')) {
+        clearTimeout(timeoutId)
 
-        timeoutId = setTimeout(async () => {
-          const ncoId = message.split(':')[1]
+        ncoId = message.split(':')[1]
 
-          // 一時データ削除
-          storage.remove(`tmp:state:${ncoId}`)
-
-          timeoutId = null
-        }, 10000)
+        timeoutId = setTimeout(dispose, 15 * 1000)
       }
     })
+
+    port.postMessage('ping')
+
+    intervalId = setInterval(() => {
+      port.postMessage('ping')
+    }, 10 * 1000)
   })
 
   storage.get().then((values) => {
