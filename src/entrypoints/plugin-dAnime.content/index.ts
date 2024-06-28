@@ -11,7 +11,7 @@ const vod: VodKey = 'dAnime'
 
 export default defineContentScript({
   matches: ['https://animestore.docomo.ne.jp/animestore/*'],
-  runAt: 'document_end',
+  // runAt: 'document_end',
   world: 'MAIN',
   main: () => void main(),
 })
