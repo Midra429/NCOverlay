@@ -31,18 +31,23 @@ export default defineConfig({
   }),
 
   hooks: {
-    'entrypoints:resolved'(wxt, entrypoints) {
-      if (wxt.config.browser === 'firefox') {
-        for (let i = 0; i < entrypoints.length; i++) {
-          const entrypoint = entrypoints[i]
+    'build:manifestGenerated'(wxt, manifest) {
+      if (manifest.content_scripts) {
+        manifest.content_scripts.forEach((script, idx, ary) => {
+          // @ts-ignore
+          if (script.world === 'MAIN' && script.js) {
+            manifest.web_accessible_resources ??= []
+            // @ts-ignore
+            manifest.web_accessible_resources.push({
+              matches: script.matches.map((v) => `${new URL(v).origin}/*`),
+              resources: script.js,
+            })
 
-          if (
-            entrypoint.type === 'content-script' &&
-            entrypoint.options.world === 'MAIN'
-          ) {
-            entrypoints.splice(i, 1)
+            delete ary[idx]
           }
-        }
+        })
+
+        manifest.content_scripts = manifest.content_scripts.filter(Boolean)
       }
     },
   },

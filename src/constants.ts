@@ -280,10 +280,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   //     },
   //   ],
   // },
-]
-
-if (!import.meta.env.FIREFOX) {
-  SETTINGS_INIT_DATA.push({
+  {
     id: 'plugins',
     title: 'プラグイン',
     icon: BlocksIcon,
@@ -297,8 +294,8 @@ if (!import.meta.env.FIREFOX) {
         value: `${vodKey}:${id}` as PluginKey,
       })),
     })),
-  })
-}
+  },
+]
 
 export const SETTINGS_INIT_ITEMS = Object.fromEntries(
   SETTINGS_INIT_DATA.flatMap((v) => v.items).map((v) => [v.settingsKey, v])
