@@ -22,9 +22,9 @@ export default defineConfig({
               id: 'ncoverlay@midra.me',
               strict_min_version: '113.0',
             },
-            gecko_android: {
-              strict_min_version: '113.0',
-            },
+            // gecko_android: {
+            //   strict_min_version: '113.0',
+            // },
           }
         : undefined,
     permissions: ['storage', 'unlimitedStorage', 'tabs'],
