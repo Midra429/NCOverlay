@@ -5,7 +5,7 @@ import type {
   StorageGetBytesInUseFunction,
 } from '.'
 
-import { defineCustomEventMessaging } from '@webext-core/messaging/page'
+import { defineWindowMessaging } from '@webext-core/messaging/page'
 
 // content (world: MAIN) -> content
 
@@ -27,6 +27,6 @@ type ProtocolMap = {
   ) => Awaited<ReturnType<StorageGetBytesInUseFunction>>
 }
 
-export const storagePageMessenger = defineCustomEventMessaging<ProtocolMap>({
+export const storagePageMessenger = defineWindowMessaging<ProtocolMap>({
   namespace: `${EXT_BUILD_ID}:storage/page-messaging`,
 })
