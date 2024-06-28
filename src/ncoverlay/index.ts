@@ -37,7 +37,7 @@ export class NCOverlay {
   #storageOnChangeRemoveListeners: StorageOnChangeRemoveListener[] = []
   #port: Runtime.Port
 
-  constructor(video: HTMLVideoElement, ctx: ContentScriptContext) {
+  constructor(video: HTMLVideoElement) {
     this.id = `${Date.now()}.${uid()}`
     this.state = new NCOState(this.id)
     this.searcher = new NCOSearcher(this.state)
@@ -54,13 +54,11 @@ export class NCOverlay {
 
     this.#setBadge(null)
 
-    ctx.onInvalidated(() => this.dispose())
-
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
       window.setTimeout(() => {
         this.#trigger('loadedmetadata', new Event('loadedmetadata'))
-      })
+      }, 500)
     }
   }
 

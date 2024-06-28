@@ -1,4 +1,3 @@
-import type { ContentScriptContext } from 'wxt/client'
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
@@ -17,7 +16,7 @@ const vod: VodKey = 'primeVideo'
 export default defineContentScript({
   matches: ['https://www.amazon.co.jp/*'],
   runAt: 'document_end',
-  main: (ctx) => void main(ctx),
+  main: () => void main(),
 })
 
 const getDetail = (): { title: string } | null => {
@@ -72,13 +71,12 @@ const getDetail = (): { title: string } | null => {
   return null
 }
 
-const main = async (ctx: ContentScriptContext) => {
+const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   Logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
-    ctx,
     getInfo: async (video) => {
       const player = video?.closest<HTMLElement>('.webPlayerSDKContainer')
 

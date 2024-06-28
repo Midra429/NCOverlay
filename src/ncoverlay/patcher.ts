@@ -1,11 +1,8 @@
-import type { ContentScriptContext } from 'wxt/client'
-
 import { settings } from '@/utils/settings/extension'
 
 import { NCOverlay } from '.'
 
 export class NCOPatcher {
-  #ctx
   #getInfo
   #appendCanvas
 
@@ -17,17 +14,13 @@ export class NCOPatcher {
   }
 
   constructor(init: {
-    ctx: ContentScriptContext
     getInfo: (
       video: HTMLVideoElement | null
     ) => Promise<{ title: string; duration: number } | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   }) {
-    this.#ctx = init.ctx
     this.#getInfo = init.getInfo
     this.#appendCanvas = init.appendCanvas
-
-    this.#ctx.onInvalidated(() => this.dispose())
   }
 
   dispose() {
@@ -43,7 +36,7 @@ export class NCOPatcher {
     this.dispose()
 
     this.#video = video
-    this.#nco = new NCOverlay(this.#video, this.#ctx)
+    this.#nco = new NCOverlay(this.#video)
 
     this.#nco.addEventListener('loadedmetadata', async () => {
       if (!this.#nco) return

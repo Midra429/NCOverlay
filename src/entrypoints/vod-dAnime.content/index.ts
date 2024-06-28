@@ -1,4 +1,3 @@
-import type { ContentScriptContext } from 'wxt/client'
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
@@ -6,6 +5,7 @@ import { ncoApi } from '@midra/nco-api'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
+import { injectScript } from '@/utils/dom/injectScript'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -16,20 +16,21 @@ const vod: VodKey = 'dAnime'
 export default defineContentScript({
   matches: ['https://animestore.docomo.ne.jp/animestore/*'],
   runAt: 'document_end',
-  main: (ctx) => void main(ctx),
+  main: () => void main(),
 })
 
-const main = async (ctx: ContentScriptContext) => {
+const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   Logger.log(`vod-${vod}.js`)
+
+  injectScript('/content-scripts/plugin-dAnime.js')
 
   const video = document.body.querySelector<HTMLVideoElement>('video#video')
 
   if (!video) return
 
   const patcher = new NCOPatcher({
-    ctx,
     getInfo: async () => {
       const partId = new URL(location.href).searchParams.get('partId')
       const partData = partId ? await ncoApi.danime.part(partId) : null

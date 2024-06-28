@@ -1,4 +1,3 @@
-import type { ContentScriptContext } from 'wxt/client'
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
@@ -13,10 +12,10 @@ const vod: VodKey = 'bandaiChannel'
 export default defineContentScript({
   matches: ['https://www.b-ch.com/titles/*'],
   runAt: 'document_end',
-  main: (ctx) => void main(ctx),
+  main: () => void main(),
 })
 
-const main = async (ctx: ContentScriptContext) => {
+const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   Logger.log(`vod-${vod}.js`)
@@ -28,7 +27,6 @@ const main = async (ctx: ContentScriptContext) => {
   if (!video) return
 
   const patcher = new NCOPatcher({
-    ctx,
     getInfo: async (video) => {
       const seriesTitleElem =
         document.body.querySelector<HTMLElement>('#bch-series-title')

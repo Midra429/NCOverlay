@@ -1,4 +1,3 @@
-import type { ContentScriptContext } from 'wxt/client'
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
@@ -14,16 +13,15 @@ const vod: VodKey = 'abema'
 export default defineContentScript({
   matches: ['https://abema.tv/*'],
   runAt: 'document_end',
-  main: (ctx) => void main(ctx),
+  main: () => void main(),
 })
 
-const main = async (ctx: ContentScriptContext) => {
+const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   Logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
-    ctx,
     getInfo: async () => {
       const id = location.pathname.split('/').at(-1)
       const program = id ? await ncoApi.abema.program(id) : null
