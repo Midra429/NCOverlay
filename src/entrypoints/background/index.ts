@@ -91,7 +91,7 @@ const main = () => {
 
         ncoId = message.split(':')[1]
 
-        timeoutId = setTimeout(dispose, 15 * 1000)
+        timeoutId = setTimeout(dispose, 15000)
       }
     })
 
@@ -99,7 +99,7 @@ const main = () => {
 
     intervalId = setInterval(() => {
       port.postMessage('ping')
-    }, 10 * 1000)
+    }, 10000)
   })
 
   storage.get().then((values) => {

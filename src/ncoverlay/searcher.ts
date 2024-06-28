@@ -69,7 +69,7 @@ export class NCOSearcher {
 
     const syobocalPrograms =
       searchSyobocalResult &&
-      searchSyobocalResult.program.filter(
+      searchSyobocalResult.programs.filter(
         (val) => parseInt(val.EdTime) < currentTime
       )
 
