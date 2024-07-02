@@ -1,4 +1,3 @@
-import type { ContentScriptContext } from 'wxt/client'
 import type { Runtime } from 'wxt/browser'
 import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 import type { setBadge } from '@/utils/extension/setBadge'

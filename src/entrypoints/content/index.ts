@@ -1,5 +1,3 @@
-import type { ContentScriptContext } from 'wxt/client'
-
 import { defineContentScript } from 'wxt/sandbox'
 
 import onStoragePageMessage from './onStoragePageMessage'
@@ -7,9 +5,9 @@ import onStoragePageMessage from './onStoragePageMessage'
 export default defineContentScript({
   matches: ['<all_urls>'],
   runAt: 'document_start',
-  main: (ctx) => void main(ctx),
+  main: () => void main(),
 })
 
-const main = (ctx: ContentScriptContext) => {
-  onStoragePageMessage(ctx)
+const main = () => {
+  onStoragePageMessage()
 }
