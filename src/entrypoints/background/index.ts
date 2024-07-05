@@ -18,7 +18,7 @@ export default defineBackground({
   main: () => void main(),
 })
 
-const main = () => {
+const main = async () => {
   Logger.log('background.js')
 
   onUtilsMessage()
@@ -102,10 +102,6 @@ const main = () => {
     }, 10000)
   })
 
-  storage.get().then((values) => {
-    Logger.log('storage', values)
-  })
-  settings.get().then((values) => {
-    Logger.log('settings', values)
-  })
+  Logger.log('storage', await storage.get())
+  Logger.log('settings', await settings.get())
 }
