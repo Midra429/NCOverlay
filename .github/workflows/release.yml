@@ -26,8 +26,8 @@ jobs:
       - name: Submit to Stores
         run: |
           bun wxt submit \
-            --chrome-zip .output/*-chrome.zip \
-            --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
+            --chrome-zip dist/*-chrome.zip \
+            --firefox-zip dist/*-firefox.zip --firefox-sources-zip dist/*-sources.zip
         env:
           CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
