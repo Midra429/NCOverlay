@@ -1,5 +1,4 @@
 import { defineConfig } from 'wxt'
-import react from '@vitejs/plugin-react-swc'
 
 import { GITHUB_URL } from './src/constants'
 import { uid } from './src/utils/uid'
@@ -31,7 +30,7 @@ export default defineConfig({
   }),
 
   hooks: {
-    'build:manifestGenerated'(wxt, manifest) {
+    'build:manifestGenerated'(_, manifest) {
       if (manifest.content_scripts) {
         manifest.content_scripts.forEach((script, idx, ary) => {
           // @ts-ignore
@@ -53,6 +52,7 @@ export default defineConfig({
   },
 
   srcDir: 'src',
+  outDir: 'dist',
   imports: false,
   vite: () => ({
     define: {
@@ -62,6 +62,6 @@ export default defineConfig({
     build: {
       chunkSizeWarningLimit: 1024,
     },
-    plugins: [react()],
   }),
+  modules: ['@wxt-dev/module-react'],
 })
