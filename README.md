@@ -109,6 +109,12 @@ bun run zip
 bun run zip:firefox
 ```
 
+## ライブラリ
+- [**nco-parser**](https://github.com/Midra429/nco-parser)\
+アニメタイトルの解析や比較をするやつ
+- [**nco-api**](https://github.com/Midra429/nco-api)\
+NCOverlayで使うAPIをまとめたやつ
+
 ## スペシャルサンクス
 - [**xpadev-net/niconicomments**](https://github.com/xpadev-net/niconicomments)
 - [**しょぼいカレンダー**](https://cal.syoboi.jp/)
