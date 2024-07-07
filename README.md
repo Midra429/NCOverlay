@@ -90,22 +90,22 @@ bun run dev:firefox
 
 ### 出力
 ```sh
-# .output/chrome-mv3
+# dist/chrome-mv3
 bun run build
 ```
 ```sh
-# .output/firefox-mv3
+# dist/firefox-mv3
 bun run build:firefox
 ```
 
 ### 出力 (ZIP)
 ```sh
-# .output/ncoverlay-0.0.0-chrome.zip
+# dist/ncoverlay-0.0.0-chrome.zip
 bun run zip
 ```
 ```sh
-# .output/ncoverlay-0.0.0-firefox.zip
-# .output/ncoverlay-0.0.0-sources.zip
+# dist/ncoverlay-0.0.0-firefox.zip
+# dist/ncoverlay-0.0.0-sources.zip
 bun run zip:firefox
 ```
 
