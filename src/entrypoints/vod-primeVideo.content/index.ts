@@ -107,7 +107,7 @@ const main = async () => {
       )
 
       const workTitleSeason = workTitle && extractSeason(workTitle)[0]
-      const subtitleEpisode = subtitle && extractEpisode(subtitle)[0]
+      const subtitleEpisode = subtitle && extractEpisode(`hoge ${subtitle}`)[0]
 
       const title = [
         workTitle,
