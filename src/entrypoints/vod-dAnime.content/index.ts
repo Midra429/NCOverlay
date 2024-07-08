@@ -1,6 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
+import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 import { ncoApi } from '@midra/nco-api'
 
 import { Logger } from '@/utils/logger'
@@ -41,7 +42,28 @@ const main = async () => {
         return null
       }
 
-      const title = partData.title
+      let title = partData.title
+
+      if (partData.partDispNumber === '本編') {
+        title = partData.workTitle
+      } else if (
+        /最終(?:回|話)/.test(partData.partDispNumber) &&
+        partData.prevTitle
+      ) {
+        const [episode] = extractEpisode(partData.prevTitle)
+
+        if (episode) {
+          title = [
+            partData.workTitle,
+            `${episode.number + 1}話`,
+            partData.partTitle,
+          ]
+            .flatMap((v) => v || [])
+            .join(' ')
+            .trim()
+        }
+      }
+
       const duration = partData.partMeasureSecond
 
       Logger.log('title', title)
