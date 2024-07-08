@@ -77,7 +77,7 @@ const main = async () => {
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/video/episode/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          '.com-a-Video__video > .com-a-Video__video-element'
+          '.com-a-Video__video > video[preload="metadata"][src]'
         )
 
         if (video) {
