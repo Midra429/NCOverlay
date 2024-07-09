@@ -2,6 +2,7 @@
   "name": "ncoverlay",
   "displayName": "NCOverlay",
   "version": "3.1.6",
+  "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
   "author": "Midra <me@midra.me> (https://github.com/Midra429)",
   "license": "MIT",
   "scripts": {
@@ -16,15 +17,15 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^9.6.0",
-    "@midra/nco-api": "^0.8.12",
-    "@midra/nco-parser": "^0.3.10",
+    "@midra/nco-api": "^1.0.0",
+    "@midra/nco-parser": "^1.0.0",
     "@nextui-org/react": "^2.4.2",
     "@webext-core/messaging": "^1.4.0",
     "@xpadev-net/niconicomments": "^0.2.71",
     "deepmerge": "^4.3.1",
     "fast-deep-equal": "^3.1.3",
-    "filesize": "^10.1.2",
-    "lucide-react": "^0.400.0",
+    "filesize": "^10.1.4",
+    "lucide-react": "^0.403.0",
     "nanoid": "^5.0.7",
     "nanoid-dictionary": "^4.3.0",
     "react": "^18.3.1",
@@ -44,6 +45,6 @@
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.3",
     "utility-types": "^3.11.0",
-    "wxt": "^0.18.11"
+    "wxt": "^0.18.12"
   }
 }

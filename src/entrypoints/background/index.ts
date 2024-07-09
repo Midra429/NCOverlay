@@ -59,6 +59,7 @@ const main = async () => {
     }
   })
 
+  // NCOverlayインスタンス作成時
   webext.runtime.onConnect.addListener((port) => {
     const tabId = port.sender?.tab?.id
     let ncoId: string | null = null
@@ -67,7 +68,7 @@ const main = async () => {
     let timeoutId: NodeJS.Timeout
 
     const dispose = () => {
-      console.log('dispose()')
+      Logger.log('dispose()')
 
       // バッジリセット
       if (tabId) {

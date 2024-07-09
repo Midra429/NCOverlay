@@ -2,7 +2,7 @@ import { defineConfig } from 'wxt'
 
 import { GITHUB_URL } from './src/constants'
 import { uid } from './src/utils/uid'
-import { displayName, version } from './package.json'
+import { displayName, version, description } from './package.json'
 
 const EXT_BUILD_ID = JSON.stringify(uid())
 const EXT_USER_AGENT = JSON.stringify(`${displayName}/${version}`)
@@ -11,8 +11,7 @@ export default defineConfig({
   manifestVersion: 3,
   manifest: ({ browser }) => ({
     name: displayName,
-    description:
-      '動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能',
+    description,
     homepage_url: GITHUB_URL,
     browser_specific_settings:
       browser === 'firefox'
@@ -26,6 +25,36 @@ export default defineConfig({
             // },
           }
         : undefined,
+
+    // commands: {
+    //   'globalOffset:increase': {
+    //     suggested_key: {
+    //       default: 'Ctrl+Shift+Right',
+    //     },
+    //     description: '全体のオフセットを増やす',
+    //   },
+
+    //   'globalOffset:decrease': {
+    //     suggested_key: {
+    //       default: 'Ctrl+Shift+Left',
+    //     },
+    //     description: '全体のオフセットを減らす',
+    //   },
+
+    //   'jumpMarker:A': {
+    //     suggested_key: {
+    //       default: 'Ctrl+Shift+A',
+    //     },
+    //     description: 'オフセットを「Aパート」に飛ばす',
+    //   },
+    //   'jumpMarker:B': {
+    //     suggested_key: {
+    //       default: 'Ctrl+Shift+B',
+    //     },
+    //     description: 'オフセットを「Bパート」に飛ばす',
+    //   },
+    // },
+
     permissions: ['storage', 'unlimitedStorage', 'tabs'],
   }),
 
