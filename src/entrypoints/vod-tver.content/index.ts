@@ -22,6 +22,7 @@ const main = async () => {
   Logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
+    vod,
     getInfo: async (video) => {
       const seriesTitleElem = document.body.querySelector<HTMLElement>(
         'h2[class^="titles_seriesTitle"]'

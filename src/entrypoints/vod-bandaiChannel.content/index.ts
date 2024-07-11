@@ -27,6 +27,7 @@ const main = async () => {
   if (!video) return
 
   const patcher = new NCOPatcher({
+    vod,
     getInfo: async (video) => {
       const seriesTitleElem =
         document.body.querySelector<HTMLElement>('#bch-series-title')

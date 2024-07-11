@@ -22,6 +22,7 @@ const main = async () => {
   Logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
+    vod,
     getInfo: async (video) => {
       const url = new URL(location.href)
       const seasonId = url.searchParams.get('season')

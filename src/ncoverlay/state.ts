@@ -1,5 +1,6 @@
 import type { DeepPartial } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { VodKey } from '@/types/constants'
 import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 
 import equal from 'fast-deep-equal'
@@ -11,6 +12,8 @@ import { deepmerge } from '@/utils/deepmerge'
 
 export type NCOStateJson = {
   _id: string
+  vod: VodKey | null
+  title: string | null
   offset: number
   slots: Slot[] | null
 }
@@ -74,6 +77,8 @@ export class NCOState {
   readonly key: `tmp:state:${string}`
   readonly sync: boolean
 
+  #vod: VodKey | null = null
+  #title: string | null = null
   #offset: number = 0
   #slots: Map<string, Slot> = new Map()
 
@@ -118,12 +123,26 @@ export class NCOState {
   getJSON(): NCOStateJson {
     return {
       _id: this.id,
+      vod: this.vod.get(),
+      title: this.title.get(),
       offset: this.offset.get(),
       slots: this.slots.getAll(),
     }
   }
 
   setJSON(json: NCOStateJson | null) {
+    if (json?.vod) {
+      this.vod.set(json.vod)
+    } else {
+      this.vod.clear()
+    }
+
+    if (json?.title) {
+      this.title.set(json.title)
+    } else {
+      this.title.clear()
+    }
+
     if (json?.offset) {
       this.offset.set(json.offset)
     } else {
@@ -135,6 +154,46 @@ export class NCOState {
     } else {
       this.slots.clear()
     }
+  }
+
+  vod = {
+    get: () => this.#vod,
+
+    set: (vod: VodKey | null): boolean => {
+      if (this.#vod !== vod) {
+        this.#vod = vod
+
+        this.#trigger('change', 'vod')
+
+        return true
+      }
+
+      return false
+    },
+
+    clear: () => {
+      return this.vod.set(null)
+    },
+  }
+
+  title = {
+    get: () => this.#title,
+
+    set: (title: string | null): boolean => {
+      if (this.#title !== title) {
+        this.#title = title?.trim() || null
+
+        this.#trigger('change', 'title')
+
+        return true
+      }
+
+      return false
+    },
+
+    clear: () => {
+      return this.title.set(null)
+    },
   }
 
   offset = {

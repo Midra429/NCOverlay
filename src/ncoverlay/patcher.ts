@@ -1,8 +1,10 @@
+import type { VodKey } from '@/types/constants'
 import { settings } from '@/utils/settings/extension'
 
 import { NCOverlay } from '.'
 
 export class NCOPatcher {
+  #vod
   #getInfo
   #appendCanvas
 
@@ -14,11 +16,13 @@ export class NCOPatcher {
   }
 
   constructor(init: {
+    vod: VodKey
     getInfo: (
       video: HTMLVideoElement | null
     ) => Promise<{ title: string; duration: number } | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   }) {
+    this.#vod = init.vod
     this.#getInfo = init.getInfo
     this.#appendCanvas = init.appendCanvas
   }
@@ -52,6 +56,9 @@ export class NCOPatcher {
       // 自動読み込み
       if (values['settings:comment:autoLoad']) {
         const info = await this.#getInfo(this.#video)
+
+        this.#nco.state.vod.set(this.#vod)
+        this.#nco.state.title.set(info?.title ?? null)
 
         if (info?.title) {
           await this.#nco.searcher.autoLoad(info, {

@@ -22,6 +22,7 @@ const main = async () => {
   Logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
+    vod,
     getInfo: async () => {
       const id = location.pathname.split('/').at(-1)
       const program = id ? await ncoApi.abema.program(id) : null

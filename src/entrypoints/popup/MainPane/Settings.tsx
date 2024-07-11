@@ -16,11 +16,35 @@ import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 
+import { useNcoStateJson } from '@/hooks/useNcoState'
+
 import { IconLink } from '@/components/icon-link'
 import { SettingsInput } from '@/components/settings-input'
 import { ItemButton } from '@/components/item-button'
 
 const { name, version } = webext.runtime.getManifest()
+
+const FormsButton: React.FC = () => {
+  const ncoStateJson = useNcoStateJson()
+
+  return (
+    <IconLink
+      icon={ClipboardPenIcon}
+      title="不具合報告・機能提案"
+      onPress={async () => {
+        const tab = await webext.getCurrentActiveTab()
+
+        webext.tabs.create({
+          url: await getFormsUrl({
+            vod: ncoStateJson?.vod,
+            title: ncoStateJson?.title,
+            url: ncoStateJson && tab?.url,
+          }),
+        })
+      }}
+    />
+  )
+}
 
 const StorageSizes: React.FC = () => {
   const [storageBytes, setStorageBytes] = useState<number>(0)
@@ -78,13 +102,7 @@ const accordionItemInfo = (
         </div>
 
         <div className="flex flex-row gap-0.5">
-          <IconLink
-            icon={ClipboardPenIcon}
-            title="不具合報告・機能提案"
-            onPress={async () => {
-              webext.tabs.create({ url: await getFormsUrl() })
-            }}
-          />
+          <FormsButton />
           <IconLink icon={SiGithub} href={GITHUB_URL} />
         </div>
       </div>

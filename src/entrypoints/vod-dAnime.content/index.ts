@@ -32,6 +32,7 @@ const main = async () => {
   if (!video) return
 
   const patcher = new NCOPatcher({
+    vod,
     getInfo: async () => {
       const partId = new URL(location.href).searchParams.get('partId')
       const partData = partId ? await ncoApi.danime.part(partId) : null

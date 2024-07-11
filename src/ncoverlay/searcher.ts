@@ -6,10 +6,11 @@ import type { Status, Slot, NCOState, SlotUpdate } from './state'
 
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
+import { MARKERS } from '@/constants'
+
 import { Logger } from '@/utils/logger'
 
 import { ncoApiProxy } from './api'
-import { MARKERS } from '@/constants'
 
 export type NCOSearcherEventMap = {
   searching: () => void

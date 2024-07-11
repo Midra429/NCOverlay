@@ -23,6 +23,7 @@ const main = async () => {
   Logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
+    vod,
     getInfo: async (video) => {
       if (
         document.querySelector(

@@ -41,6 +41,8 @@ export const GOOGLE_FORMS_IDS = {
   VERSION: '412681801',
   OS: '994779637',
   BROWSER: '104404822',
+  VODS: '1382689804',
+  TITLE: '2044762585',
 } as const
 
 /** 動画配信サービス */

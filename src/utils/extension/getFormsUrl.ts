@@ -1,6 +1,7 @@
 import type { Runtime } from 'wxt/browser'
+import type { VodKey } from '@/types/constants'
 
-import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS } from '@/constants'
+import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS, VODS } from '@/constants'
 import { webext } from '@/utils/webext'
 
 const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
@@ -11,25 +12,42 @@ const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
   android: 'Android',
 }
 
-export const getFormsUrl = async () => {
+export const getFormsUrl = async (inputs?: {
+  vod?: VodKey | null
+  title?: string | null
+  url?: string | null
+}) => {
   const { version } = webext.runtime.getManifest()
   const { os } = await webext.runtime.getPlatformInfo()
 
   const osName = OS_NAMES[os]
 
-  const searchParams = new URLSearchParams()
+  const url = new URL(GOOGLE_FORMS_URL)
 
-  searchParams.set(`entry.${GOOGLE_FORMS_IDS.VERSION}`, version)
+  url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VERSION}`, version)
 
   if (osName) {
-    searchParams.set(`entry.${GOOGLE_FORMS_IDS.OS}`, osName)
+    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.OS}`, osName)
   }
 
   if (webext.isChrome) {
-    searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Chrome')
+    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Chrome')
   } else if (webext.isFirefox) {
-    searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Firefox')
+    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Firefox')
   }
 
-  return `${GOOGLE_FORMS_URL}?${searchParams}`
+  if (inputs?.vod) {
+    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[inputs.vod])
+  }
+
+  const title = [inputs?.title, inputs?.url]
+    .flatMap((v) => v || [])
+    .join('\n\n')
+    .trim()
+
+  if (title) {
+    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.TITLE}`, title)
+  }
+
+  return url.href
 }
