@@ -31,8 +31,8 @@ export const LINKS: {
     url: 'https://x.com/Midra429',
   },
   {
-    title: 'ほしい物リスト',
-    label: 'Amazon',
+    title: 'Amazon',
+    label: 'ほしい物リスト',
     url: 'https://url.midra.me/wishlist',
   },
 ]
