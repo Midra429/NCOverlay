@@ -30,6 +30,11 @@ export const LINKS: {
     label: '@Midra429',
     url: 'https://x.com/Midra429',
   },
+  {
+    title: 'ほしい物リスト',
+    label: 'Amazon',
+    url: 'https://url.midra.me/wishlist',
+  },
 ]
 
 /** Google フォーム */
