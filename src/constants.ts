@@ -13,6 +13,7 @@ import {
   MoonIcon,
   SlidersHorizontalIcon,
   MessageSquareTextIcon,
+  MessageSquareOffIcon,
   BlocksIcon,
 } from 'lucide-react'
 
@@ -140,6 +141,9 @@ export const SETTINGS_DEFAULT: {
   'settings:comment:fps': 60,
 
   // NG設定
+  'settings:ng:largeComments': false,
+  'settings:ng:fixedComments': false,
+  'settings:ng:coloredComments': false,
   'settings:ng:word': [],
   'settings:ng:command': [],
   'settings:ng:id': [],
@@ -277,21 +281,40 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       },
     ],
   },
-  // {
-  //   id: 'ng',
-  //   title: 'NG設定 (ローカル)',
-  //   items: [
-  //     {
-  //       settingsKey: 'settings:ng:word',
-  //     },
-  //     {
-  //       settingsKey: 'settings:ng:command',
-  //     },
-  //     {
-  //       settingsKey: 'settings:ng:id',
-  //     },
-  //   ],
-  // },
+  {
+    id: 'ng',
+    title: 'NG設定',
+    icon: MessageSquareOffIcon,
+    items: [
+      {
+        settingsKey: 'settings:ng:largeComments',
+        inputType: 'toggle',
+        label: 'サイズの大きいコメントを非表示',
+        description: '「big」コマンドを含むコメントを非表示にします。',
+      },
+      {
+        settingsKey: 'settings:ng:fixedComments',
+        inputType: 'toggle',
+        label: '固定コメントを非表示',
+        description: '「ue」「shita」コマンドを含むコメントを非表示にします。',
+      },
+      {
+        settingsKey: 'settings:ng:coloredComments',
+        inputType: 'toggle',
+        label: '色付きコメントを非表示',
+        description: '色指定コマンドを含むコメントを非表示にします。',
+      },
+      // {
+      //   settingsKey: 'settings:ng:word',
+      // },
+      // {
+      //   settingsKey: 'settings:ng:command',
+      // },
+      // {
+      //   settingsKey: 'settings:ng:id',
+      // },
+    ],
+  },
   {
     id: 'plugins',
     title: 'プラグイン',
@@ -313,4 +336,35 @@ export const SETTINGS_INIT_ITEMS = Object.fromEntries(
   SETTINGS_INIT_DATA.flatMap((v) => v.items).map((v) => [v.settingsKey, v])
 ) as {
   [key in SettingsKey]: SettingsInitItem
+}
+
+/** ニコニコ コメント コマンド (色) */
+export const NICONICO_COLOR_COMMANDS = {
+  white: '#FFFFFF',
+  red: '#FF0000',
+  pink: '#FF8080',
+  orange: '#FFC000',
+  yellow: '#FFFF00',
+  green: '#00FF00',
+  cyan: '#00FFFF',
+  blue: '#0000FF',
+  purple: '#C000FF',
+  black: '#000000',
+  white2: '#CCCC99',
+  niconicowhite: '#CCCC99',
+  red2: '#CC0033',
+  truered: '#CC0033',
+  pink2: '#FF33CC',
+  orange2: '#FF6600',
+  passionorange: '#FF6600',
+  yellow2: '#999900',
+  madyellow: '#999900',
+  green2: '#00CC66',
+  elementalgreen: '#00CC66',
+  cyan2: '#00CCCC',
+  blue2: '#3399FF',
+  marinblue: '#3399FF',
+  purple2: '#6633CC',
+  nobleviolet: '#6633CC',
+  black2: '#666666',
 }

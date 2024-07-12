@@ -1,7 +1,12 @@
 import type { Runtime } from 'wxt/browser'
+import type { NgSetting } from '@midra/nco-api/utils/applyNgSetting'
 import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 import type { setBadge } from '@/utils/extension/setBadge'
 import type { SlotUpdate } from './state'
+
+import { applyNgSetting } from '@midra/nco-api/utils/applyNgSetting'
+
+import { NICONICO_COLOR_COMMANDS } from '@/constants'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
@@ -139,8 +144,43 @@ export class NCOverlay {
   /**
    * 描画するコメントデータを更新する
    */
-  updateRendererThreads() {
-    const threads = this.state.slots.getThreads()
+  async updateRendererThreads() {
+    let threads = this.state.slots.getThreads()
+
+    if (threads) {
+      const ngSetting: NgSetting = {
+        word: [],
+        command: [],
+        id: [],
+      }
+
+      const {
+        'settings:ng:largeComments': ngLargeComments,
+        'settings:ng:fixedComments': ngFixedComments,
+        'settings:ng:coloredComments': ngColoredComments,
+      } = await settings.get(
+        'settings:ng:largeComments',
+        'settings:ng:fixedComments',
+        'settings:ng:coloredComments'
+      )
+
+      if (ngLargeComments) {
+        ngSetting.command.push('big')
+      }
+
+      if (ngFixedComments) {
+        ngSetting.command.push('ue', 'shita')
+      }
+
+      if (ngColoredComments) {
+        ngSetting.command.push(
+          ...Object.keys(NICONICO_COLOR_COMMANDS),
+          /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
+        )
+      }
+
+      threads = applyNgSetting(threads, ngSetting)
+    }
 
     this.renderer.setThreads(threads)
     this.renderer.reload()
@@ -225,8 +265,9 @@ export class NCOverlay {
       }
     })
 
-    // 設定 (コメント:表示サイズ)
+    // ストレージの監視
     this.#storageOnChangeRemoveListeners.push(
+      // 設定 (コメント:表示サイズ)
       settings.loadAndWatch('settings:comment:scale', (scale) => {
         this.renderer.setOptions({
           scale: scale / 100,
@@ -234,20 +275,31 @@ export class NCOverlay {
         })
 
         this.renderer.reload()
-      })
-    )
+      }),
 
-    // 設定 (コメント:不透明度)
-    this.#storageOnChangeRemoveListeners.push(
+      // 設定 (コメント:不透明度)
       settings.loadAndWatch('settings:comment:opacity', (opacity) => {
         this.renderer.setOpacity(opacity / 100)
-      })
-    )
+      }),
 
-    // 設定 (コメント:フレームレート)
-    this.#storageOnChangeRemoveListeners.push(
+      // 設定 (コメント:フレームレート)
       settings.loadAndWatch('settings:comment:fps', (fps) => {
         this.renderer.setFps(fps)
+      }),
+
+      // 設定 (NG設定:サイズの大きいコメントを非表示)
+      settings.loadAndWatch('settings:ng:largeComments', () => {
+        this.updateRendererThreads()
+      }),
+
+      // 設定 (NG設定:固定コメントを非表示)
+      settings.loadAndWatch('settings:ng:fixedComments', () => {
+        this.updateRendererThreads()
+      }),
+
+      // 設定 (NG設定:色付きコメントを非表示)
+      settings.loadAndWatch('settings:ng:coloredComments', () => {
+        this.updateRendererThreads()
       })
     )
 

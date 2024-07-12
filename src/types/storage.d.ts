@@ -20,17 +20,8 @@ export type StorageItems_v0 = {
   showChangelog: boolean
 }
 
-export type StorageItems = {
-  [k in NCOState['key']]?: NCOStateJson
-} & {
-  '_migrate_version': number
-
-  /**
-   * コメント:不透明度 (パネル用)
-   * @default undefined
-   */
-  'tmp:comment:opacity': number
-
+/** v3.0.0 <= */
+export type StorageItems_v1 = {
   /**
    * テーマ
    * @default 'auto'
@@ -108,6 +99,24 @@ export type StorageItems = {
   'settings:comment:fps': 30 | 60 | 0
 
   /**
+   * NG設定:サイズの大きいコメントを非表示
+   * @default false
+   */
+  'settings:ng:largeComments': boolean
+
+  /**
+   * NG設定:固定コメントを非表示
+   * @default false
+   */
+  'settings:ng:fixedComments': boolean
+
+  /**
+   * NG設定:色付きコメントを非表示
+   * @default false
+   */
+  'settings:ng:coloredComments': boolean
+
+  /**
    * NG設定:単語
    * @default []
    */
@@ -130,6 +139,18 @@ export type StorageItems = {
    * @default []
    */
   'settings:plugins': PluginKey[]
+}
+
+export type StorageItems = StorageItems_v1 & {
+  '_migrate_version': number
+
+  /**
+   * コメント:不透明度 (パネル用)
+   * @default undefined
+   */
+  'tmp:comment:opacity': number
+} & {
+  [k in NCOState['key']]?: NCOStateJson
 }
 
 export type StorageKey = keyof StorageItems
