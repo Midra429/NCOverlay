@@ -35,6 +35,11 @@ export const LINKS: {
     label: 'ほしい物リスト',
     url: 'https://url.midra.me/wishlist',
   },
+  {
+    title: 'giftee',
+    label: 'ほしいものリスト',
+    url: 'https://giftee.com/u/midra429',
+  },
 ]
 
 /** Google フォーム */
