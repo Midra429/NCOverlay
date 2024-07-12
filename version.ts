@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
-import packageJson from '../package.json'
+import { execSync } from 'child_process'
+import packageJson from './package.json'
 
 const [major, minor, patch] = packageJson.version.split('.').map(Number)
 
@@ -24,8 +25,11 @@ switch (process.argv[2]) {
 packageJson.version = newVersion
 
 fs.writeFileSync(
-  path.resolve(__dirname, '../package.json'),
+  path.resolve(__dirname, 'package.json'),
   JSON.stringify(packageJson, null, 2) + '\n'
 )
+
+execSync('git add package.json')
+execSync(`git commit -m "v${newVersion}"`)
 
 console.log(`Update to v${newVersion}`)

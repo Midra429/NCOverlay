@@ -37,7 +37,7 @@ jobs:
 
       - name: Update Version
         run: |
-          bun run ./scripts/version.ts ${{ github.event.inputs.bump_type }}
+          bun run version.ts ${{ github.event.inputs.bump_type }}
           echo VERSION="v$(cat package.json | jq -r '.version')" >> "${GITHUB_ENV}"
 
       - name: Zip Extensions
@@ -66,7 +66,6 @@ jobs:
 
       - name: Create Release to GitHub
         run: |
-          gh release create "${VERSION}"
-          gh release upload "${VERSION}" dist/*.zip
+          gh release create "${VERSION}" dist/*-chrome.zip dist/*-firefox.zip
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
