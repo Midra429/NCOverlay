@@ -12,7 +12,7 @@ export let ncoState: NCOState | null = null
 export const initializeNcoState = async () => {
   try {
     const tab = await webext.getCurrentActiveTab()
-    const id = await ncoMessenger.sendMessage('p-c:getId', null, tab?.id)
+    const id = await ncoMessenger.sendMessage('getId', null, tab?.id)
 
     if (id) {
       ncoState = new NCOState(id)

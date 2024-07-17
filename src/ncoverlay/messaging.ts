@@ -2,21 +2,22 @@ import type { NCOverlay } from '.'
 
 import { defineExtensionMessaging } from '@webext-core/messaging'
 
+// popup, background -> content
+
 type ProtocolMap = {
-  // popup -> content
-  'p-c:getId': (args?: null) => string | null
+  getId: (args?: null) => string | null
 
-  'p-c:updateRendererThreads': (args?: null) => void
+  updateRendererThreads: (args?: null) => void
 
-  'p-c:updateSlot': (
+  updateSlot: (
     args: Parameters<NCOverlay['updateSlot']>
   ) => ReturnType<NCOverlay['updateSlot']>
 
-  'p-c:setGlobalOffset': (
+  setGlobalOffset: (
     args: Parameters<NCOverlay['setGlobalOffset']>
   ) => ReturnType<NCOverlay['setGlobalOffset']>
 
-  'p-c:jumpMarker': (
+  jumpMarker: (
     args: Parameters<NCOverlay['jumpMarker']>
   ) => ReturnType<NCOverlay['jumpMarker']>
 }

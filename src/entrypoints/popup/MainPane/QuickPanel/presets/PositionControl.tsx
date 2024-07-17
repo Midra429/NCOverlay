@@ -38,7 +38,7 @@ const MarkerButton: React.FC<{
           const tab = await webext.getCurrentActiveTab()
 
           ncoMessenger
-            .sendMessage('p-c:jumpMarker', [props.markerIdx], tab?.id)
+            .sendMessage('jumpMarker', [props.markerIdx], tab?.id)
             .catch(() => {})
         }}
       >
@@ -108,7 +108,7 @@ export const PositionControl: React.FC = () => {
           const tab = await webext.getCurrentActiveTab()
 
           ncoMessenger
-            .sendMessage('p-c:setGlobalOffset', [offset * 1000], tab?.id)
+            .sendMessage('setGlobalOffset', [offset * 1000], tab?.id)
             .catch(() => {})
         }}
       />

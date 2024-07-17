@@ -193,7 +193,7 @@ export class NCOverlay {
     text: string | null,
     color?: Parameters<typeof setBadge>[0]['color']
   ) {
-    utilsMessenger.sendMessage('c-b:setBadge', [{ text, color }])
+    utilsMessenger.sendMessage('setBadge', [{ text, color }])
   }
 
   /**
@@ -304,27 +304,27 @@ export class NCOverlay {
     )
 
     // メッセージ (インスタンスのID取得)
-    ncoMessenger.onMessage('p-c:getId', () => {
+    ncoMessenger.onMessage('getId', () => {
       return this.id
     })
 
     // メッセージ (スロット 更新)
-    ncoMessenger.onMessage('p-c:updateSlot', ({ data }) => {
+    ncoMessenger.onMessage('updateSlot', ({ data }) => {
       return this.updateSlot(...data)
     })
 
     // メッセージ (オフセット 全体)
-    ncoMessenger.onMessage('p-c:setGlobalOffset', ({ data }) => {
+    ncoMessenger.onMessage('setGlobalOffset', ({ data }) => {
       return this.setGlobalOffset(...data)
     })
 
     // メッセージ (マーカー)
-    ncoMessenger.onMessage('p-c:jumpMarker', ({ data }) => {
+    ncoMessenger.onMessage('jumpMarker', ({ data }) => {
       return this.jumpMarker(...data)
     })
 
     // メッセージ (描画データ 更新)
-    ncoMessenger.onMessage('p-c:updateRendererThreads', () => {
+    ncoMessenger.onMessage('updateRendererThreads', () => {
       return this.updateRendererThreads()
     })
   }

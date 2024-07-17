@@ -33,7 +33,7 @@ const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
 
         ncoMessenger
           .sendMessage(
-            'p-c:updateSlot',
+            'updateSlot',
             [
               {
                 id: slot.id,
@@ -74,7 +74,7 @@ const SlotShowToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
 
         ncoMessenger
           .sendMessage(
-            'p-c:updateSlot',
+            'updateSlot',
             [
               {
                 id: slot.id,
@@ -118,7 +118,7 @@ const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
 
         ncoMessenger
           .sendMessage(
-            'p-c:updateSlot',
+            'updateSlot',
             [
               {
                 id: slot.id,
