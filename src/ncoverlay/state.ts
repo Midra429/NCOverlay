@@ -230,25 +230,23 @@ export class NCOState {
     getThreads: () => {
       const threadMap = new Map<string, V1Thread>()
 
-      const slots = this.slots.getAll() ?? []
-
-      for (const slot of slots) {
+      this.slots.getAll()?.forEach((slot) => {
         if (slot.hidden || slot.status !== 'ready') {
-          continue
+          return
         }
 
-        for (const thread of slot.threads) {
+        slot.threads.forEach((thread) => {
           const comments = thread.comments.map((cmt) => ({
             ...cmt,
             vposMs: cmt.vposMs + this.#offset + (slot.offset ?? 0),
             commands: slot.translucent
-              ? [...new Set([...cmt.commands, '_live'])]
+              ? [...cmt.commands, '_live']
               : cmt.commands,
           }))
 
           threadMap.set(`${thread.id}${thread.fork}`, { ...thread, comments })
-        }
-      }
+        })
+      })
 
       const threads = [...threadMap.values()]
 
@@ -261,9 +259,9 @@ export class NCOState {
       if (!equal(old, slots)) {
         this.#slots.clear()
 
-        for (const slot of slots) {
+        slots.forEach((slot) => {
           this.#slots.set(slot.id, slot)
-        }
+        })
 
         this.#trigger('change', 'slots')
 
@@ -277,9 +275,9 @@ export class NCOState {
       const old = this.slots.getAll()
 
       if (!equal(old, slots)) {
-        for (const slot of slots) {
+        slots.forEach((slot) => {
           this.#slots.set(slot.id, slot)
-        }
+        })
 
         this.#trigger('change', 'slots')
 
@@ -310,9 +308,9 @@ export class NCOState {
     remove: (...ids: string[]): boolean => {
       let changed = false
 
-      for (const id of ids) {
+      ids.forEach((id) => {
         changed ||= this.#slots.delete(id)
-      }
+      })
 
       if (changed) {
         this.#trigger('change', 'slots')
@@ -348,15 +346,13 @@ export class NCOState {
       storage.set(this.key, this.getJSON())
     }
 
-    if (type in this.#listeners) {
-      for (const listener of this.#listeners[type]!) {
-        try {
-          listener.call(this, ...args)
-        } catch (err) {
-          Logger.error(type, err)
-        }
+    this.#listeners[type]?.forEach((listener) => {
+      try {
+        listener.call(this, ...args)
+      } catch (err) {
+        Logger.error(type, err)
       }
-    }
+    })
   }
 
   addEventListener<Type extends keyof NCOStateEventMap>(

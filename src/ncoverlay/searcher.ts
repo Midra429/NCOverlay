@@ -279,35 +279,33 @@ export class NCOSearcher {
     // }
 
     // ニコニコ実況
-    if (commentsJikkyo) {
-      for (const comment of commentsJikkyo) {
-        if (!comment) continue
+    commentsJikkyo?.forEach((comment) => {
+      if (!comment) return
 
-        const { thread, markers } = comment
+      const { thread, markers } = comment
 
-        updateSlots.push({
-          id: thread.id as string,
-          status: 'ready',
-          threads: [thread],
-          markers,
-          info: {
-            count: {
-              comment: thread.commentCount,
-            },
+      updateSlots.push({
+        id: thread.id as string,
+        status: 'ready',
+        threads: [thread],
+        markers,
+        info: {
+          count: {
+            comment: thread.commentCount,
           },
-        })
-      }
-    }
+        },
+      })
+    })
 
-    for (const loadingSlot of loadingSlots) {
-      const updateSlot = updateSlots.find((v) => v.id === loadingSlot.id)
+    loadingSlots.forEach((slot) => {
+      const updateSlot = updateSlots.find((v) => v.id === slot.id)
 
       if (updateSlot?.info?.count?.comment) {
         this.state.slots.update(updateSlot)
       } else {
-        this.state.slots.remove(loadingSlot.id)
+        this.state.slots.remove(slot.id)
       }
-    }
+    })
 
     this.#trigger('ready')
 
@@ -444,15 +442,13 @@ export class NCOSearcher {
     type: Type,
     ...args: Parameters<NCOSearcherEventMap[Type]>
   ) {
-    if (type in this.#listeners) {
-      for (const listener of this.#listeners[type]!) {
-        try {
-          listener.call(this, ...args)
-        } catch (err) {
-          Logger.error(type, err)
-        }
+    this.#listeners[type]?.forEach((listener) => {
+      try {
+        listener.call(this, ...args)
+      } catch (err) {
+        Logger.error(type, err)
       }
-    }
+    })
   }
 
   addEventListener<Type extends keyof NCOSearcherEventMap>(

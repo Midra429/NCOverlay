@@ -45,12 +45,12 @@ if (browser.isFirefox) {
 
     let bytes = 0
 
-    for (const [key, value] of Object.entries(values)) {
+    Object.entries(values).forEach(([key, value]) => {
       bytes += new Blob([
         key,
         typeof value === 'string' ? value : JSON.stringify(value),
       ]).size
-    }
+    })
 
     return bytes
   }
