@@ -19,7 +19,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
   return (
     <div className={cn('flex h-fit gap-2', compact ? 'flex-row' : 'flex-col')}>
       <div className="flex flex-row items-start justify-start gap-1.5">
-        {[-10, -5, -1].map((sec) => (
+        {[-30, -10, -1].map((sec) => (
           <Button
             key={sec}
             size="sm"
@@ -49,7 +49,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           onValueChange={(val) => onValueChange(Number(val))}
         />
 
-        {[1, 5, 10].map((sec) => (
+        {[1, 10, 30].map((sec) => (
           <Button
             key={sec}
             size="sm"
