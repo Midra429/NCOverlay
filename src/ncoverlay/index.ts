@@ -246,18 +246,16 @@ export class NCOverlay {
 
     // 検索ステータス ロード中
     this.searcher.addEventListener('loading', () => {
-      this.#setBadge(
-        this.state.slots.getAll()?.length?.toString() ?? null,
-        'yellow'
-      )
+      const size = this.state.slots.size()
+
+      this.#setBadge(size ? size.toString() : null, 'yellow')
     })
 
     // 検索ステータス 完了
     this.searcher.addEventListener('ready', () => {
-      this.#setBadge(
-        this.state.slots.getAll()?.length?.toString() ?? null,
-        'green'
-      )
+      const size = this.state.slots.size()
+
+      this.#setBadge(size ? size.toString() : null, 'green')
 
       this.updateRendererThreads()
 

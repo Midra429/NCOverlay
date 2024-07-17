@@ -217,14 +217,16 @@ export class NCOState {
   }
 
   slots = {
+    size: () => {
+      return this.#slots.size
+    },
+
     get: (id: string) => {
       return this.#slots.get(id) ?? null
     },
 
     getAll: () => {
-      const slots = [...this.#slots.values()]
-
-      return slots.length ? slots : null
+      return this.#slots.size ? [...this.#slots.values()] : null
     },
 
     getThreads: () => {
