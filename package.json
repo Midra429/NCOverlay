@@ -40,9 +40,9 @@
     "color2k": "^2.0.3",
     "cssnano": "^7.0.4",
     "postcss": "^8.4.39",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "tailwindcss": "^3.4.4",
+    "tailwindcss": "^3.4.6",
     "typescript": "^5.5.3",
     "utility-types": "^3.11.0",
     "wxt": "^0.18.14"
