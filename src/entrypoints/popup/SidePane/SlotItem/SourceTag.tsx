@@ -7,9 +7,8 @@ export type SourceTagProps = {
 }
 
 const SOURCE_TAG_CLASSES: {
-  [k in SourceTagProps['source']]: string
+  [k in Exclude<SourceTagProps['source'], 'normal'>]: string
 } = {
-  normal: '',
   danime: cn('bg-danime-400 text-white dark:bg-danime-500'),
   chapter: cn('bg-danime-400 text-white dark:bg-danime-500'),
   szbh: cn('bg-foreground-400 text-white'),
@@ -17,9 +16,8 @@ const SOURCE_TAG_CLASSES: {
 }
 
 const SOURCE_TAG_NAME: {
-  [k in SourceTagProps['source']]: string
+  [k in Exclude<SourceTagProps['source'], 'normal'>]: string
 } = {
-  normal: '',
   danime: 'dアニメ',
   chapter: 'dアニメ･分割',
   szbh: 'SZBH',
@@ -27,18 +25,20 @@ const SOURCE_TAG_NAME: {
 }
 
 export const SourceTag: React.FC<SourceTagProps> = ({ source }) => {
+  if (source === 'normal') {
+    return null
+  }
+
   return (
-    source !== 'normal' && (
-      <span
-        className={cn(
-          'absolute right-1 top-1',
-          'block rounded-full px-1.5 py-[1px]',
-          'text-tiny',
-          SOURCE_TAG_CLASSES[source]
-        )}
-      >
-        {SOURCE_TAG_NAME[source]}
-      </span>
-    )
+    <span
+      className={cn(
+        'absolute right-1 top-1',
+        'block rounded-full px-1 py-[0.5px]',
+        'text-[11px] leading-[15px]',
+        SOURCE_TAG_CLASSES[source]
+      )}
+    >
+      {SOURCE_TAG_NAME[source]}
+    </span>
   )
 }
