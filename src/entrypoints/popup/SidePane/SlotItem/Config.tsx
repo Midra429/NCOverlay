@@ -9,6 +9,23 @@ import { ncoMessenger } from '@/ncoverlay/messaging'
 
 import { OffsetControl } from '@/components/offset-control'
 
+const ConfigButton: React.FC<{
+  icon: React.FC<React.ComponentProps<'svg'>>
+  onPress: () => void
+}> = ({ icon: Icon, onPress }) => {
+  return (
+    <Button
+      className={cn('absolute bottom-1 right-1', '!size-6 min-h-0 min-w-0')}
+      size="sm"
+      radius="full"
+      variant="flat"
+      isIconOnly
+      startContent={<Icon className="size-3.5" />}
+      onPress={onPress}
+    />
+  )
+}
+
 const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
@@ -162,24 +179,11 @@ export const Config: React.FC<ConfigProps> = ({ slot }) => {
         <SlotTranslucentToggle slot={slot} />
       </div>
 
-      <Button
-        className={cn('absolute bottom-1 right-1', '!size-6 min-h-0 min-w-0')}
-        size="sm"
-        radius="full"
-        variant="flat"
-        isIconOnly
-        startContent={<XIcon className="size-3.5" />}
-        onPress={() => setIsOpen(false)}
-      />
+      <ConfigButton icon={XIcon} onPress={() => setIsOpen(false)} />
     </div>
   ) : (
-    <Button
-      className={cn('absolute bottom-1 right-1', '!size-6 min-h-0 min-w-0')}
-      size="sm"
-      radius="full"
-      variant="flat"
-      isIconOnly
-      startContent={<SlidersHorizontalIcon className="size-3.5" />}
+    <ConfigButton
+      icon={SlidersHorizontalIcon}
       onPress={() => setIsOpen(true)}
     />
   )
