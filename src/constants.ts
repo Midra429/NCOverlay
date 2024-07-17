@@ -29,17 +29,17 @@ export const LINKS: {
   {
     title: 'X (Twitter)',
     label: '@Midra429',
-    url: 'https://x.com/Midra429',
+    url: 'https://u.midra.me/x',
   },
   {
     title: 'Amazon',
     label: 'ほしい物リスト',
-    url: 'https://url.midra.me/wishlist',
+    url: 'https://u.midra.me/wishlist',
   },
   {
     title: 'giftee',
     label: 'ほしいものリスト',
-    url: 'https://giftee.com/u/midra429',
+    url: 'https://u.midra.me/giftee',
   },
 ]
 
