@@ -117,16 +117,16 @@ export class NCOverlay {
     if (!slots) return
 
     if (markerIdx === null) {
-      for (const slot of slots) {
+      slots.forEach((slot) => {
         this.state.slots.update({
           id: slot.id,
           offset: 0,
         })
-      }
+      })
     } else {
       const currentTimeMs = this.renderer.video.currentTime * 1000
 
-      for (const slot of slots) {
+      slots.forEach((slot) => {
         const marker = slot.markers?.[markerIdx]
 
         if (marker) {
@@ -135,7 +135,9 @@ export class NCOverlay {
             offset: marker * -1 + currentTimeMs,
           })
         }
-      }
+      })
+
+      this.state.offset.clear()
     }
 
     this.updateRendererThreads()
@@ -358,15 +360,13 @@ export class NCOverlay {
     type: Type,
     ...args: Parameters<NCOverlayEventMap[Type]>
   ) {
-    if (type in this.#listeners) {
-      for (const listener of this.#listeners[type]!) {
-        try {
-          listener.call(this, ...args)
-        } catch (err) {
-          Logger.error(type, err)
-        }
+    this.#listeners[type]?.forEach((listener) => {
+      try {
+        listener.call(this, ...args)
+      } catch (err) {
+        Logger.error(type, err)
       }
-    }
+    })
   }
 
   addEventListener<Type extends keyof NCOverlayEventMap>(
