@@ -53,26 +53,26 @@ export const PositionControl: React.FC = () => {
 
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
-  const [slotMarkers, setSlotMarkers] = useState<(number | null)[][]>()
+  const [slotMarkers, setSlotMarkers] = useState<((number | null)[] | null)[]>()
 
   useEffect(() => {
     const ofs = Math.round((ncoStateJson?.offset ?? 0) / 1000)
 
     setCurrentOffset(ofs)
     setOffset(ofs)
-    setSlotMarkers(ncoStateJson?.slots?.map((v) => v.markers ?? []))
+    setSlotMarkers(
+      ncoStateJson?.slots?.map((v) => (!v.hidden && v.markers) || null)
+    )
   }, [ncoStateJson])
 
   const markerEnableFlags = useMemo(() => {
     const flags: boolean[] = Array(MARKERS.length).fill(false)
 
-    if (slotMarkers) {
-      for (const markers of slotMarkers) {
-        for (const [idx, marker] of markers.entries()) {
-          flags[idx] ||= !!marker
-        }
-      }
-    }
+    slotMarkers?.forEach((markers) => {
+      markers?.forEach((marker, idx) => {
+        flags[idx] ||= !!marker
+      })
+    })
 
     return flags
   }, [slotMarkers])
