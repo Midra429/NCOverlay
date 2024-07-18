@@ -25,12 +25,13 @@ const main = async () => {
     vod,
     getInfo: async () => {
       const id = location.pathname.split('/').at(-1)
+      const token = localStorage.getItem('abm_token')
 
-      if (!id) {
+      if (!id || !token) {
         return null
       }
 
-      const program = await ncoApi.abema.program(id)
+      const program = await ncoApi.abema.program(id, token)
 
       Logger.log('abema.program', program)
 

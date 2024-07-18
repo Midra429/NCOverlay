@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^9.6.0",
-    "@midra/nco-api": "^1.1.1",
+    "@midra/nco-api": "^1.1.2",
     "@midra/nco-parser": "^1.0.2",
     "@nextui-org/react": "^2.4.3",
     "@webext-core/messaging": "^1.4.0",
