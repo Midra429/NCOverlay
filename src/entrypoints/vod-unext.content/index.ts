@@ -1,6 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
+import { ncoApi } from '@midra/nco-api'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
@@ -22,20 +23,36 @@ const main = async () => {
 
   const patcher = new NCOPatcher({
     vod,
-    getInfo: async (video) => {
-      const titleElem = document.querySelector<HTMLElement>(
-        'button[data-ucn="player-header-back"] + div > h2'
-      )
-      const episodeElem = document.querySelector<HTMLElement>(
-        'button[data-ucn="player-header-back"] + div > span'
-      )
+    getInfo: async () => {
+      const paths = location.pathname.split('/')
+      const id = paths.at(-2)
+      const episodeCode = paths.at(-1)
 
-      const title = [titleElem?.textContent, episodeElem?.textContent]
+      if (!id || !episodeCode) {
+        return null
+      }
+
+      const titleStage = await ncoApi.unext.title({
+        id,
+        episodeCode,
+      })
+
+      Logger.log('unext.title', titleStage)
+
+      if (!titleStage || !titleStage.episode) {
+        return null
+      }
+
+      const title = [
+        titleStage.titleName,
+        titleStage.episode.displayNo,
+        titleStage.episode.episodeName,
+      ]
         .flatMap((v) => v || [])
         .join(' ')
         .trim()
 
-      const duration = video?.duration ?? 0
+      const duration = titleStage.episode.duration
 
       Logger.log('title', title)
       Logger.log('duration', duration)
