@@ -6,8 +6,6 @@ import { ncoApiMessenger } from './api-messaging'
  * `@midra/nco-api` (content -> background)
  */
 export const ncoApiProxy: typeof ncoApi = {
-  ...ncoApi,
-
   search: (...args: Parameters<typeof ncoApi.search>) => {
     return ncoApiMessenger.sendMessage('search', args)
   },
@@ -42,15 +40,45 @@ export const ncoApiProxy: typeof ncoApi = {
     },
   },
 
+  jikkyo: {
+    kakolog: (...args: Parameters<typeof ncoApi.jikkyo.kakolog>) => {
+      return ncoApiMessenger.sendMessage('jikkyo.kakolog', args) as any
+    },
+  },
+
   syobocal: {
     json: (...args: Parameters<typeof ncoApi.syobocal.json>) => {
       return ncoApiMessenger.sendMessage('syobocal.json', args) as any
     },
   },
 
-  jikkyo: {
-    kakolog: (...args: Parameters<typeof ncoApi.jikkyo.kakolog>) => {
-      return ncoApiMessenger.sendMessage('jikkyo.kakolog', args) as any
+  danime: {
+    part: (...args: Parameters<typeof ncoApi.danime.part>) => {
+      return ncoApiMessenger.sendMessage('danime.part', args) as any
+    },
+  },
+
+  abema: {
+    program: (...args: Parameters<typeof ncoApi.abema.program>) => {
+      return ncoApiMessenger.sendMessage('abema.program', args) as any
+    },
+  },
+
+  dmmTv: {
+    video: (...args: Parameters<typeof ncoApi.dmmTv.video>) => {
+      return ncoApiMessenger.sendMessage('dmmTv.video', args) as any
+    },
+  },
+
+  fod: {
+    episode: (...args: Parameters<typeof ncoApi.fod.episode>) => {
+      return ncoApiMessenger.sendMessage('fod.episode', args) as any
+    },
+  },
+
+  unext: {
+    title: (...args: Parameters<typeof ncoApi.unext.title>) => {
+      return ncoApiMessenger.sendMessage('unext.title', args) as any
     },
   },
 }
