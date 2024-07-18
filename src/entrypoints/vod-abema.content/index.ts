@@ -25,7 +25,12 @@ const main = async () => {
     vod,
     getInfo: async () => {
       const id = location.pathname.split('/').at(-1)
-      const program = id ? await ncoApi.abema.program(id) : null
+
+      if (!id) {
+        return null
+      }
+
+      const program = await ncoApi.abema.program(id)
 
       Logger.log('abema.program', program)
 

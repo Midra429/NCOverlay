@@ -36,6 +36,7 @@ browser.getCurrentActiveTab = async function () {
     active: true,
     currentWindow: true,
   })
+
   return tab ?? null
 }
 
