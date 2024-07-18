@@ -15,6 +15,7 @@
 - [バンダイチャンネル](https://www.b-ch.com/)
 - [DMM TV](https://tv.dmm.com/vod/)
 - [U-NEXT](https://video.unext.jp/)
+- [FOD](https://fod.fujitv.co.jp/)
 - [Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [Hulu](https://www.hulu.jp/)
 - [TVer](https://tver.jp/)

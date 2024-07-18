@@ -63,6 +63,7 @@ export const VODS = {
   bandaiChannel: 'バンダイチャンネル',
   dmmTv: 'DMM TV',
   unext: 'U-NEXT',
+  fod: 'FOD',
   // lemino: 'Lemino',
   primeVideo: 'Prime Video',
   // netflix: 'Netflix',
