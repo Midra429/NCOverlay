@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       bump_type:
+        description: 'v[major].[minor].[patch]'
         required: true
         default: 'patch'
         type: choice
