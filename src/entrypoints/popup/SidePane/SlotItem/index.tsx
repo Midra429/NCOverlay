@@ -110,11 +110,11 @@ export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
         <div className="h-full">
           <span
             className="line-clamp-3 text-tiny font-bold"
-            // title={
-            //   100 < new Blob([slot.info.title]).size
-            //     ? slot.info.title
-            //     : undefined
-            // }
+            title={
+              190 < new Blob([slot.info.title]).size
+                ? slot.info.title
+                : undefined
+            }
           >
             {slot.info.title}
           </span>
