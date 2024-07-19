@@ -1,6 +1,5 @@
 import type { Runtime } from 'wxt/browser'
 import type { NgSetting } from '@midra/nco-api/utils/applyNgSetting'
-import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 import type { setBadge } from '@/utils/extension/setBadge'
 import type { SlotUpdate } from './state'
 
@@ -38,7 +37,7 @@ export class NCOverlay {
   readonly searcher: NCOSearcher
   readonly renderer: NCORenderer
 
-  #storageOnChangeRemoveListeners: StorageOnChangeRemoveListener[] = []
+  #storageOnChangeRemoveListeners: (() => void)[] = []
   #port: Runtime.Port
 
   constructor(video: HTMLVideoElement) {

@@ -1,8 +1,5 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
-import type {
-  StorageOnChangeCallback,
-  StorageOnChangeRemoveListener,
-} from '@/utils/storage'
+import type { StorageOnChangeCallback } from '@/utils/storage'
 
 import { SETTINGS_DEFAULT } from '@/constants'
 import { WebExtStorage } from '@/utils/storage'
@@ -63,17 +60,20 @@ export type SettingsGetBytesInUseFunction = {
 export type SettingsOnChangeFunction = <Key extends SettingsKey>(
   key: Key,
   callback: StorageOnChangeCallback<Key>
-) => StorageOnChangeRemoveListener
+) => () => void
 
-export class WebExtSettings<
-  Storage extends WebExtStorage,
-  OnChange extends Storage['onChange'] extends null
-    ? null
-    : SettingsOnChangeFunction,
-> {
-  #storage: Storage
+/**
+ * 設定を読み込み、変更を監視する
+ */
+export type SettingsLoadAndWatch = <Key extends SettingsKey>(
+  key: Key,
+  callback: (value: StorageItems[Key]) => void
+) => () => void
 
-  constructor(storage: Storage) {
+export class WebExtSettings {
+  #storage: WebExtStorage
+
+  constructor(storage: WebExtStorage) {
     this.#storage = storage
   }
 
@@ -82,7 +82,7 @@ export class WebExtSettings<
   }
 
   get onChange() {
-    return this.#storage.onChange as OnChange
+    return this.#storage.onChange as SettingsOnChangeFunction
   }
 
   readonly get: SettingsGetFunction = async (...keys: SettingsKey[]) => {
@@ -126,21 +126,17 @@ export class WebExtSettings<
     return this.#storage.getBytesInUse(...keys)
   }
 
-  readonly loadAndWatch = <
-    Key extends SettingsKey,
-    Return extends OnChange extends null ? null : StorageOnChangeRemoveListener,
-  >(
-    key: Key,
-    callback: (value: StorageItems[Key]) => void
-  ): Return => {
-    if (!this.onChange) {
-      return null as Return
-    }
+  readonly loadAndWatch: SettingsLoadAndWatch = (key, callback) => {
+    let removeListener = () => {}
 
-    this.get(key).then(callback)
+    this.get(key).then((value) => {
+      callback(value)
 
-    return this.onChange(key, (value) => {
-      callback(value ?? (SETTINGS_DEFAULT[key] as StorageItems[Key]))
-    }) as Return
+      removeListener = this.onChange(key, (value) => {
+        callback((value ?? SETTINGS_DEFAULT[key]) as any)
+      })
+    })
+
+    return () => removeListener()
   }
 }

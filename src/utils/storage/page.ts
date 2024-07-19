@@ -1,7 +1,8 @@
+import type { StorageItems } from '@/types/storage'
 import type {
   StorageGetFunction,
-  StorageRemoveFunction,
   StorageSetFunction,
+  StorageRemoveFunction,
   StorageGetBytesInUseFunction,
 } from '.'
 
@@ -25,7 +26,52 @@ export const storage = new WebExtStorage({
     return storagePageMessenger.sendMessage('getBytesInUse', args) as any
   },
 
-  onChange: null,
+  onChange: (key, callback) => {
+    let unregister = () => {}
 
-  loadAndWatch: null,
+    storagePageMessenger.sendMessage('onChange:register', key).then((id) => {
+      unregister = () => {
+        storagePageMessenger.sendMessage('onChange:unregister', id)
+      }
+
+      storagePageMessenger.onMessage(
+        'onChange:changed',
+        ({ data: [changedId, ...changedValues] }) => {
+          if (id !== changedId) return
+
+          callback(
+            ...(changedValues as [
+              StorageItems[typeof key],
+              StorageItems[typeof key],
+            ])
+          )
+        }
+      )
+    })
+
+    return () => unregister()
+  },
+
+  loadAndWatch: (key, callback) => {
+    let unregister = () => {}
+
+    storagePageMessenger
+      .sendMessage('loadAndWatch:register', key)
+      .then((id) => {
+        unregister = () => {
+          storagePageMessenger.sendMessage('loadAndWatch:unregister', id)
+        }
+
+        storagePageMessenger.onMessage(
+          'loadAndWatch:changed',
+          ({ data: [changedId, ...changedValues] }) => {
+            if (id !== changedId) return
+
+            callback(...(changedValues as [StorageItems[typeof key]]))
+          }
+        )
+      })
+
+    return () => unregister()
+  },
 })

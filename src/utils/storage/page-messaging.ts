@@ -1,8 +1,11 @@
+import type { StorageKey } from '@/types/storage'
 import type {
   StorageGetFunction,
   StorageSetFunction,
   StorageRemoveFunction,
   StorageGetBytesInUseFunction,
+  StorageOnChangeCallback,
+  StorageLoadAndWatchCallback,
 } from '.'
 
 import { defineWindowMessaging } from '@webext-core/messaging/page'
@@ -10,21 +13,33 @@ import { defineWindowMessaging } from '@webext-core/messaging/page'
 // content (world: MAIN) -> content
 
 type ProtocolMap = {
-  get: (
+  'get': (
     args: Parameters<StorageGetFunction>
   ) => Awaited<ReturnType<StorageGetFunction>>
 
-  set: (
+  'set': (
     args: Parameters<StorageSetFunction>
   ) => Awaited<ReturnType<StorageSetFunction>>
 
-  remove: (
+  'remove': (
     args: Parameters<StorageRemoveFunction>
   ) => Awaited<ReturnType<StorageRemoveFunction>>
 
-  getBytesInUse: (
+  'getBytesInUse': (
     args: Parameters<StorageGetBytesInUseFunction>
   ) => Awaited<ReturnType<StorageGetBytesInUseFunction>>
+
+  'onChange:register': (key: StorageKey) => string
+  'onChange:unregister': (id: string) => void
+  'onChange:changed': (
+    args: [id: string, ...Parameters<StorageOnChangeCallback<StorageKey>>]
+  ) => void
+
+  'loadAndWatch:register': (key: StorageKey) => string
+  'loadAndWatch:unregister': (id: string) => void
+  'loadAndWatch:changed': (
+    args: [id: string, ...Parameters<StorageLoadAndWatchCallback<StorageKey>>]
+  ) => void
 }
 
 export const storagePageMessenger = defineWindowMessaging<ProtocolMap>({

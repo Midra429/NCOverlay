@@ -2,6 +2,7 @@ import type { Storage as WxtStorage } from 'wxt/browser'
 import type { StorageKey } from '@/types/storage'
 
 import equal from 'fast-deep-equal'
+
 import { webext } from '@/utils/webext'
 import { WebExtStorage } from '.'
 
@@ -72,10 +73,16 @@ export const storage = new WebExtStorage({
   },
 
   loadAndWatch(key, callback) {
-    this.get(key).then(callback)
+    let removeListener = () => {}
 
-    return this.onChange!(key, (value) => {
+    this.get(key).then((value) => {
       callback(value)
+
+      removeListener = this.onChange(key, (value) => {
+        callback(value)
+      })
     })
+
+    return () => removeListener()
   },
 })

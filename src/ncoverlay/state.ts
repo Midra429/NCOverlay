@@ -1,7 +1,6 @@
 import type { DeepPartial } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { VodKey } from '@/types/constants'
-import type { StorageOnChangeRemoveListener } from '@/utils/storage'
 
 import equal from 'fast-deep-equal'
 
@@ -83,7 +82,7 @@ export class NCOState {
   #slots: Map<string, Slot> = new Map()
 
   #tmpSyncOff?: boolean
-  #onChangeRemoveListener?: StorageOnChangeRemoveListener
+  #onChangeRemoveListener?: () => void
 
   /**
    * @param id NCOverlayのID

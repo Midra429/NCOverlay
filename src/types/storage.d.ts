@@ -150,7 +150,7 @@ export type StorageItems = StorageItems_v1 & {
    */
   'tmp:comment:opacity': number
 } & {
-  [k in NCOState['key']]?: NCOStateJson
+  [k in NCOState['key']]: NCOStateJson
 }
 
 export type StorageKey = keyof StorageItems

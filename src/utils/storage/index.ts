@@ -50,50 +50,50 @@ export type StorageGetBytesInUseFunction = {
   (...keys: StorageKey[]): Promise<number>
 }
 
-/**
- * ストレージのアイテムが変更
- */
-export type StorageOnChangeFunction = <Key extends StorageKey>(
-  key: Key,
-  callback: StorageOnChangeCallback<Key>
-) => StorageOnChangeRemoveListener
-
 /** アイテムが変更されたときのコールバック */
 export type StorageOnChangeCallback<Key extends StorageKey> = (
   newValue: StorageItems[Key] | null,
   oldValue: StorageItems[Key] | null
 ) => void
 
-/** ストレージのアイテム変更のイベントを削除 */
-export type StorageOnChangeRemoveListener = () => void
+/**
+ * ストレージのアイテムが変更
+ */
+export type StorageOnChangeFunction = <Key extends StorageKey>(
+  key: Key,
+  callback: StorageOnChangeCallback<Key>
+) => () => void
+
+/**
+ * ストレージの読み込み・監視のコールバック
+ */
+export type StorageLoadAndWatchCallback<Key extends StorageKey> = (
+  value: StorageItems[Key] | null
+) => void
 
 /**
  * ストレージを読み込み、変更を監視する
  */
 export type StorageLoadAndWatch = <Key extends StorageKey>(
   key: Key,
-  callback: (value: StorageItems[Key] | null) => void
-) => StorageOnChangeRemoveListener
+  callback: StorageLoadAndWatchCallback<Key>
+) => () => void
 
-export class WebExtStorage<
-  OnChange extends
-    StorageOnChangeFunction | null = StorageOnChangeFunction | null,
-  LoadAndWatch extends StorageLoadAndWatch | null = StorageLoadAndWatch | null,
-> {
+export class WebExtStorage {
   readonly get: StorageGetFunction
   readonly set: StorageSetFunction
   readonly remove: StorageRemoveFunction
   readonly getBytesInUse: StorageGetBytesInUseFunction
-  readonly onChange: OnChange
-  readonly loadAndWatch: LoadAndWatch
+  readonly onChange: StorageOnChangeFunction
+  readonly loadAndWatch: StorageLoadAndWatch
 
   constructor(methods: {
     get: StorageGetFunction
     set: StorageSetFunction
     remove: StorageRemoveFunction
     getBytesInUse: StorageGetBytesInUseFunction
-    onChange: OnChange
-    loadAndWatch: LoadAndWatch
+    onChange: StorageOnChangeFunction
+    loadAndWatch: StorageLoadAndWatch
   }) {
     this.get = methods.get
     this.set = methods.set
