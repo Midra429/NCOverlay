@@ -12,8 +12,10 @@ export type PluginVodKey = keyof typeof PLUGINS
 export type PluginId<VodKey extends PluginVodKey> =
   (typeof PLUGINS)[VodKey][number]['id']
 
+export type PluginFunction = () => () => void
+
 export type Plugins<VodKey extends PluginVodKey> = {
-  [name in PluginId<VodKey>]: () => void
+  [id in PluginId<VodKey>]: PluginFunction
 }
 
 export type SettingsInitItem = {

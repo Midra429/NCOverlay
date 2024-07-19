@@ -1,17 +1,25 @@
+import type { PluginFunction } from '@/types/constants'
+
 /**
  * ポップアッププレイヤー無効化
  */
-export const disablePopupPlayer = () => {
-  window.open = new Proxy(window.open, {
-    apply: (target, _, argArray: Parameters<Window['open']>) => {
+export const disablePopupPlayer: PluginFunction = () => {
+  const _open = window.open
+
+  window.open = new Proxy(_open, {
+    apply: (target, thisArg, argArray: Parameters<Window['open']>) => {
       if (
         argArray[0]?.toString().startsWith('/animestore/sc_pc') &&
         argArray[1] === 'popupwindow'
       ) {
-        return target(argArray[0])
+        return Reflect.apply(target, thisArg, [argArray[0]])
       } else {
-        return target(...argArray)
+        return Reflect.apply(target, thisArg, argArray)
       }
     },
   })
+
+  return () => {
+    window.open = _open
+  }
 }
