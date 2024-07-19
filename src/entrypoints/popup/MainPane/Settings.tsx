@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useCallback, useState } from 'react'
 import { Accordion, AccordionItem, Divider, Link, cn } from '@nextui-org/react'
 import {
   InfoIcon,
@@ -25,23 +25,25 @@ import { ItemButton } from '@/components/item-button'
 const { name, version } = webext.runtime.getManifest()
 
 const FormsButton: React.FC = () => {
-  const ncoStateJson = useNcoStateJson()
+  const ncoStateJson = useNcoStateJson(['vod', 'title'])
+
+  const onPress = useCallback(async () => {
+    const tab = await webext.getCurrentActiveTab()
+
+    webext.tabs.create({
+      url: await getFormsUrl({
+        vod: ncoStateJson?.vod,
+        title: ncoStateJson?.title,
+        url: ncoStateJson && tab?.url,
+      }),
+    })
+  }, [ncoStateJson?.vod, ncoStateJson?.title])
 
   return (
     <IconLink
       icon={ClipboardPenIcon}
       title="不具合報告・機能提案"
-      onPress={async () => {
-        const tab = await webext.getCurrentActiveTab()
-
-        webext.tabs.create({
-          url: await getFormsUrl({
-            vod: ncoStateJson?.vod,
-            title: ncoStateJson?.title,
-            url: ncoStateJson && tab?.url,
-          }),
-        })
-      }}
+      onPress={onPress}
     />
   )
 }

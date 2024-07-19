@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useCallback, useState } from 'react'
 import { Button, Divider, Tooltip } from '@nextui-org/react'
 import { RotateCcwIcon } from 'lucide-react'
 
@@ -15,7 +15,15 @@ const MarkerButton: React.FC<{
   label: React.ReactNode
   shortLabel: React.ReactNode
   disabled?: boolean
-}> = (props) => {
+}> = ({ markerIdx, label, shortLabel, disabled }) => {
+  const onPress = useCallback(async () => {
+    const tab = await webext.getCurrentActiveTab()
+
+    try {
+      ncoMessenger.sendMessage('jumpMarker', [markerIdx], tab?.id)
+    } catch {}
+  }, [markerIdx])
+
   return (
     <Tooltip
       classNames={{
@@ -26,30 +34,24 @@ const MarkerButton: React.FC<{
       color="foreground"
       showArrow
       closeDelay={0}
-      content={props.label}
+      content={label}
     >
       <Button
         className="min-w-0"
         variant="flat"
         fullWidth
         size="sm"
-        isDisabled={props.disabled}
-        onPress={async () => {
-          const tab = await webext.getCurrentActiveTab()
-
-          ncoMessenger
-            .sendMessage('jumpMarker', [props.markerIdx], tab?.id)
-            .catch(() => {})
-        }}
+        isDisabled={disabled}
+        onPress={onPress}
       >
-        {props.shortLabel}
+        {shortLabel}
       </Button>
     </Tooltip>
   )
 }
 
 export const PositionControl: React.FC = () => {
-  const ncoStateJson = useNcoStateJson()
+  const ncoStateJson = useNcoStateJson(['offset', 'slots'])
 
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
@@ -60,10 +62,13 @@ export const PositionControl: React.FC = () => {
 
     setCurrentOffset(ofs)
     setOffset(ofs)
+  }, [ncoStateJson?.offset])
+
+  useEffect(() => {
     setSlotMarkers(
       ncoStateJson?.slots?.map((v) => (!v.hidden && v.markers) || null)
     )
-  }, [ncoStateJson])
+  }, [ncoStateJson?.slots])
 
   const markerEnableFlags = useMemo(() => {
     const flags: boolean[] = Array(MARKERS.length).fill(false)
@@ -76,6 +81,14 @@ export const PositionControl: React.FC = () => {
 
     return flags
   }, [slotMarkers])
+
+  const onApply = useCallback(async () => {
+    const tab = await webext.getCurrentActiveTab()
+
+    try {
+      ncoMessenger.sendMessage('setGlobalOffset', [offset * 1000], tab?.id)
+    } catch {}
+  }, [offset])
 
   return (
     <div className="flex flex-col gap-2 py-1.5">
@@ -104,13 +117,7 @@ export const PositionControl: React.FC = () => {
         value={offset}
         isValueChanged={offset !== currentOffset}
         onValueChange={(val) => setOffset(val)}
-        onApply={async () => {
-          const tab = await webext.getCurrentActiveTab()
-
-          ncoMessenger
-            .sendMessage('setGlobalOffset', [offset * 1000], tab?.id)
-            .catch(() => {})
-        }}
+        onApply={onApply}
       />
     </div>
   )

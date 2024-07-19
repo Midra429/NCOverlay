@@ -1,4 +1,4 @@
-import type { NCOStateJson, Slot } from '@/ncoverlay/state'
+import type { NCOStateEventMap, NCOStateJson, Slot } from '@/ncoverlay/state'
 
 import { useState, useEffect } from 'react'
 
@@ -20,15 +20,23 @@ export const initializeNcoState = async () => {
   } catch {}
 }
 
-export const useNcoStateJson = () => {
+export const useNcoStateJson = (targetKeys?: (keyof NCOStateJson)[]) => {
   const [state, setState] = useState<NCOStateJson | null>(null)
 
   useEffect(() => {
     setState(ncoState?.getJSON() ?? null)
 
-    ncoState?.addEventListener('change', () => {
-      setState(ncoState?.getJSON() ?? null)
-    })
+    const callback: NCOStateEventMap['change'] = function (key) {
+      if (!targetKeys || targetKeys.includes(key)) {
+        setState(this.getJSON() ?? null)
+      }
+    }
+
+    ncoState?.addEventListener('change', callback)
+
+    return () => {
+      ncoState?.removeEventListener('change', callback)
+    }
   }, [])
 
   return state
@@ -40,9 +48,17 @@ export const useNcoStateSlot = (id: string) => {
   useEffect(() => {
     setState(ncoState?.slots.get(id) ?? null)
 
-    ncoState?.addEventListener('change', () => {
-      setState(ncoState?.slots.get(id) ?? null)
-    })
+    const callback: NCOStateEventMap['change'] = function (key) {
+      if (key === 'slots') {
+        setState(this.slots.get(id) ?? null)
+      }
+    }
+
+    ncoState?.addEventListener('change', callback)
+
+    return () => {
+      ncoState?.removeEventListener('change', callback)
+    }
   }, [])
 
   return state

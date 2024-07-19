@@ -1,6 +1,6 @@
 import type { Slot } from '@/ncoverlay/state'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { Button, Switch, Divider, cn } from '@nextui-org/react'
 import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 
@@ -37,7 +37,24 @@ const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
       setCurrentOffset(ofs)
       setOffset(ofs)
     }
-  }, [slot])
+  }, [slot.offset])
+
+  const onApply = useCallback(async () => {
+    const tab = await webext.getCurrentActiveTab()
+
+    try {
+      ncoMessenger.sendMessage(
+        'updateSlot',
+        [
+          {
+            id: slot.id,
+            offset: offset * 1000,
+          },
+        ],
+        tab?.id
+      )
+    } catch {}
+  }, [slot.id, offset])
 
   return (
     <OffsetControl
@@ -45,22 +62,7 @@ const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
       value={offset}
       isValueChanged={offset !== currentOffset}
       onValueChange={(val) => setOffset(val)}
-      onApply={async () => {
-        const tab = await webext.getCurrentActiveTab()
-
-        ncoMessenger
-          .sendMessage(
-            'updateSlot',
-            [
-              {
-                id: slot.id,
-                offset: offset * 1000,
-              },
-            ],
-            tab?.id
-          )
-          .catch(() => {})
-      }}
+      onApply={onApply}
     />
   )
 }
@@ -70,7 +72,29 @@ const SlotShowToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
 
   useEffect(() => {
     setShow(!slot.hidden)
-  }, [slot])
+  }, [slot.hidden])
+
+  const onValueChange = useCallback(
+    async (isSelected: boolean) => {
+      setShow(isSelected)
+
+      const tab = await webext.getCurrentActiveTab()
+
+      try {
+        ncoMessenger.sendMessage(
+          'updateSlot',
+          [
+            {
+              id: slot.id,
+              hidden: !isSelected,
+            },
+          ],
+          tab?.id
+        )
+      } catch {}
+    },
+    [slot.id]
+  )
 
   return (
     <Switch
@@ -84,24 +108,7 @@ const SlotShowToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
       }}
       size="sm"
       isSelected={show}
-      onValueChange={async (isSelected) => {
-        setShow(isSelected)
-
-        const tab = await webext.getCurrentActiveTab()
-
-        ncoMessenger
-          .sendMessage(
-            'updateSlot',
-            [
-              {
-                id: slot.id,
-                hidden: !isSelected,
-              },
-            ],
-            tab?.id
-          )
-          .catch(() => {})
-      }}
+      onValueChange={onValueChange}
     >
       <span>表示</span>
     </Switch>
@@ -113,7 +120,29 @@ const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
 
   useEffect(() => {
     setTranslucent(!!slot.translucent)
-  }, [slot])
+  }, [slot.translucent])
+
+  const onValueChange = useCallback(
+    async (isSelected: boolean) => {
+      setTranslucent(isSelected)
+
+      const tab = await webext.getCurrentActiveTab()
+
+      try {
+        ncoMessenger.sendMessage(
+          'updateSlot',
+          [
+            {
+              id: slot.id,
+              translucent: isSelected,
+            },
+          ],
+          tab?.id
+        )
+      } catch {}
+    },
+    [slot.id]
+  )
 
   return (
     <Switch
@@ -128,24 +157,7 @@ const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
       size="sm"
       isSelected={translucent}
       isDisabled={slot.hidden}
-      onValueChange={async (isSelected) => {
-        setTranslucent(isSelected)
-
-        const tab = await webext.getCurrentActiveTab()
-
-        ncoMessenger
-          .sendMessage(
-            'updateSlot',
-            [
-              {
-                id: slot.id,
-                translucent: isSelected,
-              },
-            ],
-            tab?.id
-          )
-          .catch(() => {})
-      }}
+      onValueChange={onValueChange}
     >
       <span>半透明</span>
     </Switch>
