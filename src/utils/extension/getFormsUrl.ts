@@ -4,6 +4,12 @@ import type { VodKey } from '@/types/constants'
 import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS, VODS } from '@/constants'
 import { webext } from '@/utils/webext'
 
+const CONTENTS = {
+  bug: '不具合報告',
+  suggestion: '機能提案',
+  other: 'その他',
+} as const
+
 const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
   win: 'Windows',
   mac: 'macOS',
@@ -13,6 +19,7 @@ const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
 }
 
 export const getFormsUrl = async (inputs?: {
+  content?: keyof typeof CONTENTS
   vod?: VodKey | null
   title?: string | null
   url?: string | null
@@ -34,6 +41,13 @@ export const getFormsUrl = async (inputs?: {
     url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Chrome')
   } else if (webext.isFirefox) {
     url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Firefox')
+  }
+
+  if (inputs?.content) {
+    url.searchParams.set(
+      `entry.${GOOGLE_FORMS_IDS.CONTENT}`,
+      CONTENTS[inputs.content]
+    )
   }
 
   if (inputs?.vod) {

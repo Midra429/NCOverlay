@@ -151,6 +151,7 @@ export class NCOSearcher {
 
     // コメント取得
     this.#trigger('loading')
+    this.state.status.set('loading')
 
     const [commentsNormal, commentsChapter, commentsSzbh, commentsJikkyo] =
       await Promise.all([

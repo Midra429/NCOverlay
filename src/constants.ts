@@ -49,6 +49,7 @@ export const GOOGLE_FORMS_URL =
 
 /** `?entry.ID=VALUE&` */
 export const GOOGLE_FORMS_IDS = {
+  CONTENT: '1500638079',
   VERSION: '412681801',
   OS: '994779637',
   BROWSER: '104404822',

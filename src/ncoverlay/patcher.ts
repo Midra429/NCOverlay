@@ -47,6 +47,8 @@ export class NCOPatcher {
 
       this.#nco.clear()
 
+      this.#nco.state.status.set('pending')
+
       const values = await settings.get(
         'settings:comment:autoLoad',
         'settings:comment:autoLoadSzbh',
@@ -55,6 +57,8 @@ export class NCOPatcher {
 
       // 自動読み込み
       if (values['settings:comment:autoLoad']) {
+        this.#nco.state.status.set('searching')
+
         const info = await this.#getInfo(this.#video)
 
         this.#nco.state.vod.set(this.#vod)
@@ -67,6 +71,8 @@ export class NCOPatcher {
           })
         }
       }
+
+      this.#nco.state.status.set('ready')
     })
 
     this.#appendCanvas(this.#video, this.#nco.renderer.canvas)

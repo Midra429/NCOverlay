@@ -11,6 +11,7 @@ import { deepmerge } from '@/utils/deepmerge'
 
 export type NCOStateJson = {
   _id: string
+  status: Status | null
   vod: VodKey | null
   title: string | null
   offset: number
@@ -76,6 +77,7 @@ export class NCOState {
   readonly key: `tmp:state:${string}`
   readonly sync: boolean
 
+  #status: Status | null = null
   #vod: VodKey | null = null
   #title: string | null = null
   #offset: number = 0
@@ -115,6 +117,9 @@ export class NCOState {
   }
 
   clear() {
+    this.status.clear()
+    this.vod.clear()
+    this.title.clear()
     this.offset.clear()
     this.slots.clear()
   }
@@ -122,6 +127,7 @@ export class NCOState {
   getJSON(): NCOStateJson {
     return {
       _id: this.id,
+      status: this.status.get(),
       vod: this.vod.get(),
       title: this.title.get(),
       offset: this.offset.get(),
@@ -130,6 +136,12 @@ export class NCOState {
   }
 
   setJSON(json: NCOStateJson | null) {
+    if (json?.status) {
+      this.status.set(json.status)
+    } else {
+      this.status.clear()
+    }
+
     if (json?.vod) {
       this.vod.set(json.vod)
     } else {
@@ -153,6 +165,26 @@ export class NCOState {
     } else {
       this.slots.clear()
     }
+  }
+
+  status = {
+    get: () => this.#status,
+
+    set: (status: Status | null): boolean => {
+      if (this.#status !== status) {
+        this.#status = status
+
+        this.#trigger('change', 'status')
+
+        return true
+      }
+
+      return false
+    },
+
+    clear: () => {
+      return this.status.set(null)
+    },
   }
 
   vod = {
