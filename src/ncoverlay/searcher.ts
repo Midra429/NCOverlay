@@ -459,6 +459,15 @@ export class NCOSearcher {
     this.#listeners[type]!.push(callback)
   }
 
+  removeEventListener<Type extends keyof NCOSearcherEventMap>(
+    type: Type,
+    callback: NCOSearcherEventMap[Type]
+  ) {
+    this.#listeners[type] = this.#listeners[type]?.filter(
+      (cb) => cb !== callback
+    )
+  }
+
   removeAllEventListeners() {
     for (const key in this.#listeners) {
       delete this.#listeners[key as keyof NCOSearcherEventMap]

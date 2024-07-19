@@ -375,6 +375,15 @@ export class NCOverlay {
     this.#listeners[type]!.push(callback)
   }
 
+  removeEventListener<Type extends keyof NCOverlayEventMap>(
+    type: Type,
+    callback: NCOverlayEventMap[Type]
+  ) {
+    this.#listeners[type] = this.#listeners[type]?.filter(
+      (cb) => cb !== callback
+    )
+  }
+
   removeAllEventListeners() {
     for (const key in this.#listeners) {
       delete this.#listeners[key as keyof NCOverlayEventMap]

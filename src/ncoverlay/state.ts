@@ -365,6 +365,15 @@ export class NCOState {
     this.#listeners[type]!.push(callback)
   }
 
+  removeEventListener<Type extends keyof NCOStateEventMap>(
+    type: Type,
+    callback: NCOStateEventMap[Type]
+  ) {
+    this.#listeners[type] = this.#listeners[type]?.filter(
+      (cb) => cb !== callback
+    )
+  }
+
   removeAllEventListeners() {
     for (const key in this.#listeners) {
       delete this.#listeners[key as keyof NCOStateEventMap]
