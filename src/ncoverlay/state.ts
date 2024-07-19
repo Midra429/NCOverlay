@@ -19,7 +19,7 @@ export type NCOStateJson = {
 }
 
 export type NCOStateEventMap = {
-  change: (type: keyof NCOStateJson) => void
+  change: (this: NCOState, type: keyof NCOStateJson) => void
 }
 
 export type Status = 'pending' | 'searching' | 'loading' | 'ready' | 'error'

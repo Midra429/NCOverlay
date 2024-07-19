@@ -13,12 +13,12 @@ import { Logger } from '@/utils/logger'
 import { ncoApiProxy } from './api'
 
 export type NCOSearcherEventMap = {
-  searching: () => void
-  searched: () => void
-  loading: () => void
-  loaded: () => void
-  ready: () => void
-  error: () => void
+  searching: (this: NCOSearcher) => void
+  searched: (this: NCOSearcher) => void
+  loading: (this: NCOSearcher) => void
+  loaded: (this: NCOSearcher) => void
+  ready: (this: NCOSearcher) => void
+  error: (this: NCOSearcher) => void
 }
 
 /**
