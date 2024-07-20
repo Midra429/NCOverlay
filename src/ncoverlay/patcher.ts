@@ -47,16 +47,8 @@ export class NCOPatcher {
 
       this.#nco.clear()
 
-      this.#nco.state.status.set('pending')
-
-      const values = await settings.get(
-        'settings:comment:autoLoad',
-        'settings:comment:autoLoadSzbh',
-        'settings:comment:autoLoadJikkyo'
-      )
-
       // 自動読み込み
-      if (values['settings:comment:autoLoad']) {
+      if (await settings.get('settings:comment:autoLoad')) {
         this.#nco.state.status.set('searching')
 
         const info = await this.#getInfo(this.#video)
@@ -65,14 +57,19 @@ export class NCOPatcher {
         this.#nco.state.title.set(info?.title ?? null)
 
         if (info?.title) {
-          await this.#nco.searcher.autoLoad(info, {
-            szbh: values['settings:comment:autoLoadSzbh'],
-            jikkyo: values['settings:comment:autoLoadJikkyo'],
-          })
-        }
-      }
+          const {
+            'settings:comment:autoLoadSzbh': szbh,
+            'settings:comment:autoLoadJikkyo': jikkyo,
+          } = await settings.get(
+            'settings:comment:autoLoadSzbh',
+            'settings:comment:autoLoadJikkyo'
+          )
 
-      this.#nco.state.status.set('ready')
+          await this.#nco.searcher.autoLoad(info, { szbh, jikkyo })
+        }
+
+        this.#nco.state.status.set('ready')
+      }
     })
 
     this.#appendCanvas(this.#video, this.#nco.renderer.canvas)
