@@ -2,6 +2,7 @@ import type { Slot } from '@/ncoverlay/state'
 
 import { memo, useCallback } from 'react'
 import { Button, Spinner, cn } from '@nextui-org/react'
+import { ClipboardPenIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
@@ -43,13 +44,14 @@ const SlotItemsEmpty: React.FC = () => {
         'flex h-full w-full flex-col items-center justify-center gap-3'
       )}
     >
-      <p className="text-small">コメントはありません。</p>
+      <p className="text-small">コメントはありません</p>
 
       <Button
         className="h-7"
         size="sm"
         color="default"
         variant="flat"
+        startContent={<ClipboardPenIcon className="size-4" />}
         onPress={onPress}
       >
         不具合報告
