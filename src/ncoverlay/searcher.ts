@@ -403,35 +403,38 @@ export class NCOSearcher {
    * マーカーの位置を探す
    */
   findMarkers(threads: V1Thread[]) {
-    const allComments = threads
+    const comments = threads
       .flatMap((thread) => thread.comments)
       .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
 
-    const segmentedComments: string[][] = [[]]
-    const segmentIntervalMs = 5000
-    let tmpIdx = 0
+    return MARKERS.map(({ regexp }) => {
+      let tmpCount = 0
+      let tmpVposMs = 0
 
-    for (const { vposMs, body } of allComments) {
-      if (vposMs < segmentIntervalMs * (tmpIdx + 1)) {
-        segmentedComments[tmpIdx].push(body)
-      } else {
-        segmentedComments[++tmpIdx] = [body]
+      comments
+        .filter((cmt) => regexp.test(cmt.body))
+        .forEach((cmt, idx, ary) => {
+          const commentsInRange = ary.slice(idx).filter((val) => {
+            return val.vposMs - cmt.vposMs <= 5000
+          })
+          const count = commentsInRange.length
+
+          if (tmpCount < count) {
+            const first = commentsInRange.at(0)!
+            const last = commentsInRange.at(-1)!
+
+            tmpCount = count
+            tmpVposMs = Math.trunc(
+              first.vposMs + (last.vposMs - first.vposMs) / 4
+            )
+          }
+        })
+
+      if (2 <= tmpCount && tmpVposMs) {
+        return tmpVposMs
       }
-    }
 
-    const markerCounts = MARKERS.map(({ regexp }) => {
-      return segmentedComments.map((comments) => {
-        return comments.filter((text) => regexp.test(text)).length
-      })
-    })
-
-    return markerCounts.map((counts) => {
-      const max = Math.max(...counts)
-      const idx = 3 <= max ? counts.indexOf(max) : -1
-
-      return idx !== -1
-        ? Math.trunc(idx * segmentIntervalMs + segmentIntervalMs / 3)
-        : null
+      return null
     })
   }
 
