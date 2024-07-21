@@ -25,7 +25,7 @@ import { ItemButton } from '@/components/item-button'
 const { name, version } = webext.runtime.getManifest()
 
 const FormsButton: React.FC = () => {
-  const ncoStateJson = useNcoStateJson(['vod', 'title'])
+  const ncoStateJson = useNcoStateJson('vod', 'title')
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
@@ -37,7 +37,7 @@ const FormsButton: React.FC = () => {
         url: ncoStateJson && tab?.url,
       }),
     })
-  }, [ncoStateJson?.vod, ncoStateJson?.title])
+  }, [ncoStateJson])
 
   return (
     <IconLink

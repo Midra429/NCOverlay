@@ -19,7 +19,7 @@ export type NCOStateJson = {
 }
 
 export type NCOStateEventMap = {
-  change: (this: NCOState, type: keyof NCOStateJson) => void
+  change: (this: NCOState, type: keyof Omit<NCOStateJson, '_id'>) => void
 }
 
 export type Status = 'pending' | 'searching' | 'loading' | 'ready' | 'error'
@@ -124,14 +124,28 @@ export class NCOState {
     this.slots.clear()
   }
 
-  getJSON(): NCOStateJson {
-    return {
-      _id: this.id,
-      status: this.status.get(),
-      vod: this.vod.get(),
-      title: this.title.get(),
-      offset: this.offset.get(),
-      slots: this.slots.getAll(),
+  getJSON<
+    Keys extends (keyof Omit<NCOStateJson, '_id'>)[],
+    Result = Keys['length'] extends 0
+      ? NCOStateJson
+      : { [key in Keys[number]]: NCOStateJson[key] },
+  >(...keys: Keys): Result {
+    switch (keys.length) {
+      case 0:
+        return {
+          _id: this.id,
+          status: this.status.get(),
+          vod: this.vod.get(),
+          title: this.title.get(),
+          offset: this.offset.get(),
+          slots: this.slots.get(),
+        } satisfies NCOStateJson as Result
+
+      default:
+        return {
+          _id: this.id,
+          ...Object.fromEntries(keys.map((key) => [key, this[key].get()])),
+        } satisfies Partial<NCOStateJson> as Result
     }
   }
 
@@ -252,18 +266,28 @@ export class NCOState {
       return this.#slots.size
     },
 
-    get: (id: string) => {
-      return this.#slots.get(id) ?? null
-    },
+    get: <
+      SlotIds extends string[],
+      Result = (SlotIds['length'] extends 1 ? Slot : Slot[]) | null,
+    >(
+      ...ids: SlotIds
+    ): Result => {
+      switch (ids.length) {
+        case 0:
+          return (this.#slots.size ? [...this.#slots.values()] : null) as Result
 
-    getAll: () => {
-      return this.#slots.size ? [...this.#slots.values()] : null
+        case 1:
+          return (this.#slots.get(ids[0]) ?? null) as Result
+
+        default:
+          return ids.flatMap((id) => this.#slots.get(id) ?? []) as Result
+      }
     },
 
     getThreads: () => {
       const threadMap = new Map<string, V1Thread>()
 
-      this.slots.getAll()?.forEach((slot) => {
+      this.slots.get()?.forEach((slot) => {
         if (slot.hidden || slot.status !== 'ready') {
           return
         }
@@ -287,7 +311,7 @@ export class NCOState {
     },
 
     set: (slots: Slot[]): boolean => {
-      const old = this.slots.getAll()
+      const old = this.slots.get()
 
       if (!equal(old, slots)) {
         this.#slots.clear()
@@ -305,7 +329,7 @@ export class NCOState {
     },
 
     add: (...slots: Slot[]): boolean => {
-      const old = this.slots.getAll()
+      const old = this.slots.get()
 
       if (!equal(old, slots)) {
         slots.forEach((slot) => {

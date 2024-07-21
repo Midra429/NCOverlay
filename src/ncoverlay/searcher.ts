@@ -310,7 +310,7 @@ export class NCOSearcher {
 
     this.#trigger('ready')
 
-    Logger.log('slots', this.state.slots.getAll())
+    Logger.log('slots', this.state.slots.get())
   }
 
   // /**

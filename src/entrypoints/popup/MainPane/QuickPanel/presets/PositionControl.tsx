@@ -51,7 +51,7 @@ const MarkerButton: React.FC<{
 }
 
 export const PositionControl: React.FC = () => {
-  const ncoStateJson = useNcoStateJson(['offset', 'slots'])
+  const ncoStateJson = useNcoStateJson('offset', 'slots')
 
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)

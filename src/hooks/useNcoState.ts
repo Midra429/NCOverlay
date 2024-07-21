@@ -20,15 +20,22 @@ export const initializeNcoState = async () => {
   } catch {}
 }
 
-export const useNcoStateJson = (targetKeys?: (keyof NCOStateJson)[]) => {
-  const [state, setState] = useState<NCOStateJson | null>(null)
+export const useNcoStateJson = <
+  Keys extends (keyof Omit<NCOStateJson, '_id'>)[],
+  Result = Keys['length'] extends 0
+    ? NCOStateJson
+    : { [key in Keys[number]]: NCOStateJson[key] },
+>(
+  ...keys: Keys
+): Result | null => {
+  const [state, setState] = useState<Result | null>(null)
 
   useEffect(() => {
-    setState(ncoState?.getJSON() ?? null)
+    setState(ncoState?.getJSON(...keys) ?? null)
 
     const callback: NCOStateEventMap['change'] = function (key) {
-      if (!targetKeys || targetKeys.includes(key)) {
-        setState(this.getJSON() ?? null)
+      if (!keys || keys.includes(key)) {
+        setState(this.getJSON(...keys) ?? null)
       }
     }
 

@@ -22,7 +22,7 @@ const SlotItems: React.FC<{ slots: Slot[] }> = ({ slots }) => {
 }
 
 const SlotItemsEmpty: React.FC = () => {
-  const ncoStateJson = useNcoStateJson(['vod', 'title'])
+  const ncoStateJson = useNcoStateJson('vod', 'title')
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
@@ -35,7 +35,7 @@ const SlotItemsEmpty: React.FC = () => {
         url: ncoStateJson && tab?.url,
       }),
     })
-  }, [ncoStateJson?.vod, ncoStateJson?.title])
+  }, [ncoStateJson])
 
   return (
     <div
@@ -61,7 +61,7 @@ const SlotItemsEmpty: React.FC = () => {
 }
 
 const StatusOverlay: React.FC = () => {
-  const ncoStateJson = useNcoStateJson(['status'])
+  const ncoStateJson = useNcoStateJson('status')
 
   if (ncoStateJson?.status === 'searching') {
     return (
@@ -85,7 +85,7 @@ const StatusOverlay: React.FC = () => {
  * サイド
  */
 export const SidePane: React.FC = memo(() => {
-  const ncoStateJson = useNcoStateJson(['slots'])
+  const ncoStateJson = useNcoStateJson('slots')
 
   return (
     <div className="relative h-full w-full overflow-y-auto p-2">

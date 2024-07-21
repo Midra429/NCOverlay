@@ -111,7 +111,7 @@ export class NCOverlay {
    * 指定したマーカーの位置にジャンプ
    */
   jumpMarker(markerIdx: number | null) {
-    const slots = this.state.slots.getAll()
+    const slots = this.state.slots.get()
 
     if (!slots) return
 
