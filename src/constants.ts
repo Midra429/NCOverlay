@@ -101,7 +101,7 @@ export const MARKERS: {
   {
     label: 'オープニング',
     shortLabel: 'OP',
-    regexp: /^(OP|ＯＰ)$/,
+    regexp: /^(OP|ＯＰ)$/i,
   },
   {
     label: 'Aパート',
