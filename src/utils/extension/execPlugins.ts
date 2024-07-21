@@ -1,4 +1,9 @@
-import type { PluginVodKey, PluginId, Plugins } from '@/types/constants'
+import type {
+  PluginKey,
+  PluginVodKey,
+  PluginId,
+  Plugins,
+} from '@/types/constants'
 
 import { Logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/page'
@@ -8,29 +13,24 @@ export const execPlugins = async <VodKey extends PluginVodKey>(
   plugins: Plugins<VodKey>
 ) => {
   const pluginIds = Object.keys(plugins) as PluginId<VodKey>[]
-  const disablePluginFunctions = new Map<PluginId<VodKey>, () => void>()
+  const disablePlugins = new Map<PluginId<VodKey>, () => void>()
 
   settings.loadAndWatch('settings:plugins', (keys) => {
     pluginIds.forEach((id) => {
-      const pluginKey = `${vod}:${id}` as const
+      const pluginKey = `${vod}:${id}` as PluginKey
 
       // プラグイン ON
-      if (keys.includes(pluginKey) && !disablePluginFunctions.has(id)) {
+      if (keys.includes(pluginKey) && !disablePlugins.has(id)) {
         Logger.log(`plugin (enable): ${id}`)
 
-        const disablePlugin = plugins[id]()
-
-        disablePluginFunctions.set(id, disablePlugin)
+        disablePlugins.set(id, plugins[id]())
       }
       // プラグイン OFF
-      else if (!keys.includes(pluginKey) && disablePluginFunctions.has(id)) {
+      else if (!keys.includes(pluginKey) && disablePlugins.has(id)) {
         Logger.log(`plugin (disable): ${id}`)
 
-        const disablePlugin = disablePluginFunctions.get(id)!
-
-        disablePlugin()
-
-        disablePluginFunctions.delete(id)
+        disablePlugins.get(id)!()
+        disablePlugins.delete(id)
       }
     })
   })
