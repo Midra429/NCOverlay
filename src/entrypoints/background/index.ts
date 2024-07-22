@@ -8,7 +8,7 @@ import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { setBadge } from '@/utils/extension/setBadge'
 
-import migration from './migration'
+// import migration from './migration'
 import onUtilsMessage from './onUtilsMessage'
 import onNcoApiMessage from './onNcoApiMessage'
 import clearTemporaryData from './clearTemporaryData'
@@ -42,7 +42,7 @@ const main = async () => {
 
       case 'update': {
         await clearTemporaryData()
-        await migration()
+        // await migration()
 
         if (
           import.meta.env.PROD &&
