@@ -12,6 +12,7 @@ import { setBadge } from '@/utils/extension/setBadge'
 import onUtilsMessage from './onUtilsMessage'
 import onNcoApiMessage from './onNcoApiMessage'
 import clearTemporaryData from './clearTemporaryData'
+import requestPermissions from './requestPermissions'
 
 export default defineBackground({
   type: 'module',
@@ -27,6 +28,9 @@ const main = async () => {
   // インストール・アップデート時
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
     const { version } = webext.runtime.getManifest()
+
+    // 権限をリクエスト
+    await requestPermissions()
 
     switch (reason) {
       case 'install': {
