@@ -280,7 +280,9 @@ export class NCOState {
           return (this.#slots.get(ids[0]) ?? null) as Result
 
         default:
-          return ids.flatMap((id) => this.#slots.get(id) ?? []) as Result
+          const slots = ids.flatMap((id) => this.#slots.get(id) ?? [])
+
+          return (slots.length ? slots : null) as Result
       }
     },
 
