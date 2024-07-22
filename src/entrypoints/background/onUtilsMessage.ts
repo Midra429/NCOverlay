@@ -1,4 +1,4 @@
-import { utilsMessenger } from '@/utils/messaging'
+import { utilsMessenger } from '@/utils/extension/messaging'
 import { setBadge } from '@/utils/extension/setBadge'
 
 export default () => {

@@ -11,7 +11,7 @@ import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
-import { utilsMessenger } from '@/utils/messaging'
+import { utilsMessenger } from '@/utils/extension/messaging'
 
 import { ncoMessenger } from './messaging'
 import { NCOState } from './state'

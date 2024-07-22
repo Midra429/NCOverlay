@@ -1,5 +1,5 @@
 import type { Tabs } from 'wxt/browser'
-import type { setBadge } from '@/utils/extension/setBadge'
+import type { setBadge } from './setBadge'
 
 import { defineExtensionMessaging } from '@webext-core/messaging'
 
