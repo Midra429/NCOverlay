@@ -1,0 +1,5 @@
+.NCOverlay-Capture {
+  #bcplayer > *:not(.NCOverlay-Video, .NCOverlay-Canvas) {
+    display: none !important;
+  }
+}

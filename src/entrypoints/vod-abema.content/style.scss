@@ -1,0 +1,8 @@
+.NCOverlay-Capture {
+  *:has(> .com-vod-VODScreen__player) {
+    & ~ *,
+    & > *:not(.com-vod-VODScreen__player) {
+      display: none !important;
+    }
+  }
+}

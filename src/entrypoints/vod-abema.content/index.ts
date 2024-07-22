@@ -8,6 +8,8 @@ import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
+import './style.scss'
+
 const vod: VodKey = 'abema'
 
 export default defineContentScript({

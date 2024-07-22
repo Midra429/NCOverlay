@@ -10,7 +10,7 @@ import { injectScript } from '@/utils/dom/injectScript'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
-import './style.css'
+import './style.scss'
 
 const vod: VodKey = 'dAnime'
 

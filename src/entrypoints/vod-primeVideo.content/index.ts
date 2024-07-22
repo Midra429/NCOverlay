@@ -11,6 +11,8 @@ import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 import { formatedToSeconds } from '@/utils/format'
 
+import './style.scss'
+
 const vod: VodKey = 'primeVideo'
 
 export default defineContentScript({

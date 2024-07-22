@@ -131,6 +131,9 @@ export const SETTINGS_DEFAULT: {
   // 動画配信サービス
   'settings:vods': Object.keys(VODS) as VodKey[],
 
+  // キャプチャー
+  'settings:capture:format': 'jpeg',
+
   // コメント
   'settings:comment:autoLoad': true,
   'settings:comment:autoLoadChapter': true,
@@ -192,6 +195,15 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           label: VODS[key],
           value: key,
         })),
+      },
+      {
+        settingsKey: 'settings:capture:format',
+        inputType: 'select',
+        label: 'キャプチャー: 形式',
+        options: [
+          { value: 'jpeg', label: 'JPEG' },
+          { value: 'png', label: 'PNG' },
+        ],
       },
       {
         settingsKey: 'settings:showChangelog',
@@ -267,18 +279,9 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'select',
         label: 'フレームレート',
         options: [
-          {
-            value: 30,
-            label: '30fps',
-          },
-          {
-            value: 60,
-            label: '60fps',
-          },
-          {
-            value: 0,
-            label: '無制限',
-          },
+          { value: 30, label: '30fps' },
+          { value: 60, label: '60fps' },
+          { value: 0, label: '無制限' },
         ],
       },
     ],

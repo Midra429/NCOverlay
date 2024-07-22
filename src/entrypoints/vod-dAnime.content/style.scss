@@ -16,3 +16,11 @@
   width: 100%;
   height: 100%;
 }
+
+.NCOverlay-Capture {
+  .c-afterWatchHeader,
+  .controller,
+  .waitArea {
+    display: none !important;
+  }
+}

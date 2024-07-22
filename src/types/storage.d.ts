@@ -41,6 +41,12 @@ export type StorageItems_v1 = {
   'settings:vods': VodKey[]
 
   /**
+   * キャプチャー:形式
+   * @default 'jpeg'
+   */
+  'settings:capture:format': 'jpeg' | 'png'
+
+  /**
    * コメント:自動読み込み
    * @default true
    */

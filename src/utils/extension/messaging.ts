@@ -1,5 +1,6 @@
 import type { Tabs } from 'wxt/browser'
 import type { setBadge } from './setBadge'
+import type { captureTab } from './captureTab'
 
 import { defineExtensionMessaging } from '@webext-core/messaging'
 
@@ -8,7 +9,15 @@ import { defineExtensionMessaging } from '@webext-core/messaging'
 type ProtocolMap = {
   getCurrentTab: (args?: null) => Tabs.Tab
 
-  setBadge: (args: Parameters<typeof setBadge>) => ReturnType<typeof setBadge>
+  setBadge: (
+    args: Parameters<typeof setBadge>[0]
+  ) => Awaited<ReturnType<typeof setBadge>>
+
+  captureTab: (
+    args: Parameters<typeof captureTab>[0]
+  ) => Awaited<ReturnType<typeof captureTab>>
 }
 
 export const utilsMessenger = defineExtensionMessaging<ProtocolMap>()
+
+export const sendUtilsMessage = utilsMessenger.sendMessage

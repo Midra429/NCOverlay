@@ -4,9 +4,8 @@ import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants'
 
-import { webext } from '@/utils/webext'
 import { useNcoStateJson } from '@/hooks/useNcoState'
-import { ncoMessenger } from '@/ncoverlay/messaging'
+import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import { OffsetControl } from '@/components/offset-control'
 
@@ -17,10 +16,8 @@ const MarkerButton: React.FC<{
   disabled?: boolean
 }> = ({ markerIdx, label, shortLabel, disabled }) => {
   const onPress = useCallback(async () => {
-    const tab = await webext.getCurrentActiveTab()
-
     try {
-      ncoMessenger.sendMessage('jumpMarker', [markerIdx], tab?.id)
+      sendNcoMessage('jumpMarker', markerIdx)
     } catch {}
   }, [markerIdx])
 
@@ -83,10 +80,8 @@ export const PositionControl: React.FC = () => {
   }, [slotMarkers])
 
   const onApply = useCallback(async () => {
-    const tab = await webext.getCurrentActiveTab()
-
     try {
-      ncoMessenger.sendMessage('setGlobalOffset', [offset * 1000], tab?.id)
+      sendNcoMessage('setGlobalOffset', offset * 1000)
     } catch {}
   }, [offset])
 

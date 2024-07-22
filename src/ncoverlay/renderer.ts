@@ -2,6 +2,11 @@ import type { BaseOptions, V1Thread } from '@xpadev-net/niconicomments'
 
 import NiconiComments from '@xpadev-net/niconicomments'
 
+import { Logger } from '@/utils/logger'
+import { getObjectFitRect } from '@/utils/dom/getObjectFitRect'
+import { settings } from '@/utils/settings/extension'
+import { sendUtilsMessage } from '@/utils/extension/messaging'
+
 type NiconiCommentsOptions = Partial<Omit<BaseOptions, 'mode' | 'format'>>
 
 /**
@@ -46,6 +51,8 @@ export class NCORenderer {
     this.#niconicomments?.clear()
     this.#niconicomments = null
     this.#threads = null
+
+    document.body.classList.remove('NCOverlay-Capture')
   }
 
   /**
@@ -119,5 +126,37 @@ export class NCORenderer {
     }
 
     this.start()
+  }
+
+  /**
+   * スクリーンショット
+   */
+  async capture() {
+    document.body.classList.add('NCOverlay-Capture')
+
+    return new Promise<{
+      data: number[]
+      format: 'jpeg' | 'png'
+    } | null>((resolve) => {
+      setTimeout(async () => {
+        const format = await settings.get('settings:capture:format')
+
+        let data: number[] | undefined
+
+        try {
+          data = await sendUtilsMessage('captureTab', {
+            rect: getObjectFitRect(true, this.canvas, 1920, 1080),
+            scale: window.devicePixelRatio,
+            format,
+          })
+        } catch (err) {
+          Logger.error('capture', err)
+        }
+
+        document.body.classList.remove('NCOverlay-Capture')
+
+        resolve(data ? { data, format } : null)
+      }, 100)
+    })
   }
 }

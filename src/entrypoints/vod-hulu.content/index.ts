@@ -7,7 +7,7 @@ import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
-import './style.css'
+import './style.scss'
 
 const vod: VodKey = 'hulu'
 

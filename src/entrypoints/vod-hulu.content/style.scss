@@ -1,0 +1,12 @@
+.NCOverlay-Canvas {
+  z-index: 1;
+}
+
+.NCOverlay-Capture {
+  .hulu-player {
+    > *:not(.hulu-player-container),
+    .video-js > *:not(.NCOverlay-Video, .NCOverlay-Canvas) {
+      display: none !important;
+    }
+  }
+}

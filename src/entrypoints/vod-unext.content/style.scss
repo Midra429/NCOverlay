@@ -1,0 +1,5 @@
+.NCOverlay-Capture {
+  *:has(> .NCOverlay-Canvas) > *:not(.NCOverlay-Video, .NCOverlay-Canvas) {
+    display: none !important;
+  }
+}

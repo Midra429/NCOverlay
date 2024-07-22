@@ -2,17 +2,14 @@ import type { NCOStateEventMap, NCOStateJson } from '@/ncoverlay/state'
 
 import { useState, useEffect } from 'react'
 
-import { webext } from '@/utils/webext'
-
-import { ncoMessenger } from '@/ncoverlay/messaging'
+import { sendNcoMessage } from '@/ncoverlay/messaging'
 import { NCOState } from '@/ncoverlay/state'
 
 export let ncoState: NCOState | null = null
 
 export const initializeNcoState = async () => {
   try {
-    const tab = await webext.getCurrentActiveTab()
-    const id = await ncoMessenger.sendMessage('getId', null, tab?.id)
+    const id = await sendNcoMessage('getId', null)
 
     if (id) {
       ncoState = new NCOState(id)

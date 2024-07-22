@@ -4,8 +4,7 @@ import { useEffect, useCallback, useState } from 'react'
 import { Button, Switch, Divider, cn } from '@nextui-org/react'
 import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 
-import { webext } from '@/utils/webext'
-import { ncoMessenger } from '@/ncoverlay/messaging'
+import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import { OffsetControl } from '@/components/offset-control'
 
@@ -40,19 +39,11 @@ const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
   }, [slot.offset])
 
   const onApply = useCallback(async () => {
-    const tab = await webext.getCurrentActiveTab()
-
     try {
-      ncoMessenger.sendMessage(
-        'updateSlot',
-        [
-          {
-            id: slot.id,
-            offset: offset * 1000,
-          },
-        ],
-        tab?.id
-      )
+      sendNcoMessage('updateSlot', {
+        id: slot.id,
+        offset: offset * 1000,
+      })
     } catch {}
   }, [slot.id, offset])
 
@@ -78,19 +69,11 @@ const SlotShowToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
     async (isSelected: boolean) => {
       setShow(isSelected)
 
-      const tab = await webext.getCurrentActiveTab()
-
       try {
-        ncoMessenger.sendMessage(
-          'updateSlot',
-          [
-            {
-              id: slot.id,
-              hidden: !isSelected,
-            },
-          ],
-          tab?.id
-        )
+        sendNcoMessage('updateSlot', {
+          id: slot.id,
+          hidden: !isSelected,
+        })
       } catch {}
     },
     [slot.id]
@@ -126,19 +109,11 @@ const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
     async (isSelected: boolean) => {
       setTranslucent(isSelected)
 
-      const tab = await webext.getCurrentActiveTab()
-
       try {
-        ncoMessenger.sendMessage(
-          'updateSlot',
-          [
-            {
-              id: slot.id,
-              translucent: isSelected,
-            },
-          ],
-          tab?.id
-        )
+        sendNcoMessage('updateSlot', {
+          id: slot.id,
+          translucent: isSelected,
+        })
       } catch {}
     },
     [slot.id]

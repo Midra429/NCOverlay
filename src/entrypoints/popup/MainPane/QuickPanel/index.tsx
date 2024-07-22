@@ -9,11 +9,12 @@ import { PanelItem } from '@/components/panel-item'
 
 import { ShowHideToggle } from './presets/ShowHideToggle'
 import { PositionControl } from './presets/PositionControl'
+import { CaptureButton } from './presets/CaptureButton'
 
 type PanelPresetComponentKey = keyof typeof PANEL_PRESET_CONPONENTS
 
 const PANEL_PRESET_CONPONENTS = {
-  'panel:showHideToggle': ShowHideToggle,
+  'panel:ShowHideToggle': ShowHideToggle,
   'panel:PositionControl': PositionControl,
 }
 
@@ -21,10 +22,9 @@ const PANEL_PRESET_CONPONENTS = {
  * @todo そのうち編集可にする
  */
 const quickpanelItemKeys: (PanelPresetComponentKey | SettingsKey)[] = [
-  'panel:showHideToggle',
+  'panel:ShowHideToggle',
   'settings:comment:opacity',
   'settings:comment:scale',
-  'settings:comment:fps',
   'panel:PositionControl',
 ]
 
@@ -59,6 +59,8 @@ export const QuickPanel: React.FC = memo(() => {
           )
         )
       })}
+
+      <CaptureButton />
     </div>
   )
 })

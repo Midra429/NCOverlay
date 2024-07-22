@@ -11,7 +11,7 @@ import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
-import { utilsMessenger } from '@/utils/extension/messaging'
+import { sendUtilsMessage } from '@/utils/extension/messaging'
 
 import { ncoMessenger } from './messaging'
 import { NCOState } from './state'
@@ -61,7 +61,7 @@ export class NCOverlay {
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
       window.setTimeout(() => {
         this.#trigger('loadedmetadata', new Event('loadedmetadata'))
-      }, 500)
+      }, 100)
     }
   }
 
@@ -194,7 +194,7 @@ export class NCOverlay {
     text: string | null,
     color?: Parameters<typeof setBadge>[0]['color']
   ) {
-    utilsMessenger.sendMessage('setBadge', [{ text, color }])
+    sendUtilsMessage('setBadge', { text, color })
   }
 
   /**
@@ -309,22 +309,27 @@ export class NCOverlay {
 
     // メッセージ (スロット 更新)
     ncoMessenger.onMessage('updateSlot', ({ data }) => {
-      return this.updateSlot(...data)
+      return this.updateSlot(data)
     })
 
     // メッセージ (オフセット 全体)
     ncoMessenger.onMessage('setGlobalOffset', ({ data }) => {
-      return this.setGlobalOffset(...data)
+      return this.setGlobalOffset(data)
     })
 
     // メッセージ (マーカー)
     ncoMessenger.onMessage('jumpMarker', ({ data }) => {
-      return this.jumpMarker(...data)
+      return this.jumpMarker(data)
     })
 
     // メッセージ (描画データ 更新)
     ncoMessenger.onMessage('updateRendererThreads', () => {
       return this.updateRendererThreads()
+    })
+
+    // メッセージ (スクリーンショット)
+    ncoMessenger.onMessage('capture', () => {
+      return this.renderer.capture()
     })
   }
 

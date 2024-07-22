@@ -9,7 +9,7 @@ import { ncoApiProxy } from '@/ncoverlay/api'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 import { getCookie } from '@/utils/dom/getCookie'
 
-import './style.css'
+import './style.scss'
 
 const vod: VodKey = 'fod'
 

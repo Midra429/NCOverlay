@@ -8,6 +8,8 @@ import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
+import './style.scss'
+
 const vod: VodKey = 'unext'
 
 export default defineContentScript({
@@ -76,7 +78,7 @@ const main = async () => {
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/play/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          'div[data-ucn="fullscreenContextWrapper"] video'
+          ':is(#videoTagWrapper, div[data-ucn="fullscreenContextWrapper"]) video'
         )
 
         if (video) {

@@ -1,0 +1,9 @@
+.NCOverlay-Canvas {
+  z-index: 11;
+}
+
+.NCOverlay-Capture {
+  #video_container > *:not(.NCOverlay-Video, .NCOverlay-Canvas) {
+    display: none !important;
+  }
+}

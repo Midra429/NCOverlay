@@ -1,5 +1,6 @@
 import { utilsMessenger } from '@/utils/extension/messaging'
 import { setBadge } from '@/utils/extension/setBadge'
+import { captureTab } from '@/utils/extension/captureTab'
 
 export default () => {
   utilsMessenger.onMessage('getCurrentTab', ({ sender }) => {
@@ -9,7 +10,14 @@ export default () => {
   utilsMessenger.onMessage('setBadge', ({ sender, data }) => {
     return setBadge({
       tabId: sender.tab?.id,
-      ...data[0],
+      ...data,
+    })
+  })
+
+  utilsMessenger.onMessage('captureTab', ({ sender, data }) => {
+    return captureTab({
+      windowId: sender.tab?.windowId,
+      ...data,
     })
   })
 }

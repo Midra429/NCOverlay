@@ -1,0 +1,8 @@
+.NCOverlay-Capture {
+  div[class^='player_container_'] {
+    > *:not(div[class^='player_']),
+    .video-js > *:not(.NCOverlay-Video, .NCOverlay-Canvas) {
+      display: none !important;
+    }
+  }
+}
