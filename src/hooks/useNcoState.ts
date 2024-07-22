@@ -1,4 +1,4 @@
-import type { NCOStateEventMap, NCOStateJson, Slot } from '@/ncoverlay/state'
+import type { NCOStateEventMap, NCOStateJson } from '@/ncoverlay/state'
 
 import { useState, useEffect } from 'react'
 
@@ -36,28 +36,6 @@ export const useNcoStateJson = <
     const callback: NCOStateEventMap['change'] = function (key) {
       if (!keys || keys.includes(key)) {
         setState(this.getJSON(...keys) ?? null)
-      }
-    }
-
-    ncoState?.addEventListener('change', callback)
-
-    return () => {
-      ncoState?.removeEventListener('change', callback)
-    }
-  }, [])
-
-  return state
-}
-
-export const useNcoStateSlot = (id: string) => {
-  const [state, setState] = useState<Slot | null>(null)
-
-  useEffect(() => {
-    setState(ncoState?.slots.get(id) ?? null)
-
-    const callback: NCOStateEventMap['change'] = function (key) {
-      if (key === 'slots') {
-        setState(this.slots.get(id) ?? null)
       }
     }
 
