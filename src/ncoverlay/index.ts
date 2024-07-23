@@ -24,7 +24,7 @@ export type NCOverlayEventMap = {
   playing: (this: NCOverlay, evt: Event) => void
   pause: (this: NCOverlay, evt: Event) => void
   seeked: (this: NCOverlay, evt: Event) => void
-  timeupdate: (this: NCOverlay, evt: Event) => void
+  // timeupdate: (this: NCOverlay, evt: Event) => void
   loadedmetadata: (this: NCOverlay, evt: Event) => void
 }
 
@@ -97,7 +97,7 @@ export class NCOverlay {
   /**
    * 全体のオフセットをセット
    */
-  setGlobalOffset(ms: number | null) {
+  setGlobalOffset(ms: number | null): boolean {
     const changed = ms ? this.state.offset.set(ms) : this.state.offset.clear()
 
     if (changed) {
@@ -194,7 +194,7 @@ export class NCOverlay {
     text: string | null,
     color?: Parameters<typeof setBadge>[0]['color']
   ) {
-    sendUtilsMessage('setBadge', { text, color })
+    return sendUtilsMessage('setBadge', { text, color })
   }
 
   /**
@@ -203,6 +203,10 @@ export class NCOverlay {
   #videoEventListeners: {
     [type in keyof HTMLVideoElementEventMap]?: (evt: Event) => void
   } = {
+    loadedmetadata: (evt) => {
+      this.#trigger('loadedmetadata', evt)
+    },
+
     playing: (evt) => {
       this.renderer.stop()
       this.renderer.start()
@@ -222,13 +226,9 @@ export class NCOverlay {
       this.#trigger('seeked', evt)
     },
 
-    timeupdate: (evt) => {
-      this.#trigger('timeupdate', evt)
-    },
-
-    loadedmetadata: (evt) => {
-      this.#trigger('loadedmetadata', evt)
-    },
+    // timeupdate: (evt) => {
+    //   this.#trigger('timeupdate', evt)
+    // },
   }
 
   /**
@@ -241,6 +241,13 @@ export class NCOverlay {
       const listener = this.#videoEventListeners[type]!
 
       this.renderer.video.addEventListener(type, listener)
+    }
+
+    /**
+     * 描画データの更新
+     */
+    const updateRenderer = () => {
+      this.updateRendererThreads()
     }
 
     // 検索ステータス ロード中
@@ -256,7 +263,7 @@ export class NCOverlay {
 
       this.#setBadge(size ? size.toString() : null, 'green')
 
-      this.updateRendererThreads()
+      updateRenderer()
 
       if (!this.renderer.video.paused) {
         this.renderer.stop()
@@ -287,19 +294,13 @@ export class NCOverlay {
       }),
 
       // 設定 (NG設定:サイズの大きいコメントを非表示)
-      settings.loadAndWatch('settings:ng:largeComments', () => {
-        this.updateRendererThreads()
-      }),
+      settings.loadAndWatch('settings:ng:largeComments', updateRenderer),
 
       // 設定 (NG設定:固定コメントを非表示)
-      settings.loadAndWatch('settings:ng:fixedComments', () => {
-        this.updateRendererThreads()
-      }),
+      settings.loadAndWatch('settings:ng:fixedComments', updateRenderer),
 
       // 設定 (NG設定:色付きコメントを非表示)
-      settings.loadAndWatch('settings:ng:coloredComments', () => {
-        this.updateRendererThreads()
-      })
+      settings.loadAndWatch('settings:ng:coloredComments', updateRenderer)
     )
 
     // メッセージ (インスタンスのID取得)
@@ -322,14 +323,9 @@ export class NCOverlay {
       return this.jumpMarker(data)
     })
 
-    // メッセージ (描画データ 更新)
-    ncoMessenger.onMessage('updateRendererThreads', () => {
-      return this.updateRendererThreads()
-    })
-
     // メッセージ (スクリーンショット)
-    ncoMessenger.onMessage('capture', () => {
-      return this.renderer.capture()
+    ncoMessenger.onMessage('capture', ({ data }) => {
+      return this.renderer.capture(data)
     })
   }
 

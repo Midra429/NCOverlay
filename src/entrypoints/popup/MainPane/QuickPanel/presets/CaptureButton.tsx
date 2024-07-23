@@ -1,37 +1,34 @@
 import { useCallback, useState } from 'react'
 import { Button } from '@nextui-org/react'
-import { CameraIcon } from 'lucide-react'
+import { CameraIcon, CheckIcon, XIcon } from 'lucide-react'
 
-import { webext } from '@/utils/webext'
-import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { capture } from '@/utils/extension/capture'
 
 export const CaptureButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isCopied, setIsCopied] = useState(false)
+  const [isFailed, setIsFailed] = useState(false)
 
   const onPress = useCallback(async () => {
     setIsLoading(true)
 
-    try {
-      const result = await sendNcoMessage('capture', null)
-
-      if (result) {
-        const { data, format } = result
-
-        const blob = new Blob([new Uint8Array(data)], {
-          type: `image/${format}`,
-        })
-        const url = URL.createObjectURL(blob)
-
-        await webext.windows.create({
-          type: 'popup',
-          width: 1280,
-          height: 960,
-          url,
-        })
-      }
-    } catch {}
+    const result = await capture()
 
     setIsLoading(false)
+
+    if (!result) {
+      setIsFailed(true)
+
+      setTimeout(() => {
+        setIsFailed(false)
+      }, 2000)
+    } else if (result === 'copy') {
+      setIsCopied(true)
+
+      setTimeout(() => {
+        setIsCopied(false)
+      }, 2000)
+    }
   }, [])
 
   return (
@@ -39,11 +36,18 @@ export const CaptureButton: React.FC = () => {
       fullWidth
       size="md"
       variant="flat"
-      startContent={!isLoading && <CameraIcon className="size-4" />}
+      startContent={
+        (isCopied && <CheckIcon className="size-4" />) ||
+        (isFailed && <XIcon className="size-4" />) ||
+        (!isLoading && <CameraIcon className="size-4" />)
+      }
       isLoading={isLoading}
+      isDisabled={isCopied || isFailed}
       onPress={onPress}
     >
-      キャプチャー
+      {(isCopied && 'コピーしました') ||
+        (isFailed && '失敗しました') ||
+        'キャプチャー'}
     </Button>
   )
 }

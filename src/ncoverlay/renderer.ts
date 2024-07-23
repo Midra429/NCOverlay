@@ -1,10 +1,10 @@
 import type { BaseOptions, V1Thread } from '@xpadev-net/niconicomments'
+import type { StorageItems } from '@/types/storage'
 
 import NiconiComments from '@xpadev-net/niconicomments'
 
 import { Logger } from '@/utils/logger'
 import { getObjectFitRect } from '@/utils/dom/getObjectFitRect'
-import { settings } from '@/utils/settings/extension'
 import { sendUtilsMessage } from '@/utils/extension/messaging'
 
 type NiconiCommentsOptions = Partial<Omit<BaseOptions, 'mode' | 'format'>>
@@ -131,17 +131,15 @@ export class NCORenderer {
   /**
    * スクリーンショット
    */
-  async capture() {
+  async capture(format: StorageItems['settings:capture:format']) {
     document.body.classList.add('NCOverlay-Capture')
 
     return new Promise<{
-      data: number[]
+      data: number[] | null
       format: 'jpeg' | 'png'
-    } | null>((resolve) => {
+    }>((resolve) => {
       setTimeout(async () => {
-        const format = await settings.get('settings:capture:format')
-
-        let data: number[] | undefined
+        let data: number[] | null = null
 
         try {
           data = await sendUtilsMessage('captureTab', {
@@ -155,7 +153,7 @@ export class NCORenderer {
 
         document.body.classList.remove('NCOverlay-Capture')
 
-        resolve(data ? { data, format } : null)
+        resolve({ data, format })
       }, 100)
     })
   }

@@ -56,7 +56,7 @@ export default defineConfig({
     // },
 
     host_permissions: ['<all_urls>'],
-    permissions: ['storage', 'unlimitedStorage', 'tabs'],
+    permissions: ['storage', 'unlimitedStorage', 'tabs', 'clipboardWrite'],
   }),
 
   hooks: {

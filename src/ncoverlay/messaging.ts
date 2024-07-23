@@ -1,3 +1,4 @@
+import type { StorageItems } from '@/types/storage'
 import type { NCOverlay } from '.'
 
 import { defineExtensionMessaging } from '@webext-core/messaging'
@@ -8,8 +9,6 @@ import { webext } from '@/utils/webext'
 
 type ProtocolMap = {
   getId: (args?: null) => string | null
-
-  updateRendererThreads: (args?: null) => void
 
   updateSlot: (
     args: Parameters<NCOverlay['updateSlot']>[0]
@@ -23,10 +22,10 @@ type ProtocolMap = {
     args: Parameters<NCOverlay['jumpMarker']>[0]
   ) => ReturnType<NCOverlay['jumpMarker']>
 
-  capture: (args?: null) => {
-    data: number[]
+  capture: (format: StorageItems['settings:capture:format']) => {
+    data: number[] | null
     format: 'jpeg' | 'png'
-  } | null
+  }
 }
 
 export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()

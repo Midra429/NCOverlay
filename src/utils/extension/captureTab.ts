@@ -1,3 +1,5 @@
+import type { StorageItems } from '@/types/storage'
+
 import { webext } from '@/utils/webext'
 
 export const captureTab = async ({
@@ -13,7 +15,7 @@ export const captureTab = async ({
     height: number
   }
   scale: number
-  format?: 'jpeg' | 'png'
+  format?: StorageItems['settings:capture:format']
   windowId?: number
 }) => {
   format ??= 'jpeg'

@@ -133,6 +133,7 @@ export const SETTINGS_DEFAULT: {
 
   // キャプチャー
   'settings:capture:format': 'jpeg',
+  'settings:capture:method': 'window',
 
   // コメント
   'settings:comment:autoLoad': true,
@@ -203,6 +204,15 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         options: [
           { value: 'jpeg', label: 'JPEG' },
           { value: 'png', label: 'PNG' },
+        ],
+      },
+      {
+        settingsKey: 'settings:capture:method',
+        inputType: 'select',
+        label: 'キャプチャー: 方式',
+        options: [
+          { value: 'window', label: 'ウィンドウ' },
+          { value: 'copy', label: 'コピー' },
         ],
       },
       {

@@ -47,6 +47,12 @@ export type StorageItems_v1 = {
   'settings:capture:format': 'jpeg' | 'png'
 
   /**
+   * キャプチャー:方式
+   * @default 'jpeg'
+   */
+  'settings:capture:method': 'window' | 'copy'
+
+  /**
    * コメント:自動読み込み
    * @default true
    */
