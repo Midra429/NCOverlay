@@ -142,8 +142,8 @@ export const SETTINGS_DEFAULT: {
   'settings:comment:autoLoadJikkyo': true,
   'settings:comment:useNglist': false,
   'settings:comment:amount': 1,
-  'settings:comment:scale': 100,
   'settings:comment:opacity': 100,
+  'settings:comment:scale': 100,
   'settings:comment:fps': 60,
 
   // NG設定
@@ -267,21 +267,21 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       //   suffix: '倍',
       // },
       {
-        settingsKey: 'settings:comment:scale',
-        inputType: 'range',
-        label: '表示サイズ',
-        min: 50,
-        max: 100,
-        step: 10,
-        suffix: '%',
-      },
-      {
         settingsKey: 'settings:comment:opacity',
         inputType: 'range',
         label: '不透明度',
         min: 0,
         max: 100,
         step: 5,
+        suffix: '%',
+      },
+      {
+        settingsKey: 'settings:comment:scale',
+        inputType: 'range',
+        label: '表示サイズ',
+        min: 50,
+        max: 100,
+        step: 10,
         suffix: '%',
       },
       {

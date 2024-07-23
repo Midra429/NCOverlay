@@ -90,18 +90,18 @@ export type StorageItems_v1 = {
   'settings:comment:amount': number
 
   /**
-   * コメント:表示サイズ
-   * @description 50 ~ 100%
-   * @default 100
-   */
-  'settings:comment:scale': number
-
-  /**
    * コメント:不透明度
    * @description 0 ~ 100%
    * @default 100
    */
   'settings:comment:opacity': number
+
+  /**
+   * コメント:表示サイズ
+   * @description 50 ~ 100%
+   * @default 100
+   */
+  'settings:comment:scale': number
 
   /**
    * コメント:フレームレート

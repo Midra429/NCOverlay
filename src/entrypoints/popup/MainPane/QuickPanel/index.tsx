@@ -10,8 +10,11 @@ import { PanelItem } from '@/components/panel-item'
 import { ShowHideToggle } from './presets/ShowHideToggle'
 import { PositionControl } from './presets/PositionControl'
 import { CaptureButton } from './presets/CaptureButton'
+import { SidePanelButton } from './presets/SidePanelButton'
 
 type PanelPresetComponentKey = keyof typeof PANEL_PRESET_CONPONENTS
+
+type PanelItemKey = PanelPresetComponentKey | SettingsKey
 
 const PANEL_PRESET_CONPONENTS = {
   'panel:ShowHideToggle': ShowHideToggle,
@@ -21,7 +24,7 @@ const PANEL_PRESET_CONPONENTS = {
 /**
  * @todo そのうち編集可にする
  */
-const quickpanelItemKeys: (PanelPresetComponentKey | SettingsKey)[] = [
+const quickpanelItemKeys: PanelItemKey[] = [
   'panel:ShowHideToggle',
   'settings:comment:opacity',
   'settings:comment:scale',
@@ -43,24 +46,24 @@ export const QuickPanel: React.FC = memo(() => {
 
           delete item.description
 
-          element = <Input {...(item as any)} />
+          element = (
+            <PanelItem key={key} className="px-2.5 py-0.5">
+              <Input {...(item as any)} />
+            </PanelItem>
+          )
         } else if (key in PANEL_PRESET_CONPONENTS) {
           const Component =
             PANEL_PRESET_CONPONENTS[key as PanelPresetComponentKey]
 
-          element = <Component />
+          element = <Component key={key} />
         }
 
-        return (
-          element && (
-            <PanelItem key={key} className="px-2.5 py-0.5">
-              {element}
-            </PanelItem>
-          )
-        )
+        return element
       })}
 
-      <CaptureButton />
+      <div className="flex flex-row gap-2">
+        <CaptureButton />
+      </div>
     </div>
   )
 })

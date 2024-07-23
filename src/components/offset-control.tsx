@@ -72,9 +72,9 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           fullWidth
           isIconOnly={compact}
           isDisabled={value === 0}
+          startContent={<RotateCcwIcon className="size-4" />}
           onPress={() => onValueChange(0)}
         >
-          <RotateCcwIcon className="size-4" />
           {!compact && <span>リセット</span>}
         </Button>
 
@@ -85,9 +85,9 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           fullWidth
           isIconOnly={compact}
           isDisabled={isValueChanged === false}
+          startContent={<CheckIcon className="size-4" />}
           onPress={onApply}
         >
-          <CheckIcon className="size-4" />
           {!compact && <span>適用</span>}
         </Button>
       </div>

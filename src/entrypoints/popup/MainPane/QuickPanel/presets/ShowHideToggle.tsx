@@ -4,6 +4,8 @@ import { Switch, cn } from '@nextui-org/react'
 import { useStorage } from '@/hooks/useStorage'
 import { useSettings } from '@/hooks/useSettings'
 
+import { PanelItem } from '@/components/panel-item'
+
 /**
  * 表示 / 非表示
  */
@@ -21,29 +23,31 @@ export const ShowHideToggle: React.FC = () => {
   }, [opacity])
 
   return (
-    <Switch
-      classNames={{
-        base: cn(
-          'flex flex-row-reverse justify-between gap-2',
-          'w-full max-w-full py-2',
-          'overflow-hidden'
-        ),
-        wrapper: 'm-0',
-      }}
-      size="sm"
-      isSelected={show}
-      onValueChange={(isSelected) => {
-        setShow(isSelected)
+    <PanelItem>
+      <Switch
+        classNames={{
+          base: cn(
+            'flex flex-row-reverse justify-between gap-2',
+            'w-full max-w-full p-2.5',
+            'overflow-hidden'
+          ),
+          wrapper: 'm-0',
+        }}
+        size="sm"
+        isSelected={show}
+        onValueChange={(isSelected) => {
+          setShow(isSelected)
 
-        if (isSelected) {
-          setOpacity(tmpOpacity || 100)
-        } else {
-          setTmpOpacity(opacity)
-          setOpacity(0)
-        }
-      }}
-    >
-      <span>表示 / 非表示</span>
-    </Switch>
+          if (isSelected) {
+            setOpacity(tmpOpacity || 100)
+          } else {
+            setTmpOpacity(opacity)
+            setOpacity(0)
+          }
+        }}
+      >
+        <span>表示 / 非表示</span>
+      </Switch>
+    </PanelItem>
   )
 }

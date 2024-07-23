@@ -1,4 +1,4 @@
-import { memo, useEffect, useCallback, useState } from 'react'
+import { memo, useEffect, useState, useCallback } from 'react'
 import { Accordion, AccordionItem, Divider, Link, cn } from '@nextui-org/react'
 import {
   InfoIcon,

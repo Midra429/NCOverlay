@@ -7,6 +7,7 @@ import { MARKERS } from '@/constants'
 import { useNcoStateJson } from '@/hooks/useNcoState'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
+import { PanelItem } from '@/components/panel-item'
 import { OffsetControl } from '@/components/offset-control'
 
 const MarkerButton: React.FC<{
@@ -86,7 +87,7 @@ export const PositionControl: React.FC = () => {
   }, [offset])
 
   return (
-    <div className="flex flex-col gap-2 py-1.5">
+    <PanelItem className="flex flex-col gap-2 px-2.5 py-2">
       <div className="flex flex-row gap-2">
         <MarkerButton
           key="reset"
@@ -114,6 +115,6 @@ export const PositionControl: React.FC = () => {
         onValueChange={(val) => setOffset(val)}
         onApply={onApply}
       />
-    </div>
+    </PanelItem>
   )
 }

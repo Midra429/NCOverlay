@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react'
-import { Button } from '@nextui-org/react'
+import { useState, useCallback } from 'react'
+import { Button, cn } from '@nextui-org/react'
 import { CameraIcon, CheckIcon, XIcon } from 'lucide-react'
 
 import { capture } from '@/utils/extension/capture'
@@ -33,16 +33,19 @@ export const CaptureButton: React.FC = () => {
 
   return (
     <Button
+      className={cn(
+        'border-1 border-foreground-100',
+        'bg-content1 text-foreground',
+        'shadow-small'
+      )}
       fullWidth
-      size="md"
-      variant="flat"
+      isLoading={isLoading}
+      isDisabled={isCopied || isFailed}
       startContent={
         (isCopied && <CheckIcon className="size-4" />) ||
         (isFailed && <XIcon className="size-4" />) ||
         (!isLoading && <CameraIcon className="size-4" />)
       }
-      isLoading={isLoading}
-      isDisabled={isCopied || isFailed}
       onPress={onPress}
     >
       {(isCopied && 'コピーしました') ||

@@ -1,6 +1,6 @@
 import type { Slot } from '@/ncoverlay/state'
 
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Button, Switch, Divider, cn } from '@nextui-org/react'
 import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 

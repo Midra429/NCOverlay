@@ -17,7 +17,7 @@ export const captureTab = async ({
   scale: number
   format?: StorageItems['settings:capture:format']
   windowId?: number
-}) => {
+}): Promise<number[]> => {
   format ??= 'jpeg'
 
   const url = await webext.tabs.captureVisibleTab(windowId, {
