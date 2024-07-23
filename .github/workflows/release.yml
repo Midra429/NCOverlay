@@ -38,7 +38,7 @@ jobs:
 
       - name: Update Version
         run: |
-          bun run version.ts ${{ github.event.inputs.bump_type }}
+          bun version ${{ github.event.inputs.bump_type }}
           echo VERSION="v$(cat package.json | jq -r '.version')" >> "${GITHUB_ENV}"
 
       - name: Zip Extensions
