@@ -25,24 +25,20 @@ export const capture = async (): Promise<
       })
 
       switch (captureMethod) {
-        case 'copy': {
+        case 'copy':
           await navigator.clipboard.write([
             new ClipboardItem({ [blob.type]: blob }),
           ])
 
           break
-        }
 
-        default: {
+        default:
           await webext.windows.create({
             type: 'popup',
             width: 1280,
             height: 960,
             url: URL.createObjectURL(blob),
           })
-
-          break
-        }
       }
 
       return captureMethod

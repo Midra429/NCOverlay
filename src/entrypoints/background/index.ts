@@ -35,7 +35,7 @@ const main = async () => {
     await requestPermissions()
 
     switch (reason) {
-      case 'install': {
+      case 'install':
         if (import.meta.env.PROD) {
           // README
           webext.tabs.create({
@@ -44,9 +44,8 @@ const main = async () => {
         }
 
         break
-      }
 
-      case 'update': {
+      case 'update':
         await clearTemporaryData()
         // await migration()
 
@@ -61,14 +60,13 @@ const main = async () => {
         }
 
         break
-      }
     }
   })
 
   webext.runtime.onConnect.addListener((port) => {
     switch (port.name) {
       // NCOverlayインスタンス作成時
-      case 'instance': {
+      case 'instance':
         const tabId = port.sender?.tab?.id
         let ncoId: string | null = null
 
@@ -99,14 +97,13 @@ const main = async () => {
             const [type, data] = message.split(':')
 
             switch (type) {
-              case 'pong': {
+              case 'pong':
                 clearTimeout(timeoutId)
 
                 ncoId = data
                 timeoutId = setTimeout(dispose, 15000)
 
                 break
-              }
             }
           }
         })
@@ -118,10 +115,9 @@ const main = async () => {
         }, 10000)
 
         break
-      }
 
       // サイドパネル
-      case 'sidepanel': {
+      case 'sidepanel':
         port.onDisconnect.addListener(async () => {
           const tab = await webext.getCurrentActiveTab()
 
@@ -132,7 +128,6 @@ const main = async () => {
         })
 
         break
-      }
     }
   })
 
@@ -159,13 +154,12 @@ const main = async () => {
 
     webext.contextMenus.onClicked.addListener(async ({ menuItemId }) => {
       switch (menuItemId) {
-        case 'report': {
+        case 'report':
           webext.tabs.create({
             url: await getFormsUrl(),
           })
 
           break
-        }
       }
     })
   })

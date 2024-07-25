@@ -45,35 +45,51 @@ const CommentListRow: React.FC<{
     let fgColor: string | undefined
 
     comment.commands.forEach((command) => {
-      if (['white'].includes(command)) return
+      switch (command) {
+        case 'white':
+          break
 
-      // カラー
-      if (
-        command in NICONICO_COLOR_COMMANDS ||
-        REGEXP_COLOR_CODE.test(command)
-      ) {
-        bgColor =
-          NICONICO_COLOR_COMMANDS[
-            command as keyof typeof NICONICO_COLOR_COMMANDS
-          ] ?? command
+        // 半透明
+        case '_live':
+          classNames.push(cn('opacity-50'))
 
-        fgColor = readableColor(bgColor)
+          break
 
-        classNames.push(
-          cn('m-[-1px] rounded-[5px] border-1 border-foreground-300 px-1')
-        )
-      }
-      // 明朝体
-      else if (command === 'mincho') {
-        classNames.push(cn('font-serif'))
-      }
-      // 小
-      else if (command === 'small') {
-        classNames.push(cn('text-[75%]'))
-      }
-      // 大
-      else if (command === 'big') {
-        classNames.push(cn('text-[110%] font-bold'))
+        // 明朝体
+        case 'mincho':
+          classNames.push(cn('font-serif'))
+
+          break
+
+        // 小
+        case 'small':
+          classNames.push(cn('text-[75%]'))
+
+          break
+
+        // 大
+        case 'big':
+          classNames.push(cn('text-[110%] font-bold'))
+
+          break
+
+        default:
+          // カラー
+          if (
+            command in NICONICO_COLOR_COMMANDS ||
+            REGEXP_COLOR_CODE.test(command)
+          ) {
+            bgColor =
+              NICONICO_COLOR_COMMANDS[
+                command as keyof typeof NICONICO_COLOR_COMMANDS
+              ] ?? command
+
+            fgColor = readableColor(bgColor)
+
+            classNames.push(
+              cn('m-[-1px] rounded-[5px] border-1 border-foreground-300 px-1')
+            )
+          }
       }
     })
 

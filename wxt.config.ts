@@ -23,13 +23,12 @@ export default defineConfig({
     let browser_specific_settings: UserManifest['browser_specific_settings']
 
     switch (browser) {
-      case 'chrome': {
+      case 'chrome':
         permissions.push('sidePanel')
 
         break
-      }
 
-      case 'firefox': {
+      case 'firefox':
         browser_specific_settings = {
           gecko: {
             id: `${name}@midra.me`,
@@ -38,7 +37,6 @@ export default defineConfig({
         }
 
         break
-      }
     }
 
     return {
