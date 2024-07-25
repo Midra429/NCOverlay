@@ -1,6 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
+import { ncoParser } from '@midra/nco-parser'
 import { ncoApi } from '@midra/nco-api'
 
 import { Logger } from '@/utils/logger'
@@ -46,7 +47,10 @@ const main = async () => {
       let workTitle = seriesTitle
 
       if (program.season && 1 < program.season.sequence) {
-        if (program.season.name.includes(seriesTitle)) {
+        const normalizedSeasonName = ncoParser.normalizeAll(program.season.name)
+        const normalizedSeriesTitle = ncoParser.normalizeAll(seriesTitle)
+
+        if (normalizedSeasonName.includes(normalizedSeriesTitle)) {
           workTitle = program.season.name
         } else {
           workTitle = `${seriesTitle} ${program.season.name}`
