@@ -8,6 +8,8 @@ import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { storage } from '@/utils/storage/extension'
 import { deepmerge } from '@/utils/deepmerge'
+import { getNgSetting } from '@/utils/extension/getNgSetting'
+import { isNgComment } from '@/utils/extension/applyNgSetting'
 
 export type NCOStateJson = {
   _id: string
@@ -68,6 +70,59 @@ export type SlotJikkyo = SlotBase & {
 export type Slot = SlotDefault | SlotJikkyo
 
 export type SlotUpdate = { id: string } & DeepPartial<Slot>
+
+export const filterDisplayThreads = async (
+  slots: Slot[],
+  offset: number = 0
+): Promise<V1Thread[] | null> => {
+  if (!slots.length) {
+    return null
+  }
+
+  const threadMap = new Map<string, V1Thread>()
+  const ngSetting = await getNgSetting()
+
+  slots.forEach((slot) => {
+    if (slot.hidden || slot.status !== 'ready') {
+      return
+    }
+
+    slot.threads.forEach((thread) => {
+      const key = `${thread.id}${thread.fork}`
+
+      if (threadMap.has(key)) {
+        return
+      }
+
+      const comments = thread.comments.flatMap((cmt) => {
+        // NG
+        if (isNgComment(cmt, ngSetting)) {
+          return []
+        }
+
+        // オフセット
+        const vposMs = cmt.vposMs + offset + (slot.offset ?? 0)
+
+        // 半透明
+        const commands = slot.translucent
+          ? [...new Set([...cmt.commands, '_live'])]
+          : cmt.commands
+
+        return { ...cmt, vposMs, commands }
+      })
+
+      const commentCount = comments.length
+
+      if (thread.commentCount) {
+        threadMap.set(key, { ...thread, comments, commentCount })
+      }
+    })
+  })
+
+  const threads = [...threadMap.values()]
+
+  return threads.length ? threads : null
+}
 
 /**
  * NCOverlayのデータ管理担当
@@ -287,29 +342,7 @@ export class NCOState {
     },
 
     getThreads: () => {
-      const threadMap = new Map<string, V1Thread>()
-
-      this.slots.get()?.forEach((slot) => {
-        if (slot.hidden || slot.status !== 'ready') {
-          return
-        }
-
-        slot.threads.forEach((thread) => {
-          const comments = thread.comments.map((cmt) => ({
-            ...cmt,
-            vposMs: cmt.vposMs + this.#offset + (slot.offset ?? 0),
-            commands: slot.translucent
-              ? [...cmt.commands, '_live']
-              : cmt.commands,
-          }))
-
-          threadMap.set(`${thread.id}${thread.fork}`, { ...thread, comments })
-        })
-      })
-
-      const threads = [...threadMap.values()]
-
-      return threads.length ? threads : null
+      return filterDisplayThreads(this.slots.get() ?? [], this.#offset)
     },
 
     set: (slots: Slot[]): boolean => {

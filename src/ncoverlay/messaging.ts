@@ -26,6 +26,8 @@ type ProtocolMap = {
     data: number[] | null
     format: 'jpeg' | 'png'
   }
+
+  timeupdate: (args: { id: string; time: number }) => void
 }
 
 export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
@@ -33,7 +35,15 @@ export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
 export const sendNcoMessage: typeof ncoMessenger.sendMessage = async (
   ...args
 ) => {
-  const tab = await webext.getCurrentActiveTab()
+  let tabId: number | undefined
 
-  return ncoMessenger.sendMessage(args[0], args[1], tab?.id)
+  if (typeof args[2] === 'number') {
+    tabId = args[2]
+  } else {
+    const tab = await webext.getCurrentActiveTab()
+
+    tabId = tab?.id
+  }
+
+  return ncoMessenger.sendMessage(args[0], args[1], tabId)
 }

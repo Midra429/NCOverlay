@@ -383,3 +383,5 @@ export const NICONICO_COLOR_COMMANDS = {
   nobleviolet: '#6633CC',
   black2: '#666666',
 }
+
+export const REGEXP_COLOR_CODE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/

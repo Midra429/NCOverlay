@@ -9,13 +9,7 @@ const App: React.FC = () => {
   const isActive = !!ncoState
 
   return (
-    <Layout
-      className="flex flex-row overflow-hidden"
-      style={{
-        width: 'fit-content',
-        height: 'fit-content',
-      }}
-    >
+    <Layout className="flex h-fit w-fit flex-row overflow-hidden">
       {isActive && (
         <div
           className="border-r-1 border-foreground-200"

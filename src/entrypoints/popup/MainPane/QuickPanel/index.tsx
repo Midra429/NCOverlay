@@ -63,6 +63,7 @@ export const QuickPanel: React.FC = memo(() => {
 
       <div className="flex flex-row gap-2">
         <CaptureButton />
+        <SidePanelButton />
       </div>
     </div>
   )

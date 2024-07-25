@@ -59,7 +59,7 @@ export class NCORenderer {
    * @description `reload()` 必須
    */
   setThreads(threads: V1Thread[] | null) {
-    this.#threads = threads?.length ? threads : null
+    this.#threads = threads
   }
 
   /**

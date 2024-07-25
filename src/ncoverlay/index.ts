@@ -1,11 +1,6 @@
 import type { Runtime } from 'wxt/browser'
-import type { NgSetting } from '@midra/nco-api/utils/applyNgSetting'
 import type { setBadge } from '@/utils/extension/setBadge'
 import type { SlotUpdate } from './state'
-
-import { applyNgSetting } from '@midra/nco-api/utils/applyNgSetting'
-
-import { NICONICO_COLOR_COMMANDS } from '@/constants'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
@@ -24,7 +19,7 @@ export type NCOverlayEventMap = {
   playing: (this: NCOverlay, evt: Event) => void
   pause: (this: NCOverlay, evt: Event) => void
   seeked: (this: NCOverlay, evt: Event) => void
-  // timeupdate: (this: NCOverlay, evt: Event) => void
+  timeupdate: (this: NCOverlay, evt: Event) => void
   loadedmetadata: (this: NCOverlay, evt: Event) => void
 }
 
@@ -46,7 +41,7 @@ export class NCOverlay {
     this.searcher = new NCOSearcher(this.state)
     this.renderer = new NCORenderer(video)
 
-    this.#port = webext.runtime.connect()
+    this.#port = webext.runtime.connect({ name: 'instance' })
     this.#port.onMessage.addListener((message) => {
       if (message === 'ping') {
         this.#port.postMessage(`pong:${this.id}`)
@@ -146,42 +141,7 @@ export class NCOverlay {
    * 描画するコメントデータを更新する
    */
   async updateRendererThreads() {
-    let threads = this.state.slots.getThreads()
-
-    if (threads) {
-      const ngSetting: NgSetting = {
-        word: [],
-        command: [],
-        id: [],
-      }
-
-      const {
-        'settings:ng:largeComments': ngLargeComments,
-        'settings:ng:fixedComments': ngFixedComments,
-        'settings:ng:coloredComments': ngColoredComments,
-      } = await settings.get(
-        'settings:ng:largeComments',
-        'settings:ng:fixedComments',
-        'settings:ng:coloredComments'
-      )
-
-      if (ngLargeComments) {
-        ngSetting.command.push('big')
-      }
-
-      if (ngFixedComments) {
-        ngSetting.command.push('ue', 'shita')
-      }
-
-      if (ngColoredComments) {
-        ngSetting.command.push(
-          ...Object.keys(NICONICO_COLOR_COMMANDS),
-          /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
-        )
-      }
-
-      threads = applyNgSetting(threads, ngSetting)
-    }
+    const threads = await this.state.slots.getThreads()
 
     this.renderer.setThreads(threads)
     this.renderer.reload()
@@ -226,9 +186,9 @@ export class NCOverlay {
       this.#trigger('seeked', evt)
     },
 
-    // timeupdate: (evt) => {
-    //   this.#trigger('timeupdate', evt)
-    // },
+    timeupdate: (evt) => {
+      this.#trigger('timeupdate', evt)
+    },
   }
 
   /**

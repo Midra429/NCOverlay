@@ -3,6 +3,7 @@ import type { VodKey } from '@/types/constants'
 import { settings } from '@/utils/settings/extension'
 
 import { NCOverlay } from '.'
+import { ncoMessenger } from './messaging'
 
 export class NCOPatcher {
   #vod
@@ -70,6 +71,23 @@ export class NCOPatcher {
         }
 
         this.#nco.state.status.set('ready')
+      }
+    })
+
+    let tmpTime = -1
+
+    this.#nco.addEventListener('timeupdate', function () {
+      const time = Math.floor(this.renderer.video.currentTime)
+
+      if (tmpTime !== time) {
+        tmpTime = time
+
+        ncoMessenger
+          .sendMessage('timeupdate', {
+            id: this.id,
+            time,
+          })
+          .catch(() => {})
       }
     })
 

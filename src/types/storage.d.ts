@@ -1,6 +1,6 @@
 import type { VodKey, PluginKey } from '@/types/constants'
+import type { NgSetting } from '@/utils/extension/applyNgSetting'
 import type { NCOState, NCOStateJson } from '@/ncoverlay/state'
-import type { NgSetting } from '@midra/nco-api/utils/applyNgSetting'
 
 /** <= v2.x.x */
 export type StorageItems_v0 = {
