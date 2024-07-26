@@ -2,7 +2,7 @@ import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { Slot } from '@/ncoverlay/state'
 
 import { useMemo } from 'react'
-import { Skeleton, Image, cn } from '@nextui-org/react'
+import { Skeleton, Link, Image, cn } from '@nextui-org/react'
 import {
   CalendarDaysIcon,
   PlayIcon,
@@ -100,19 +100,35 @@ const SlotItemDate: React.FC<SlotItemProps> = ({ slot }) => {
 // タイトル
 const SlotItemTitle: React.FC<SlotItemProps> = ({ slot }) => {
   const element = useMemo(() => {
+    const { href } = new URL(
+      slot.info.id,
+      slot.type === 'jikkyo'
+        ? `https://cal.syoboi.jp/tid/`
+        : 'https://www.nicovideo.jp/watch/'
+    )
+
     return (
       <div className="h-full">
-        <span
-          className="line-clamp-3 text-tiny font-bold"
-          title={
-            190 < new Blob([slot.info.title]).size ? slot.info.title : undefined
-          }
+        <Link
+          className="underline-offset-2"
+          color="foreground"
+          href={href}
+          isExternal
         >
-          {slot.info.title}
-        </span>
+          <span
+            className="line-clamp-3 text-tiny font-bold"
+            title={
+              190 < new Blob([slot.info.title]).size
+                ? slot.info.title
+                : undefined
+            }
+          >
+            {slot.info.title}
+          </span>
+        </Link>
       </div>
     )
-  }, [slot.info.title])
+  }, [slot.info.id, slot.info.title])
 
   return element
 }

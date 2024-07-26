@@ -43,6 +43,7 @@ export type SlotDefault = SlotBase & {
   type: 'normal' | 'danime' | 'chapter' | 'szbh'
 
   info: {
+    id: string
     title: string
     duration: number
     date: number
@@ -58,6 +59,7 @@ export type SlotJikkyo = SlotBase & {
   type: 'jikkyo'
 
   info: {
+    id: string
     title: string
     duration: number
     date: [start: number, end: number]

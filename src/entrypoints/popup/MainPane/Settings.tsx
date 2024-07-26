@@ -97,7 +97,6 @@ const accordionItemInfo = (
             className="text-[length:inherit] text-foreground-500"
             href={`${GITHUB_URL}/releases/tag/v${version}`}
             isExternal
-            underline="hover"
           >
             v{version}
           </Link>

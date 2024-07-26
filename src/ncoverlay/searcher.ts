@@ -98,6 +98,7 @@ export class NCOSearcher {
     //       status: 'loading',
     //       threads: [],
     //       info: {
+    //         id: video.contentId,
     //         title: video.title,
     //         duration: video.lengthSeconds,
     //         date: new Date(video.startTime).getTime(),
@@ -135,6 +136,7 @@ export class NCOSearcher {
           status: 'loading',
           threads: [],
           info: {
+            id: program.TID,
             title,
             duration: (endtime - starttime) / 1000,
             date: [starttime, endtime],
