@@ -103,6 +103,10 @@ export const filterDisplayThreads = async (
         // オフセット
         const vposMs = cmt.vposMs + offset + (slot.offset ?? 0)
 
+        if (vposMs < 0) {
+          return []
+        }
+
         // 半透明
         const commands = slot.translucent
           ? [...new Set([...cmt.commands, '_live'])]
