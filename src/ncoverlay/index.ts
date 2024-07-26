@@ -8,10 +8,10 @@ import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
 import { sendUtilsMessage } from '@/utils/extension/messaging'
 
-import { ncoMessenger } from './messaging'
 import { NCOState } from './state'
 import { NCOSearcher } from './searcher'
 import { NCORenderer } from './renderer'
+import { ncoMessenger } from './messaging'
 
 import './style.css'
 

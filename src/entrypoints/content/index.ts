@@ -1,6 +1,6 @@
 import { defineContentScript } from 'wxt/sandbox'
 
-import onStoragePageMessage from './onStoragePageMessage'
+import registerStorageMessage from './registerStorageMessage'
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -9,5 +9,5 @@ export default defineContentScript({
 })
 
 const main = () => {
-  onStoragePageMessage()
+  registerStorageMessage()
 }

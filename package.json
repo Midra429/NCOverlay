@@ -22,6 +22,7 @@
     "@midra/nco-parser": "^1.0.4",
     "@nextui-org/react": "^2.4.6",
     "@webext-core/messaging": "^1.4.0",
+    "@webext-core/proxy-service": "^1.2.0",
     "@xpadev-net/niconicomments": "^0.2.71",
     "color2k": "^2.0.3",
     "deepmerge": "^4.3.1",
@@ -32,8 +33,7 @@
     "nanoid-dictionary": "^4.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-virtuoso": "^4.7.13",
-    "rfdc": "^1.4.1"
+    "react-virtuoso": "^4.7.13"
   },
   "devDependencies": {
     "@types/nanoid-dictionary": "^4.2.3",

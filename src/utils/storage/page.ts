@@ -7,34 +7,34 @@ import type {
 } from '.'
 
 import { WebExtStorage } from '.'
-import { storagePageMessenger } from './page-messaging'
+import { storageMessenger } from './messaging'
 
 export const storage = new WebExtStorage({
   get: (...args: Parameters<StorageGetFunction>) => {
-    return storagePageMessenger.sendMessage('get', args) as any
+    return storageMessenger.sendMessage('get', args) as any
   },
 
   set: (...args: Parameters<StorageSetFunction>) => {
-    return storagePageMessenger.sendMessage('set', args) as any
+    return storageMessenger.sendMessage('set', args) as any
   },
 
   remove: (...args: Parameters<StorageRemoveFunction>) => {
-    return storagePageMessenger.sendMessage('remove', args) as any
+    return storageMessenger.sendMessage('remove', args) as any
   },
 
   getBytesInUse: (...args: Parameters<StorageGetBytesInUseFunction>) => {
-    return storagePageMessenger.sendMessage('getBytesInUse', args) as any
+    return storageMessenger.sendMessage('getBytesInUse', args) as any
   },
 
   onChange: (key, callback) => {
     let unregister = () => {}
 
-    storagePageMessenger.sendMessage('onChange:register', key).then((id) => {
+    storageMessenger.sendMessage('onChange:register', key).then((id) => {
       unregister = () => {
-        storagePageMessenger.sendMessage('onChange:unregister', id)
+        storageMessenger.sendMessage('onChange:unregister', id)
       }
 
-      storagePageMessenger.onMessage(
+      storageMessenger.onMessage(
         'onChange:changed',
         ({ data: [changedId, ...changedValues] }) => {
           if (id !== changedId) return
@@ -55,22 +55,20 @@ export const storage = new WebExtStorage({
   loadAndWatch: (key, callback) => {
     let unregister = () => {}
 
-    storagePageMessenger
-      .sendMessage('loadAndWatch:register', key)
-      .then((id) => {
-        unregister = () => {
-          storagePageMessenger.sendMessage('loadAndWatch:unregister', id)
+    storageMessenger.sendMessage('loadAndWatch:register', key).then((id) => {
+      unregister = () => {
+        storageMessenger.sendMessage('loadAndWatch:unregister', id)
+      }
+
+      storageMessenger.onMessage(
+        'loadAndWatch:changed',
+        ({ data: [changedId, ...changedValues] }) => {
+          if (id !== changedId) return
+
+          callback(...(changedValues as [StorageItems[typeof key]]))
         }
-
-        storagePageMessenger.onMessage(
-          'loadAndWatch:changed',
-          ({ data: [changedId, ...changedValues] }) => {
-            if (id !== changedId) return
-
-            callback(...(changedValues as [StorageItems[typeof key]]))
-          }
-        )
-      })
+      )
+    })
 
     return () => unregister()
   },

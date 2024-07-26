@@ -5,9 +5,10 @@ import { defineContentScript } from 'wxt/sandbox'
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
-import { ncoApiProxy } from '@/ncoverlay/api'
-import { NCOPatcher } from '@/ncoverlay/patcher'
 import { getCookie } from '@/utils/dom/getCookie'
+import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
+
+import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.scss'
 
@@ -23,6 +24,8 @@ const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   Logger.log(`vod-${vod}.js`)
+
+  const ncoApiProxy = getNcoApiProxy()
 
   const patcher = new NCOPatcher({
     vod,

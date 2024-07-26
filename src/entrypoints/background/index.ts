@@ -11,8 +11,8 @@ import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 import { getNcoId } from '@/utils/extension/getNcoId'
 
 // import migration from './migration'
-import onUtilsMessage from './onUtilsMessage'
-import onNcoApiMessage from './onNcoApiMessage'
+import registerProxyService from './registerProxyService'
+import registerUtilsMessage from './registerUtilsMessage'
 import clearTemporaryData from './clearTemporaryData'
 import requestPermissions from './requestPermissions'
 
@@ -24,15 +24,15 @@ export default defineBackground({
 const main = async () => {
   Logger.log('background.js')
 
-  onUtilsMessage()
-  onNcoApiMessage()
+  registerProxyService()
+  registerUtilsMessage()
 
   // インストール・アップデート時
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
     const { version } = webext.runtime.getManifest()
 
     // 権限をリクエスト
-    await requestPermissions()
+    requestPermissions()
 
     switch (reason) {
       case 'install':

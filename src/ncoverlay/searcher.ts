@@ -9,8 +9,9 @@ import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 import { MARKERS } from '@/constants'
 
 import { Logger } from '@/utils/logger'
+import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
 
-import { ncoApiProxy } from './api'
+const ncoApiProxy = getNcoApiProxy()
 
 export type NCOSearcherEventMap = {
   searching: (this: NCOSearcher) => void

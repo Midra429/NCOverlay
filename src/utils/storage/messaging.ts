@@ -42,6 +42,6 @@ type ProtocolMap = {
   ) => void
 }
 
-export const storagePageMessenger = defineWindowMessaging<ProtocolMap>({
-  namespace: `${EXT_BUILD_ID}:storage/page-messaging`,
+export const storageMessenger = defineWindowMessaging<ProtocolMap>({
+  namespace: `${EXT_BUILD_ID}:storage/messaging`,
 })
