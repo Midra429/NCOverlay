@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^9.6.0",
-    "@midra/nco-api": "^1.1.4",
-    "@midra/nco-parser": "^1.0.3",
+    "@midra/nco-api": "^1.1.6",
+    "@midra/nco-parser": "^1.0.4",
     "@nextui-org/react": "^2.4.6",
     "@webext-core/messaging": "^1.4.0",
     "@xpadev-net/niconicomments": "^0.2.71",
@@ -49,6 +49,6 @@
     "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
     "utility-types": "^3.11.0",
-    "wxt": "^0.18.15"
+    "wxt": "0.18.15"
   }
 }
