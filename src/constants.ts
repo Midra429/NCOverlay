@@ -354,7 +354,7 @@ export const SETTINGS_INIT_ITEMS = Object.fromEntries(
 }
 
 /** ニコニコ コメント コマンド (色) */
-export const NICONICO_COLOR_COMMANDS = {
+export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
   white: '#FFFFFF',
   red: '#FF0000',
   pink: '#FF8080',

@@ -7,10 +7,10 @@ import { SETTINGS_INIT_ITEMS } from '@/constants'
 import { SettingsInput } from '@/components/settings-input'
 import { PanelItem } from '@/components/panel-item'
 
-import { ShowHideToggle } from './presets/ShowHideToggle'
-import { PositionControl } from './presets/PositionControl'
-import { CaptureButton } from './presets/CaptureButton'
-import { SidePanelButton } from './presets/SidePanelButton'
+import { ShowHideToggle } from './presets/showhide-toggle'
+import { PositionControl } from './presets/position-control'
+import { CaptureButton } from './presets/capture-button'
+import { SidePanelButton } from './presets/sidepanel-button'
 
 type PanelPresetComponentKey = keyof typeof PANEL_PRESET_CONPONENTS
 

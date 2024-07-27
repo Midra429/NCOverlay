@@ -9,6 +9,7 @@ export const PanelItem: React.FC<PanelItemProps> = (props) => {
   return (
     <div
       className={cn(
+        'shrink-0',
         'overflow-hidden rounded-medium',
         'border-1 border-foreground-100',
         'bg-content1 text-foreground',

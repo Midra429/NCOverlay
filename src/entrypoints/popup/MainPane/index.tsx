@@ -2,7 +2,8 @@ import { memo } from 'react'
 import { Tabs, Tab } from '@nextui-org/react'
 import { LayoutGridIcon, SettingsIcon } from 'lucide-react'
 
-import { QuickPanel } from './QuickPanel'
+import { QuickPanel } from '@/components/quickpanel'
+
 import { Settings } from './Settings'
 
 const tabItems: {
