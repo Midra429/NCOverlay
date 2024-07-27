@@ -22,7 +22,7 @@ export const formatDuration = (seconds: number) => {
 
 export const formatDate = (
   date: string | number | Date,
-  format: string = 'YYYY/MM/DD (d) hh:mm'
+  format: string = 'YYYY/MM/DD(d) hh:mm'
 ) => {
   if (!(date instanceof Date)) {
     date = new Date(date)
