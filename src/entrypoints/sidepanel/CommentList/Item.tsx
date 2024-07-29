@@ -26,8 +26,9 @@ const Cell: React.FC<
     <span
       {...props}
       className={cn(
-        'border-b-1 border-b-divider',
+        'flex',
         'flex-shrink-0 p-1.5',
+        'border-b-1 border-b-divider',
         '[&:not(:first-child)]:border-l-1 [&:not(:first-child)]:border-l-divider',
         className
       )}
@@ -67,7 +68,7 @@ export const Item: React.FC<{
   return (
     <div className="flex flex-row">
       {/* 再生時間 */}
-      <Cell className="w-[5rem] text-center font-mono">
+      <Cell className="w-[5rem] justify-center font-mono">
         <span className="line-clamp-1">
           {formatDuration(comment.vposMs / 1000)}
         </span>
@@ -76,7 +77,7 @@ export const Item: React.FC<{
       {/* コメント */}
       <Cell className="w-[calc(100%-5rem)]">
         <span
-          className={cn('line-clamp-2', commentClass)}
+          className={cn('line-clamp-2 !break-words break-keep', commentClass)}
           style={{
             backgroundColor: commentBgColor,
             color: commentFgColor,
@@ -87,7 +88,7 @@ export const Item: React.FC<{
       </Cell>
 
       {/* 投稿日時 */}
-      <Cell className="w-52 text-center font-mono">
+      <Cell className="w-52 justify-center font-mono">
         <span className="line-clamp-1">{formatDate(comment.postedAt)}</span>
       </Cell>
 

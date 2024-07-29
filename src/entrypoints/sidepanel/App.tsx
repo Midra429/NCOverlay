@@ -17,13 +17,19 @@ const App: React.FC = () => {
           className={cn(
             'flex flex-col',
             'h-full w-full text-small',
-            'bg-content1',
-            '[&>*]:rounded-none [&>*]:border-none'
+            'bg-content1'
           )}
         >
           <CommentList />
 
-          <PositionControl />
+          <div
+            className={cn(
+              'ml-auto max-w-[450px]',
+              '[&>*]:rounded-none [&>*]:border-none [&>*]:shadow-none'
+            )}
+          >
+            <PositionControl />
+          </div>
         </div>
       )}
     </Layout>

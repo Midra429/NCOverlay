@@ -108,7 +108,7 @@ const SlotItemTitle: React.FC<SlotItemProps> = ({ slot }) => {
     )
 
     return (
-      <div className="h-full">
+      <div className="flex h-full flex-col justify-start">
         <Link
           className="underline-offset-2"
           color="foreground"
