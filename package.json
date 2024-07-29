@@ -6,7 +6,6 @@
   "author": "Midra <me@midra.me> (https://github.com/Midra429)",
   "license": "MIT",
   "scripts": {
-    "version": "bun version.ts",
     "pre": "wxt prepare",
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",

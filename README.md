@@ -75,39 +75,39 @@ https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ## 開発
 ### 環境
-- [Bun](https://bun.sh/)
+- [pnpm](https://pnpm.io/ja/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Chrome](https://www.google.com/intl/ja/chrome/)
 
 ### 開発サーバー
 ```sh
 # Chrome
-bun run dev
+pnpm run dev
 ```
 ```sh
 # Firefox
-bun run dev:firefox
+pnpm run dev:firefox
 ```
 
 ### 出力
 ```sh
 # dist/chrome-mv3
-bun run build
+pnpm run build
 ```
 ```sh
 # dist/firefox-mv3
-bun run build:firefox
+pnpm run build:firefox
 ```
 
 ### 出力 (ZIP)
 ```sh
 # dist/ncoverlay-0.0.0-chrome.zip
-bun run zip
+pnpm run zip
 ```
 ```sh
 # dist/ncoverlay-0.0.0-firefox.zip
 # dist/ncoverlay-0.0.0-sources.zip
-bun run zip:firefox
+pnpm run zip:firefox
 ```
 
 ## ライブラリ

@@ -6,8 +6,8 @@ on:
       bump_type:
         description: 'v[major].[minor].[patch]'
         required: true
-        default: 'patch'
         type: choice
+        default: 'patch'
         options:
           - major
           - minor
@@ -23,32 +23,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          bun-version: latest
+          version: 9
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Setup Git
         run: |
           git config user.name "Midra"
           git config user.email "me@midra.me"
 
-      - name: Install Dependencies
-        run: bun install --frozen-lockfile
-
       - name: Update Version
         run: |
-          bun version ${{ github.event.inputs.bump_type }}
+          pnpm version ${{ github.event.inputs.bump_type }}
           echo VERSION="v$(cat package.json | jq -r '.version')" >> "${GITHUB_ENV}"
 
       - name: Zip Extensions
         run: |
-          bun zip
-          bun zip:firefox
+          pnpm zip
+          pnpm zip:firefox
 
       - name: Submit to Stores
         run: |
-          bun wxt submit \
+          pnpm wxt submit \
             --chrome-zip dist/*-chrome.zip \
             --firefox-zip dist/*-firefox.zip --firefox-sources-zip dist/*-sources.zip
         env:
