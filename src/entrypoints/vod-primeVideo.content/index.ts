@@ -43,16 +43,16 @@ const getDetail = (): { title: string } | null => {
 
     if ('atf' in props) {
       const { headerDetail } = props.atf.state.detail
-      const { title } =
+      const detail =
         headerDetail[asin] || headerDetail[titleId1] || headerDetail[titleId2]
 
-      if (title) {
-        return { title }
+      if (detail?.title) {
+        return detail
       }
     }
 
     if ('landingPage' in props) {
-      const { title } = props.landingPage.containers
+      const detail = props.landingPage.containers
         // @ts-ignore
         .flatMap((v) => v.entities)
         // @ts-ignore
@@ -64,8 +64,8 @@ const getDetail = (): { title: string } | null => {
           )
         })
 
-      if (title) {
-        return { title }
+      if (detail?.title) {
+        return detail
       }
     }
   } catch {}
@@ -98,7 +98,11 @@ const main = async () => {
         '.atvwebplayersdk-timeindicator-text:has(span)'
       )
 
-      const workTitle = getDetail()?.title || titleElem?.textContent
+      const detail = getDetail()
+
+      Logger.log('detail', detail)
+
+      const workTitle = detail?.title || titleElem?.textContent
       const season_episode = subtitleElem?.firstChild?.textContent
       const subtitle = subtitleElem?.lastChild?.textContent
 
