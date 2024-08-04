@@ -65,7 +65,7 @@ export const SidePanelButton: React.FC = () => {
         }
         onPress={onPress}
       >
-        サイドパネル
+        コメントリスト
       </Button>
     </Tooltip>
   )
