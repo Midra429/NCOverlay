@@ -45,13 +45,13 @@ const main = async () => {
         return null
       }
 
-      const title = `${episode.lu_title} ${episode.ep_title}`.trim()
+      const rawText = `${episode.lu_title} ${episode.ep_title}`.trim()
       const duration = video?.duration ?? 0
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

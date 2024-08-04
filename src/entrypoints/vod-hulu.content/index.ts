@@ -43,7 +43,7 @@ const main = async () => {
         '.watch-info-title > .playable-title'
       )
 
-      const title = [
+      const rawText = [
         titleElem?.textContent,
         episodeElem?.textContent,
         subTitleElem?.textContent,
@@ -54,10 +54,10 @@ const main = async () => {
 
       const duration = video?.duration ?? 0
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

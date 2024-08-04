@@ -1,9 +1,16 @@
 import type { VodKey } from '@/types/constants'
+import type { AutoLoadInput } from './searcher'
 
+import { ncoParser } from '@midra/nco-parser'
+
+import { Logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/extension'
+import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
 
 import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
+
+const ncoApiProxy = getNcoApiProxy()
 
 export class NCOPatcher {
   #vod
@@ -19,9 +26,10 @@ export class NCOPatcher {
 
   constructor(init: {
     vod: VodKey
-    getInfo: (
-      video: HTMLVideoElement | null
-    ) => Promise<{ title: string; duration: number } | null>
+    getInfo: (video: HTMLVideoElement | null) => Promise<{
+      rawText: string
+      duration: number
+    } | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   }) {
     this.#vod = init.vod
@@ -55,19 +63,49 @@ export class NCOPatcher {
 
         const info = await this.#getInfo(this.#video)
 
+        let input: AutoLoadInput | null = null
+
+        if (info) {
+          const { rawText, duration } = info
+
+          if (await settings.get('settings:experimental:useAiParser')) {
+            const result = await ncoApiProxy.nco.ai.parse(
+              rawText,
+              EXT_USER_AGENT
+            )
+
+            if (result) {
+              input = { ...result, duration }
+            }
+          }
+
+          if (!input) {
+            const extracted = ncoParser.extract(rawText)
+
+            input = {
+              title: extracted.title,
+              seasonText: extracted.season?.text,
+              seasonNumber: extracted.season?.number,
+              episodeText: extracted.episode?.text,
+              episodeNumber: extracted.episode?.number,
+              subtitle: extracted.subtitle,
+              duration,
+            }
+          }
+        }
+
+        const parsed = { ...info, ...input }
+
+        Logger.log('parsed', parsed)
+
         this.#nco.state.vod.set(this.#vod)
-        this.#nco.state.title.set(info?.title ?? null)
+        this.#nco.state.title.set(JSON.stringify(parsed, null, 2))
 
-        if (info?.title) {
-          const {
-            'settings:comment:autoLoadSzbh': szbh,
-            'settings:comment:autoLoadJikkyo': jikkyo,
-          } = await settings.get(
-            'settings:comment:autoLoadSzbh',
-            'settings:comment:autoLoadJikkyo'
-          )
-
-          await this.#nco.searcher.autoLoad(info, { szbh, jikkyo })
+        if (input) {
+          await this.#nco.searcher.autoLoad(input, {
+            szbh: await settings.get('settings:comment:autoLoadSzbh'),
+            jikkyo: await settings.get('settings:comment:autoLoadJikkyo'),
+          })
         }
 
         this.#nco.state.status.set('ready')

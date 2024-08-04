@@ -50,7 +50,7 @@ const main = async () => {
       const seriesTitleSeason =
         seriesTitleText && extractSeason(seriesTitleText)[0]
 
-      const title = [
+      const rawText = [
         seriesTitleText,
         !seriesTitleSeason && seasonText !== '本編' && seasonText,
         titleText,
@@ -61,10 +61,10 @@ const main = async () => {
 
       const duration = video?.duration ?? 0
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

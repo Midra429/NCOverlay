@@ -15,7 +15,7 @@ const App: React.FC = () => {
           className="border-r-1 border-foreground-200"
           style={{
             width: 450,
-            height: 500,
+            height: 520,
           }}
         >
           <SidePane />
@@ -25,7 +25,7 @@ const App: React.FC = () => {
       <div
         style={{
           width: 350,
-          height: isActive ? 500 : 450,
+          height: isActive ? 520 : 460,
         }}
       >
         <MainPane quickpanel={isActive} />

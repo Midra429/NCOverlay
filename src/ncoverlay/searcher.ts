@@ -11,6 +11,18 @@ import { MARKERS } from '@/constants'
 import { Logger } from '@/utils/logger'
 import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
 
+export type AutoLoadInput = {
+  title?: string | null
+  seasonText?: string | null
+  seasonNumber?: number | null
+  episodeText?: string | null
+  episodeNumber?: number | null
+  subtitle?: string | null
+  duration: number
+}
+
+const userAgent = EXT_USER_AGENT
+
 const ncoApiProxy = getNcoApiProxy()
 
 export type NCOSearcherEventMap = {
@@ -33,10 +45,7 @@ export class NCOSearcher {
   }
 
   async autoLoad(
-    info: {
-      title: string
-      duration: number
-    },
+    input: AutoLoadInput,
     options: {
       szbh?: boolean
       jikkyo?: boolean
@@ -48,23 +57,18 @@ export class NCOSearcher {
     const [searchResult, searchSyobocalResult] = await Promise.all([
       // // ニコニコ動画 検索
       // ncoApiProxy.search({
-      //   title: info.title,
-      //   duration: info.duration,
+      //   title: input.title,
+      //   duration: input.duration,
       //   chapter: true,
       //   szbh: options.szbh,
-      //   userAgent: EXT_USER_AGENT,
+      //   userAgent,
       // }),
 
       // ニコニコが死んでるので
       null,
 
       // ニコニコ実況 過去ログ 検索
-      options.jikkyo
-        ? ncoApiProxy.searchSyobocal({
-            title: info.title,
-            userAgent: EXT_USER_AGENT,
-          })
-        : null,
+      options.jikkyo ? ncoApiProxy.searchSyobocal(input, { userAgent }) : null,
     ])
 
     const currentTime = Date.now() / 1000
@@ -118,8 +122,8 @@ export class NCOSearcher {
     if (syobocalPrograms) {
       const title = [
         searchSyobocalResult.title.Title,
-        `#${searchSyobocalResult.subTitleCount}`,
-        searchSyobocalResult.subTitle ?? '',
+        `#${input.episodeNumber}`,
+        searchSyobocalResult.subtitle ?? '',
       ]
         .join(' ')
         .trim()

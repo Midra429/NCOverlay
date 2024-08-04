@@ -116,7 +116,7 @@ const main = async () => {
       const workTitleSeason = workTitle && extractSeason(workTitle)[0]
       const subtitleEpisode = subtitle && extractEpisode(`hoge ${subtitle}`)[0]
 
-      const title = [
+      const rawText = [
         workTitle,
         !workTitleSeason && 2 <= seasonNum && `${seasonNum}期`,
         !subtitleEpisode && 0 <= episodeNum && `${episodeNum}話`,
@@ -132,10 +132,10 @@ const main = async () => {
           .map(formatedToSeconds)
           .reduce((a, b) => a + b) ?? 0
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video

@@ -151,6 +151,12 @@ export type StorageItems_v1 = {
    * @default []
    */
   'settings:plugins': PluginKey[]
+
+  /**
+   * 実験的な機能:タイトル解析でAIを使用する
+   * @default false
+   */
+  'settings:experimental:useAiParser': boolean
 }
 
 export type StorageItems = StorageItems_v1 & {

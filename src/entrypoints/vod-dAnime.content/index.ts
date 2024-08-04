@@ -43,10 +43,10 @@ const main = async () => {
         return null
       }
 
-      let title = partData.title
+      let rawText = partData.title
 
       if (partData.partDispNumber === '本編') {
-        title = partData.workTitle
+        rawText = partData.workTitle
       } else if (
         /最終(?:回|話)/.test(partData.partDispNumber) &&
         partData.prevTitle
@@ -54,7 +54,7 @@ const main = async () => {
         const [episode] = extractEpisode(partData.prevTitle)
 
         if (episode) {
-          title = [
+          rawText = [
             partData.workTitle,
             `${episode.number + 1}話`,
             partData.partTitle,
@@ -67,10 +67,10 @@ const main = async () => {
 
       const duration = partData.partMeasureSecond
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

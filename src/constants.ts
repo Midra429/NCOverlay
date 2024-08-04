@@ -15,6 +15,7 @@ import {
   MessageSquareTextIcon,
   MessageSquareOffIcon,
   BlocksIcon,
+  FlaskConicalIcon,
 } from 'lucide-react'
 
 /** GitHub */
@@ -156,6 +157,9 @@ export const SETTINGS_DEFAULT: {
 
   // プラグイン
   'settings:plugins': [],
+
+  // 実験的な機能
+  'settings:experimental:useAiParser': false,
 } as const
 
 /** 設定画面の初期化データ */
@@ -345,6 +349,19 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       })),
     })),
   },
+  {
+    id: 'experimental',
+    title: '実験的な機能',
+    icon: FlaskConicalIcon,
+    items: [
+      {
+        settingsKey: 'settings:experimental:useAiParser',
+        inputType: 'toggle',
+        label: 'タイトル解析でAIを使用する',
+        description: 'VODのタイトル解析でAI（Gemini 1.5 Flash）を使用します。',
+      },
+    ],
+  },
 ]
 
 export const SETTINGS_INIT_ITEMS = Object.fromEntries(
@@ -355,7 +372,7 @@ export const SETTINGS_INIT_ITEMS = Object.fromEntries(
 
 /** ニコニコ コメント コマンド (色) */
 export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
-  white: '#FFFFFF',
+  // white: '#FFFFFF',
   red: '#FF0000',
   pink: '#FF8080',
   orange: '#FFC000',

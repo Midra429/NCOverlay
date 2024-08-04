@@ -57,19 +57,19 @@ const main = async () => {
         }
       }
 
-      let episode = ''
+      let episodeTitle = ''
 
       if (workTitle !== program.episode.title) {
-        episode = program.episode.title
+        episodeTitle = program.episode.title
       }
 
-      const title = `${workTitle} ${episode}`.trim()
+      const rawText = `${workTitle} ${episodeTitle}`.trim()
       const duration = program.info.duration
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video

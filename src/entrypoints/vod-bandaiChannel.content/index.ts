@@ -39,7 +39,7 @@ const main = async () => {
         '.bch-p-heading-mov__summary'
       )
 
-      const title = [
+      const rawText = [
         seriesTitleElem?.textContent,
         storyTitleElem?.firstChild?.textContent,
         episodeTextElem?.textContent,
@@ -50,10 +50,10 @@ const main = async () => {
 
       const duration = video?.duration ?? 0
 
-      Logger.log('title', title)
+      Logger.log('rawText', rawText)
       Logger.log('duration', duration)
 
-      return { title, duration }
+      return { rawText, duration }
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)
