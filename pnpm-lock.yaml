@@ -12,11 +12,11 @@ importers:
         specifier: ^9.6.0
         version: 9.6.0(react@18.3.1)
       '@midra/nco-api':
-        specifier: ^1.2.3
-        version: 1.2.3
+        specifier: ^1.2.4
+        version: 1.2.4
       '@midra/nco-parser':
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       '@nextui-org/react':
         specifier: ^2.4.6
         version: 2.4.6(@types/react@18.3.3)(framer-motion@11.3.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.7)
@@ -71,7 +71,7 @@ importers:
         version: 18.3.0
       '@wxt-dev/module-react':
         specifier: ^1.1.0
-        version: 1.1.0(vite@5.3.5(@types/node@22.1.0)(sass@1.77.8))(wxt@0.19.3(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8))
+        version: 1.1.0(vite@5.3.5(@types/node@22.1.0)(sass@1.77.8))(wxt@0.19.4(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.40)
@@ -100,8 +100,8 @@ importers:
         specifier: ^3.11.0
         version: 3.11.0
       wxt:
-        specifier: ^0.19.3
-        version: 0.19.3(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8)
+        specifier: ^0.19.4
+        version: 0.19.4(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8)
 
 packages:
 
@@ -571,11 +571,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@midra/nco-api@1.2.3':
-    resolution: {integrity: sha512-WFC7BmX48htjugkqlthn1l5HNZhsIICZz7THqoKVGU8I8nLcNc78Vjd0MpfRrZMGbfRqq2icb9z/lDcN1drssw==}
+  '@midra/nco-api@1.2.4':
+    resolution: {integrity: sha512-8NECcOOZ+iks9pKKdtneKt/o2natmw3fv4vKixo+FkfGCjezqSojlZv1aJIAt+q3AVQhuQ/nlI01pxxUdy4TaA==}
 
-  '@midra/nco-parser@1.0.5':
-    resolution: {integrity: sha512-YVND4gV9Z8syLmUkL2PT6kOD+CHgz9nOo7eJuBMqUKXsQSJqmGE2C5vDncHSHMVZTUaYT+EIVGzj4YbIKPTlSA==}
+  '@midra/nco-parser@1.0.6':
+    resolution: {integrity: sha512-AD9d/AbyO8TEY6Tpb/aDOZj6f0eJ86hFKJM/HxsRREWsOG10NScvjxImlTiI36oLGYusu4jg426onLkuke+G5w==}
 
   '@nextui-org/accordion@2.0.38':
     resolution: {integrity: sha512-kFCZU1VaKkUI295Fg3NxuQR2+kZ5vTH4ftIs0oByrOs0+l14dVQGFOd9ZV402fHNykZJt7Sk6oWjTp4Qwl83JA==}
@@ -4153,8 +4153,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  wxt@0.19.3:
-    resolution: {integrity: sha512-ZEyWAvahUkye5oZR6AX1oxTvg3wOK6DSO14ukiRCSY9FRWeBloa6C24AjzjsvYmZwO0RA8FNClQHJfaoli/MVw==}
+  wxt@0.19.4:
+    resolution: {integrity: sha512-L77X9mTYEqJPbaKyT3UQ9zKtIYNsJ7FCNb6t/OT73aWDUD3w7ijqJ38485mlOwyDKKDcJ2AWcvsU9Z0tR8B8ZQ==}
     hasBin: true
     peerDependencies:
       '@types/chrome': '*'
@@ -4594,11 +4594,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@midra/nco-api@1.2.3':
+  '@midra/nco-api@1.2.4':
     dependencies:
-      '@midra/nco-parser': 1.0.5
+      '@midra/nco-parser': 1.0.6
 
-  '@midra/nco-parser@1.0.5':
+  '@midra/nco-parser@1.0.6':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
 
@@ -6700,10 +6700,10 @@ snapshots:
       get-value: 3.0.1
       webextension-polyfill: 0.12.0
 
-  '@wxt-dev/module-react@1.1.0(vite@5.3.5(@types/node@22.1.0)(sass@1.77.8))(wxt@0.19.3(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8))':
+  '@wxt-dev/module-react@1.1.0(vite@5.3.5(@types/node@22.1.0)(sass@1.77.8))(wxt@0.19.4(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8))':
     dependencies:
       '@vitejs/plugin-react': 4.3.1(vite@5.3.5(@types/node@22.1.0)(sass@1.77.8))
-      wxt: 0.19.3(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8)
+      wxt: 0.19.4(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
       - vite
@@ -9032,7 +9032,7 @@ snapshots:
 
   ws@8.18.0: {}
 
-  wxt@0.19.3(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8):
+  wxt@0.19.4(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8):
     dependencies:
       '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@4.20.0)
       '@types/webextension-polyfill': 0.10.7

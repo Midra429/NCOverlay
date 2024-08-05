@@ -2,14 +2,12 @@ import type { PublicPath } from 'wxt/browser'
 
 import { webext } from '@/utils/webext'
 
-export const injectScript = (src: PublicPath) => {
+export const injectScript = (path: PublicPath) => {
   const script = document.createElement('script')
 
-  script.src = webext.runtime.getURL(src)
+  script.src = webext.runtime.getURL(path)
 
-  script.addEventListener('load', function () {
-    this.remove()
-  })
+  script.onload = () => script.remove()
 
   document.documentElement.appendChild(script)
 }

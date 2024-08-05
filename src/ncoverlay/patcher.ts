@@ -63,14 +63,23 @@ export class NCOPatcher {
 
         const info = await this.#getInfo(this.#video)
 
+        const normalized = ncoParser.normalizeAll(info?.rawText ?? '', {
+          adjust: {
+            letterCase: false,
+          },
+          remove: {
+            space: false,
+          },
+        })
+
         let input: AutoLoadInput | null = null
 
         if (info) {
-          const { rawText, duration } = info
+          const { duration } = info
 
           if (await settings.get('settings:experimental:useAiParser')) {
             const result = await ncoApiProxy.nco.ai.parse(
-              rawText,
+              normalized,
               EXT_USER_AGENT
             )
 
@@ -79,8 +88,8 @@ export class NCOPatcher {
             }
           }
 
-          if (!input) {
-            const extracted = ncoParser.extract(rawText)
+          if (input?.episodeNumber == null) {
+            const extracted = ncoParser.extract(normalized)
 
             input = {
               title: extracted.title,
@@ -94,7 +103,7 @@ export class NCOPatcher {
           }
         }
 
-        const parsed = { ...info, ...input }
+        const parsed = { ...info, normalized, ...input }
 
         Logger.log('parsed', parsed)
 
