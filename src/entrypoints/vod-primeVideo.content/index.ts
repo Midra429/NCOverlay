@@ -1,6 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
+import { normalizeAll } from '@midra/nco-parser/normalize'
 import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
@@ -113,8 +114,16 @@ const main = async () => {
         season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
       )
 
-      const workTitleSeason = workTitle && extractSeason(workTitle)[0]
-      const subtitleEpisode = subtitle && extractEpisode(`hoge ${subtitle}`)[0]
+      const workTitleSeason = workTitle && extractSeason(workTitle)
+      const subtitleEpisode =
+        subtitle &&
+        extractEpisode(
+          normalizeAll(`タイトル ${subtitle}`, {
+            remove: {
+              space: false,
+            },
+          })
+        )
 
       const rawText = [
         workTitle,
