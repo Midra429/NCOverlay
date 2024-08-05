@@ -1,7 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import { ncoApi } from '@midra/nco-api'
+import * as unextApi from '@midra/nco-api/unext'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
@@ -34,7 +34,7 @@ const main = async () => {
         return null
       }
 
-      const titleStage = await ncoApi.unext.title({
+      const titleStage = await unextApi.title({
         id,
         episodeCode,
       })

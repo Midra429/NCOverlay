@@ -1,7 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import { ncoApi } from '@midra/nco-api'
+import * as dmmTvApi from '@midra/nco-api/dmmTv'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
@@ -32,7 +32,7 @@ const main = async () => {
 
       const dataVideo =
         seasonId && contentId
-          ? await ncoApi.dmmTv.video({ seasonId, contentId })
+          ? await dmmTvApi.video({ seasonId, contentId })
           : null
 
       Logger.log('dmmTv.video', dataVideo)

@@ -2,7 +2,7 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
-import { ncoApi } from '@midra/nco-api'
+import * as dAnimeApi from '@midra/nco-api/danime'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
@@ -35,7 +35,7 @@ const main = async () => {
     vod,
     getInfo: async () => {
       const partId = new URL(location.href).searchParams.get('partId')
-      const partData = partId ? await ncoApi.danime.part(partId) : null
+      const partData = partId ? await dAnimeApi.part(partId) : null
 
       Logger.log('danime.part', partData)
 

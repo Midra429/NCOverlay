@@ -1,8 +1,8 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import { ncoParser } from '@midra/nco-parser'
-import { ncoApi } from '@midra/nco-api'
+import { normalizeAll } from '@midra/nco-parser/normalize'
+import * as abemaApi from '@midra/nco-api/abema'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
@@ -34,7 +34,7 @@ const main = async () => {
         return null
       }
 
-      const program = await ncoApi.abema.program(id, token)
+      const program = await abemaApi.program(id, token)
 
       Logger.log('abema.program', program)
 
@@ -47,8 +47,8 @@ const main = async () => {
       let workTitle = seriesTitle
 
       if (program.season && 1 < program.season.sequence) {
-        const normalizedSeasonName = ncoParser.normalizeAll(program.season.name)
-        const normalizedSeriesTitle = ncoParser.normalizeAll(seriesTitle)
+        const normalizedSeasonName = normalizeAll(program.season.name)
+        const normalizedSeriesTitle = normalizeAll(seriesTitle)
 
         if (normalizedSeasonName.includes(normalizedSeriesTitle)) {
           workTitle = program.season.name
