@@ -111,10 +111,13 @@ export class NCOPatcher {
         this.#nco.state.title.set(JSON.stringify(parsed, null, 2))
 
         if (input) {
-          await this.#nco.searcher.autoLoad(input, {
-            szbh: await settings.get('settings:comment:autoLoadSzbh'),
-            jikkyo: await settings.get('settings:comment:autoLoadJikkyo'),
-          })
+          const [chapter, szbh, jikkyo] = await Promise.all([
+            settings.get('settings:comment:autoLoadChapter'),
+            settings.get('settings:comment:autoLoadSzbh'),
+            settings.get('settings:comment:autoLoadJikkyo'),
+          ])
+
+          await this.#nco.searcher.autoLoad(input, { chapter, szbh, jikkyo })
         }
 
         this.#nco.state.status.set('ready')

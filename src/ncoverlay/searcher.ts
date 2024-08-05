@@ -47,6 +47,7 @@ export class NCOSearcher {
   async autoLoad(
     input: AutoLoadInput,
     options: {
+      chapter?: boolean
       szbh?: boolean
       jikkyo?: boolean
     } = {}
@@ -56,13 +57,15 @@ export class NCOSearcher {
 
     const [searchResult, searchSyobocalResult] = await Promise.all([
       // // ニコニコ動画 検索
-      // ncoApiProxy.search({
-      //   title: input.title,
-      //   duration: input.duration,
-      //   chapter: true,
-      //   szbh: options.szbh,
-      //   userAgent,
-      // }),
+      // input.title
+      //   ? ncoApiProxy.search({
+      //       rawText: input.title,
+      //       duration: input.duration,
+      //       chapter: options.chapter,
+      //       szbh: options.szbh,
+      //       userAgent,
+      //     })
+      //   : null,
 
       // ニコニコが死んでるので
       null,
@@ -335,7 +338,7 @@ export class NCOSearcher {
   //   } | null)[]
   // > {
   //   // 動画情報取得
-  //   const videosData = await Promise.all(
+  //   const videos = await Promise.all(
   //     params.map(({ contentId }) => {
   //       return ncoApiProxy.niconico.video(contentId)
   //     })
@@ -343,7 +346,7 @@ export class NCOSearcher {
 
   //   // コメント取得
   //   const threadsData = await Promise.all(
-  //     videosData.map((video, idx) => {
+  //     videos.map((video, idx) => {
   //       return video
   //         ? ncoApiProxy.niconico.threads(video.comment.nvComment, {
   //             when: params[idx].when,
@@ -355,7 +358,7 @@ export class NCOSearcher {
   //   return threadsData.map((val, idx) => {
   //     return val
   //       ? {
-  //           data: videosData[idx]!,
+  //           data: videos[idx]!,
   //           threads: val.threads,
   //         }
   //       : null
