@@ -114,7 +114,7 @@ const main = async () => {
         season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
       )
 
-      const workTitleSeason = workTitle && extractSeason(workTitle)
+      const workTitleSeason = workTitle && extractSeason(workTitle)[0]
       const subtitleEpisode =
         subtitle &&
         extractEpisode(
@@ -123,7 +123,7 @@ const main = async () => {
               space: false,
             },
           })
-        )
+        )[0]
 
       const rawText = [
         workTitle,
