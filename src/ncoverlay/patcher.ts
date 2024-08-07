@@ -108,7 +108,11 @@ export class NCOPatcher {
         Logger.log('parsed', parsed)
 
         this.#nco.state.vod.set(this.#vod)
-        this.#nco.state.title.set(JSON.stringify(parsed, null, 2))
+        this.#nco.state.title.set(
+          Object.entries(parsed)
+            .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
+            .join('\n')
+        )
 
         if (input) {
           const [chapter, szbh, jikkyo] = await Promise.all([
