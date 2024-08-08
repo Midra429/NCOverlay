@@ -22,7 +22,7 @@ const SlotItems: React.FC<{ slots: Slot[] }> = ({ slots }) => {
 }
 
 const SlotItemsEmpty: React.FC = () => {
-  const ncoStateJson = useNcoStateJson('vod', 'title')
+  const ncoStateJson = useNcoStateJson('vod', 'info')
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
@@ -31,7 +31,7 @@ const SlotItemsEmpty: React.FC = () => {
       url: await getFormsUrl({
         content: 'bug',
         vod: ncoStateJson?.vod,
-        title: ncoStateJson?.title,
+        info: ncoStateJson?.info,
         url: ncoStateJson && tab?.url,
       }),
     })

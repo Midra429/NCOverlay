@@ -25,7 +25,7 @@ import { ItemButton } from '@/components/item-button'
 const { name, version } = webext.runtime.getManifest()
 
 const FormsButton: React.FC = () => {
-  const ncoStateJson = useNcoStateJson('vod', 'title')
+  const ncoStateJson = useNcoStateJson('vod', 'info')
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
@@ -33,7 +33,7 @@ const FormsButton: React.FC = () => {
     webext.tabs.create({
       url: await getFormsUrl({
         vod: ncoStateJson?.vod,
-        title: ncoStateJson?.title,
+        info: ncoStateJson?.info,
         url: ncoStateJson && tab?.url,
       }),
     })

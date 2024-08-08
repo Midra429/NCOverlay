@@ -108,9 +108,20 @@ export class NCOPatcher {
         Logger.log('parsed', parsed)
 
         this.#nco.state.vod.set(this.#vod)
-        this.#nco.state.title.set(
-          Object.entries(parsed)
-            .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
+        this.#nco.state.info.set(
+          (
+            [
+              'rawText',
+              'title',
+              'seasonText',
+              'seasonNumber',
+              'episodeText',
+              'episodeNumber',
+              'subtitle',
+              'duration',
+            ] as (keyof typeof parsed)[]
+          )
+            .map((key) => `${key}: ${JSON.stringify(parsed[key])}`)
             .join('\n')
         )
 

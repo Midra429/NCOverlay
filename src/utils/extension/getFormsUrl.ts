@@ -1,4 +1,5 @@
 import type { Runtime } from 'wxt/browser'
+import type { NCOStateJson } from '@/ncoverlay/state'
 import type { VodKey } from '@/types/constants'
 
 import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS, VODS } from '@/constants'
@@ -20,8 +21,8 @@ const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
 
 export const getFormsUrl = async (inputs?: {
   content?: keyof typeof CONTENTS
-  vod?: VodKey | null
-  title?: string | null
+  vod?: NCOStateJson['vod']
+  info?: NCOStateJson['info']
   url?: string | null
 }) => {
   const { version } = webext.runtime.getManifest()
@@ -54,7 +55,7 @@ export const getFormsUrl = async (inputs?: {
     url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[inputs.vod])
   }
 
-  const title = [inputs?.title, inputs?.url]
+  const title = [inputs?.info, inputs?.url]
     .flatMap((v) => v || [])
     .join('\n\n')
     .trim()

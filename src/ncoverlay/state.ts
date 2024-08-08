@@ -15,7 +15,7 @@ export type NCOStateJson = {
   _id: string
   status: Status | null
   vod: VodKey | null
-  title: string | null
+  info: string | null
   offset: number
   slots: Slot[] | null
 }
@@ -136,10 +136,10 @@ export class NCOState {
   readonly key: `tmp:state:${string}`
   readonly sync: boolean
 
-  #status: Status | null = null
-  #vod: VodKey | null = null
-  #title: string | null = null
-  #offset: number = 0
+  #status: NCOStateJson['status'] = null
+  #vod: NCOStateJson['vod'] = null
+  #info: NCOStateJson['info'] = null
+  #offset: NCOStateJson['offset'] = 0
   #slots: Map<string, Slot> = new Map()
 
   #tmpSyncOff?: boolean
@@ -178,7 +178,7 @@ export class NCOState {
   clear() {
     this.status.clear()
     this.vod.clear()
-    this.title.clear()
+    this.info.clear()
     this.offset.clear()
     this.slots.clear()
   }
@@ -195,7 +195,7 @@ export class NCOState {
           _id: this.id,
           status: this.status.get(),
           vod: this.vod.get(),
-          title: this.title.get(),
+          info: this.info.get(),
           offset: this.offset.get(),
           slots: this.slots.get(),
         } satisfies NCOStateJson as Result
@@ -221,10 +221,10 @@ export class NCOState {
       this.vod.clear()
     }
 
-    if (json?.title) {
-      this.title.set(json.title)
+    if (json?.info) {
+      this.info.set(json.info)
     } else {
-      this.title.clear()
+      this.info.clear()
     }
 
     if (json?.offset) {
@@ -243,7 +243,7 @@ export class NCOState {
   status = {
     get: () => this.#status,
 
-    set: (status: Status | null): boolean => {
+    set: (status: NCOStateJson['status']): boolean => {
       if (this.#status !== status) {
         this.#status = status
 
@@ -263,7 +263,7 @@ export class NCOState {
   vod = {
     get: () => this.#vod,
 
-    set: (vod: VodKey | null): boolean => {
+    set: (vod: NCOStateJson['vod']): boolean => {
       if (this.#vod !== vod) {
         this.#vod = vod
 
@@ -280,14 +280,14 @@ export class NCOState {
     },
   }
 
-  title = {
-    get: () => this.#title,
+  info = {
+    get: () => this.#info,
 
-    set: (title: string | null): boolean => {
-      if (this.#title !== title) {
-        this.#title = title?.trim() || null
+    set: (info: NCOStateJson['info']): boolean => {
+      if (this.#info !== info) {
+        this.#info = info
 
-        this.#trigger('change', 'title')
+        this.#trigger('change', 'info')
 
         return true
       }
@@ -296,14 +296,14 @@ export class NCOState {
     },
 
     clear: () => {
-      return this.title.set(null)
+      return this.info.set(null)
     },
   }
 
   offset = {
     get: () => this.#offset,
 
-    set: (ms: number): boolean => {
+    set: (ms: NCOStateJson['offset']): boolean => {
       if (this.#offset !== ms) {
         this.#offset = ms
 
