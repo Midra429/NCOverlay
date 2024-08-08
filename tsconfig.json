@@ -5,6 +5,7 @@
     "jsx": "react-jsx",
     "skipLibCheck": false,
     "verbatimModuleSyntax": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "noErrorTruncation": true
   }
 }

@@ -1,13 +1,15 @@
-import type { SidePanel } from 'wxt/browser'
+import type { WebExtBrowser, SidePanel } from 'wxt/browser'
 
 import { browser } from 'wxt/browser'
 
-browser.isChrome =
-  import.meta.env.CHROME || import.meta.env.EDGE || import.meta.env.OPERA
-browser.isFirefox = import.meta.env.FIREFOX
-browser.isSafari = import.meta.env.SAFARI
+const webext = browser as WebExtBrowser
 
-browser.getCurrentActiveTab = async function (windowId) {
+webext.isChrome =
+  import.meta.env.CHROME || import.meta.env.EDGE || import.meta.env.OPERA
+webext.isFirefox = import.meta.env.FIREFOX
+webext.isSafari = import.meta.env.SAFARI
+
+webext.getCurrentActiveTab = async function (windowId) {
   const [tab] = await this.tabs.query({
     active: true,
     ...(typeof windowId === 'number' && windowId !== this.windows.WINDOW_ID_NONE
@@ -23,9 +25,9 @@ browser.getCurrentActiveTab = async function (windowId) {
 }
 
 // Chrome
-if (browser.isChrome) {
-  if (browser.sidePanel) {
-    browser.sidePanel.open = new Proxy(browser.sidePanel.open, {
+if (webext.isChrome) {
+  if (webext.sidePanel) {
+    webext.sidePanel.open = new Proxy(webext.sidePanel.open, {
       apply(
         target,
         thisArg: SidePanel.Static,
@@ -41,15 +43,15 @@ if (browser.isChrome) {
       },
     })
 
-    browser.sidePanel.close = function ({ tabId }) {
+    webext.sidePanel.close = function ({ tabId }) {
       return this.setOptions({ enabled: false, tabId })
     }
   }
 }
 
 // Firefox
-if (browser.isFirefox) {
-  browser.storage.local.getBytesInUse = async function (keys) {
+if (webext.isFirefox) {
+  webext.storage.local.getBytesInUse = async function (keys) {
     const values = await this.get(keys)
 
     let bytes = 0
@@ -64,14 +66,14 @@ if (browser.isFirefox) {
     return bytes
   }
 
-  if (browser.sidebarAction) {
-    browser.sidePanel = {
+  if (webext.sidebarAction) {
+    webext.sidePanel = {
       open() {
-        return browser.sidebarAction.open()
+        return webext.sidebarAction.open()
       },
 
       close() {
-        return browser.sidebarAction.close()
+        return webext.sidebarAction.close()
       },
 
       async getOptions(options) {
@@ -80,34 +82,34 @@ if (browser.isFirefox) {
         let isOpen = false
 
         if (typeof tabId === 'number') {
-          const { windowId } = await browser.tabs.get(tabId)
+          const { windowId } = await webext.tabs.get(tabId)
 
-          isOpen = await browser.sidebarAction.isOpen({ windowId })
+          isOpen = await webext.sidebarAction.isOpen({ windowId })
         }
 
-        const path = await browser.sidebarAction.getPanel({ tabId })
+        const path = await webext.sidebarAction.getPanel({ tabId })
         const enabled = !!path && isOpen
 
         return { enabled, path, tabId }
       },
 
       async setOptions({ enabled, path, tabId }) {
-        const currentPanel = await browser.sidebarAction.getPanel({ tabId })
+        const currentPanel = await webext.sidebarAction.getPanel({ tabId })
 
         const panel =
           enabled === false ? null : path || currentPanel || this.path || null
 
-        await browser.sidebarAction.setPanel({ panel, tabId })
+        await webext.sidebarAction.setPanel({ panel, tabId })
       },
     }
   }
 }
 
-if (browser.sidePanel) {
-  const { side_panel, sidebar_action } = browser.runtime.getManifest()
+if (webext.sidePanel) {
+  const { side_panel, sidebar_action } = webext.runtime.getManifest()
 
-  browser.sidePanel.path =
+  webext.sidePanel.path =
     side_panel?.default_path ?? sidebar_action?.default_panel
 }
 
-export const webext = browser
+export { webext }

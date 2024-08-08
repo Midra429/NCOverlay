@@ -67,7 +67,7 @@ declare module 'wxt/browser' {
     }
   }
 
-  interface AugmentedBrowser {
+  type WebExtBrowser = AugmentedBrowser & {
     sidePanel: SidePanel.Static
 
     isChrome: boolean
