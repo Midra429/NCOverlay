@@ -1,38 +1,53 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
-
-export type NgSetting = {
-  word: (string | RegExp)[]
-  command: (string | RegExp)[]
-  id: string[]
-}
+import type { NgSettings } from './getNgSettings'
 
 export const isNgComment = (
-  comment: V1Thread['comments'][number],
-  ngSetting: NgSetting
+  { body, commands, userId }: V1Thread['comments'][number],
+  ngSettings: NgSettings
 ): boolean => {
-  return (
-    // 単語
-    ngSetting.word.some((ngWord) =>
-      typeof ngWord === 'string'
-        ? comment.body.includes(ngWord)
-        : ngWord.test(comment.body)
-    ) ||
-    // コマンド
-    comment.commands.some((cmd) =>
-      ngSetting.command.some((ngCmd) =>
-        typeof ngCmd === 'string' ? cmd === ngCmd : ngCmd.test(cmd)
-      )
-    ) ||
-    // ユーザーID
-    ngSetting.id.includes(comment.userId)
-  )
+  // 単語
+  const isNgWord = ngSettings.words.some(({ content, isRegExp }) => {
+    if (isRegExp) {
+      try {
+        return new RegExp(content).test(body)
+      } catch {}
+    } else {
+      return body.includes(content)
+    }
+  })
+
+  // コマンド
+  const isNgCommand = commands.some((command) => {
+    return ngSettings.commands.some(({ content, isRegExp }) => {
+      if (isRegExp) {
+        try {
+          return new RegExp(content).test(command)
+        } catch {}
+      } else {
+        return command === content
+      }
+    })
+  })
+
+  // ユーザーID
+  const isNgId = ngSettings.ids.some(({ content, isRegExp }) => {
+    if (isRegExp) {
+      try {
+        return new RegExp(content).test(userId)
+      } catch {}
+    } else {
+      return userId === content
+    }
+  })
+
+  return isNgWord || isNgCommand || isNgId
 }
 
 export const applyNgSetting = (
   threads: V1Thread[],
-  ngSetting: NgSetting
+  ngSettings: NgSettings
 ): V1Thread[] => {
-  if (!Object.values(ngSetting).flat().length) {
+  if (!Object.values(ngSettings).flat().length) {
     return threads
   }
 
@@ -41,17 +56,17 @@ export const applyNgSetting = (
   for (const thread of threads) {
     let commentCount = thread.commentCount
 
-    const comments = thread.comments.flatMap((cmt) => {
-      if (isNgComment(cmt, ngSetting)) {
+    const comments = thread.comments.flatMap((comment) => {
+      if (isNgComment(comment, ngSettings)) {
         commentCount--
 
         return []
       }
 
-      return cmt
+      return comment
     })
 
-    applied.push({ ...thread, comments })
+    applied.push({ ...thread, commentCount, comments })
   }
 
   return applied

@@ -8,7 +8,7 @@ import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { storage } from '@/utils/storage/extension'
 import { deepmerge } from '@/utils/deepmerge'
-import { getNgSetting } from '@/utils/extension/getNgSetting'
+import { getNgSettings } from '@/utils/extension/getNgSettings'
 import { isNgComment } from '@/utils/extension/applyNgSetting'
 
 export type NCOStateJson = {
@@ -41,7 +41,6 @@ export type SlotBase = {
 
 export type SlotDefault = SlotBase & {
   type: 'normal' | 'danime' | 'chapter' | 'szbh'
-
   info: {
     id: string
     title: string
@@ -57,7 +56,6 @@ export type SlotDefault = SlotBase & {
 
 export type SlotJikkyo = SlotBase & {
   type: 'jikkyo'
-
   info: {
     id: string
     title: string
@@ -82,7 +80,7 @@ export const filterDisplayThreads = async (
   }
 
   const threadMap = new Map<string, V1Thread>()
-  const ngSetting = await getNgSetting()
+  const ngSettings = await getNgSettings()
 
   slots.forEach((slot) => {
     if (slot.hidden || slot.status !== 'ready') {
@@ -98,7 +96,7 @@ export const filterDisplayThreads = async (
 
       const comments = thread.comments.flatMap((cmt) => {
         // NG
-        if (isNgComment(cmt, ngSetting)) {
+        if (isNgComment(cmt, ngSettings)) {
           return []
         }
 

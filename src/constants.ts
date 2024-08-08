@@ -151,9 +151,9 @@ export const SETTINGS_DEFAULT: {
   'settings:ng:largeComments': false,
   'settings:ng:fixedComments': false,
   'settings:ng:coloredComments': false,
-  'settings:ng:word': [],
-  'settings:ng:command': [],
-  'settings:ng:id': [],
+  'settings:ng:words': [],
+  'settings:ng:commands': [],
+  'settings:ng:ids': [],
 
   // プラグイン
   'settings:plugins': [],
@@ -335,6 +335,19 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     ],
   },
   {
+    id: 'experimental',
+    title: '実験機能',
+    icon: FlaskConicalIcon,
+    items: [
+      {
+        settingsKey: 'settings:experimental:useAiParser',
+        inputType: 'toggle',
+        label: 'タイトル解析でAIを使用する',
+        description: 'VODのタイトル解析でAI（Gemini 1.5 Flash）を使用します。',
+      },
+    ],
+  },
+  {
     id: 'plugins',
     title: 'プラグイン',
     icon: BlocksIcon,
@@ -348,19 +361,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         value: `${vodKey}:${id}` as PluginKey,
       })),
     })),
-  },
-  {
-    id: 'experimental',
-    title: '実験的な機能',
-    icon: FlaskConicalIcon,
-    items: [
-      {
-        settingsKey: 'settings:experimental:useAiParser',
-        inputType: 'toggle',
-        label: 'タイトル解析でAIを使用する',
-        description: 'VODのタイトル解析でAI（Gemini 1.5 Flash）を使用します。',
-      },
-    ],
   },
 ]
 
@@ -401,4 +401,6 @@ export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
   black2: '#666666',
 }
 
-export const REGEXP_COLOR_CODE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
+export const COLOR_CODE = '^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$'
+
+export const COLOR_CODE_REGEXP = new RegExp(COLOR_CODE)

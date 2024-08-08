@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { cn } from '@nextui-org/react'
 import { readableColor } from 'color2k'
 
-import { NICONICO_COLOR_COMMANDS, REGEXP_COLOR_CODE } from '@/constants'
+import { NICONICO_COLOR_COMMANDS, COLOR_CODE_REGEXP } from '@/constants'
 
 import { formatDuration, formatDate } from '@/utils/format'
 
@@ -51,7 +51,7 @@ export const Item: React.FC<{
         classNames.push(commentComamndClasses[command])
       } else if (
         command in NICONICO_COLOR_COMMANDS ||
-        REGEXP_COLOR_CODE.test(command)
+        COLOR_CODE_REGEXP.test(command)
       ) {
         bgColor = NICONICO_COLOR_COMMANDS[command] ?? command
         fgColor = readableColor(bgColor)

@@ -86,9 +86,9 @@ export const useNcoStateJson = <
         settings.onChange('settings:ng:largeComments', ngChangedCallback),
         settings.onChange('settings:ng:fixedComments', ngChangedCallback),
         settings.onChange('settings:ng:coloredComments', ngChangedCallback),
-        settings.onChange('settings:ng:word', ngChangedCallback),
-        settings.onChange('settings:ng:command', ngChangedCallback),
-        settings.onChange('settings:ng:id', ngChangedCallback),
+        settings.onChange('settings:ng:words', ngChangedCallback),
+        settings.onChange('settings:ng:commands', ngChangedCallback),
+        settings.onChange('settings:ng:ids', ngChangedCallback),
       ]
     }
 

@@ -1,5 +1,5 @@
 import type { VodKey, PluginKey } from '@/types/constants'
-import type { NgSetting } from '@/utils/extension/applyNgSetting'
+import type { NgSettings } from '@/utils/extension/getNgSettings'
 import type { NCOState, NCOStateJson } from '@/ncoverlay/state'
 
 /** <= v2.x.x */
@@ -132,19 +132,19 @@ export type StorageItems_v1 = {
    * NG設定:単語
    * @default []
    */
-  'settings:ng:word': NgSetting['word']
+  'settings:ng:words': NgSettings['words']
 
   /**
    * NG設定:コマンド
    * @default []
    */
-  'settings:ng:command': NgSetting['command']
+  'settings:ng:commands': NgSettings['commands']
 
   /**
    * NG設定:ユーザーID
    * @default []
    */
-  'settings:ng:id': NgSetting['id']
+  'settings:ng:ids': NgSettings['ids']
 
   /**
    * プラグイン
