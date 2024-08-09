@@ -5,12 +5,9 @@ import { ncoParser } from '@midra/nco-parser'
 
 import { Logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/extension'
-import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
 
 import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
-
-const ncoApiProxy = getNcoApiProxy()
 
 export class NCOPatcher {
   #vod
@@ -26,10 +23,20 @@ export class NCOPatcher {
 
   constructor(init: {
     vod: VodKey
-    getInfo: (video: HTMLVideoElement | null) => Promise<{
-      rawText: string
-      duration: number
-    } | null>
+    getInfo: (video: HTMLVideoElement | null) => Promise<
+      | ((
+          | {
+              rawText: string
+            }
+          | {
+              /** <作品名> */
+              workTitle: string
+              /** <話数> <サブタイトル> */
+              episodeTitle: string | null
+            }
+        ) & { duration: number })
+      | null
+    >
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   }) {
     this.#vod = init.vod
@@ -63,67 +70,79 @@ export class NCOPatcher {
 
         const info = await this.#getInfo(this.#video)
 
-        const normalized = ncoParser.normalizeAll(info?.rawText ?? '', {
-          adjust: {
-            letterCase: false,
-          },
-          remove: {
-            space: false,
-          },
-        })
-
         let input: AutoLoadInput | null = null
 
         if (info) {
-          const { duration } = info
+          info.duration = Math.floor(info.duration)
 
-          if (await settings.get('settings:experimental:useAiParser')) {
-            const result = await ncoApiProxy.nco.ai.parse(
-              normalized,
-              EXT_USER_AGENT
+          let extracted: ReturnType<typeof ncoParser.extract> = {
+            normalized: '',
+            title: null,
+            season: null,
+            episode: null,
+            subtitle: null,
+          }
+
+          if ('rawText' in info) {
+            extracted = ncoParser.extract(
+              ncoParser.normalizeAll(info.rawText, {
+                adjust: {
+                  letterCase: false,
+                },
+                remove: {
+                  space: false,
+                },
+              })
+            )
+          } else {
+            const { title, season } = ncoParser.extract(
+              `${info.workTitle} 1話 サブタイトル`
             )
 
-            if (result) {
-              input = { ...result, duration }
+            extracted.title = title
+            extracted.season = season
+
+            if (info.episodeTitle) {
+              const { episode, subtitle } = ncoParser.extract(
+                ncoParser.normalizeAll(`タイトル ${info.episodeTitle}`, {
+                  adjust: {
+                    letterCase: false,
+                  },
+                  remove: {
+                    space: false,
+                  },
+                })
+              )
+
+              extracted.episode = episode
+              extracted.subtitle = subtitle
             }
           }
 
-          if (input?.episodeNumber == null) {
-            const extracted = ncoParser.extract(normalized)
-
-            input = {
-              title: extracted.title,
-              seasonText: extracted.season?.text,
-              seasonNumber: extracted.season?.number,
-              episodeText: extracted.episode?.text,
-              episodeNumber: extracted.episode?.number,
-              subtitle: extracted.subtitle,
-              duration,
-            }
+          input = {
+            title: extracted.title,
+            seasonText: extracted.season?.text,
+            seasonNumber: extracted.season?.number,
+            episodeText: extracted.episode?.text,
+            episodeNumber: extracted.episode?.number,
+            subtitle: extracted.subtitle,
+            duration: info.duration,
           }
         }
 
-        const parsed = { ...info, normalized, ...input }
+        const parsed = { ...info, ...input }
 
-        Logger.log('parsed', parsed)
+        Logger.log('parsed:', parsed)
+
+        const stateInfo = Object.entries(parsed)
+          .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
+          .join('\n')
 
         this.#nco.state.vod.set(this.#vod)
-        this.#nco.state.info.set(
-          (
-            [
-              'rawText',
-              'title',
-              'seasonText',
-              'seasonNumber',
-              'episodeText',
-              'episodeNumber',
-              'subtitle',
-              'duration',
-            ] as (keyof typeof parsed)[]
-          )
-            .map((key) => `${key}: ${JSON.stringify(parsed[key])}`)
-            .join('\n')
-        )
+        this.#nco.state.info.set(stateInfo)
+
+        Logger.log('state.vod:', this.#vod)
+        Logger.log('state.info:', '\n' + stateInfo)
 
         if (input) {
           const [chapter, szbh, jikkyo] = await Promise.all([

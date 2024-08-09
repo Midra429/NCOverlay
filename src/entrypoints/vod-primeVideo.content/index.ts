@@ -101,9 +101,9 @@ const main = async () => {
 
       const detail = getDetail()
 
-      Logger.log('detail', detail)
+      Logger.log('detail:', detail)
 
-      const workTitle = detail?.title || titleElem?.textContent
+      const title = detail?.title || titleElem?.textContent
       const season_episode = subtitleElem?.firstChild?.textContent
       const subtitle = subtitleElem?.lastChild?.textContent
 
@@ -114,7 +114,7 @@ const main = async () => {
         season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
       )
 
-      const workTitleSeason = workTitle && extractSeason(workTitle)[0]
+      const titleSeason = title && extractSeason(title)[0]
       const subtitleEpisode =
         subtitle &&
         extractEpisode(
@@ -125,15 +125,17 @@ const main = async () => {
           })
         )[0]
 
-      const rawText = [
-        workTitle,
-        !workTitleSeason && 2 <= seasonNum && `${seasonNum}期`,
-        !subtitleEpisode && 0 <= episodeNum && `${episodeNum}話`,
-        subtitle,
-      ]
-        .flatMap((v) => v || [])
-        .join(' ')
-        .trim()
+      const workTitle =
+        [title, !titleSeason && 2 <= seasonNum && `${seasonNum}期`]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
+
+      const episodeTitle =
+        [!subtitleEpisode && 0 <= episodeNum && `${episodeNum}話`, subtitle]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
 
       const duration =
         timeindicatorElem?.textContent
@@ -141,10 +143,11 @@ const main = async () => {
           .map(formatedToSeconds)
           .reduce((a, b) => a + b) ?? 0
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video

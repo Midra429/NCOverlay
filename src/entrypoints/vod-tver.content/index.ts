@@ -34,14 +34,14 @@ const main = async () => {
       )
 
       const seriesTitleText = seriesTitleElem?.textContent
-      const titleText = titleElem?.textContent
+      const episodeTitle = titleElem?.textContent ?? null
 
       const seasonText = [
         ...document.body.querySelectorAll(
           'div[class^="episode-live-list-column_season"] div[class^="episode-row_title"]'
         ),
       ]
-        .find((v) => v.textContent === titleText)
+        .find((v) => v.textContent === episodeTitle)
         ?.closest('div[class^="episode-live-list-column_season"]')
         ?.querySelector(
           'span[class^="episode-live-list-column_title"]'
@@ -50,21 +50,22 @@ const main = async () => {
       const seriesTitleSeason =
         seriesTitleText && extractSeason(seriesTitleText)[0]
 
-      const rawText = [
-        seriesTitleText,
-        !seriesTitleSeason && seasonText !== '本編' && seasonText,
-        titleText,
-      ]
-        .flatMap((v) => v || [])
-        .join(' ')
-        .trim()
+      const workTitle =
+        [
+          seriesTitleText,
+          !seriesTitleSeason && seasonText !== '本編' && seasonText,
+        ]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
 
       const duration = video?.duration ?? 0
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

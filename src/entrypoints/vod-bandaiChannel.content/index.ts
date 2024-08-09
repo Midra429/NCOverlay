@@ -39,21 +39,20 @@ const main = async () => {
         '.bch-p-heading-mov__summary'
       )
 
-      const rawText = [
-        seriesTitleElem?.textContent,
-        storyTitleElem?.firstChild?.textContent,
-        episodeTextElem?.textContent,
-      ]
-        .flatMap((v) => v || [])
-        .join(' ')
-        .trim()
+      const workTitle = seriesTitleElem?.textContent || null
+      const episodeTitle =
+        [storyTitleElem?.firstChild?.textContent, episodeTextElem?.textContent]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
 
       const duration = video?.duration ?? 0
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

@@ -43,21 +43,20 @@ const main = async () => {
         '.watch-info-title > .playable-title'
       )
 
-      const rawText = [
-        titleElem?.textContent,
-        episodeElem?.textContent,
-        subTitleElem?.textContent,
-      ]
-        .flatMap((v) => v || [])
-        .join(' ')
-        .trim()
+      const workTitle = titleElem?.textContent || null
+      const episodeTitle =
+        [episodeElem?.textContent, subTitleElem?.textContent]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
 
       const duration = video?.duration ?? 0
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

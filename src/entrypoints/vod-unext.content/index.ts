@@ -39,27 +39,25 @@ const main = async () => {
         episodeCode,
       })
 
-      Logger.log('unext.title', titleStage)
+      Logger.log('unext.title:', titleStage)
 
       if (!titleStage || !titleStage.episode) {
         return null
       }
 
-      const rawText = [
-        titleStage.titleName,
+      const workTitle = titleStage.titleName
+      const episodeTitle = [
         titleStage.episode.displayNo,
         titleStage.episode.episodeName,
-      ]
-        .flatMap((v) => v || [])
-        .join(' ')
-        .trim()
+      ].join(' ')
 
       const duration = titleStage.episode.duration
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

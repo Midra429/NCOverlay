@@ -36,7 +36,7 @@ const main = async () => {
 
       const program = await abemaApi.program(id, token)
 
-      Logger.log('abema.program', program)
+      Logger.log('abema.program:', program)
 
       if (program?.genre.id !== 'animation') {
         return null
@@ -57,19 +57,19 @@ const main = async () => {
         }
       }
 
-      let episodeTitle = ''
+      let episodeTitle: string | null = null
 
       if (workTitle !== program.episode.title) {
         episodeTitle = program.episode.title
       }
 
-      const rawText = `${workTitle} ${episodeTitle}`.trim()
       const duration = program.info.duration
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video

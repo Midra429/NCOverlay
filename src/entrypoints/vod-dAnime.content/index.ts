@@ -37,16 +37,17 @@ const main = async () => {
       const partId = new URL(location.href).searchParams.get('partId')
       const partData = partId ? await dAnimeApi.part(partId) : null
 
-      Logger.log('danime.part', partData)
+      Logger.log('danime.part:', partData)
 
       if (!partData) {
         return null
       }
 
-      let rawText = partData.title
+      let workTitle = partData.workTitle
+      let episodeText = partData.partDispNumber
 
       if (partData.partDispNumber === '本編') {
-        rawText = partData.workTitle
+        episodeText = ''
       } else if (
         /最終(?:回|話)/.test(partData.partDispNumber) &&
         partData.prevTitle
@@ -54,23 +55,23 @@ const main = async () => {
         const [episode] = extractEpisode(partData.prevTitle)
 
         if (episode) {
-          rawText = [
-            partData.workTitle,
-            `${episode.number + 1}話`,
-            partData.partTitle,
-          ]
-            .flatMap((v) => v || [])
-            .join(' ')
-            .trim()
+          episodeText = `${episode.number + 1}話`
         }
       }
 
+      const episodeTitle =
+        [episodeText, partData.partTitle]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
+
       const duration = partData.partMeasureSecond
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

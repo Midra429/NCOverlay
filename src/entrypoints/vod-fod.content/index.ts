@@ -39,19 +39,22 @@ const main = async () => {
 
       const episode = await ncoApiProxy.fod.episode(id, token)
 
-      Logger.log('fod.episode', episode)
+      Logger.log('fod.episode:', episode)
 
       if (!episode) {
         return null
       }
 
-      const rawText = `${episode.lu_title} ${episode.ep_title}`.trim()
+      const workTitle = episode.lu_title
+      const episodeTitle = episode.ep_title
+
       const duration = video?.duration ?? 0
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

@@ -84,8 +84,8 @@ export class NCOSearcher {
 
     this.#trigger('searched')
 
-    // Logger.log('searchResult', searchResult)
-    Logger.log('searchSyobocalResult', searchSyobocalResult)
+    // Logger.log('searchResult:', searchResult)
+    Logger.log('searchSyobocalResult:', searchSyobocalResult)
 
     // ロード中のデータ
     const loadingSlots: Slot[] = []
@@ -201,10 +201,10 @@ export class NCOSearcher {
 
     this.#trigger('loaded')
 
-    // Logger.log('commentsNormal', commentsNormal)
-    // Logger.log('commentsChapter', commentsChapter)
-    // Logger.log('commentsSzbh', commentsSzbh)
-    Logger.log('commentsJikkyo', commentsJikkyo)
+    // Logger.log('commentsNormal:', commentsNormal)
+    // Logger.log('commentsChapter:', commentsChapter)
+    // Logger.log('commentsSzbh:', commentsSzbh)
+    Logger.log('commentsJikkyo:', commentsJikkyo)
 
     const updateSlots: SlotUpdate[] = []
 
@@ -320,7 +320,7 @@ export class NCOSearcher {
 
     this.#trigger('ready')
 
-    Logger.log('slots', this.state.slots.get())
+    Logger.log('slots:', this.state.slots.get())
   }
 
   // /**

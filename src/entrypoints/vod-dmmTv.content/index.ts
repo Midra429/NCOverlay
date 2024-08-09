@@ -35,28 +35,27 @@ const main = async () => {
           ? await dmmTvApi.video({ seasonId, contentId })
           : null
 
-      Logger.log('dmmTv.video', dataVideo)
+      Logger.log('dmmTv.video:', dataVideo)
 
       if (!dataVideo?.categories.some((v) => v.id === '15' || v.id === '17')) {
         return null
       }
 
-      const rawText = [
-        dataVideo.seasonName,
-        dataVideo.episode?.episodeNumberName,
-        dataVideo.episode?.episodeTitle,
-      ]
-        .flatMap((v) => v || [])
-        .join(' ')
-        .trim()
+      const workTitle = dataVideo.seasonName
+      const episodeTitle =
+        [dataVideo.episode?.episodeNumberName, dataVideo.episode?.episodeTitle]
+          .flatMap((v) => v || [])
+          .join(' ')
+          .trim() || null
 
       const duration =
         dataVideo.episode?.playInfo.duration ?? video?.duration ?? 0
 
-      Logger.log('rawText', rawText)
-      Logger.log('duration', duration)
+      Logger.log('workTitle:', workTitle)
+      Logger.log('episodeTitle:', episodeTitle)
+      Logger.log('duration:', duration)
 
-      return { rawText, duration }
+      return workTitle ? { workTitle, episodeTitle, duration } : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)
