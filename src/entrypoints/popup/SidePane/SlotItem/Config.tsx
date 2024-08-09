@@ -30,19 +30,19 @@ const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
-    const ofs = Math.round((slot.offset ?? 0) / 1000)
+    const ofs = Math.round((slot.offsetMs ?? 0) / 1000)
 
     if (ofs !== currentOffset) {
       setCurrentOffset(ofs)
       setOffset(ofs)
     }
-  }, [slot.offset])
+  }, [slot.offsetMs])
 
   const onApply = useCallback(async () => {
     try {
       sendNcoMessage('updateSlot', {
         id: slot.id,
-        offset: offset * 1000,
+        offsetMs: offset * 1000,
       })
     } catch {}
   }, [slot.id, offset])

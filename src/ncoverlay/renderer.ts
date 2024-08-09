@@ -19,6 +19,7 @@ export class NCORenderer {
   #niconicomments: NiconiComments | null = null
   #threads: V1Thread[] | null = null
   #options: NiconiCommentsOptions | null = null
+  #offset: number = 0
 
   #intervalMs: number = 1000 / 60
   #frameId: number = 0
@@ -51,6 +52,7 @@ export class NCORenderer {
     this.#niconicomments?.clear()
     this.#niconicomments = null
     this.#threads = null
+    this.#offset = 0
 
     document.body.classList.remove('NCOverlay-Capture')
   }
@@ -67,6 +69,16 @@ export class NCORenderer {
    */
   setOptions(options: NiconiCommentsOptions | null) {
     this.#options = options
+  }
+
+  setOffset(offset: number) {
+    if (this.#offset !== offset) {
+      this.#offset = offset
+
+      if (!this.#frameId) {
+        this.render()
+      }
+    }
   }
 
   /**
@@ -99,7 +111,9 @@ export class NCORenderer {
   }
 
   render() {
-    this.#niconicomments?.drawCanvas((this.video.currentTime * 100) | 0)
+    const time = this.video.currentTime - this.#offset
+
+    this.#niconicomments?.drawCanvas(0 < time ? (time * 100) | 0 : 0)
   }
 
   start() {
@@ -110,6 +124,8 @@ export class NCORenderer {
 
   stop() {
     window.cancelAnimationFrame(this.#frameId)
+
+    this.#frameId = 0
   }
 
   #frameReqCallback(time: number) {

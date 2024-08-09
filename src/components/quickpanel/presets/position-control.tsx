@@ -60,7 +60,7 @@ export const PositionControl: React.FC = () => {
   const [slotMarkers, setSlotMarkers] = useState<((number | null)[] | null)[]>()
 
   useEffect(() => {
-    const ofs = Math.round((ncoStateJson?.offset ?? 0) / 1000)
+    const ofs = ncoStateJson?.offset ?? 0
 
     setCurrentOffset(ofs)
     setOffset(ofs)
@@ -86,7 +86,7 @@ export const PositionControl: React.FC = () => {
 
   const onApply = useCallback(async () => {
     try {
-      sendNcoMessage('setGlobalOffset', offset * 1000)
+      sendNcoMessage('setGlobalOffset', offset)
     } catch {}
   }, [offset])
 

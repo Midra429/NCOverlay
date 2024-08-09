@@ -54,7 +54,7 @@ export class NCOverlay {
 
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
-      window.setTimeout(() => {
+      setTimeout(() => {
         this.#trigger('loadedmetadata', new Event('loadedmetadata'))
       }, 100)
     }
@@ -92,11 +92,13 @@ export class NCOverlay {
   /**
    * 全体のオフセットをセット
    */
-  setGlobalOffset(ms: number | null): boolean {
-    const changed = ms ? this.state.offset.set(ms) : this.state.offset.clear()
+  setGlobalOffset(offset: number | null): boolean {
+    const changed = offset
+      ? this.state.offset.set(offset)
+      : this.state.offset.clear()
 
     if (changed) {
-      this.updateRendererThreads()
+      this.renderer.setOffset(this.state.offset.get())
     }
 
     return changed
@@ -114,7 +116,7 @@ export class NCOverlay {
       slots.forEach((slot) => {
         this.state.slots.update({
           id: slot.id,
-          offset: 0,
+          offsetMs: 0,
         })
       })
     } else {
@@ -126,7 +128,7 @@ export class NCOverlay {
         if (marker) {
           this.state.slots.update({
             id: slot.id,
-            offset: marker * -1 + currentTimeMs,
+            offsetMs: marker * -1 + currentTimeMs,
           })
         }
       })

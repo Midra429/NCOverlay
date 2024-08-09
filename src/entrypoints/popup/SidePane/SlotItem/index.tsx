@@ -169,7 +169,7 @@ const SlotItemCounter: React.FC<SlotItemProps> = ({ slot }) => {
 // オフセット
 const SlotItemOffset: React.FC<SlotItemProps> = ({ slot }) => {
   const element = useMemo(() => {
-    const ofs = Math.round((slot.offset ?? 0) / 1000)
+    const ofs = Math.round((slot.offsetMs ?? 0) / 1000)
 
     if (ofs === 0) {
       return null
@@ -184,7 +184,7 @@ const SlotItemOffset: React.FC<SlotItemProps> = ({ slot }) => {
         </span>
       </div>
     )
-  }, [slot.offset])
+  }, [slot.offsetMs])
 
   return element
 }

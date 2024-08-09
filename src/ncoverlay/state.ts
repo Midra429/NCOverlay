@@ -34,7 +34,7 @@ export type SlotBase = {
   status: Status
   threads: V1Thread[]
   markers?: (number | null)[]
-  offset?: number
+  offsetMs?: number
   translucent?: boolean
   hidden?: boolean
 }
@@ -72,8 +72,7 @@ export type Slot = SlotDefault | SlotJikkyo
 export type SlotUpdate = { id: string } & DeepPartial<Slot>
 
 export const filterDisplayThreads = async (
-  slots: Slot[],
-  offset: number = 0
+  slots: Slot[]
 ): Promise<V1Thread[] | null> => {
   if (!slots.length) {
     return null
@@ -101,11 +100,7 @@ export const filterDisplayThreads = async (
         }
 
         // オフセット
-        const vposMs = cmt.vposMs + offset + (slot.offset ?? 0)
-
-        if (vposMs < 0) {
-          return []
-        }
+        const vposMs = cmt.vposMs + (slot.offsetMs ?? 0)
 
         // 半透明
         const commands = slot.translucent
@@ -303,9 +298,9 @@ export class NCOState {
   offset = {
     get: () => this.#offset,
 
-    set: (ms: NCOStateJson['offset']): boolean => {
-      if (this.#offset !== ms) {
-        this.#offset = ms
+    set: (offset: NCOStateJson['offset']): boolean => {
+      if (this.#offset !== offset) {
+        this.#offset = offset
 
         this.#trigger('change', 'offset')
 
@@ -346,7 +341,7 @@ export class NCOState {
     },
 
     getThreads: () => {
-      return filterDisplayThreads(this.slots.get() ?? [], this.#offset)
+      return filterDisplayThreads(this.slots.get() ?? [])
     },
 
     set: (slots: Slot[]): boolean => {

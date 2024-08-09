@@ -38,28 +38,40 @@ const components: VirtuosoProps<
 export const CommentList: React.FC = memo(() => {
   const [isHover, setIsHover] = useState(false)
   const [comments, setComments] = useState<V1Thread['comments']>([])
+  const [offsetMs, setOffsetMs] = useState(0)
 
   const ncoStateJson = useNcoStateJson('slots', 'offset')
   const time = useNcoTime()
 
+  const displayComments = useMemo(() => {
+    return comments.flatMap((cmt) => {
+      const vposMs = cmt.vposMs + offsetMs
+
+      return 0 <= vposMs ? { ...cmt, vposMs } : []
+    })
+  }, [comments, offsetMs])
+
   const index = useMemo(() => {
-    return comments.findLastIndex((cmt) => cmt.vposMs <= time)
-  }, [comments, time])
+    return displayComments.findLastIndex((cmt) => cmt.vposMs <= time)
+  }, [displayComments, time])
 
   const virtuoso = useRef<VirtuosoHandle>(null)
 
   useEffect(() => {
     const slots = ncoStateJson?.slots ?? []
-    const offset = ncoStateJson?.offset
 
-    filterDisplayThreads(slots, offset).then((threads) => {
+    filterDisplayThreads(slots).then((threads) => {
       const comments = threads
         ?.flatMap((thread) => thread.comments)
         .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
 
       setComments(comments ?? [])
     })
-  }, [ncoStateJson])
+  }, [ncoStateJson?.slots])
+
+  useEffect(() => {
+    setOffsetMs((ncoStateJson?.offset ?? 0) * 1000)
+  }, [ncoStateJson?.offset])
 
   useEffect(() => {
     if (isHover || index === -1) return
@@ -74,7 +86,7 @@ export const CommentList: React.FC = memo(() => {
     <Virtuoso
       ref={virtuoso}
       components={components}
-      data={comments}
+      data={displayComments}
       itemContent={(_, data) => <Item comment={data} />}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}

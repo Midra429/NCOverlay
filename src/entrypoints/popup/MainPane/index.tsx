@@ -44,7 +44,7 @@ export const MainPane: React.FC<{
           fullWidth
           radius="full"
           color="primary"
-          destroyInactiveTabPanel={false}
+          // destroyInactiveTabPanel={false}
           items={tabItems}
         >
           {({ key, title, icon: Icon, children }) => (
