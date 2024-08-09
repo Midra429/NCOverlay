@@ -334,19 +334,19 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       // },
     ],
   },
-  {
-    id: 'experimental',
-    title: '実験機能',
-    icon: FlaskConicalIcon,
-    items: [
-      {
-        settingsKey: 'settings:experimental:useAiParser',
-        inputType: 'toggle',
-        label: 'タイトル解析でAIを使用する',
-        description: 'VODのタイトル解析でAI（Gemini 1.5 Flash）を使用します。',
-      },
-    ],
-  },
+  // {
+  //   id: 'experimental',
+  //   title: '実験機能',
+  //   icon: FlaskConicalIcon,
+  //   items: [
+  //     {
+  //       settingsKey: 'settings:experimental:useAiParser',
+  //       inputType: 'toggle',
+  //       label: 'タイトル解析でAIを使用する',
+  //       description: 'VODのタイトル解析でAI（Gemini 1.5 Flash）を使用します。',
+  //     },
+  //   ],
+  // },
   {
     id: 'plugins',
     title: 'プラグイン',
