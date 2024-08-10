@@ -55,10 +55,7 @@ export const getFormsUrl = async (inputs?: {
     url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[inputs.vod])
   }
 
-  const title = [inputs?.info, inputs?.url]
-    .flatMap((v) => v || [])
-    .join('\n\n')
-    .trim()
+  const title = [inputs?.info, inputs?.url].filter(Boolean).join('\n\n').trim()
 
   if (title) {
     url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.TITLE}`, title)

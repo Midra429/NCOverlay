@@ -127,13 +127,13 @@ const main = async () => {
 
       const workTitle =
         [title, !titleSeason && 2 <= seasonNum && `${seasonNum}期`]
-          .flatMap((v) => v || [])
+          .filter(Boolean)
           .join(' ')
           .trim() || null
 
       const episodeTitle =
         [!subtitleEpisode && 0 <= episodeNum && `${episodeNum}話`, subtitle]
-          .flatMap((v) => v || [])
+          .filter(Boolean)
           .join(' ')
           .trim() || null
 

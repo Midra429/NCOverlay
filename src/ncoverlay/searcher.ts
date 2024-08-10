@@ -290,10 +290,10 @@ export class NCOSearcher {
     // }
 
     // ニコニコ実況
-    commentsJikkyo?.forEach((comment) => {
-      if (!comment) return
+    commentsJikkyo?.forEach((cmt) => {
+      if (!cmt) return
 
-      const { thread, markers } = comment
+      const { thread, markers } = cmt
 
       updateSlots.push({
         id: thread.id as string,

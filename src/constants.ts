@@ -365,7 +365,9 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
 ]
 
 export const SETTINGS_INIT_ITEMS = Object.fromEntries(
-  SETTINGS_INIT_DATA.flatMap((v) => v.items).map((v) => [v.settingsKey, v])
+  SETTINGS_INIT_DATA.flatMap(({ items }) => {
+    return items.map((item) => [item.settingsKey, item])
+  })
 ) as {
   [key in SettingsKey]: SettingsInitItem
 }

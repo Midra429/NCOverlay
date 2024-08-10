@@ -44,7 +44,7 @@ const main = async () => {
       const workTitle = dataVideo.seasonName
       const episodeTitle =
         [dataVideo.episode?.episodeNumberName, dataVideo.episode?.episodeTitle]
-          .flatMap((v) => v || [])
+          .filter(Boolean)
           .join(' ')
           .trim() || null
 

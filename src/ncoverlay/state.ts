@@ -93,22 +93,19 @@ export const filterDisplayThreads = async (
         return
       }
 
-      const comments = thread.comments.flatMap((cmt) => {
-        // NG
-        if (isNgComment(cmt, ngSettings)) {
-          return []
-        }
+      const comments = thread.comments
+        .filter((cmt) => !isNgComment(cmt, ngSettings))
+        .map((cmt) => {
+          // オフセット
+          const vposMs = cmt.vposMs + (slot.offsetMs ?? 0)
 
-        // オフセット
-        const vposMs = cmt.vposMs + (slot.offsetMs ?? 0)
+          // 半透明
+          const commands = slot.translucent
+            ? [...new Set([...cmt.commands, '_live'])]
+            : cmt.commands
 
-        // 半透明
-        const commands = slot.translucent
-          ? [...new Set([...cmt.commands, '_live'])]
-          : cmt.commands
-
-        return { ...cmt, vposMs, commands }
-      })
+          return { ...cmt, vposMs, commands }
+        })
 
       const commentCount = comments.length
 
@@ -334,7 +331,9 @@ export class NCOState {
           return (this.#slots.get(ids[0]) ?? null) as Result
 
         default:
-          const slots = ids.flatMap((id) => this.#slots.get(id) ?? [])
+          const slots = ids
+            .map((id) => this.#slots.get(id))
+            .filter((slot) => slot != null)
 
           return (slots.length ? slots : null) as Result
       }

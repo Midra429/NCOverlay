@@ -56,15 +56,11 @@ export const applyNgSetting = (
   for (const thread of threads) {
     let commentCount = thread.commentCount
 
-    const comments = thread.comments.flatMap((comment) => {
-      if (isNgComment(comment, ngSettings)) {
-        commentCount--
+    const comments = thread.comments.filter(
+      (cmt) => !isNgComment(cmt, ngSettings)
+    )
 
-        return []
-      }
-
-      return comment
-    })
+    commentCount -= thread.comments.length - comments.length
 
     applied.push({ ...thread, commentCount, comments })
   }

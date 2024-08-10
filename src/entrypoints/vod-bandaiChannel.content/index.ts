@@ -42,7 +42,7 @@ const main = async () => {
       const workTitle = seriesTitleElem?.textContent || null
       const episodeTitle =
         [storyTitleElem?.firstChild?.textContent, episodeTextElem?.textContent]
-          .flatMap((v) => v || [])
+          .filter(Boolean)
           .join(' ')
           .trim() || null
 

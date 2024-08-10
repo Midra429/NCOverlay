@@ -1,7 +1,15 @@
 import type { VirtuosoProps, VirtuosoHandle } from 'react-virtuoso'
 import type { V1Thread } from '@xpadev-net/niconicomments'
 
-import { memo, useMemo, useEffect, useState, useRef, forwardRef } from 'react'
+import {
+  memo,
+  useMemo,
+  useEffect,
+  useCallback,
+  useState,
+  useRef,
+  forwardRef,
+} from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
 import { useNcoStateJson, useNcoTime } from '@/hooks/useNcoState'
@@ -44,11 +52,9 @@ export const CommentList: React.FC = memo(() => {
   const time = useNcoTime()
 
   const displayComments = useMemo(() => {
-    return comments.flatMap((cmt) => {
-      const vposMs = cmt.vposMs + offsetMs
-
-      return 0 <= vposMs ? { ...cmt, vposMs } : []
-    })
+    return comments
+      .filter((cmt) => 0 <= cmt.vposMs + offsetMs)
+      .map((cmt) => ({ ...cmt, vposMs: cmt.vposMs + offsetMs }))
   }, [comments, offsetMs])
 
   const index = useMemo(() => {
@@ -74,13 +80,16 @@ export const CommentList: React.FC = memo(() => {
   }, [ncoStateJson?.offset])
 
   useEffect(() => {
-    if (isHover || index === -1) return
+    if (!isHover && index !== -1) {
+      virtuoso.current?.scrollToIndex({
+        index,
+        align: 'end',
+      })
+    }
+  }, [index, isHover])
 
-    virtuoso.current?.scrollToIndex({
-      index,
-      align: 'end',
-    })
-  }, [index])
+  const onMouseEnter = useCallback(() => setIsHover(true), [])
+  const onMouseLeave = useCallback(() => setIsHover(false), [])
 
   return (
     <Virtuoso
@@ -88,8 +97,8 @@ export const CommentList: React.FC = memo(() => {
       components={components}
       data={displayComments}
       itemContent={(_, data) => <Item comment={data} />}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     />
   )
 })

@@ -55,7 +55,7 @@ const main = async () => {
           seriesTitleText,
           !seriesTitleSeason && seasonText !== '本編' && seasonText,
         ]
-          .flatMap((v) => v || [])
+          .filter(Boolean)
           .join(' ')
           .trim() || null
 

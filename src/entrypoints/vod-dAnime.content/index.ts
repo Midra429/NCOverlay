@@ -60,10 +60,8 @@ const main = async () => {
       }
 
       const episodeTitle =
-        [episodeText, partData.partTitle]
-          .flatMap((v) => v || [])
-          .join(' ')
-          .trim() || null
+        [episodeText, partData.partTitle].filter(Boolean).join(' ').trim() ||
+        null
 
       const duration = partData.partMeasureSecond
 
