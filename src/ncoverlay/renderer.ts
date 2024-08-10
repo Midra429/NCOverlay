@@ -151,11 +151,11 @@ export class NCORenderer {
     document.body.classList.add('NCOverlay-Capture')
 
     return new Promise<{
-      data: number[] | null
       format: 'jpeg' | 'png'
+      data?: number[]
     }>((resolve) => {
       setTimeout(async () => {
-        let data: number[] | null = null
+        let data: number[] | undefined
 
         try {
           data = await sendUtilsMessage('captureTab', {
@@ -169,7 +169,7 @@ export class NCORenderer {
 
         document.body.classList.remove('NCOverlay-Capture')
 
-        resolve({ data, format })
+        resolve({ format, data })
       }, 100)
     })
   }

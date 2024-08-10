@@ -14,7 +14,7 @@ export const capture = async (): Promise<
   } = await settings.get('settings:capture:format', 'settings:capture:method')
 
   try {
-    const { data, format } = await sendNcoMessage(
+    const { format, data } = await sendNcoMessage(
       'capture',
       captureMethod === 'copy' ? 'png' : captureFormat
     )

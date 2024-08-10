@@ -57,7 +57,7 @@ const main = async () => {
         }
       }
 
-      let episodeTitle: string | null = null
+      let episodeTitle: string | undefined
 
       if (workTitle !== program.episode.title) {
         episodeTitle = program.episode.title

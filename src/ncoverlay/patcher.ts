@@ -32,7 +32,7 @@ export class NCOPatcher {
               /** <作品名> */
               workTitle: string
               /** <話数> <サブタイトル> */
-              episodeTitle: string | null
+              episodeTitle?: string | null
             }
         ) & { duration: number })
       | null
@@ -70,7 +70,7 @@ export class NCOPatcher {
 
         const info = await this.#getInfo(this.#video)
 
-        let input: AutoLoadInput | null = null
+        let input: AutoLoadInput | undefined
 
         if (info) {
           info.duration = Math.floor(info.duration)

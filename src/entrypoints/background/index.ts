@@ -68,7 +68,7 @@ const main = async () => {
       // NCOverlayインスタンス作成時
       case 'instance':
         const tabId = port.sender?.tab?.id
-        let ncoId: string | null = null
+        let ncoId: string | undefined
 
         let intervalId: NodeJS.Timeout
         let timeoutId: NodeJS.Timeout

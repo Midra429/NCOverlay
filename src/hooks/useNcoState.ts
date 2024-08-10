@@ -7,8 +7,8 @@ import { settings } from '@/utils/settings/extension'
 import { NCOState } from '@/ncoverlay/state'
 import { ncoMessenger } from '@/ncoverlay/messaging'
 
-export let ncoId: string | null = null
-export let ncoState: NCOState | null = null
+export let ncoId: string | undefined
+export let ncoState: NCOState | undefined
 
 const timeupdateEvent = {
   _listeners: [] as Array<(time: number) => void>,
@@ -29,10 +29,11 @@ ncoMessenger.onMessage('timeupdate', ({ data }) => {
 })
 
 export const initializeNcoState = async (tabId?: number) => {
-  ncoId = await getNcoId(tabId)
+  const id = await getNcoId(tabId)
 
-  if (ncoId) {
-    ncoState = new NCOState(ncoId)
+  if (id) {
+    ncoId = id
+    ncoState = new NCOState(id)
   }
 }
 

@@ -23,8 +23,8 @@ type ProtocolMap = {
   ) => ReturnType<NCOverlay['jumpMarker']>
 
   capture: (format: StorageItems['settings:capture:format']) => {
-    data: number[] | null
     format: 'jpeg' | 'png'
+    data?: number[]
   }
 
   timeupdate: (args: { id: string; time: number }) => void
