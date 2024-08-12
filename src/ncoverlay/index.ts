@@ -270,16 +270,6 @@ export class NCOverlay {
       return this.id
     })
 
-    // // メッセージ (スロット 更新)
-    // ncoMessenger.onMessage('updateSlot', ({ data }) => {
-    //   return this.updateSlot(data)
-    // })
-
-    // // メッセージ (オフセット 全体)
-    // ncoMessenger.onMessage('setGlobalOffset', ({ data }) => {
-    //   return this.setGlobalOffset(data)
-    // })
-
     // メッセージ (マーカー)
     ncoMessenger.onMessage('jumpMarker', ({ data }) => {
       return this.jumpMarker(data)
