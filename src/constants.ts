@@ -16,6 +16,7 @@ import {
   MessageSquareOffIcon,
   BlocksIcon,
   FlaskConicalIcon,
+  KeyboardIcon,
 } from 'lucide-react'
 
 /** GitHub */
@@ -155,11 +156,19 @@ export const SETTINGS_DEFAULT: {
   'settings:ng:commands': [],
   'settings:ng:ids': [],
 
+  // キーボード
+  'settings:kbd:increaseGlobalOffset': '',
+  'settings:kbd:decreaseGlobalOffset': '',
+  'settings:kbd:jumpMarkerToOP': '',
+  'settings:kbd:jumpMarkerToA': '',
+  'settings:kbd:jumpMarkerToB': '',
+  'settings:kbd:jumpMarkerToC': '',
+
   // プラグイン
   'settings:plugins': [],
 
   // 実験的な機能
-  'settings:experimental:useAiParser': false,
+  // 'settings:experimental:useAiParser': false,
 } as const
 
 /** 設定画面の初期化データ */
@@ -332,6 +341,43 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       // {
       //   settingsKey: 'settings:ng:id',
       // },
+    ],
+  },
+  {
+    id: 'keyboard',
+    title: 'キーボード (β)',
+    icon: KeyboardIcon,
+    items: [
+      {
+        settingsKey: 'settings:kbd:increaseGlobalOffset',
+        inputType: 'kbd-shortcut',
+        label: '全体のオフセットを増やす (+1s)',
+      },
+      {
+        settingsKey: 'settings:kbd:decreaseGlobalOffset',
+        inputType: 'kbd-shortcut',
+        label: '全体のオフセットを減らす (-1s)',
+      },
+      {
+        settingsKey: 'settings:kbd:jumpMarkerToOP',
+        inputType: 'kbd-shortcut',
+        label: '「OP（オープニング）」にジャンプ',
+      },
+      {
+        settingsKey: 'settings:kbd:jumpMarkerToA',
+        inputType: 'kbd-shortcut',
+        label: '「A（Aパート）」にジャンプ',
+      },
+      {
+        settingsKey: 'settings:kbd:jumpMarkerToB',
+        inputType: 'kbd-shortcut',
+        label: '「B（Bパート）」にジャンプ',
+      },
+      {
+        settingsKey: 'settings:kbd:jumpMarkerToC',
+        inputType: 'kbd-shortcut',
+        label: '「C（Cパート）」にジャンプ',
+      },
     ],
   },
   // {

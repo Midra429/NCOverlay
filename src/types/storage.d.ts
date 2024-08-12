@@ -147,16 +147,52 @@ export type StorageItems_v1 = {
   'settings:ng:ids': NgSettings['ids']
 
   /**
+   * キーボード:全体のオフセットを増やす
+   * @default ''
+   */
+  'settings:kbd:increaseGlobalOffset': string
+
+  /**
+   * キーボード:全体のオフセットを減らす
+   * @default ''
+   */
+  'settings:kbd:decreaseGlobalOffset': string
+
+  /**
+   * キーボード:オフセットを「オープニング」に飛ばす
+   * @default ''
+   */
+  'settings:kbd:jumpMarkerToOP': string
+
+  /**
+   * キーボード:オフセットを「Aパート」に飛ばす
+   * @default ''
+   */
+  'settings:kbd:jumpMarkerToA': string
+
+  /**
+   * キーボード:オフセットを「Bパート」に飛ばす
+   * @default ''
+   */
+  'settings:kbd:jumpMarkerToB': string
+
+  /**
+   * キーボード:オフセットを「Cパート」に飛ばす
+   * @default ''
+   */
+  'settings:kbd:jumpMarkerToC': string
+
+  /**
    * プラグイン
    * @default []
    */
   'settings:plugins': PluginKey[]
 
-  /**
-   * 実験的な機能:タイトル解析でAIを使用する
-   * @default false
-   */
-  'settings:experimental:useAiParser': boolean
+  // /**
+  //  * 実験的な機能:タイトル解析でAIを使用する
+  //  * @default false
+  //  */
+  // 'settings:experimental:useAiParser': boolean
 }
 
 export type StorageItems = StorageItems_v1 & {

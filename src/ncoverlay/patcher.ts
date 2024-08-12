@@ -10,9 +10,9 @@ import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
 
 export class NCOPatcher {
-  #vod
-  #getInfo
-  #appendCanvas
+  readonly #vod
+  readonly #getInfo
+  readonly #appendCanvas
 
   #video: HTMLVideoElement | null = null
   #nco: NCOverlay | null = null

@@ -7,6 +7,7 @@ import * as Text from './text'
 import * as Range from './range'
 import * as Checkbox from './checkbox'
 import * as Checkcard from './checkcard'
+import * as KbdShortcut from './kbd-shortcut'
 
 export type SettingsInputBaseProps<
   K extends SettingsKey,
@@ -19,21 +20,23 @@ export type SettingsInputBaseProps<
 }
 
 export type SettingsInputProps = {
-  segmented: Segmented.Props
-  select: Select.Props
-  toggle: Toggle.Props
-  text: Text.Props
-  range: Range.Props
-  checkbox: Checkbox.Props
-  checkcard: Checkcard.Props
+  'segmented': Segmented.Props
+  'select': Select.Props
+  'toggle': Toggle.Props
+  'text': Text.Props
+  'range': Range.Props
+  'checkbox': Checkbox.Props
+  'checkcard': Checkcard.Props
+  'kbd-shortcut': KbdShortcut.Props
 }
 
 export const SettingsInput = {
-  segmented: Segmented.Input,
-  select: Select.Input,
-  toggle: Toggle.Input,
-  text: Text.Input,
-  range: Range.Input,
-  checkbox: Checkbox.Input,
-  checkcard: Checkcard.Input,
+  'segmented': Segmented.Input,
+  'select': Select.Input,
+  'toggle': Toggle.Input,
+  'text': Text.Input,
+  'range': Range.Input,
+  'checkbox': Checkbox.Input,
+  'checkcard': Checkcard.Input,
+  'kbd-shortcut': KbdShortcut.Input,
 }

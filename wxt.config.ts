@@ -43,36 +43,6 @@ export default defineConfig({
       name: displayName,
       description,
       homepage_url: GITHUB_URL,
-
-      // commands: {
-      //   'globalOffset:increase': {
-      //     suggested_key: {
-      //       default: 'Ctrl+Shift+Right',
-      //     },
-      //     description: '全体のオフセットを増やす',
-      //   },
-
-      //   'globalOffset:decrease': {
-      //     suggested_key: {
-      //       default: 'Ctrl+Shift+Left',
-      //     },
-      //     description: '全体のオフセットを減らす',
-      //   },
-
-      //   'jumpMarker:A': {
-      //     suggested_key: {
-      //       default: 'Ctrl+Shift+A',
-      //     },
-      //     description: 'オフセットを「Aパート」に飛ばす',
-      //   },
-      //   'jumpMarker:B': {
-      //     suggested_key: {
-      //       default: 'Ctrl+Shift+B',
-      //     },
-      //     description: 'オフセットを「Bパート」に飛ばす',
-      //   },
-      // },
-
       permissions,
       host_permissions: ['<all_urls>'],
       browser_specific_settings,

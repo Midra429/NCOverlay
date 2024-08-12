@@ -12,6 +12,7 @@ import { sendUtilsMessage } from '@/utils/extension/messaging'
 import { NCOState } from './state'
 import { NCOSearcher } from './searcher'
 import { NCORenderer } from './renderer'
+import { NCOKeyboard } from './keyboard'
 import { ncoMessenger } from './messaging'
 
 import './style.css'
@@ -32,15 +33,19 @@ export class NCOverlay {
   readonly state: NCOState
   readonly searcher: NCOSearcher
   readonly renderer: NCORenderer
+  readonly keyboard: NCOKeyboard
 
-  #storageOnChangeRemoveListeners: (() => void)[] = []
-  #port: Runtime.Port
+  readonly #storageOnChangeRemoveListeners: (() => void)[] = []
+  readonly #port: Runtime.Port
 
   constructor(video: HTMLVideoElement) {
     this.id = `${Date.now()}.${uid()}`
     this.state = new NCOState(this.id)
     this.searcher = new NCOSearcher(this.state)
     this.renderer = new NCORenderer(video)
+    this.keyboard = new NCOKeyboard(this.state, {
+      jumpMarker: (...args) => this.jumpMarker(...args),
+    })
 
     this.#port = webext.runtime.connect({ name: 'instance' })
     this.#port.onMessage.addListener((message) => {
@@ -66,6 +71,7 @@ export class NCOverlay {
 
     this.state.dispose()
     this.renderer.dispose()
+    this.keyboard.dispose()
 
     this.#port.disconnect()
 
