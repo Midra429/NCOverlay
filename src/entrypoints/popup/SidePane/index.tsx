@@ -1,4 +1,4 @@
-import type { Slot } from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { memo, useCallback } from 'react'
 import { Button, Spinner, cn } from '@nextui-org/react'
@@ -7,22 +7,23 @@ import { ClipboardPenIcon } from 'lucide-react'
 import { webext } from '@/utils/webext'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 
-import { useNcoStateJson } from '@/hooks/useNcoState'
+import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from './SlotItem'
 
-const SlotItems: React.FC<{ slots: Slot[] }> = ({ slots }) => {
+const SlotItems: React.FC<{ details: StateSlotDetail[] }> = ({ details }) => {
   return (
     <div className="flex flex-col gap-2">
-      {slots.map((slot) => (
-        <SlotItem key={slot.id} slot={slot} />
+      {details.map((detail) => (
+        <SlotItem key={detail.id} detail={detail} />
       ))}
     </div>
   )
 }
 
 const SlotItemsEmpty: React.FC = () => {
-  const ncoStateJson = useNcoStateJson('vod', 'info')
+  const stateVod = useNcoState('vod')
+  const stateInfo = useNcoState('info')
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
@@ -30,12 +31,12 @@ const SlotItemsEmpty: React.FC = () => {
     webext.tabs.create({
       url: await getFormsUrl({
         content: 'bug',
-        vod: ncoStateJson?.vod,
-        info: ncoStateJson?.info,
-        url: ncoStateJson && tab?.url,
+        vod: stateVod,
+        info: stateInfo,
+        url: stateVod && tab?.url,
       }),
     })
-  }, [ncoStateJson])
+  }, [stateVod, stateInfo])
 
   return (
     <div
@@ -61,9 +62,9 @@ const SlotItemsEmpty: React.FC = () => {
 }
 
 const StatusOverlay: React.FC = () => {
-  const ncoStateJson = useNcoStateJson('status')
+  const stateStatus = useNcoState('status')
 
-  if (ncoStateJson?.status === 'searching') {
+  if (stateStatus === 'searching') {
     return (
       <div
         className={cn(
@@ -85,12 +86,12 @@ const StatusOverlay: React.FC = () => {
  * サイド
  */
 export const SidePane: React.FC = memo(() => {
-  const ncoStateJson = useNcoStateJson('slots')
+  const stateSlotDetails = useNcoState('slotDetails')
 
   return (
     <div className="relative h-full w-full overflow-y-auto p-2">
-      {ncoStateJson?.slots?.length ? (
-        <SlotItems slots={ncoStateJson.slots} />
+      {stateSlotDetails?.length ? (
+        <SlotItems details={stateSlotDetails} />
       ) : (
         <StatusOverlay />
       )}

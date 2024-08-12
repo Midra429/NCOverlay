@@ -6,7 +6,7 @@ import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants'
 
-import { useNcoStateJson } from '@/hooks/useNcoState'
+import { ncoState, useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import { PanelItem } from '@/components/panel-item'
@@ -53,24 +53,25 @@ const MarkerButton: React.FC<{
 }
 
 export const PositionControl: React.FC = () => {
-  const ncoStateJson = useNcoStateJson('offset', 'slots')
+  const stateOffset = useNcoState('offset')
+  const stateSlotDetails = useNcoState('slotDetails')
 
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
   const [slotMarkers, setSlotMarkers] = useState<((number | null)[] | null)[]>()
 
   useEffect(() => {
-    const ofs = ncoStateJson?.offset ?? 0
+    const ofs = stateOffset ?? 0
 
     setCurrentOffset(ofs)
     setOffset(ofs)
-  }, [ncoStateJson?.offset])
+  }, [stateOffset])
 
   useEffect(() => {
     setSlotMarkers(
-      ncoStateJson?.slots?.map((v) => (!v.hidden && v.markers) || null)
+      stateSlotDetails?.map((v) => (!v.hidden && v.markers) || null)
     )
-  }, [ncoStateJson?.slots])
+  }, [stateSlotDetails])
 
   const markerEnableFlags = useMemo(() => {
     const flags: boolean[] = Array(MARKERS.length).fill(false)
@@ -85,9 +86,7 @@ export const PositionControl: React.FC = () => {
   }, [slotMarkers])
 
   const onApply = useCallback(async () => {
-    try {
-      sendNcoMessage('setGlobalOffset', offset)
-    } catch {}
+    await ncoState?.set('offset', offset)
   }, [offset])
 
   return (

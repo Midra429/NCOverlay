@@ -66,7 +66,7 @@ export class NCOPatcher {
 
       // 自動読み込み
       if (await settings.get('settings:comment:autoLoad')) {
-        this.#nco.state.status.set('searching')
+        await this.#nco.state.set('status', 'searching')
 
         const info = await this.#getInfo(this.#video)
 
@@ -138,8 +138,8 @@ export class NCOPatcher {
           .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
           .join('\n')
 
-        this.#nco.state.vod.set(this.#vod)
-        this.#nco.state.info.set(stateInfo)
+        await this.#nco.state.set('vod', this.#vod)
+        await this.#nco.state.set('info', stateInfo)
 
         Logger.log('state.vod:', this.#vod)
         Logger.log('state.info:', '\n' + stateInfo)
@@ -154,7 +154,7 @@ export class NCOPatcher {
           await this.#nco.searcher.autoLoad(input, { chapter, szbh, jikkyo })
         }
 
-        this.#nco.state.status.set('ready')
+        await this.#nco.state.set('status', 'ready')
       }
     })
 

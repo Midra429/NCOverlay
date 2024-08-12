@@ -1,6 +1,6 @@
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NgSettings } from '@/utils/extension/getNgSettings'
-import type { NCOState, NCOStateJson } from '@/ncoverlay/state'
+import type { NCOStateItems } from '@/ncoverlay/state'
 
 /** <= v2.x.x */
 export type StorageItems_v0 = {
@@ -167,9 +167,7 @@ export type StorageItems = StorageItems_v1 & {
    * @default undefined
    */
   'tmp:comment:opacity': number
-} & {
-  [k in NCOState['key']]: NCOStateJson
-}
+} & NCOStateItems
 
 export type StorageKey = keyof StorageItems
 
@@ -178,3 +176,5 @@ export type InternalKey = Extract<StorageKey, `_${string}`>
 export type TemporaryKey = Extract<StorageKey, `tmp:${string}`>
 
 export type SettingsKey = Extract<StorageKey, `settings:${string}`>
+
+export type StateKey = Extract<StorageKey, `state:${string}`>

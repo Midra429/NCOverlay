@@ -1,45 +1,64 @@
 import type { DeepPartial } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { VodKey } from '@/types/constants'
+import type { StorageOnChangeCallback } from '@/utils/storage'
 
 import equal from 'fast-deep-equal'
 
-import { Logger } from '@/utils/logger'
-import { uid } from '@/utils/uid'
 import { storage } from '@/utils/storage/extension'
 import { deepmerge } from '@/utils/deepmerge'
 import { getNgSettings } from '@/utils/extension/getNgSettings'
 import { isNgComment } from '@/utils/extension/applyNgSetting'
 
-export type NCOStateJson = {
-  _id: string
-  status: Status | null
-  vod: VodKey | null
-  info: string | null
-  offset: number
-  slots: Slot[] | null
+export type NCOStateItems = {
+  [key: `state:${string}:status`]: StateStatus | null
+  [key: `state:${string}:vod`]: StateVod | null
+  [key: `state:${string}:info`]: StateInfo | null
+  [key: `state:${string}:offset`]: StateOffset | null
+  [key: `state:${string}:slots`]: StateSlot[] | null
+  [key: `state:${string}:slotDetails`]: StateSlotDetail[] | null
 }
 
-export type NCOStateEventMap = {
-  change: (this: NCOState, type: keyof Omit<NCOStateJson, '_id'>) => void
-}
+export type NCOStateItemKey =
+  keyof NCOStateItems extends `state:${string}:${infer K}` ? K : never
 
-export type Status = 'pending' | 'searching' | 'loading' | 'ready' | 'error'
+export type NCOStateItem<T extends NCOStateItemKey> =
+  NCOStateItems[`state:${string}:${T}`]
 
-export type SlotBase = {
+export type StateStatus =
+  | 'pending'
+  | 'searching'
+  | 'loading'
+  | 'ready'
+  | 'error'
+
+export type StateVod = VodKey
+
+export type StateInfo = string
+
+export type StateOffset = number
+
+export type StateSlot = {
   /**
    * 動画ID or `${jkChId}:${starttime}-${endtime}`
    */
   id: string
-  status: Status
   threads: V1Thread[]
+}
+
+export type StateSlotDetailBase = {
+  /**
+   * 動画ID or `${jkChId}:${starttime}-${endtime}`
+   */
+  id: string
+  status: StateStatus
   markers?: (number | null)[]
   offsetMs?: number
   translucent?: boolean
   hidden?: boolean
 }
 
-export type SlotDefault = SlotBase & {
+export type StateSlotDetailDefault = StateSlotDetailBase & {
   type: 'normal' | 'danime' | 'chapter' | 'szbh'
   info: {
     id: string
@@ -54,7 +73,7 @@ export type SlotDefault = SlotBase & {
   }
 }
 
-export type SlotJikkyo = SlotBase & {
+export type StateSlotDetailJikkyo = StateSlotDetailBase & {
   type: 'jikkyo'
   info: {
     id: string
@@ -67,24 +86,30 @@ export type SlotJikkyo = SlotBase & {
   }
 }
 
-export type Slot = SlotDefault | SlotJikkyo
+export type StateSlotDetail = StateSlotDetailDefault | StateSlotDetailJikkyo
 
-export type SlotUpdate = { id: string } & DeepPartial<Slot>
+export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
+  Required<Pick<StateSlotDetail, 'id'>>
 
 export const filterDisplayThreads = async (
-  slots: Slot[]
+  slots: StateSlot[] | null,
+  details: StateSlotDetail[] | null
 ): Promise<V1Thread[] | null> => {
-  if (!slots.length) {
+  if (!slots?.length || !details?.length) {
     return null
   }
 
   const threadMap = new Map<string, V1Thread>()
   const ngSettings = await getNgSettings()
 
-  slots.forEach((slot) => {
-    if (slot.hidden || slot.status !== 'ready') {
+  details.forEach((detail) => {
+    if (detail.hidden || detail.status !== 'ready') {
       return
     }
+
+    const slot = slots.find((slot) => slot.id === detail.id)
+
+    if (!slot) return
 
     slot.threads.forEach((thread) => {
       const key = `${thread.id}${thread.fork}`
@@ -97,10 +122,10 @@ export const filterDisplayThreads = async (
         .filter((cmt) => !isNgComment(cmt, ngSettings))
         .map((cmt) => {
           // オフセット
-          const vposMs = cmt.vposMs + (slot.offsetMs ?? 0)
+          const vposMs = cmt.vposMs + (detail.offsetMs ?? 0)
 
           // 半透明
-          const commands = slot.translucent
+          const commands = detail.translucent
             ? [...new Set([...cmt.commands, '_live'])]
             : cmt.commands
 
@@ -124,347 +149,140 @@ export const filterDisplayThreads = async (
  * NCOverlayのデータ管理担当
  */
 export class NCOState {
-  readonly id: string
-  readonly key: `tmp:state:${string}`
-  readonly sync: boolean
+  readonly ncoId: string
 
-  #status: NCOStateJson['status'] = null
-  #vod: NCOStateJson['vod'] = null
-  #info: NCOStateJson['info'] = null
-  #offset: NCOStateJson['offset'] = 0
-  #slots: Map<string, Slot> = new Map()
-
-  #tmpSyncOff?: boolean
-  #onChangeRemoveListener?: () => void
-
-  /**
-   * @param id NCOverlayのID
-   * @param sync 同IDの別インスタンスと同期する (デフォルト: true)
-   */
-  constructor(id: string, sync: boolean = true) {
-    this.id = `${Date.now()}.${uid()}`
-    this.key = `tmp:state:${id}`
-    this.sync = sync
-
-    if (this.sync) {
-      this.#onChangeRemoveListener = storage.loadAndWatch(this.key, (json) => {
-        if (json?._id !== this.id) {
-          this.#tmpSyncOff = true
-
-          this.setJSON(json ?? null)
-
-          this.#tmpSyncOff = false
-        }
-      })
-    }
+  constructor(ncoId: string) {
+    this.ncoId = ncoId
   }
 
   dispose() {
     this.clear()
-
-    this.#onChangeRemoveListener?.()
-
-    storage.remove(this.key)
   }
 
-  clear() {
-    this.status.clear()
-    this.vod.clear()
-    this.info.clear()
-    this.offset.clear()
-    this.slots.clear()
+  get<Key extends NCOStateItemKey>(
+    key: Key
+  ): Promise<NCOStateItem<Key> | null> {
+    return storage.get(`state:${this.ncoId}:${key}`)
   }
 
-  getJSON<
-    Keys extends (keyof Omit<NCOStateJson, '_id'>)[],
-    Result = Keys['length'] extends 0
-      ? NCOStateJson
-      : { [key in Keys[number]]: NCOStateJson[key] },
-  >(...keys: Keys): Result {
-    switch (keys.length) {
-      case 0:
-        return {
-          _id: this.id,
-          status: this.status.get(),
-          vod: this.vod.get(),
-          info: this.info.get(),
-          offset: this.offset.get(),
-          slots: this.slots.get(),
-        } satisfies NCOStateJson as Result
+  async getThreads() {
+    return filterDisplayThreads(
+      ...(await Promise.all([this.get('slots'), this.get('slotDetails')]))
+    )
+  }
 
-      default:
-        return {
-          _id: this.id,
-          ...Object.fromEntries(keys.map((key) => [key, this[key].get()])),
-        } satisfies Partial<NCOStateJson> as Result
+  set<Key extends NCOStateItemKey>(key: Key, value: NCOStateItem<Key>) {
+    return storage.set(`state:${this.ncoId}:${key}`, value as any)
+  }
+
+  async add<Key extends 'slots' | 'slotDetails'>(
+    key: Key,
+    ...values: NonNullable<NCOStateItem<Key>>
+  ) {
+    const oldValue = await this.get<Key>(key)
+
+    const exists = values.some((val) => {
+      return oldValue?.some((old) => equal(old, val))
+    })
+
+    if (!exists) {
+      const value = (
+        oldValue ? [...oldValue, ...values] : values
+      ) as NCOStateItem<Key>
+
+      return this.set(key, value)
     }
   }
 
-  setJSON(json: NCOStateJson | null) {
-    if (json?.status) {
-      this.status.set(json.status)
-    } else {
-      this.status.clear()
+  async update<
+    Key extends 'slots' | 'slotDetails',
+    Value extends NonNullable<NCOStateItem<Key>>,
+    UpdateValue extends Value extends Array<any> ? Value[number] : Value,
+    UpdateFixedProps extends (keyof UpdateValue)[],
+  >(
+    key: Key,
+    fixedProps: UpdateFixedProps,
+    value: DeepPartial<UpdateValue> &
+      Required<Pick<UpdateValue, UpdateFixedProps[number]>>
+  ): Promise<boolean> {
+    const oldValue = await this.get(key)
+
+    if (!oldValue) {
+      return false
     }
 
-    if (json?.vod) {
-      this.vod.set(json.vod)
-    } else {
-      this.vod.clear()
-    }
+    if (Array.isArray(oldValue)) {
+      const idx = oldValue.findIndex((old) => {
+        return fixedProps.every((k) =>
+          equal(old[k as keyof typeof old], value[k])
+        )
+      })
 
-    if (json?.info) {
-      this.info.set(json.info)
-    } else {
-      this.info.clear()
-    }
+      if (idx !== -1) {
+        const newValue = deepmerge(oldValue[idx], value)
 
-    if (json?.offset) {
-      this.offset.set(json.offset)
-    } else {
-      this.offset.clear()
-    }
+        if (!equal(oldValue[idx], newValue)) {
+          oldValue[idx] = newValue
 
-    if (json?.slots) {
-      this.slots.set(json.slots)
-    } else {
-      this.slots.clear()
-    }
-  }
-
-  status = {
-    get: () => this.#status,
-
-    set: (status: NCOStateJson['status']): boolean => {
-      if (this.#status !== status) {
-        this.#status = status
-
-        this.#trigger('change', 'status')
-
-        return true
-      }
-
-      return false
-    },
-
-    clear: () => {
-      return this.status.set(null)
-    },
-  }
-
-  vod = {
-    get: () => this.#vod,
-
-    set: (vod: NCOStateJson['vod']): boolean => {
-      if (this.#vod !== vod) {
-        this.#vod = vod
-
-        this.#trigger('change', 'vod')
-
-        return true
-      }
-
-      return false
-    },
-
-    clear: () => {
-      return this.vod.set(null)
-    },
-  }
-
-  info = {
-    get: () => this.#info,
-
-    set: (info: NCOStateJson['info']): boolean => {
-      if (this.#info !== info) {
-        this.#info = info
-
-        this.#trigger('change', 'info')
-
-        return true
-      }
-
-      return false
-    },
-
-    clear: () => {
-      return this.info.set(null)
-    },
-  }
-
-  offset = {
-    get: () => this.#offset,
-
-    set: (offset: NCOStateJson['offset']): boolean => {
-      if (this.#offset !== offset) {
-        this.#offset = offset
-
-        this.#trigger('change', 'offset')
-
-        return true
-      }
-
-      return false
-    },
-
-    clear: () => {
-      return this.offset.set(0)
-    },
-  }
-
-  slots = {
-    size: () => {
-      return this.#slots.size
-    },
-
-    get: <
-      SlotIds extends string[],
-      Result = (SlotIds['length'] extends 1 ? Slot : Slot[]) | null,
-    >(
-      ...ids: SlotIds
-    ): Result => {
-      switch (ids.length) {
-        case 0:
-          return (this.#slots.size ? [...this.#slots.values()] : null) as Result
-
-        case 1:
-          return (this.#slots.get(ids[0]) ?? null) as Result
-
-        default:
-          const slots = ids
-            .map((id) => this.#slots.get(id))
-            .filter((slot) => slot != null)
-
-          return (slots.length ? slots : null) as Result
-      }
-    },
-
-    getThreads: () => {
-      return filterDisplayThreads(this.slots.get() ?? [])
-    },
-
-    set: (slots: Slot[]): boolean => {
-      const old = this.slots.get()
-
-      if (!equal(old, slots)) {
-        this.#slots.clear()
-
-        slots.forEach((slot) => {
-          this.#slots.set(slot.id, slot)
-        })
-
-        this.#trigger('change', 'slots')
-
-        return true
-      }
-
-      return false
-    },
-
-    add: (...slots: Slot[]): boolean => {
-      const old = this.slots.get()
-
-      if (!equal(old, slots)) {
-        slots.forEach((slot) => {
-          this.#slots.set(slot.id, slot)
-        })
-
-        this.#trigger('change', 'slots')
-
-        return true
-      }
-
-      return false
-    },
-
-    update: (data: SlotUpdate): boolean => {
-      const slot = this.#slots.get(data.id)
-
-      if (slot) {
-        const newSlot: Slot = deepmerge(slot, data)
-
-        if (!equal(slot, newSlot)) {
-          this.#slots.set(newSlot.id, newSlot)
-
-          this.#trigger('change', 'slots')
+          await this.set(key, oldValue)
 
           return true
         }
       }
+    } else {
+      const newValue = deepmerge(oldValue, value)
 
-      return false
-    },
-
-    remove: (...ids: string[]): boolean => {
-      let changed = false
-
-      ids.forEach((id) => {
-        changed ||= this.#slots.delete(id)
-      })
-
-      if (changed) {
-        this.#trigger('change', 'slots')
+      if (!equal(oldValue, newValue)) {
+        await this.set(key, newValue)
 
         return true
       }
-
-      return false
-    },
-
-    clear: (): boolean => {
-      if (this.#slots.size) {
-        this.#slots.clear()
-
-        this.#trigger('change', 'slots')
-
-        return true
-      }
-
-      return false
-    },
-  }
-
-  #listeners: {
-    [type in keyof NCOStateEventMap]?: NCOStateEventMap[type][]
-  } = {}
-
-  #trigger<Type extends keyof NCOStateEventMap>(
-    type: Type,
-    ...args: Parameters<NCOStateEventMap[Type]>
-  ) {
-    if (this.sync && !this.#tmpSyncOff && type === 'change') {
-      storage.set(this.key, this.getJSON())
     }
 
-    this.#listeners[type]?.forEach((listener) => {
-      try {
-        listener.call(this, ...args)
-      } catch (err) {
-        Logger.error(type, err)
+    return false
+  }
+
+  async remove<
+    Key extends NCOStateItemKey,
+    Value extends NCOStateItem<Key>,
+    Target extends Value extends Array<any> ? Partial<Value[number]> : never,
+  >(key: Key, target?: Target) {
+    if (target) {
+      const oldValue = await this.get(key)
+
+      if (Array.isArray(oldValue)) {
+        const entries = Object.entries(target)
+
+        const idx = oldValue.findIndex((old) => {
+          return entries.every(([k, v]) => equal(old[k as keyof typeof old], v))
+        })
+
+        if (idx !== -1) {
+          oldValue.splice(idx, 1)
+
+          return this.set(key, oldValue)
+        }
       }
-    })
+    } else {
+      return storage.remove(`state:${this.ncoId}:${key}`)
+    }
   }
 
-  addEventListener<Type extends keyof NCOStateEventMap>(
-    type: Type,
-    callback: NCOStateEventMap[Type]
-  ) {
-    this.#listeners[type] ??= []
-    this.#listeners[type]!.push(callback)
-  }
-
-  removeEventListener<Type extends keyof NCOStateEventMap>(
-    type: Type,
-    callback: NCOStateEventMap[Type]
-  ) {
-    this.#listeners[type] = this.#listeners[type]?.filter(
-      (cb) => cb !== callback
+  clear() {
+    return storage.remove(
+      `state:${this.ncoId}:status`,
+      `state:${this.ncoId}:vod`,
+      `state:${this.ncoId}:info`,
+      `state:${this.ncoId}:offset`,
+      `state:${this.ncoId}:slots`,
+      `state:${this.ncoId}:slotDetails`
     )
   }
 
-  removeAllEventListeners() {
-    for (const key in this.#listeners) {
-      delete this.#listeners[key as keyof NCOStateEventMap]
-    }
+  onChange<Key extends NCOStateItemKey>(
+    key: Key,
+    callback: StorageOnChangeCallback<`state:${string}:${Key}`>
+  ) {
+    return storage.onChange(`state:${this.ncoId}:${key}`, callback)
   }
 }

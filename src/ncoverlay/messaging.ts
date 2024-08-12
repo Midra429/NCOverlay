@@ -10,14 +10,6 @@ import { webext } from '@/utils/webext'
 type ProtocolMap = {
   getId: (args?: null) => string | null
 
-  updateSlot: (
-    args: Parameters<NCOverlay['updateSlot']>[0]
-  ) => ReturnType<NCOverlay['updateSlot']>
-
-  setGlobalOffset: (
-    args: Parameters<NCOverlay['setGlobalOffset']>[0]
-  ) => ReturnType<NCOverlay['setGlobalOffset']>
-
   jumpMarker: (
     args: Parameters<NCOverlay['jumpMarker']>[0]
   ) => ReturnType<NCOverlay['jumpMarker']>

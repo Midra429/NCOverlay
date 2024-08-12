@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { initializeNcoState } from '@/hooks/useNcoState'
+import { initializeNcoState } from '@/hooks/useNco'
 
 import App from './App'
 

@@ -1,10 +1,10 @@
-import type { Slot } from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useEffect, useState, useCallback } from 'react'
 import { Button, Switch, Divider, cn } from '@nextui-org/react'
 import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 
-import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { ncoState } from '@/hooks/useNco'
 
 import { OffsetControl } from '@/components/offset-control'
 
@@ -25,27 +25,27 @@ const ConfigButton: React.FC<{
   )
 }
 
-const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
+const SlotOffsetControl: React.FC<{ detail: StateSlotDetail }> = ({
+  detail,
+}) => {
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
-    const ofs = Math.round((slot.offsetMs ?? 0) / 1000)
+    const ofs = Math.round((detail.offsetMs ?? 0) / 1000)
 
     if (ofs !== currentOffset) {
       setCurrentOffset(ofs)
       setOffset(ofs)
     }
-  }, [slot.offsetMs])
+  }, [detail.offsetMs])
 
   const onApply = useCallback(async () => {
-    try {
-      sendNcoMessage('updateSlot', {
-        id: slot.id,
-        offsetMs: offset * 1000,
-      })
-    } catch {}
-  }, [slot.id, offset])
+    await ncoState?.update('slotDetails', ['id'], {
+      id: detail.id,
+      offsetMs: offset * 1000,
+    })
+  }, [detail.id, offset])
 
   return (
     <OffsetControl
@@ -58,25 +58,23 @@ const SlotOffsetControl: React.FC<{ slot: Slot }> = ({ slot }) => {
   )
 }
 
-const SlotShowToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
+const SlotShowToggle: React.FC<{ detail: StateSlotDetail }> = ({ detail }) => {
   const [show, setShow] = useState(true)
 
   useEffect(() => {
-    setShow(!slot.hidden)
-  }, [slot.hidden])
+    setShow(!detail.hidden)
+  }, [detail.hidden])
 
   const onValueChange = useCallback(
     async (isSelected: boolean) => {
       setShow(isSelected)
 
-      try {
-        sendNcoMessage('updateSlot', {
-          id: slot.id,
-          hidden: !isSelected,
-        })
-      } catch {}
+      await ncoState?.update('slotDetails', ['id'], {
+        id: detail.id,
+        hidden: !isSelected,
+      })
     },
-    [slot.id]
+    [detail.id]
   )
 
   return (
@@ -98,25 +96,25 @@ const SlotShowToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
   )
 }
 
-const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
+const SlotTranslucentToggle: React.FC<{ detail: StateSlotDetail }> = ({
+  detail,
+}) => {
   const [translucent, setTranslucent] = useState(true)
 
   useEffect(() => {
-    setTranslucent(!!slot.translucent)
-  }, [slot.translucent])
+    setTranslucent(!!detail.translucent)
+  }, [detail.translucent])
 
   const onValueChange = useCallback(
     async (isSelected: boolean) => {
       setTranslucent(isSelected)
 
-      try {
-        sendNcoMessage('updateSlot', {
-          id: slot.id,
-          translucent: isSelected,
-        })
-      } catch {}
+      await ncoState?.update('slotDetails', ['id'], {
+        id: detail.id,
+        translucent: isSelected,
+      })
     },
-    [slot.id]
+    [detail.id]
   )
 
   return (
@@ -131,7 +129,7 @@ const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
       }}
       size="sm"
       isSelected={translucent}
-      isDisabled={slot.hidden}
+      isDisabled={detail.hidden}
       onValueChange={onValueChange}
     >
       <span>半透明</span>
@@ -140,10 +138,10 @@ const SlotTranslucentToggle: React.FC<{ slot: Slot }> = ({ slot }) => {
 }
 
 export type ConfigProps = {
-  slot: Slot
+  detail: StateSlotDetail
 }
 
-export const Config: React.FC<ConfigProps> = ({ slot }) => {
+export const Config: React.FC<ConfigProps> = ({ detail }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return isOpen ? (
@@ -154,16 +152,16 @@ export const Config: React.FC<ConfigProps> = ({ slot }) => {
         'bg-content1 p-2'
       )}
     >
-      <SlotOffsetControl slot={slot} />
+      <SlotOffsetControl detail={detail} />
 
       <Divider />
 
       <div className="flex flex-row gap-3">
-        <SlotShowToggle slot={slot} />
+        <SlotShowToggle detail={detail} />
 
         <Divider orientation="vertical" />
 
-        <SlotTranslucentToggle slot={slot} />
+        <SlotTranslucentToggle detail={detail} />
       </div>
 
       <ConfigButton icon={XIcon} onPress={() => setIsOpen(false)} />

@@ -38,7 +38,8 @@ const Cell: React.FC<
 
 export const Item: React.FC<{
   comment: V1Thread['comments'][number]
-}> = ({ comment }) => {
+  offsetMs: number
+}> = ({ comment, offsetMs }) => {
   const [commentClass, commentBgColor, commentFgColor] = useMemo(() => {
     const classNames: string[] = []
     let bgColor: string | undefined
@@ -65,13 +66,19 @@ export const Item: React.FC<{
     return [cn(classNames), bgColor, fgColor]
   }, [comment.commands])
 
+  const formattedDuration = useMemo(() => {
+    return formatDuration((comment.vposMs + offsetMs) / 1000)
+  }, [comment.vposMs, offsetMs])
+
+  const formattedDate = useMemo(() => {
+    return formatDate(comment.postedAt)
+  }, [comment.postedAt])
+
   return (
     <div className="flex flex-row">
       {/* 再生時間 */}
       <Cell className="w-[5rem] justify-center font-mono">
-        <span className="line-clamp-1">
-          {formatDuration(comment.vposMs / 1000)}
-        </span>
+        <span className="line-clamp-1">{formattedDuration}</span>
       </Cell>
 
       {/* コメント */}
@@ -89,7 +96,7 @@ export const Item: React.FC<{
 
       {/* 投稿日時 */}
       <Cell className="w-52 justify-center font-mono">
-        <span className="line-clamp-1">{formatDate(comment.postedAt)}</span>
+        <span className="line-clamp-1">{formattedDate}</span>
       </Cell>
 
       {/* コマンド */}

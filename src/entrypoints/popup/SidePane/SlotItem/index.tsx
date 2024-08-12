@@ -1,5 +1,5 @@
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
-import type { Slot } from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useMemo } from 'react'
 import { Skeleton, Link, Image, cn } from '@nextui-org/react'
@@ -21,14 +21,14 @@ import { SourceTag } from './SourceTag'
 import { Config } from './Config'
 
 export type SlotItemProps = {
-  slot: Slot
+  detail: StateSlotDetail
 }
 
 // サムネイル
-const SlotItemThumbnail: React.FC<SlotItemProps> = ({ slot }) => {
+const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
-    if (slot.type === 'jikkyo') {
-      const jkChId = slot.id.split(':')[0] as JikkyoChannelId
+    if (detail.type === 'jikkyo') {
+      const jkChId = detail.id.split(':')[0] as JikkyoChannelId
 
       return (
         // 実況のチャンネル情報
@@ -49,7 +49,7 @@ const SlotItemThumbnail: React.FC<SlotItemProps> = ({ slot }) => {
               {JIKKYO_CHANNELS[jkChId!]}
             </span>
             <span className="text-tiny text-white/80 drop-shadow-sm">
-              ({formatDuration(slot.info.duration)})
+              ({formatDuration(detail.info.duration)})
             </span>
           </div>
         </div>
@@ -63,16 +63,16 @@ const SlotItemThumbnail: React.FC<SlotItemProps> = ({ slot }) => {
           img: 'aspect-video h-full object-contain',
         }}
         radius="lg"
-        src={slot.info.thumbnail}
+        src={detail.info.thumbnail}
       />
     )
-  }, [slot.id, slot.type, slot.info])
+  }, [detail.id, detail.type, detail.info])
 
   return element
 }
 
 // 日付
-const SlotItemDate: React.FC<SlotItemProps> = ({ slot }) => {
+const SlotItemDate: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
     return (
       <div
@@ -85,24 +85,24 @@ const SlotItemDate: React.FC<SlotItemProps> = ({ slot }) => {
         <div className="flex h-full flex-row items-center gap-1">
           <CalendarDaysIcon className="size-3" />
           <span className="text-tiny">
-            {slot.type !== 'jikkyo'
-              ? formatDate(slot.info.date, 'YYYY/MM/DD(d) hh:mm')
-              : `${formatDate(slot.info.date[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}
+            {detail.type !== 'jikkyo'
+              ? formatDate(detail.info.date, 'YYYY/MM/DD(d) hh:mm')
+              : `${formatDate(detail.info.date[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}
           </span>
         </div>
       </div>
     )
-  }, [slot.type, slot.info.date])
+  }, [detail.type, detail.info.date])
 
   return element
 }
 
 // タイトル
-const SlotItemTitle: React.FC<SlotItemProps> = ({ slot }) => {
+const SlotItemTitle: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
     const { href } = new URL(
-      slot.info.id,
-      slot.type === 'jikkyo'
+      detail.info.id,
+      detail.type === 'jikkyo'
         ? `https://cal.syoboi.jp/tid/`
         : 'https://www.nicovideo.jp/watch/'
     )
@@ -118,32 +118,32 @@ const SlotItemTitle: React.FC<SlotItemProps> = ({ slot }) => {
           <span
             className="line-clamp-3 text-tiny font-bold"
             title={
-              190 < new Blob([slot.info.title]).size
-                ? slot.info.title
+              190 < new Blob([detail.info.title]).size
+                ? detail.info.title
                 : undefined
             }
           >
-            {slot.info.title}
+            {detail.info.title}
           </span>
         </Link>
       </div>
     )
-  }, [slot.info.id, slot.info.title])
+  }, [detail.info.id, detail.info.title])
 
   return element
 }
 
 // カウンター
-const SlotItemCounter: React.FC<SlotItemProps> = ({ slot }) => {
+const SlotItemCounter: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
     return (
       <div className="flex flex-row items-center gap-5">
         {/* 再生数 */}
-        {slot.type !== 'jikkyo' && (
+        {detail.type !== 'jikkyo' && (
           <div className="flex h-full flex-row items-center gap-1">
             <PlayIcon className="size-3" />
             <span className="text-tiny">
-              {slot.info.count.view.toLocaleString('ja-JP')}
+              {detail.info.count.view.toLocaleString('ja-JP')}
             </span>
           </div>
         )}
@@ -152,8 +152,8 @@ const SlotItemCounter: React.FC<SlotItemProps> = ({ slot }) => {
         <div className="flex h-full flex-row items-center gap-1">
           <MessageSquareTextIcon className="size-3" />
           <span className="text-tiny">
-            {slot.info.count.comment ? (
-              slot.info.count.comment.toLocaleString('ja-JP')
+            {detail.info.count.comment ? (
+              detail.info.count.comment.toLocaleString('ja-JP')
             ) : (
               <Skeleton className="h-3 w-16" />
             )}
@@ -161,15 +161,15 @@ const SlotItemCounter: React.FC<SlotItemProps> = ({ slot }) => {
         </div>
       </div>
     )
-  }, [slot.type, slot.info.count])
+  }, [detail.type, detail.info.count])
 
   return element
 }
 
 // オフセット
-const SlotItemOffset: React.FC<SlotItemProps> = ({ slot }) => {
+const SlotItemOffset: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
-    const ofs = Math.round((slot.offsetMs ?? 0) / 1000)
+    const ofs = Math.round((detail.offsetMs ?? 0) / 1000)
 
     if (ofs === 0) {
       return null
@@ -184,45 +184,45 @@ const SlotItemOffset: React.FC<SlotItemProps> = ({ slot }) => {
         </span>
       </div>
     )
-  }, [slot.offsetMs])
+  }, [detail.offsetMs])
 
   return element
 }
 
-export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
+export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
   return (
     <PanelItem
       key="1"
       className={cn(
         'relative flex h-24 flex-row gap-2 p-1',
-        slot.status === 'error' && 'bg-danger/30'
+        detail.status === 'error' && 'bg-danger/30'
       )}
     >
       <div
         className={cn(
           'relative h-full flex-shrink-0',
-          slot.hidden && 'opacity-50'
+          detail.hidden && 'opacity-50'
         )}
       >
         {/* サムネイル */}
-        <SlotItemThumbnail slot={slot} />
+        <SlotItemThumbnail detail={detail} />
 
         {/* ステータス */}
-        <StatusOverlay status={slot.status} />
+        <StatusOverlay status={detail.status} />
       </div>
 
       {/* 情報 (右) */}
       <div
         className={cn(
           'flex h-full w-full flex-col gap-1',
-          slot.hidden && 'opacity-50'
+          detail.hidden && 'opacity-50'
         )}
       >
         {/* 日付 */}
-        <SlotItemDate slot={slot} />
+        <SlotItemDate detail={detail} />
 
         {/* タイトル */}
-        <SlotItemTitle slot={slot} />
+        <SlotItemTitle detail={detail} />
 
         <div
           className={cn(
@@ -232,10 +232,10 @@ export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
           )}
         >
           {/* 再生数・コメント数 */}
-          <SlotItemCounter slot={slot} />
+          <SlotItemCounter detail={detail} />
 
           {/* オフセット */}
-          <SlotItemOffset slot={slot} />
+          <SlotItemOffset detail={detail} />
         </div>
       </div>
 
@@ -243,14 +243,14 @@ export const SlotItem: React.FC<SlotItemProps> = ({ slot }) => {
       <div
         className={cn(
           'pointer-events-none absolute inset-0',
-          slot.hidden && 'opacity-50'
+          detail.hidden && 'opacity-50'
         )}
       >
-        <SourceTag source={slot.type} />
+        <SourceTag source={detail.type} />
       </div>
 
       {/* 設定 */}
-      {slot.status === 'ready' && <Config slot={slot} />}
+      {detail.status === 'ready' && <Config detail={detail} />}
     </PanelItem>
   )
 }

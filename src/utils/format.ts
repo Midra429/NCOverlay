@@ -1,13 +1,15 @@
 import { zeroPadding } from './zeroPadding'
 
 export const formatDuration = (seconds: number) => {
-  seconds = Math.floor(seconds)
+  const sign = seconds < 0 ? '-' : ''
 
-  const hours = Math.floor(seconds / 3600)
-  seconds %= 3600
+  let secAbs = Math.abs(Math.floor(seconds))
 
-  const minutes = Math.floor(seconds / 60)
-  seconds %= 60
+  const hours = Math.floor(secAbs / 3600)
+  secAbs %= 3600
+
+  const minutes = Math.floor(secAbs / 60)
+  secAbs %= 60
 
   let formatted = ''
 
@@ -15,9 +17,9 @@ export const formatDuration = (seconds: number) => {
     formatted += `${zeroPadding(hours, 2)}:`
   }
 
-  formatted += `${zeroPadding(minutes, 2)}:${zeroPadding(seconds, 2)}`
+  formatted += `${zeroPadding(minutes, 2)}:${zeroPadding(secAbs, 2)}`
 
-  return formatted
+  return `${sign}${formatted}`
 }
 
 export const formatDate = (

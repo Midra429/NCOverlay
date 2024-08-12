@@ -1,4 +1,4 @@
-import type { NCOStateEventMap, NCOStateJson } from '@/ncoverlay/state'
+import type { NCOStateItemKey, NCOStateItem } from '@/ncoverlay/state'
 
 import { useEffect, useState } from 'react'
 
@@ -53,34 +53,23 @@ export const useNcoStateReady = (tabId?: number) => {
   return state
 }
 
-export const useNcoStateJson = <
-  Keys extends (keyof Omit<NCOStateJson, '_id'>)[],
-  Result = Keys['length'] extends 0
-    ? NCOStateJson
-    : { [key in Keys[number]]: NCOStateJson[key] },
->(
-  ...keys: Keys
-): Result | null => {
-  const [state, setState] = useState<Result | null>(null)
+export const useNcoState = <Key extends NCOStateItemKey>(
+  key: Key
+): NCOStateItem<Key> | null => {
+  const [state, setState] = useState<NCOStateItem<Key> | null>(null)
 
   useEffect(() => {
     if (!ncoState) return
 
-    setState(ncoState.getJSON(...keys) ?? null)
-
-    const callback: NCOStateEventMap['change'] = function (key) {
-      if (!keys.length || keys.includes(key)) {
-        setState(this.getJSON(...keys) ?? null)
-      }
-    }
-
-    ncoState.addEventListener('change', callback)
+    ncoState.get(key).then((value) => {
+      setState(value)
+    })
 
     let ngOnChangeRemoveListeners: (() => void)[] | undefined
 
-    if (keys.includes('slots')) {
-      const ngChangedCallback = () => {
-        callback.call(ncoState!, 'slots')
+    if (key === 'slots') {
+      const ngChangedCallback = async () => {
+        setState(await ncoState!.get(key))
       }
 
       ngOnChangeRemoveListeners = [
@@ -93,8 +82,12 @@ export const useNcoStateJson = <
       ]
     }
 
+    const onChangeRemoveListener = ncoState.onChange(key, (value) => {
+      setState(value)
+    })
+
     return () => {
-      ncoState!.removeEventListener('change', callback)
+      onChangeRemoveListener()
 
       while (ngOnChangeRemoveListeners?.length) {
         ngOnChangeRemoveListeners.pop()?.()

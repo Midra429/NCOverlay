@@ -1,9 +1,9 @@
-import type { Slot } from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { cn } from '@nextui-org/react'
 
 export type SourceTagProps = {
-  source: Slot['type']
+  source: StateSlotDetail['type']
 }
 
 const SOURCE_TAG_CLASSES: {

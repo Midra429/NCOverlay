@@ -16,7 +16,7 @@ import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 
-import { useNcoStateJson } from '@/hooks/useNcoState'
+import { useNcoState } from '@/hooks/useNco'
 
 import { IconLink } from '@/components/icon-link'
 import { SettingsInput } from '@/components/settings-input'
@@ -25,19 +25,20 @@ import { ItemButton } from '@/components/item-button'
 const { name, version } = webext.runtime.getManifest()
 
 const FormsButton: React.FC = () => {
-  const ncoStateJson = useNcoStateJson('vod', 'info')
+  const stateVod = useNcoState('vod')
+  const stateInfo = useNcoState('info')
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
 
     webext.tabs.create({
       url: await getFormsUrl({
-        vod: ncoStateJson?.vod,
-        info: ncoStateJson?.info,
-        url: ncoStateJson && tab?.url,
+        vod: stateVod,
+        info: stateInfo,
+        url: stateVod && tab?.url,
       }),
     })
-  }, [ncoStateJson])
+  }, [stateVod, stateInfo])
 
   return (
     <IconLink

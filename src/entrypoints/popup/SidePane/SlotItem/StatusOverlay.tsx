@@ -1,8 +1,10 @@
-import type { Status } from '@/ncoverlay/state'
+import type { StateStatus } from '@/ncoverlay/state'
 
 import { Spinner, cn } from '@nextui-org/react'
 
-export const StatusOverlay: React.FC<{ status: Status }> = ({ status }) => {
+export const StatusOverlay: React.FC<{ status: StateStatus }> = ({
+  status,
+}) => {
   if (status === 'ready' || status === 'error') {
     return null
   }

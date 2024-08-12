@@ -1,14 +1,12 @@
-import type { TemporaryKey } from '@/types/storage'
-
 import { storage } from '@/utils/storage/extension'
 
 export default async () => {
   const values = await storage.get()
-  const tmpKeys = Object.keys(values).filter((key) =>
-    key.startsWith('tmp:')
-  ) as TemporaryKey[]
+  const keys = Object.keys(values).filter(
+    (key) => key.startsWith('tmp:') || key.startsWith(`state:`)
+  ) as (keyof typeof values)[]
 
-  if (tmpKeys.length) {
-    await storage.remove(...tmpKeys)
+  if (keys.length) {
+    storage.remove(...keys)
   }
 }

@@ -1,4 +1,4 @@
-import { ncoState } from '@/hooks/useNcoState'
+import { ncoState } from '@/hooks/useNco'
 
 import { Layout } from '@/components/layout'
 

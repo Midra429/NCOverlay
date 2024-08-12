@@ -1,3 +1,5 @@
+import type { StateKey } from '@/types/storage'
+
 import { defineBackground } from 'wxt/sandbox'
 
 import { GITHUB_URL } from '@/constants'
@@ -81,9 +83,17 @@ const main = async () => {
             setBadge({ text: null, tabId })
           }
 
-          // 一時データ削除
+          // state削除
           if (ncoId) {
-            storage.remove(`tmp:state:${ncoId}`)
+            storage.get().then((values) => {
+              const stateKeys = Object.keys(values).filter((key) =>
+                key.startsWith(`state:${ncoId}:`)
+              ) as StateKey[]
+
+              if (stateKeys.length) {
+                storage.remove(...stateKeys)
+              }
+            })
           }
 
           clearInterval(intervalId)

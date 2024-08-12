@@ -1,6 +1,7 @@
 import type { Runtime } from 'wxt/browser'
 import type { setBadge } from '@/utils/extension/setBadge'
-import type { SlotUpdate } from './state'
+
+import equal from 'fast-deep-equal'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
@@ -79,71 +80,39 @@ export class NCOverlay {
     this.renderer.clear()
   }
 
-  updateSlot(data: SlotUpdate): boolean {
-    const changed = this.state.slots.update(data)
-
-    if (changed) {
-      this.updateRendererThreads()
-    }
-
-    return changed
-  }
-
-  /**
-   * 全体のオフセットをセット
-   */
-  setGlobalOffset(offset: number | null): boolean {
-    const changed = offset
-      ? this.state.offset.set(offset)
-      : this.state.offset.clear()
-
-    if (changed) {
-      this.renderer.setOffset(this.state.offset.get())
-    }
-
-    return changed
-  }
-
   /**
    * 指定したマーカーの位置にジャンプ
    */
-  jumpMarker(markerIdx: number | null) {
-    const slots = this.state.slots.get()
-
-    if (!slots) return
+  async jumpMarker(markerIdx: number | null) {
+    const oldDetails = await this.state.get('slotDetails')
+    const newDetails = structuredClone(oldDetails)
 
     if (markerIdx === null) {
-      slots.forEach((slot) => {
-        this.state.slots.update({
-          id: slot.id,
-          offsetMs: 0,
-        })
+      newDetails?.forEach((detail) => {
+        delete detail.offsetMs
       })
     } else {
       const currentTimeMs = this.renderer.video.currentTime * 1000
 
-      slots.forEach((slot) => {
-        const marker = slot.markers?.[markerIdx]
+      newDetails?.forEach((detail) => {
+        const marker = detail.markers?.[markerIdx]
 
         if (marker) {
-          this.state.slots.update({
-            id: slot.id,
-            offsetMs: marker * -1 + currentTimeMs,
-          })
+          detail.offsetMs = marker * -1 + currentTimeMs
         }
       })
 
-      this.state.offset.clear()
+      await this.state.remove('offset')
     }
 
-    this.updateRendererThreads()
+    await this.state.set('slotDetails', newDetails)
   }
 
   /**
    * 描画するコメントデータを更新する
    */
   async updateRendererThreads() {
-    const threads = await this.state.slots.getThreads()
+    const threads = await this.state.getThreads()
 
     this.renderer.setThreads(threads)
     this.renderer.reload()
@@ -213,15 +182,15 @@ export class NCOverlay {
     }
 
     // 検索ステータス ロード中
-    this.searcher.addEventListener('loading', () => {
-      const size = this.state.slots.size()
+    this.searcher.addEventListener('loading', async () => {
+      const size = (await this.state.get('slotDetails'))?.length ?? 0
 
       this.#setBadge(size ? size.toString() : null, 'yellow')
     })
 
     // 検索ステータス 完了
-    this.searcher.addEventListener('ready', () => {
-      const size = this.state.slots.size()
+    this.searcher.addEventListener('ready', async () => {
+      const size = (await this.state.get('slotDetails'))?.length ?? 0
 
       this.#setBadge(size ? size.toString() : null, 'green')
 
@@ -256,13 +225,44 @@ export class NCOverlay {
       }),
 
       // 設定 (NG設定:サイズの大きいコメントを非表示)
-      settings.loadAndWatch('settings:ng:largeComments', updateRenderer),
+      settings.onChange('settings:ng:largeComments', updateRenderer),
 
       // 設定 (NG設定:固定コメントを非表示)
-      settings.loadAndWatch('settings:ng:fixedComments', updateRenderer),
+      settings.onChange('settings:ng:fixedComments', updateRenderer),
 
       // 設定 (NG設定:色付きコメントを非表示)
-      settings.loadAndWatch('settings:ng:coloredComments', updateRenderer)
+      settings.onChange('settings:ng:coloredComments', updateRenderer),
+
+      // 全体のオフセット
+      this.state.onChange('offset', (offset) => {
+        this.renderer.setOffset(offset ?? 0)
+      }),
+
+      // スロット
+      this.state.onChange('slots', updateRenderer),
+
+      // スロットの情報
+      this.state.onChange('slotDetails', (newValue, oldValue) => {
+        const newVal = newValue?.map((v) => ({
+          id: v.id,
+          status: v.status,
+          offsetMs: v.offsetMs,
+          translucent: v.translucent,
+          hidden: v.hidden,
+        }))
+
+        const oldVal = oldValue?.map((v) => ({
+          id: v.id,
+          status: v.status,
+          offsetMs: v.offsetMs,
+          translucent: v.translucent,
+          hidden: v.hidden,
+        }))
+
+        if (!equal(newVal, oldVal)) {
+          updateRenderer()
+        }
+      })
     )
 
     // メッセージ (インスタンスのID取得)
@@ -270,15 +270,15 @@ export class NCOverlay {
       return this.id
     })
 
-    // メッセージ (スロット 更新)
-    ncoMessenger.onMessage('updateSlot', ({ data }) => {
-      return this.updateSlot(data)
-    })
+    // // メッセージ (スロット 更新)
+    // ncoMessenger.onMessage('updateSlot', ({ data }) => {
+    //   return this.updateSlot(data)
+    // })
 
-    // メッセージ (オフセット 全体)
-    ncoMessenger.onMessage('setGlobalOffset', ({ data }) => {
-      return this.setGlobalOffset(data)
-    })
+    // // メッセージ (オフセット 全体)
+    // ncoMessenger.onMessage('setGlobalOffset', ({ data }) => {
+    //   return this.setGlobalOffset(data)
+    // })
 
     // メッセージ (マーカー)
     ncoMessenger.onMessage('jumpMarker', ({ data }) => {
@@ -302,7 +302,6 @@ export class NCOverlay {
       this.renderer.video.removeEventListener(type, listener)
     }
 
-    this.state.removeAllEventListeners()
     this.searcher.removeAllEventListeners()
 
     while (this.#storageOnChangeRemoveListeners.length) {

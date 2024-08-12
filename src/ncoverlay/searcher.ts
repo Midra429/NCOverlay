@@ -1,8 +1,12 @@
-import type { DeepPartial } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { VideoData } from '@midra/nco-api/types/niconico/video'
-import type { Status, Slot, NCOState, SlotUpdate } from './state'
+import type {
+  NCOState,
+  StateSlot,
+  StateSlotDetail,
+  StateSlotDetailUpdate,
+} from './state'
 
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
@@ -88,7 +92,7 @@ export class NCOSearcher {
     Logger.log('searchSyobocalResult:', searchSyobocalResult)
 
     // ロード中のデータ
-    const loadingSlots: Slot[] = []
+    const loadingSlotDetails: StateSlotDetail[] = []
 
     // // ニコニコ動画
     // if (searchResult) {
@@ -131,7 +135,7 @@ export class NCOSearcher {
         .join(' ')
         .trim()
 
-      const slots: Slot[] = syobocalPrograms.map((program) => {
+      const details: StateSlotDetail[] = syobocalPrograms.map((program) => {
         const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
 
         const starttime = parseInt(program.StTime) * 1000
@@ -141,7 +145,6 @@ export class NCOSearcher {
           type: 'jikkyo',
           id,
           status: 'loading',
-          threads: [],
           info: {
             id: program.TID,
             title,
@@ -154,14 +157,14 @@ export class NCOSearcher {
         }
       })
 
-      loadingSlots.push(...slots)
+      loadingSlotDetails.push(...details)
     }
 
-    this.state.slots.add(...loadingSlots)
+    await this.state.set('slotDetails', loadingSlotDetails)
 
     // コメント取得
     this.#trigger('loading')
-    this.state.status.set('loading')
+    await this.state.set('status', 'loading')
 
     const [commentsNormal, commentsChapter, commentsSzbh, commentsJikkyo] =
       await Promise.all([
@@ -206,7 +209,8 @@ export class NCOSearcher {
     // Logger.log('commentsSzbh:', commentsSzbh)
     Logger.log('commentsJikkyo:', commentsJikkyo)
 
-    const updateSlots: SlotUpdate[] = []
+    const loadedSlots: StateSlot[] = []
+    const updateSlotDetails: StateSlotDetailUpdate[] = []
 
     // // 通常, コメント専用動画
     // if (commentsNormal || commentsSzbh) {
@@ -295,10 +299,14 @@ export class NCOSearcher {
 
       const { thread, markers } = cmt
 
-      updateSlots.push({
+      loadedSlots.push({
+        id: thread.id as string,
+        threads: [thread],
+      })
+
+      updateSlotDetails.push({
         id: thread.id as string,
         status: 'ready',
-        threads: [thread],
         markers,
         info: {
           count: {
@@ -308,19 +316,28 @@ export class NCOSearcher {
       })
     })
 
-    loadingSlots.forEach((slot) => {
-      const updateSlot = updateSlots.find((v) => v.id === slot.id)
+    for (const { id } of loadingSlotDetails) {
+      const loadedSlotIdx = loadedSlots.findIndex((v) => v.id === id)
+      const updateDetail = updateSlotDetails.find((v) => v.id === id)
 
-      if (updateSlot?.info?.count?.comment) {
-        this.state.slots.update(updateSlot)
+      if (loadedSlotIdx !== -1 && updateDetail?.info?.count?.comment) {
+        await this.state.update('slotDetails', ['id'], updateDetail)
       } else {
-        this.state.slots.remove(slot.id)
+        loadedSlots.splice(loadedSlotIdx, 1)
+        await this.state.remove('slotDetails', { id })
       }
-    })
+    }
+
+    await this.state.set('slots', loadedSlots)
 
     this.#trigger('ready')
 
-    Logger.log('slots:', this.state.slots.get())
+    Promise.all([this.state.get('slots'), this.state.get('slotDetails')]).then(
+      ([slots, slotDetails]) => {
+        Logger.log('slots:', slots)
+        Logger.log('slotDetails:', slotDetails)
+      }
+    )
   }
 
   // /**

@@ -1,6 +1,6 @@
 import { cn } from '@nextui-org/react'
 
-import { useNcoStateReady } from '@/hooks/useNcoState'
+import { useNcoStateReady } from '@/hooks/useNco'
 
 import { Layout } from '@/components/layout'
 import { PositionControl } from '@/components/quickpanel/presets/position-control'

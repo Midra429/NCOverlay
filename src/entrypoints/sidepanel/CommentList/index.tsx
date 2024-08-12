@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
-import { useNcoStateJson, useNcoTime } from '@/hooks/useNcoState'
+import { useNcoState, useNcoTime } from '@/hooks/useNco'
 import { filterDisplayThreads } from '@/ncoverlay/state'
 
 import { Header } from './Header'
@@ -45,39 +45,33 @@ const components: VirtuosoProps<
 
 export const CommentList: React.FC = memo(() => {
   const [isHover, setIsHover] = useState(false)
-  const [comments, setComments] = useState<V1Thread['comments']>([])
   const [offsetMs, setOffsetMs] = useState(0)
+  const [comments, setComments] = useState<V1Thread['comments']>([])
 
-  const ncoStateJson = useNcoStateJson('slots', 'offset')
+  const stateOffset = useNcoState('offset')
+  const stateSlots = useNcoState('slots')
+  const stateSlotDetails = useNcoState('slotDetails')
   const time = useNcoTime()
 
-  const displayComments = useMemo(() => {
-    return comments
-      .filter((cmt) => 0 <= cmt.vposMs + offsetMs)
-      .map((cmt) => ({ ...cmt, vposMs: cmt.vposMs + offsetMs }))
-  }, [comments, offsetMs])
-
   const index = useMemo(() => {
-    return displayComments.findLastIndex((cmt) => cmt.vposMs <= time)
-  }, [displayComments, time])
+    return comments.findLastIndex((cmt) => cmt.vposMs + offsetMs <= time)
+  }, [comments, time])
 
   const virtuoso = useRef<VirtuosoHandle>(null)
 
   useEffect(() => {
-    const slots = ncoStateJson?.slots ?? []
+    setOffsetMs((stateOffset ?? 0) * 1000)
+  }, [stateOffset])
 
-    filterDisplayThreads(slots).then((threads) => {
+  useEffect(() => {
+    filterDisplayThreads(stateSlots, stateSlotDetails).then((threads) => {
       const comments = threads
         ?.flatMap((thread) => thread.comments)
         .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
 
       setComments(comments ?? [])
     })
-  }, [ncoStateJson?.slots])
-
-  useEffect(() => {
-    setOffsetMs((ncoStateJson?.offset ?? 0) * 1000)
-  }, [ncoStateJson?.offset])
+  }, [stateSlots, stateSlotDetails])
 
   useEffect(() => {
     if (!isHover && index !== -1) {
@@ -86,7 +80,7 @@ export const CommentList: React.FC = memo(() => {
         align: 'end',
       })
     }
-  }, [index, isHover])
+  }, [index])
 
   const onMouseEnter = useCallback(() => setIsHover(true), [])
   const onMouseLeave = useCallback(() => setIsHover(false), [])
@@ -95,8 +89,8 @@ export const CommentList: React.FC = memo(() => {
     <Virtuoso
       ref={virtuoso}
       components={components}
-      data={displayComments}
-      itemContent={(_, data) => <Item comment={data} />}
+      data={comments}
+      itemContent={(_, data) => <Item comment={data} offsetMs={offsetMs} />}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     />
