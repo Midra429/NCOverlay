@@ -3,8 +3,6 @@ import type { NCOState } from './state'
 
 import hotkeys from 'hotkeys-js'
 
-import { MARKERS } from '@/constants'
-
 import { storage } from '@/utils/storage/extension'
 
 export class NCOKeyboard {
@@ -65,36 +63,28 @@ export class NCOKeyboard {
    * オフセットを「オープニング」に飛ばす
    */
   async #jumpMarkerToOP() {
-    const markerIdx = MARKERS.findIndex((v) => v.shortLabel === 'OP')
-
-    await this.#jumpMarker(markerIdx)
+    await this.#jumpMarker('OP')
   }
 
   /**
    * オフセットを「Aパート」に飛ばす
    */
   async #jumpMarkerToA() {
-    const markerIdx = MARKERS.findIndex((v) => v.shortLabel === 'A')
-
-    await this.#jumpMarker(markerIdx)
+    await this.#jumpMarker('A')
   }
 
   /**
    * オフセットを「Bパート」に飛ばす
    */
   async #jumpMarkerToB() {
-    const markerIdx = MARKERS.findIndex((v) => v.shortLabel === 'B')
-
-    await this.#jumpMarker(markerIdx)
+    await this.#jumpMarker('B')
   }
 
   /**
    * オフセットを「Cパート」に飛ばす
    */
   async #jumpMarkerToC() {
-    const markerIdx = MARKERS.findIndex((v) => v.shortLabel === 'C')
-
-    await this.#jumpMarker(markerIdx)
+    await this.#jumpMarker('C')
   }
 
   async #registerEventListener() {

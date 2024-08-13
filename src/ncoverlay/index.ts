@@ -3,6 +3,8 @@ import type { setBadge } from '@/utils/extension/setBadge'
 
 import equal from 'fast-deep-equal'
 
+import { MARKERS } from '@/constants'
+
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { webext } from '@/utils/webext'
@@ -89,15 +91,20 @@ export class NCOverlay {
   /**
    * 指定したマーカーの位置にジャンプ
    */
-  async jumpMarker(markerIdx: number | null) {
+  async jumpMarker(marker: number | string | null) {
     const oldDetails = await this.state.get('slotDetails')
     const newDetails = structuredClone(oldDetails)
 
-    if (markerIdx === null) {
+    if (marker === null) {
       newDetails?.forEach((detail) => {
         delete detail.offsetMs
       })
     } else {
+      const markerIdx =
+        typeof marker === 'string'
+          ? MARKERS.findIndex((v) => v.shortLabel === marker)
+          : marker
+
       const currentTimeMs = this.renderer.video.currentTime * 1000
 
       newDetails?.forEach((detail) => {

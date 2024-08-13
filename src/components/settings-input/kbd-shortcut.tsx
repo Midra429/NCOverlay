@@ -4,7 +4,7 @@ import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { Button, Kbd, cn } from '@nextui-org/react'
-import { CheckIcon, PenIcon } from 'lucide-react'
+import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
 
 import { webext } from '@/utils/webext'
@@ -42,12 +42,23 @@ const OS_KEYS: Record<string, Record<string, string>> = {
   },
 }
 
-const convertKbdKey = (key: string, os?: string) => {
-  if (NEXTUI_KBD_KEYS.includes(key)) {
-    return key
-  }
+const isNextUiKbdKey = (key: string): key is KbdKey => {
+  return NEXTUI_KBD_KEYS.includes(key)
+}
 
-  return (os && OS_KEYS[os]?.[key]) || key
+const KeyboardKey: React.FC<{ kbdKey: string; os?: string }> = ({
+  kbdKey,
+  os,
+}) => {
+  if (!kbdKey) return
+
+  kbdKey = (os && OS_KEYS[os]?.[kbdKey]) || kbdKey
+
+  return isNextUiKbdKey(kbdKey) ? (
+    <Kbd keys={kbdKey} />
+  ) : (
+    <Kbd>{kbdKey[0].toUpperCase() + kbdKey.slice(1)}</Kbd>
+  )
 }
 
 export type Key = Extract<SettingsKey, `settings:kbd:${string}`>
@@ -67,7 +78,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   }, [])
 
   return (
-    <div className="flex flex-col justify-between gap-1.5 py-2">
+    <div className="flex flex-col justify-between gap-1.5 py-2.5">
       <div className="flex flex-col gap-0.5">
         <span className="text-small text-foreground">{props.label}</span>
         {props.description && (
@@ -80,30 +91,20 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       <div className="flex flex-row items-center gap-1">
         <div
           className={cn(
-            'flex h-10 w-full flex-row gap-1.5 p-1.5',
-            'rounded-medium border-1 border-foreground-200',
+            'flex flex-row items-center gap-1',
+            'h-10 w-full p-1.5',
+            'rounded-medium',
+            'border-1 border-foreground-200',
             isRecording && 'border-primary bg-primary/15'
           )}
         >
-          {(isRecording ? [...keys] : value.split('+')).map((val) => {
-            if (!val) return
-
-            const key = convertKbdKey(val, os)
-
-            if (NEXTUI_KBD_KEYS.includes(key)) {
-              return <Kbd key={key} keys={key as KbdKey} />
-            } else {
-              return (
-                <Kbd
-                  key={key}
-                  classNames={{
-                    base: 'text-tiny',
-                  }}
-                >
-                  {key[0].toUpperCase() + key.slice(1)}
-                </Kbd>
-              )
-            }
+          {(isRecording ? [...keys] : value.split('+')).map((key, idx) => {
+            return (
+              <>
+                {idx !== 0 && <PlusIcon className="size-3.5" />}
+                <KeyboardKey kbdKey={key} os={os} />
+              </>
+            )
           })}
         </div>
 
@@ -133,7 +134,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
               evt.currentTarget.blur()
             }}
           >
-            <PenIcon className="size-4" />
+            <PencilIcon className="size-4" />
           </Button>
         )}
       </div>
