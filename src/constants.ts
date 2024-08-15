@@ -159,6 +159,7 @@ export const SETTINGS_DEFAULT: {
   // キーボード
   'settings:kbd:increaseGlobalOffset': '',
   'settings:kbd:decreaseGlobalOffset': '',
+  'settings:kbd:resetMarker': '',
   'settings:kbd:jumpMarkerToOP': '',
   'settings:kbd:jumpMarkerToA': '',
   'settings:kbd:jumpMarkerToB': '',
@@ -357,6 +358,11 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:kbd:decreaseGlobalOffset',
         inputType: 'kbd-shortcut',
         label: '全体のオフセットを減らす (-1s)',
+      },
+      {
+        settingsKey: 'settings:kbd:resetMarker',
+        inputType: 'kbd-shortcut',
+        label: 'オフセットをリセットする',
       },
       {
         settingsKey: 'settings:kbd:jumpMarkerToOP',

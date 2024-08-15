@@ -1,9 +1,36 @@
+import type { KeyHandler } from 'hotkeys-js'
+import type { StorageKey } from '@/types/storage'
 import type { NCOverlay } from '.'
 import type { NCOState } from './state'
 
 import hotkeys from 'hotkeys-js'
 
 import { storage } from '@/utils/storage/extension'
+
+const register = (
+  key: Extract<StorageKey, `settings:kbd:${string}`>,
+  method: (...args: Parameters<KeyHandler>) => void
+) => {
+  let tmpShortcutKey: string | null = null
+
+  return storage.loadAndWatch(key, (shortcutKey) => {
+    if (tmpShortcutKey) {
+      hotkeys.unbind(tmpShortcutKey)
+    }
+
+    tmpShortcutKey = shortcutKey
+
+    if (shortcutKey) {
+      hotkeys(shortcutKey, (event, handler) => {
+        event.preventDefault()
+
+        method(event, handler)
+
+        return false
+      })
+    }
+  })
+}
 
 export class NCOKeyboard {
   readonly state: NCOState
@@ -22,149 +49,50 @@ export class NCOKeyboard {
     this.#jumpMarker = functions.jumpMarker
 
     this.#registerEventListener()
-
-    const kbdOnChange = () => {
-      this.#registerEventListener()
-    }
-
-    this.#storageOnChangeRemoveListeners.push(
-      storage.onChange('settings:kbd:increaseGlobalOffset', kbdOnChange),
-      storage.onChange('settings:kbd:decreaseGlobalOffset', kbdOnChange),
-      storage.onChange('settings:kbd:jumpMarkerToOP', kbdOnChange),
-      storage.onChange('settings:kbd:jumpMarkerToA', kbdOnChange),
-      storage.onChange('settings:kbd:jumpMarkerToB', kbdOnChange),
-      storage.onChange('settings:kbd:jumpMarkerToC', kbdOnChange)
-    )
   }
 
   dispose() {
     this.#unregisterEventListener()
   }
 
-  /**
-   * 全体のオフセットを増やす
-   */
-  async #increaseGlobalOffset(seconds: number = 1) {
-    const offset = (await this.state.get('offset')) ?? 0
-
-    await this.state.set('offset', offset + seconds)
+  async getOffset() {
+    return (await this.state.get('offset')) ?? 0
   }
 
-  /**
-   * 全体のオフセットを減らす
-   */
-  async #decreaseGlobalOffset(seconds: number = 1) {
-    const offset = (await this.state.get('offset')) ?? 0
-
-    await this.state.set('offset', offset - seconds)
-  }
-
-  /**
-   * オフセットを「オープニング」に飛ばす
-   */
-  async #jumpMarkerToOP() {
-    await this.#jumpMarker('OP')
-  }
-
-  /**
-   * オフセットを「Aパート」に飛ばす
-   */
-  async #jumpMarkerToA() {
-    await this.#jumpMarker('A')
-  }
-
-  /**
-   * オフセットを「Bパート」に飛ばす
-   */
-  async #jumpMarkerToB() {
-    await this.#jumpMarker('B')
-  }
-
-  /**
-   * オフセットを「Cパート」に飛ばす
-   */
-  async #jumpMarkerToC() {
-    await this.#jumpMarker('C')
+  async setOffset(offset: number) {
+    return this.state.set('offset', offset)
   }
 
   async #registerEventListener() {
-    hotkeys.unbind()
+    this.#storageOnChangeRemoveListeners.push(
+      register('settings:kbd:increaseGlobalOffset', async () => {
+        this.setOffset((await this.getOffset()) + 1)
+      }),
 
-    const [
-      increaseGlobalOffset,
-      decreaseGlobalOffset,
-      jumpMarkerToOP,
-      jumpMarkerToA,
-      jumpMarkerToB,
-      jumpMarkerToC,
-    ] = await Promise.all([
-      storage.get('settings:kbd:increaseGlobalOffset'),
-      storage.get('settings:kbd:decreaseGlobalOffset'),
-      storage.get('settings:kbd:jumpMarkerToOP'),
-      storage.get('settings:kbd:jumpMarkerToA'),
-      storage.get('settings:kbd:jumpMarkerToB'),
-      storage.get('settings:kbd:jumpMarkerToC'),
-    ])
+      register('settings:kbd:decreaseGlobalOffset', async () => {
+        this.setOffset((await this.getOffset()) - 1)
+      }),
 
-    if (increaseGlobalOffset) {
-      hotkeys(increaseGlobalOffset, (event) => {
-        event.preventDefault()
+      register('settings:kbd:resetMarker', () => {
+        this.#jumpMarker(null)
+      }),
 
-        this.#increaseGlobalOffset()
+      register('settings:kbd:jumpMarkerToOP', () => {
+        this.#jumpMarker('OP')
+      }),
 
-        return false
+      register('settings:kbd:jumpMarkerToA', () => {
+        this.#jumpMarker('A')
+      }),
+
+      register('settings:kbd:jumpMarkerToB', () => {
+        this.#jumpMarker('B')
+      }),
+
+      register('settings:kbd:jumpMarkerToC', () => {
+        this.#jumpMarker('C')
       })
-    }
-
-    if (decreaseGlobalOffset) {
-      hotkeys(decreaseGlobalOffset, (event) => {
-        event.preventDefault()
-
-        this.#decreaseGlobalOffset()
-
-        return false
-      })
-    }
-
-    if (jumpMarkerToOP) {
-      hotkeys(jumpMarkerToOP, (event) => {
-        event.preventDefault()
-
-        this.#jumpMarkerToOP()
-
-        return false
-      })
-    }
-
-    if (jumpMarkerToA) {
-      hotkeys(jumpMarkerToA, (event) => {
-        event.preventDefault()
-
-        this.#jumpMarkerToA()
-
-        return false
-      })
-    }
-
-    if (jumpMarkerToB) {
-      hotkeys(jumpMarkerToB, (event) => {
-        event.preventDefault()
-
-        this.#jumpMarkerToB()
-
-        return false
-      })
-    }
-
-    if (jumpMarkerToC) {
-      hotkeys(jumpMarkerToC, (event) => {
-        event.preventDefault()
-
-        this.#jumpMarkerToC()
-
-        return false
-      })
-    }
+    )
   }
 
   #unregisterEventListener() {

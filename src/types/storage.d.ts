@@ -159,6 +159,12 @@ export type StorageItems_v1 = {
   'settings:kbd:decreaseGlobalOffset': string
 
   /**
+   * キーボード:オフセットをリセットする
+   * @default ''
+   */
+  'settings:kbd:resetMarker': string
+
+  /**
    * キーボード:オフセットを「オープニング」に飛ばす
    * @default ''
    */
