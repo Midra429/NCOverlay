@@ -346,7 +346,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   },
   {
     id: 'keyboard',
-    title: 'キーボード (β)',
+    title: 'キーボード',
     icon: KeyboardIcon,
     items: [
       {
