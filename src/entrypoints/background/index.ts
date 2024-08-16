@@ -13,7 +13,7 @@ import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 import { getNcoId } from '@/utils/extension/getNcoId'
 
 // import migration from './migration'
-import registerProxyService from './registerProxyService'
+import registerNcoApiProxy from './registerNcoApiProxy'
 import registerUtilsMessage from './registerUtilsMessage'
 import clearTemporaryData from './clearTemporaryData'
 import requestPermissions from './requestPermissions'
@@ -26,7 +26,7 @@ export default defineBackground({
 const main = async () => {
   Logger.log('background.js')
 
-  registerProxyService()
+  registerNcoApiProxy()
   registerUtilsMessage()
 
   // インストール・アップデート時

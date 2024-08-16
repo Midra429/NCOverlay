@@ -13,7 +13,7 @@ import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 import { MARKERS } from '@/constants/markers'
 
 import { Logger } from '@/utils/logger'
-import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
+import { ncoApiProxy } from '@/proxy/nco-api'
 
 export type AutoLoadInput = {
   title?: string | null
@@ -26,8 +26,6 @@ export type AutoLoadInput = {
 }
 
 const userAgent = EXT_USER_AGENT
-
-const ncoApiProxy = getNcoApiProxy()
 
 export type NCOSearcherEventMap = {
   searching: (this: NCOSearcher) => void

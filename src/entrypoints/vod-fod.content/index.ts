@@ -6,7 +6,7 @@ import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { getCookie } from '@/utils/dom/getCookie'
-import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
+import { ncoApiProxy } from '@/proxy/nco-api'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -24,8 +24,6 @@ const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   Logger.log(`vod-${vod}.js`)
-
-  const ncoApiProxy = getNcoApiProxy()
 
   const patcher = new NCOPatcher({
     vod,
