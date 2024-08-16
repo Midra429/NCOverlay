@@ -1,63 +1,101 @@
 import type { KbdKey } from '@nextui-org/react'
+import type { Runtime } from 'wxt/browser'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
-import { Button, Kbd, cn } from '@nextui-org/react'
+import { ScrollShadow, Button, Kbd, cn } from '@nextui-org/react'
 import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
 
 import { webext } from '@/utils/webext'
 import { useSettings } from '@/hooks/useSettings'
 
-const NEXTUI_KBD_KEYS = [
-  'command',
-  'shift',
-  'ctrl',
-  'option',
-  'enter',
-  'delete',
-  'escape',
-  'tab',
-  'capslock',
-  'up',
-  'right',
-  'down',
-  'left',
-  'pageup',
-  'pagedown',
-  'home',
-  'end',
-  'help',
-  'space',
-]
+const NEXTUI_KBD_KEYS: Partial<
+  Record<'common' | Runtime.PlatformOs, string[]>
+> = {
+  common: [
+    'shift',
+    'enter',
+    // 'delete',
+    'escape',
+    'tab',
+    'capslock',
+    'up',
+    'right',
+    'down',
+    'left',
+    'pageup',
+    'pagedown',
+    'home',
+    'end',
+    'help',
+    'space',
+  ],
+  win: [],
+  mac: ['command', 'ctrl', 'option'],
+}
 
-const OS_KEYS: Record<string, Record<string, string>> = {
+const OS_KEYS: Partial<
+  Record<'common' | Runtime.PlatformOs, Record<string, string>>
+> = {
+  common: {
+    backquote: '`',
+    backslash: '\\',
+    bracketleft: '[',
+    bracketright: ']',
+    comma: ',',
+    equal: '=',
+    intlbackslash: '\\',
+    intlro: 'ろ',
+    intlyen: '¥',
+    minus: '-',
+    period: '.',
+    quote: "'",
+    semicolon: ';',
+    slash: '/',
+
+    convert: '変換',
+    nonconvert: '無変換',
+
+    delete: '⌦',
+    backspace: '⌫',
+  },
   win: {
-    meta: 'Win',
+    meta: 'win',
   },
   mac: {
+    lang1: 'かな',
+    lang2: '英数',
+
     meta: 'command',
     alt: 'option',
   },
 }
 
-const isNextUiKbdKey = (key: string): key is KbdKey => {
-  return NEXTUI_KBD_KEYS.includes(key)
+const isNextUiKbdKey = (
+  key: string,
+  os?: Runtime.PlatformOs
+): key is KbdKey => {
+  return !!(
+    NEXTUI_KBD_KEYS['common']?.includes(key) ||
+    (os && NEXTUI_KBD_KEYS[os]?.includes(key))
+  )
 }
 
-const KeyboardKey: React.FC<{ kbdKey: string; os?: string }> = ({
+const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
   kbdKey,
   os,
 }) => {
   if (!kbdKey) return
 
-  kbdKey = (os && OS_KEYS[os]?.[kbdKey]) || kbdKey
+  kbdKey =
+    OS_KEYS['common']?.[kbdKey] || (os && OS_KEYS[os]?.[kbdKey]) || kbdKey
 
-  return isNextUiKbdKey(kbdKey) ? (
-    <Kbd keys={kbdKey} />
+  return isNextUiKbdKey(kbdKey, os) ? (
+    <Kbd className="shrink-0" keys={kbdKey} />
   ) : (
-    <Kbd>{kbdKey[0].toUpperCase() + kbdKey.slice(1)}</Kbd>
+    <Kbd className="shrink-0">{kbdKey[0].toUpperCase() + kbdKey.slice(1)}</Kbd>
   )
 }
 
@@ -69,7 +107,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
 > & {}
 
 export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
-  const [os, setOs] = useState<string>()
+  const [os, setOs] = useState<Runtime.PlatformOs>()
   const { value, setValue } = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()
 
@@ -89,7 +127,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       </div>
 
       <div className="flex flex-row items-center gap-1">
-        <div
+        <ScrollShadow
           className={cn(
             'flex flex-row items-center gap-1',
             'h-10 w-full p-1.5',
@@ -97,46 +135,42 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             'border-1 border-foreground-200',
             isRecording && 'border-primary bg-primary/15'
           )}
+          orientation="horizontal"
+          hideScrollBar
         >
           {(isRecording ? [...keys] : value.split('+')).map((key, idx) => {
             return (
               <>
-                {idx !== 0 && <PlusIcon className="size-3.5" />}
+                {idx !== 0 && <PlusIcon className="size-3.5 shrink-0" />}
                 <KeyboardKey kbdKey={key} os={os} />
               </>
             )
           })}
-        </div>
+        </ScrollShadow>
 
-        {isRecording ? (
-          <Button
-            size="sm"
-            radius="full"
-            variant="light"
-            isIconOnly
-            onClick={() => {
+        <Button
+          className="shrink-0"
+          size="sm"
+          radius="full"
+          variant="light"
+          isIconOnly
+          onClick={(evt) => {
+            if (isRecording) {
               stop()
               setValue([...keys].join('+'))
-            }}
-          >
-            <CheckIcon className="size-4" />
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            radius="full"
-            variant="light"
-            isIconOnly
-            onClick={(evt) => {
+            } else {
               start()
               setValue('')
-
               evt.currentTarget.blur()
-            }}
-          >
+            }
+          }}
+        >
+          {isRecording ? (
+            <CheckIcon className="size-4" />
+          ) : (
             <PencilIcon className="size-4" />
-          </Button>
-        )}
+          )}
+        </Button>
       </div>
     </div>
   )
