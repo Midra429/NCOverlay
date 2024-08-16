@@ -1,7 +1,8 @@
 import type { Runtime } from 'wxt/browser'
 import type { StateVod, StateInfo } from '@/ncoverlay/state'
 
-import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS, VODS } from '@/constants'
+import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS } from '@/constants'
+import { VODS } from '@/constants/vods'
 import { webext } from '@/utils/webext'
 
 const CONTENTS = {

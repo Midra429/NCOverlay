@@ -4,7 +4,7 @@ import { useEffect, useMemo, useCallback, useState } from 'react'
 import { Button, Divider, Tooltip } from '@nextui-org/react'
 import { RotateCcwIcon } from 'lucide-react'
 
-import { MARKERS } from '@/constants'
+import { MARKERS } from '@/constants/markers'
 
 import { ncoState, useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'

@@ -10,7 +10,7 @@ import type {
 
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
-import { MARKERS } from '@/constants'
+import { MARKERS } from '@/constants/markers'
 
 import { Logger } from '@/utils/logger'
 import { getNcoApiProxy } from '@/proxy-service/NcoApiProxy'
@@ -42,10 +42,10 @@ export type NCOSearcherEventMap = {
  * NCOverlayの検索担当
  */
 export class NCOSearcher {
-  readonly state: NCOState
+  readonly #state: NCOState
 
   constructor(state: NCOState) {
-    this.state = state
+    this.#state = state
   }
 
   async autoLoad(
@@ -160,11 +160,11 @@ export class NCOSearcher {
       loadingSlotDetails.push(...details)
     }
 
-    await this.state.set('slotDetails', loadingSlotDetails)
+    await this.#state.set('slotDetails', loadingSlotDetails)
 
     // コメント取得
     this.#trigger('loading')
-    await this.state.set('status', 'loading')
+    await this.#state.set('status', 'loading')
 
     const [commentsNormal, commentsChapter, commentsSzbh, commentsJikkyo] =
       await Promise.all([
@@ -321,23 +321,24 @@ export class NCOSearcher {
       const updateDetail = updateSlotDetails.find((v) => v.id === id)
 
       if (loadedSlotIdx !== -1 && updateDetail?.info?.count?.comment) {
-        await this.state.update('slotDetails', ['id'], updateDetail)
+        await this.#state.update('slotDetails', ['id'], updateDetail)
       } else {
         loadedSlots.splice(loadedSlotIdx, 1)
-        await this.state.remove('slotDetails', { id })
+        await this.#state.remove('slotDetails', { id })
       }
     }
 
-    await this.state.set('slots', loadedSlots)
+    await this.#state.set('slots', loadedSlots)
 
     this.#trigger('ready')
 
-    Promise.all([this.state.get('slots'), this.state.get('slotDetails')]).then(
-      ([slots, slotDetails]) => {
-        Logger.log('slots:', slots)
-        Logger.log('slotDetails:', slotDetails)
-      }
-    )
+    Promise.all([
+      this.#state.get('slots'),
+      this.#state.get('slotDetails'),
+    ]).then(([slots, slotDetails]) => {
+      Logger.log('slots:', slots)
+      Logger.log('slotDetails:', slotDetails)
+    })
   }
 
   // /**

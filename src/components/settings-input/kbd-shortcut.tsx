@@ -31,9 +31,9 @@ const NEXTUI_KBD_KEYS: Partial<
     'end',
     'help',
     'space',
-  ],
-  win: [],
-  mac: ['command', 'ctrl', 'option'],
+  ] satisfies KbdKey[],
+  win: [] satisfies KbdKey[],
+  mac: ['command', 'ctrl', 'option'] satisfies KbdKey[],
 }
 
 const OS_KEYS: Partial<
@@ -89,13 +89,13 @@ const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
 }) => {
   if (!kbdKey) return
 
-  kbdKey =
+  const key =
     OS_KEYS['common']?.[kbdKey] || (os && OS_KEYS[os]?.[kbdKey]) || kbdKey
 
-  return isNextUiKbdKey(kbdKey, os) ? (
-    <Kbd className="shrink-0" keys={kbdKey} />
+  return isNextUiKbdKey(key, os) ? (
+    <Kbd className="shrink-0" keys={key} />
   ) : (
-    <Kbd className="shrink-0">{kbdKey[0].toUpperCase() + kbdKey.slice(1)}</Kbd>
+    <Kbd className="shrink-0">{key[0].toUpperCase() + key.slice(1)}</Kbd>
   )
 }
 

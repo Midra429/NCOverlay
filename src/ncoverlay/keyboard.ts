@@ -7,6 +7,10 @@ import hotkeys from 'hotkeys-js'
 
 import { storage } from '@/utils/storage/extension'
 
+type NCOKeyboardFunctions = Readonly<{
+  jumpMarker: NCOverlay['jumpMarker']
+}>
+
 const register = (
   key: Extract<StorageKey, `settings:kbd:${string}`>,
   method: (...args: Parameters<KeyHandler>) => void
@@ -33,20 +37,14 @@ const register = (
 }
 
 export class NCOKeyboard {
-  readonly state: NCOState
-
-  readonly #jumpMarker: NCOverlay['jumpMarker']
+  readonly #state: NCOState
+  readonly #functions: NCOKeyboardFunctions
 
   readonly #storageOnChangeRemoveListeners: (() => void)[] = []
 
-  constructor(
-    state: NCOState,
-    functions: {
-      jumpMarker: NCOverlay['jumpMarker']
-    }
-  ) {
-    this.state = state
-    this.#jumpMarker = functions.jumpMarker
+  constructor(state: NCOState, functions: NCOKeyboardFunctions) {
+    this.#state = state
+    this.#functions = functions
 
     this.#registerEventListener()
   }
@@ -56,11 +54,11 @@ export class NCOKeyboard {
   }
 
   async getOffset() {
-    return (await this.state.get('offset')) ?? 0
+    return (await this.#state.get('offset')) ?? 0
   }
 
-  async setOffset(offset: number) {
-    return this.state.set('offset', offset)
+  async setOffset(offset: number | null) {
+    return this.#state.set('offset', offset)
   }
 
   async #registerEventListener() {
@@ -73,24 +71,28 @@ export class NCOKeyboard {
         this.setOffset((await this.getOffset()) - 1)
       }),
 
-      register('settings:kbd:resetMarker', () => {
-        this.#jumpMarker(null)
+      register('settings:kbd:resetGlobalOffset', async () => {
+        this.setOffset(null)
       }),
 
       register('settings:kbd:jumpMarkerToOP', () => {
-        this.#jumpMarker('OP')
+        this.#functions.jumpMarker('OP')
       }),
 
       register('settings:kbd:jumpMarkerToA', () => {
-        this.#jumpMarker('A')
+        this.#functions.jumpMarker('A')
       }),
 
       register('settings:kbd:jumpMarkerToB', () => {
-        this.#jumpMarker('B')
+        this.#functions.jumpMarker('B')
       }),
 
       register('settings:kbd:jumpMarkerToC', () => {
-        this.#jumpMarker('C')
+        this.#functions.jumpMarker('C')
+      }),
+
+      register('settings:kbd:resetMarker', () => {
+        this.#functions.jumpMarker(null)
       })
     )
   }

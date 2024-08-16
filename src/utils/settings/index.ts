@@ -1,7 +1,8 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { StorageOnChangeCallback } from '@/utils/storage'
 
-import { SETTINGS_DEFAULT } from '@/constants'
+import { SETTINGS_DEFAULT } from '@/constants/settings/default'
+
 import { WebExtStorage } from '@/utils/storage'
 
 /**

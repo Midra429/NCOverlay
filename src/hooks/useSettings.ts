@@ -1,6 +1,7 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 
-import { SETTINGS_DEFAULT } from '@/constants'
+import { SETTINGS_DEFAULT } from '@/constants/settings/default'
+
 import { useStorage } from './useStorage'
 
 export const useSettings = <Key extends SettingsKey>(key: Key) => {

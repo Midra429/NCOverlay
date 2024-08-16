@@ -4,7 +4,7 @@ import type { SettingsInputBaseProps } from '.'
 import { useEffect, useState } from 'react'
 import { Slider } from '@nextui-org/react'
 
-import { SETTINGS_DEFAULT } from '@/constants'
+import { SETTINGS_DEFAULT } from '@/constants/settings/default'
 
 import { useSettings } from '@/hooks/useSettings'
 

@@ -1,11 +1,4 @@
-import type {
-  VodKey,
-  PluginKey,
-  PluginVodKey,
-  SettingsInitData,
-  SettingsInitItem,
-} from '@/types/constants'
-import type { StorageItems, SettingsKey } from '@/types/storage'
+import type { VodKey, PluginKey, SettingsInitData } from '@/types/constants'
 
 import {
   SunMoonIcon,
@@ -19,158 +12,8 @@ import {
   KeyboardIcon,
 } from 'lucide-react'
 
-/** GitHub */
-export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
-
-/** その他のリンク */
-export const LINKS: {
-  title: string
-  label: string
-  url: string
-}[] = [
-  {
-    title: 'X (Twitter)',
-    label: '@Midra429',
-    url: 'https://u.midra.me/x',
-  },
-  {
-    title: 'Amazon',
-    label: 'ほしい物リスト',
-    url: 'https://u.midra.me/wishlist',
-  },
-  {
-    title: 'giftee',
-    label: 'ほしいものリスト',
-    url: 'https://u.midra.me/giftee',
-  },
-]
-
-/** Google フォーム */
-export const GOOGLE_FORMS_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform'
-
-/** `?entry.ID=VALUE&` */
-export const GOOGLE_FORMS_IDS = {
-  CONTENT: '1500638079',
-  VERSION: '412681801',
-  OS: '994779637',
-  BROWSER: '104404822',
-  VODS: '1382689804',
-  TITLE: '2044762585',
-} as const
-
-/** 動画配信サービス */
-export const VODS = {
-  dAnime: 'dアニメストア',
-  abema: 'ABEMA',
-  bandaiChannel: 'バンダイチャンネル',
-  dmmTv: 'DMM TV',
-  unext: 'U-NEXT',
-  fod: 'FOD',
-  // lemino: 'Lemino',
-  primeVideo: 'Prime Video',
-  // netflix: 'Netflix',
-  hulu: 'Hulu',
-  // disneyPlus: 'Disney+',
-  tver: 'TVer',
-  // nhkplus: 'NHKプラス',
-} as const
-
-/** プラグイン */
-export const PLUGINS = {
-  dAnime: [
-    {
-      id: 'disablePopupPlayer',
-      title: 'ポップアップ無効化',
-      description: 'プレイヤーを新しいタブで開くようにします。',
-    },
-    // {
-    //   id: 'showCommentCounter',
-    //   title: 'コメントカウンター',
-    //   description: 'サムネイル上にコメント数を表示します。',
-    // },
-  ],
-} as const
-
-/**
- * マーカー
- */
-export const MARKERS: {
-  label: string
-  shortLabel: string
-  regexp: RegExp
-}[] = [
-  {
-    label: 'オープニング',
-    shortLabel: 'OP',
-    regexp: /^(OP|ＯＰ)$/i,
-  },
-  {
-    label: 'Aパート',
-    shortLabel: 'A',
-    regexp: /^(A|Ａ)$/,
-  },
-  {
-    label: 'Bパート',
-    shortLabel: 'B',
-    regexp: /^(B|Ｂ)$/,
-  },
-  {
-    label: 'Cパート',
-    shortLabel: 'C',
-    regexp: /^(C|Ｃ)$/,
-  },
-]
-
-/** 設定のデフォルト値 */
-export const SETTINGS_DEFAULT: {
-  [key in SettingsKey]: StorageItems[key]
-} = {
-  // 全般
-  'settings:theme': 'auto',
-  'settings:showChangelog': true,
-
-  // 動画配信サービス
-  'settings:vods': Object.keys(VODS) as VodKey[],
-
-  // キャプチャー
-  'settings:capture:format': 'jpeg',
-  'settings:capture:method': 'window',
-
-  // コメント
-  'settings:comment:autoLoad': true,
-  'settings:comment:autoLoadChapter': true,
-  'settings:comment:autoLoadSzbh': true,
-  'settings:comment:autoLoadJikkyo': true,
-  'settings:comment:useNglist': false,
-  'settings:comment:amount': 1,
-  'settings:comment:opacity': 100,
-  'settings:comment:scale': 100,
-  'settings:comment:fps': 60,
-
-  // NG設定
-  'settings:ng:largeComments': false,
-  'settings:ng:fixedComments': false,
-  'settings:ng:coloredComments': false,
-  'settings:ng:words': [],
-  'settings:ng:commands': [],
-  'settings:ng:ids': [],
-
-  // キーボード
-  'settings:kbd:increaseGlobalOffset': '',
-  'settings:kbd:decreaseGlobalOffset': '',
-  'settings:kbd:resetMarker': '',
-  'settings:kbd:jumpMarkerToOP': '',
-  'settings:kbd:jumpMarkerToA': '',
-  'settings:kbd:jumpMarkerToB': '',
-  'settings:kbd:jumpMarkerToC': '',
-
-  // プラグイン
-  'settings:plugins': [],
-
-  // 実験的な機能
-  // 'settings:experimental:useAiParser': false,
-} as const
+import { VODS } from '../vods'
+import { PLUGINS } from '../plugins'
 
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
@@ -206,9 +49,9 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'checkbox',
         label: '動画配信サービス',
         description: '選択した動画配信サービスで拡張機能を有効にします。',
-        options: (Object.keys(VODS) as VodKey[]).map((key) => ({
-          label: VODS[key],
-          value: key,
+        options: Object.entries(VODS).map(([key, value]) => ({
+          label: value,
+          value: key as VodKey,
         })),
       },
       {
@@ -360,9 +203,9 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '全体のオフセットを減らす (-1s)',
       },
       {
-        settingsKey: 'settings:kbd:resetMarker',
+        settingsKey: 'settings:kbd:resetGlobalOffset',
         inputType: 'kbd-shortcut',
-        label: 'オフセットをリセットする',
+        label: '全体のオフセットをリセットする',
       },
       {
         settingsKey: 'settings:kbd:jumpMarkerToOP',
@@ -384,6 +227,11 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'kbd-shortcut',
         label: '「C（Cパート）」にジャンプ',
       },
+      {
+        settingsKey: 'settings:kbd:resetMarker',
+        inputType: 'kbd-shortcut',
+        label: 'オフセットをリセットする',
+      },
     ],
   },
   // {
@@ -403,58 +251,15 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     id: 'plugins',
     title: 'プラグイン',
     icon: BlocksIcon,
-    items: (Object.keys(PLUGINS) as PluginVodKey[]).map((vodKey) => ({
+    items: Object.entries(PLUGINS).map(([key, value]) => ({
       settingsKey: 'settings:plugins',
       inputType: 'checkcard',
-      label: VODS[vodKey],
-      options: PLUGINS[vodKey].map(({ id, title, description }) => ({
+      label: VODS[key as VodKey],
+      options: value.map(({ id, title, description }) => ({
         label: title,
         description: description,
-        value: `${vodKey}:${id}` as PluginKey,
+        value: `${key}:${id}` as PluginKey,
       })),
     })),
   },
 ]
-
-export const SETTINGS_INIT_ITEMS = Object.fromEntries(
-  SETTINGS_INIT_DATA.flatMap(({ items }) => {
-    return items.map((item) => [item.settingsKey, item])
-  })
-) as {
-  [key in SettingsKey]: SettingsInitItem
-}
-
-/** ニコニコ コメント コマンド (色) */
-export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
-  // white: '#FFFFFF',
-  red: '#FF0000',
-  pink: '#FF8080',
-  orange: '#FFC000',
-  yellow: '#FFFF00',
-  green: '#00FF00',
-  cyan: '#00FFFF',
-  blue: '#0000FF',
-  purple: '#C000FF',
-  black: '#000000',
-  white2: '#CCCC99',
-  niconicowhite: '#CCCC99',
-  red2: '#CC0033',
-  truered: '#CC0033',
-  pink2: '#FF33CC',
-  orange2: '#FF6600',
-  passionorange: '#FF6600',
-  yellow2: '#999900',
-  madyellow: '#999900',
-  green2: '#00CC66',
-  elementalgreen: '#00CC66',
-  cyan2: '#00CCCC',
-  blue2: '#3399FF',
-  marinblue: '#3399FF',
-  purple2: '#6633CC',
-  nobleviolet: '#6633CC',
-  black2: '#666666',
-}
-
-export const COLOR_CODE = '^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$'
-
-export const COLOR_CODE_REGEXP = new RegExp(COLOR_CODE)

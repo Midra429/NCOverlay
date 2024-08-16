@@ -8,7 +8,8 @@ import {
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
 
-import { GITHUB_URL, LINKS, SETTINGS_INIT_DATA } from '@/constants'
+import { GITHUB_URL, LINKS } from '@/constants'
+import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
 import { webext } from '@/utils/webext'
 import { filesize } from '@/utils/filesize'

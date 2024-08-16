@@ -159,10 +159,10 @@ export type StorageItems_v1 = {
   'settings:kbd:decreaseGlobalOffset': string
 
   /**
-   * キーボード:オフセットをリセットする
+   * キーボード:全体のオフセットをリセットする
    * @default ''
    */
-  'settings:kbd:resetMarker': string
+  'settings:kbd:resetGlobalOffset': string
 
   /**
    * キーボード:オフセットを「オープニング」に飛ばす
@@ -187,6 +187,12 @@ export type StorageItems_v1 = {
    * @default ''
    */
   'settings:kbd:jumpMarkerToC': string
+
+  /**
+   * キーボード:オフセットをリセットする
+   * @default ''
+   */
+  'settings:kbd:resetMarker': string
 
   /**
    * プラグイン
@@ -215,8 +221,16 @@ export type StorageKey = keyof StorageItems
 
 export type InternalKey = Extract<StorageKey, `_${string}`>
 
+export type InternalItems = { [k in InternalKey]: StorageItems[k] }
+
 export type TemporaryKey = Extract<StorageKey, `tmp:${string}`>
+
+export type TemporaryItems = { [k in TemporaryKey]: StorageItems[k] }
 
 export type SettingsKey = Extract<StorageKey, `settings:${string}`>
 
+export type SettingItems = { [k in SettingsKey]: StorageItems[k] }
+
 export type StateKey = Extract<StorageKey, `state:${string}`>
+
+export type StateItems = { [k in StateKey]: StorageItems[k] }

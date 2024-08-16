@@ -3,7 +3,7 @@ import type { setBadge } from '@/utils/extension/setBadge'
 
 import equal from 'fast-deep-equal'
 
-import { MARKERS } from '@/constants'
+import { MARKERS } from '@/constants/markers'
 
 import { Logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'

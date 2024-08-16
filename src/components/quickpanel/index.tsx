@@ -1,8 +1,9 @@
+import type { SettingsInitItem } from '@/types/constants'
 import type { SettingsKey } from '@/types/storage'
 
 import { memo } from 'react'
 
-import { SETTINGS_INIT_ITEMS } from '@/constants'
+import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
 import { SettingsInput } from '@/components/settings-input'
 import { PanelItem } from '@/components/panel-item'
@@ -15,6 +16,14 @@ import { SidePanelButton } from './presets/sidepanel-button'
 type PanelPresetComponentKey = keyof typeof PANEL_PRESET_CONPONENTS
 
 type PanelItemKey = PanelPresetComponentKey | SettingsKey
+
+const SETTINGS_INIT_ITEMS = Object.fromEntries(
+  SETTINGS_INIT_DATA.flatMap(({ items }) => {
+    return items.map((item) => [item.settingsKey, item])
+  })
+) as {
+  [key in SettingsKey]: SettingsInitItem
+}
 
 const PANEL_PRESET_CONPONENTS = {
   'panel:ShowHideToggle': ShowHideToggle,
