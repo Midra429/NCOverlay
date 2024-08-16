@@ -5,7 +5,7 @@ import type {
   StorageRemoveFunction,
   StorageGetBytesInUseFunction,
   StorageOnChangeCallback,
-  StorageLoadAndWatchCallback,
+  StorageWatchCallback,
 } from '.'
 
 import { defineWindowMessaging } from '@webext-core/messaging/page'
@@ -35,10 +35,10 @@ type ProtocolMap = {
     args: [id: string, ...Parameters<StorageOnChangeCallback<StorageKey>>]
   ) => void
 
-  'loadAndWatch:register': (key: StorageKey) => string
-  'loadAndWatch:unregister': (id: string) => void
-  'loadAndWatch:changed': (
-    args: [id: string, ...Parameters<StorageLoadAndWatchCallback<StorageKey>>]
+  'watch:register': (key: StorageKey) => string
+  'watch:unregister': (id: string) => void
+  'watch:changed': (
+    args: [id: string, ...Parameters<StorageWatchCallback<StorageKey>>]
   ) => void
 }
 

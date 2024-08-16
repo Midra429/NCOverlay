@@ -218,7 +218,7 @@ export class NCOverlay {
     // ストレージの監視
     this.#storageOnChangeRemoveListeners.push(
       // 設定 (コメント:表示サイズ)
-      settings.loadAndWatch('settings:comment:scale', (scale) => {
+      settings.watch('settings:comment:scale', (scale) => {
         this.renderer.setOptions({
           scale: scale / 100,
           keepCA: scale !== 100,
@@ -228,12 +228,12 @@ export class NCOverlay {
       }),
 
       // 設定 (コメント:不透明度)
-      settings.loadAndWatch('settings:comment:opacity', (opacity) => {
+      settings.watch('settings:comment:opacity', (opacity) => {
         this.renderer.setOpacity(opacity / 100)
       }),
 
       // 設定 (コメント:フレームレート)
-      settings.loadAndWatch('settings:comment:fps', (fps) => {
+      settings.watch('settings:comment:fps', (fps) => {
         this.renderer.setFps(fps)
       }),
 

@@ -39,19 +39,19 @@ export default () => {
     removeListeners[id]?.()
   })
 
-  storageMessenger.onMessage('loadAndWatch:register', ({ data: key }) => {
+  storageMessenger.onMessage('watch:register', ({ data: key }) => {
     const id = `${key}:${uid()}`
 
-    removeListeners[id] = storage.loadAndWatch(key, (...args) => {
+    removeListeners[id] = storage.watch(key, (...args) => {
       storageMessenger
-        .sendMessage('loadAndWatch:changed', [id, ...args])
+        .sendMessage('watch:changed', [id, ...args])
         .catch(() => {})
     })
 
     return id
   })
 
-  storageMessenger.onMessage('loadAndWatch:unregister', ({ data: id }) => {
+  storageMessenger.onMessage('watch:unregister', ({ data: id }) => {
     removeListeners[id]?.()
   })
 }

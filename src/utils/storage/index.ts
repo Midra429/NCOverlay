@@ -67,16 +67,16 @@ export type StorageOnChangeFunction = <Key extends StorageKey>(
 /**
  * ストレージの読み込み・監視のコールバック
  */
-export type StorageLoadAndWatchCallback<Key extends StorageKey> = (
+export type StorageWatchCallback<Key extends StorageKey> = (
   value: StorageItems[Key] | null
 ) => void
 
 /**
  * ストレージを読み込み、変更を監視する
  */
-export type StorageLoadAndWatch = <Key extends StorageKey>(
+export type StorageWatch = <Key extends StorageKey>(
   key: Key,
-  callback: StorageLoadAndWatchCallback<Key>
+  callback: StorageWatchCallback<Key>
 ) => () => void
 
 export class WebExtStorage {
@@ -85,7 +85,7 @@ export class WebExtStorage {
   readonly remove: StorageRemoveFunction
   readonly getBytesInUse: StorageGetBytesInUseFunction
   readonly onChange: StorageOnChangeFunction
-  readonly loadAndWatch: StorageLoadAndWatch
+  readonly watch: StorageWatch
 
   constructor(methods: {
     get: StorageGetFunction
@@ -93,13 +93,13 @@ export class WebExtStorage {
     remove: StorageRemoveFunction
     getBytesInUse: StorageGetBytesInUseFunction
     onChange: StorageOnChangeFunction
-    loadAndWatch: StorageLoadAndWatch
+    watch: StorageWatch
   }) {
     this.get = methods.get
     this.set = methods.set
     this.remove = methods.remove
     this.getBytesInUse = methods.getBytesInUse
     this.onChange = methods.onChange
-    this.loadAndWatch = methods.loadAndWatch
+    this.watch = methods.watch
   }
 }

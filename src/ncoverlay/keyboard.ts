@@ -17,7 +17,7 @@ const register = (
 ) => {
   let tmpShortcutKey: string | null = null
 
-  return storage.loadAndWatch(key, (shortcutKey) => {
+  return storage.watch(key, (shortcutKey) => {
     if (tmpShortcutKey) {
       hotkeys.unbind(tmpShortcutKey)
     }

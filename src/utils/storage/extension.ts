@@ -72,7 +72,7 @@ export const storage = new WebExtStorage({
     }
   },
 
-  loadAndWatch(key, callback) {
+  watch(key, callback) {
     let removeListener = () => {}
 
     this.get(key).then((value) => {

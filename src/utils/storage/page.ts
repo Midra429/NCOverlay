@@ -52,16 +52,16 @@ export const storage = new WebExtStorage({
     return () => unregister()
   },
 
-  loadAndWatch: (key, callback) => {
+  watch: (key, callback) => {
     let unregister = () => {}
 
-    storageMessenger.sendMessage('loadAndWatch:register', key).then((id) => {
+    storageMessenger.sendMessage('watch:register', key).then((id) => {
       unregister = () => {
-        storageMessenger.sendMessage('loadAndWatch:unregister', id)
+        storageMessenger.sendMessage('watch:unregister', id)
       }
 
       storageMessenger.onMessage(
-        'loadAndWatch:changed',
+        'watch:changed',
         ({ data: [changedId, ...changedValues] }) => {
           if (id !== changedId) return
 

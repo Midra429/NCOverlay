@@ -66,7 +66,7 @@ export type SettingsOnChangeFunction = <Key extends SettingsKey>(
 /**
  * 設定を読み込み、変更を監視する
  */
-export type SettingsLoadAndWatch = <Key extends SettingsKey>(
+export type SettingsWatch = <Key extends SettingsKey>(
   key: Key,
   callback: (value: StorageItems[Key]) => void
 ) => () => void
@@ -127,7 +127,7 @@ export class WebExtSettings {
     return this.#storage.getBytesInUse(...keys)
   }
 
-  readonly loadAndWatch: SettingsLoadAndWatch = (key, callback) => {
+  readonly watch: SettingsWatch = (key, callback) => {
     let removeListener = () => {}
 
     this.get(key).then((value) => {
