@@ -73,12 +73,12 @@ export const useNcoState = <Key extends NCOStateItemKey>(
       }
 
       ngOnChangeRemoveListeners = [
-        settings.onChange('settings:ng:largeComments', ngChangedCallback),
-        settings.onChange('settings:ng:fixedComments', ngChangedCallback),
-        settings.onChange('settings:ng:coloredComments', ngChangedCallback),
         settings.onChange('settings:ng:words', ngChangedCallback),
         settings.onChange('settings:ng:commands', ngChangedCallback),
         settings.onChange('settings:ng:ids', ngChangedCallback),
+        settings.onChange('settings:ng:largeComments', ngChangedCallback),
+        settings.onChange('settings:ng:fixedComments', ngChangedCallback),
+        settings.onChange('settings:ng:coloredComments', ngChangedCallback),
       ]
     }
 

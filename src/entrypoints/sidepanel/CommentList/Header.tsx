@@ -1,16 +1,16 @@
 import { cn } from '@nextui-org/react'
 
-const Cell: React.FC<
+const HeaderCell: React.FC<
   React.PropsWithChildren<React.HTMLAttributes<HTMLSpanElement>>
 > = ({ className, ...props }) => {
   return (
     <span
       {...props}
       className={cn(
-        'flex-shrink-0 p-1.5',
+        'flex-shrink-0 py-1.5',
         'bg-content2 text-center text-content2-foreground',
-        'border-b-1 border-b-divider',
-        '[&:not(:first-child)]:border-l-1 [&:not(:first-child)]:border-l-divider',
+        'border-b-1 border-divider',
+        '[&:not(:first-child)]:border-l-1',
         className
       )}
     />
@@ -20,13 +20,13 @@ const Cell: React.FC<
 export const Header: React.FC = () => {
   return (
     <div className={cn('sticky top-0 z-10', 'flex flex-row', 'font-bold')}>
-      <Cell className="w-[5rem]">時間</Cell>
+      <HeaderCell className="w-[5rem]">時間</HeaderCell>
 
-      <Cell className="w-[calc(100%-5rem)]">コメント</Cell>
+      <HeaderCell className="w-[calc(100%-5rem)]">コメント</HeaderCell>
 
-      <Cell className="w-52">投稿日時</Cell>
+      <HeaderCell className="w-52">投稿日時</HeaderCell>
 
-      <Cell className="w-full">コマンド</Cell>
+      <HeaderCell className="w-full">コマンド</HeaderCell>
     </div>
   )
 }

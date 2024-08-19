@@ -27,12 +27,12 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:fps': 60,
 
   // NG設定
-  'settings:ng:largeComments': false,
-  'settings:ng:fixedComments': false,
-  'settings:ng:coloredComments': false,
   'settings:ng:words': [],
   'settings:ng:commands': [],
   'settings:ng:ids': [],
+  'settings:ng:largeComments': false,
+  'settings:ng:fixedComments': false,
+  'settings:ng:coloredComments': false,
 
   // キーボード
   'settings:kbd:increaseGlobalOffset': '',

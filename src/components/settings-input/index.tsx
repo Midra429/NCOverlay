@@ -8,6 +8,7 @@ import * as Range from './range'
 import * as Checkbox from './checkbox'
 import * as Checkcard from './checkcard'
 import * as KbdShortcut from './kbd-shortcut'
+import * as NgList from './ng-list'
 
 export type SettingsInputBaseProps<
   K extends SettingsKey,
@@ -28,6 +29,7 @@ export type SettingsInputProps = {
   'checkbox': Checkbox.Props
   'checkcard': Checkcard.Props
   'kbd-shortcut': KbdShortcut.Props
+  'ng-list': NgList.Props
 }
 
 export const SettingsInput = {
@@ -39,4 +41,5 @@ export const SettingsInput = {
   'checkbox': Checkbox.Input,
   'checkcard': Checkcard.Input,
   'kbd-shortcut': KbdShortcut.Input,
+  'ng-list': NgList.Input,
 }

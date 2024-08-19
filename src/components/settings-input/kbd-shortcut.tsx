@@ -11,6 +11,8 @@ import { useRecordHotkeys } from 'react-hotkeys-hook'
 import { webext } from '@/utils/webext'
 import { useSettings } from '@/hooks/useSettings'
 
+import { ItemLabel } from '@/components/label'
+
 const NEXTUI_KBD_KEYS: Partial<
   Record<'common' | Runtime.PlatformOs, string[]>
 > = {
@@ -117,16 +119,9 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
 
   return (
     <div className="flex flex-col justify-between gap-1.5 py-2.5">
-      <div className="flex flex-col gap-0.5">
-        <span className="text-small text-foreground">{props.label}</span>
-        {props.description && (
-          <span className="line-clamp-2 text-tiny text-foreground-400">
-            {props.description}
-          </span>
-        )}
-      </div>
+      <ItemLabel title={props.label} description={props.description} />
 
-      <div className="flex flex-row items-center gap-1">
+      <div className="flex flex-row items-center gap-2">
         <ScrollShadow
           className={cn(
             'flex flex-row items-center gap-1',
@@ -138,14 +133,12 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           orientation="horizontal"
           hideScrollBar
         >
-          {(isRecording ? [...keys] : value.split('+')).map((key, idx) => {
-            return (
-              <>
-                {idx !== 0 && <PlusIcon className="size-3.5 shrink-0" />}
-                <KeyboardKey kbdKey={key} os={os} />
-              </>
-            )
-          })}
+          {(isRecording ? [...keys] : value.split('+')).map((key, idx) => (
+            <div key={key} className="flex flex-row items-center gap-1">
+              {idx !== 0 && <PlusIcon className="size-3.5 shrink-0" />}
+              <KeyboardKey kbdKey={key} os={os} />
+            </div>
+          ))}
         </ScrollShadow>
 
         <Button

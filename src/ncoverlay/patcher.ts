@@ -24,17 +24,19 @@ export class NCOPatcher {
   constructor(init: {
     vod: VodKey
     getInfo: (video: HTMLVideoElement | null) => Promise<
-      | ((
+      | (
           | {
               rawText: string
+              duration: number
             }
           | {
               /** <作品名> */
               workTitle: string
               /** <話数> <サブタイトル> */
               episodeTitle?: string | null
+              duration: number
             }
-        ) & { duration: number })
+        )
       | null
     >
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void

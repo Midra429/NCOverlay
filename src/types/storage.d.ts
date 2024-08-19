@@ -111,6 +111,24 @@ export type StorageItems_v1 = {
   'settings:comment:fps': 30 | 60 | 0
 
   /**
+   * NG設定:コメント
+   * @default []
+   */
+  'settings:ng:words': NgSettings['words']
+
+  /**
+   * NG設定:コマンド
+   * @default []
+   */
+  'settings:ng:commands': NgSettings['commands']
+
+  /**
+   * NG設定:ユーザーID
+   * @default []
+   */
+  'settings:ng:ids': NgSettings['ids']
+
+  /**
    * NG設定:サイズの大きいコメントを非表示
    * @default false
    */
@@ -127,24 +145,6 @@ export type StorageItems_v1 = {
    * @default false
    */
   'settings:ng:coloredComments': boolean
-
-  /**
-   * NG設定:単語
-   * @default []
-   */
-  'settings:ng:words': NgSettings['words']
-
-  /**
-   * NG設定:コマンド
-   * @default []
-   */
-  'settings:ng:commands': NgSettings['commands']
-
-  /**
-   * NG設定:ユーザーID
-   * @default []
-   */
-  'settings:ng:ids': NgSettings['ids']
 
   /**
    * キーボード:全体のオフセットを増やす

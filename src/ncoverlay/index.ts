@@ -237,13 +237,12 @@ export class NCOverlay {
         this.renderer.setFps(fps)
       }),
 
-      // 設定 (NG設定:サイズの大きいコメントを非表示)
+      // 設定 (NG設定)
+      settings.onChange('settings:ng:words', updateRenderer),
+      settings.onChange('settings:ng:commands', updateRenderer),
+      settings.onChange('settings:ng:ids', updateRenderer),
       settings.onChange('settings:ng:largeComments', updateRenderer),
-
-      // 設定 (NG設定:固定コメントを非表示)
       settings.onChange('settings:ng:fixedComments', updateRenderer),
-
-      // 設定 (NG設定:色付きコメントを非表示)
       settings.onChange('settings:ng:coloredComments', updateRenderer),
 
       // 全体のオフセット

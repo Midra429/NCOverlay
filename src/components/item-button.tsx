@@ -1,7 +1,9 @@
 import type { ButtonProps } from '@nextui-org/react'
 import type { PopconfirmProps } from '@/components/popconfirm'
 
-import { Button } from '@nextui-org/react'
+import { Button, cn } from '@nextui-org/react'
+
+import { ItemLabel } from '@/components/label'
 import { Popconfirm } from '@/components/popconfirm'
 
 export const ItemButton: React.FC<{
@@ -21,7 +23,12 @@ export const ItemButton: React.FC<{
 }> = (props) => {
   const button = (
     <Button
-      className="min-w-24 shrink-0"
+      className={cn(
+        'min-w-24 shrink-0',
+        props.button.variant === 'flat' &&
+          props.button.color === 'default' &&
+          'text-foreground'
+      )}
       size="sm"
       variant={props.button.variant}
       color={props.button.color}
@@ -33,14 +40,7 @@ export const ItemButton: React.FC<{
 
   return (
     <div className="flex flex-row items-center justify-between gap-2">
-      <div className="flex flex-col gap-0.5">
-        <span className="line-clamp-1 text-small">{props.title}</span>
-        {props.description && (
-          <span className="line-clamp-2 text-tiny text-foreground-400">
-            {props.description}
-          </span>
-        )}
-      </div>
+      <ItemLabel title={props.title} description={props.description} />
 
       {props.confirm ? (
         <Popconfirm

@@ -8,7 +8,7 @@ import {
   MessageSquareTextIcon,
   MessageSquareOffIcon,
   BlocksIcon,
-  FlaskConicalIcon,
+  // FlaskConicalIcon,
   KeyboardIcon,
 } from 'lucide-react'
 
@@ -159,6 +159,21 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     icon: MessageSquareOffIcon,
     items: [
       {
+        settingsKey: 'settings:ng:words',
+        inputType: 'ng-list',
+        label: 'コメント',
+      },
+      {
+        settingsKey: 'settings:ng:commands',
+        inputType: 'ng-list',
+        label: 'コマンド',
+      },
+      {
+        settingsKey: 'settings:ng:ids',
+        inputType: 'ng-list',
+        label: 'ユーザーID',
+      },
+      {
         settingsKey: 'settings:ng:largeComments',
         inputType: 'toggle',
         label: 'サイズの大きいコメントを非表示',
@@ -176,15 +191,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '色付きコメントを非表示',
         description: '色指定コマンドを含むコメントを非表示にします。',
       },
-      // {
-      //   settingsKey: 'settings:ng:word',
-      // },
-      // {
-      //   settingsKey: 'settings:ng:command',
-      // },
-      // {
-      //   settingsKey: 'settings:ng:id',
-      // },
     ],
   },
   {

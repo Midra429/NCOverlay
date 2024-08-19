@@ -19,7 +19,7 @@ const commentComamndClasses: Record<string, string> = {
   big: cn('text-[110%] font-bold'),
 }
 
-const Cell: React.FC<
+const ItemCell: React.FC<
   React.PropsWithChildren<React.HTMLAttributes<HTMLSpanElement>>
 > = ({ className, ...props }) => {
   return (
@@ -28,8 +28,8 @@ const Cell: React.FC<
       className={cn(
         'flex',
         'flex-shrink-0 p-1.5',
-        'border-b-1 border-b-divider',
-        '[&:not(:first-child)]:border-l-1 [&:not(:first-child)]:border-l-divider',
+        'border-b-1 border-divider',
+        '[&:not(:first-child)]:border-l-1',
         className
       )}
     />
@@ -77,12 +77,12 @@ export const Item: React.FC<{
   return (
     <div className="flex flex-row">
       {/* 再生時間 */}
-      <Cell className="w-[5rem] justify-center font-mono">
+      <ItemCell className="w-[5rem] justify-center font-mono">
         <span className="line-clamp-1">{formattedDuration}</span>
-      </Cell>
+      </ItemCell>
 
       {/* コメント */}
-      <Cell className="w-[calc(100%-5rem)]">
+      <ItemCell className="w-[calc(100%-5rem)]">
         <span
           className={cn('line-clamp-2 !break-words break-keep', commentClass)}
           style={{
@@ -92,17 +92,17 @@ export const Item: React.FC<{
         >
           {comment.body}
         </span>
-      </Cell>
+      </ItemCell>
 
       {/* 投稿日時 */}
-      <Cell className="w-52 justify-center font-mono">
+      <ItemCell className="w-52 justify-center font-mono">
         <span className="line-clamp-1">{formattedDate}</span>
-      </Cell>
+      </ItemCell>
 
       {/* コマンド */}
-      <Cell className="w-full font-mono">
+      <ItemCell className="w-full font-mono">
         <span className="line-clamp-1">{comment.commands.join(' ')}</span>
-      </Cell>
+      </ItemCell>
     </div>
   )
 }

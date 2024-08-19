@@ -5,6 +5,8 @@ import { Switch, cn } from '@nextui-org/react'
 
 import { useSettings } from '@/hooks/useSettings'
 
+import { ItemLabel } from '@/components/label'
+
 export type Key = {
   [key in SettingsKey]: StorageItems[key] extends boolean ? key : never
 }[SettingsKey]
@@ -31,14 +33,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       isSelected={value}
       onValueChange={(val) => setValue(val)}
     >
-      <div className="flex flex-col gap-0.5">
-        <span>{props.label}</span>
-        {props.description && (
-          <span className="line-clamp-2 text-tiny text-foreground-400">
-            {props.description}
-          </span>
-        )}
-      </div>
+      <ItemLabel title={props.label} description={props.description} />
     </Switch>
   )
 }
