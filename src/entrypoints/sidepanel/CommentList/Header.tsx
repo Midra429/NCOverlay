@@ -10,6 +10,7 @@ const HeaderCell: React.FC<
         'flex-shrink-0 py-1.5',
         'bg-content2 text-center text-content2-foreground',
         'border-b-1 border-divider',
+        'text-tiny font-bold',
         '[&:not(:first-child)]:border-l-1',
         className
       )}
@@ -19,7 +20,7 @@ const HeaderCell: React.FC<
 
 export const Header: React.FC = () => {
   return (
-    <div className={cn('sticky top-0 z-10', 'flex flex-row', 'font-bold')}>
+    <div className="sticky top-0 z-10 flex flex-row">
       <HeaderCell className="w-[5rem]">時間</HeaderCell>
 
       <HeaderCell className="w-[calc(100%-5rem)]">コメント</HeaderCell>

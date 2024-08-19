@@ -29,6 +29,7 @@ const ItemCell: React.FC<
         'flex',
         'flex-shrink-0 p-1.5',
         'border-b-1 border-divider',
+        'text-small',
         '[&:not(:first-child)]:border-l-1',
         className
       )}

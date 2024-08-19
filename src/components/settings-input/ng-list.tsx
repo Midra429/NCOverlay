@@ -74,6 +74,7 @@ const HeaderCell: React.FC<
         'flex-shrink-0 py-1.5',
         'bg-content2 text-center text-content2-foreground',
         'border-b-1 border-divider',
+        'text-tiny font-bold',
         '[&:not(:first-child)]:border-l-1',
         className
       )}
@@ -91,6 +92,7 @@ const ItemCell: React.FC<
         'flex',
         'flex-shrink-0 p-1.5',
         'border-b-1 border-divider',
+        'text-small',
         '[&:not(:first-child)]:border-l-1',
         className
       )}
@@ -100,7 +102,7 @@ const ItemCell: React.FC<
 
 const Header: React.FC = () => {
   return (
-    <div className={cn('sticky top-0 z-20', 'flex flex-row', 'font-bold')}>
+    <div className="sticky top-0 z-20 flex flex-row">
       <HeaderCell className="w-[calc(100%-7rem)]">テキスト</HeaderCell>
 
       <HeaderCell className="w-[4rem]">正規表現</HeaderCell>
