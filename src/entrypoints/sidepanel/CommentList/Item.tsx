@@ -113,7 +113,7 @@ export const Item: React.FC<{
       classNames={{
         backdrop: 'bg-transparent',
         base: 'max-w-[90vw]',
-        content: 'overflow-hidden',
+        content: 'overflow-hidden border-1 border-foreground-100',
       }}
       backdrop="opaque"
     >
