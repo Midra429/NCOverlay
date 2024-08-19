@@ -12,8 +12,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
       '@midra/nco-api':
-        specifier: ^1.3.4
-        version: 1.3.4
+        specifier: ^1.3.5
+        version: 1.3.5
       '@midra/nco-parser':
         specifier: ^1.0.9
         version: 1.0.9
@@ -574,8 +574,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@midra/nco-api@1.3.4':
-    resolution: {integrity: sha512-TSu4UGMyieX+UuoH671Z6bwj/U8gwKxAXQyLD0jURRNznKS0EdeieTJzOGFpeyNAVwUPoLtNUDf907RGMbc1bQ==}
+  '@midra/nco-api@1.3.5':
+    resolution: {integrity: sha512-rwWYLo4VGC6SFKCoWOMjnWLC9lux+0n4ZlOzcBns/wuDZHY+o4T0+VbK4I/qWE2S5H6co4stJVbYG1oZ7FPrxA==}
 
   '@midra/nco-parser@1.0.9':
     resolution: {integrity: sha512-R4o2ZcY2Fr1YIaJS5IoS4+w/qVHPMRd3TkbT6Zql+3f+f6spskmcimudzGrBj7er+Ir2Vqi+DlwePq6Os1Ps8w==}
@@ -4649,7 +4649,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@midra/nco-api@1.3.4':
+  '@midra/nco-api@1.3.5':
     dependencies:
       '@midra/nco-parser': 1.0.9
 

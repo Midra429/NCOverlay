@@ -1,12 +1,21 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 
-import { useMemo } from 'react'
-import { cn } from '@nextui-org/react'
+import { useMemo, useCallback } from 'react'
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+  cn,
+} from '@nextui-org/react'
+import { CopyIcon, PlusIcon } from 'lucide-react'
 import { readableColor } from 'color2k'
 
 import { NICONICO_COLOR_COMMANDS, COLOR_CODE_REGEXP } from '@/constants'
 
 import { formatDuration, formatDate } from '@/utils/format'
+import { settings } from '@/utils/settings/extension'
 
 const commentComamndClasses: Record<string, string> = {
   // 半透明
@@ -75,35 +84,121 @@ export const Item: React.FC<{
     return formatDate(comment.postedAt)
   }, [comment.postedAt])
 
+  const copyCommentBody = useCallback(
+    () => navigator.clipboard.writeText(comment.body),
+    [comment.body]
+  )
+
+  const copyCommentUserId = useCallback(
+    () => navigator.clipboard.writeText(comment.userId),
+    [comment.userId]
+  )
+
+  const addNgWord = useCallback(async () => {
+    await settings.set('settings:ng:words', [
+      ...(await settings.get('settings:ng:words')),
+      { content: comment.body },
+    ])
+  }, [comment.body])
+
+  const addNgId = useCallback(async () => {
+    await settings.set('settings:ng:ids', [
+      ...(await settings.get('settings:ng:ids')),
+      { content: comment.userId },
+    ])
+  }, [comment.userId])
+
   return (
-    <div className="flex flex-row">
-      {/* 再生時間 */}
-      <ItemCell className="w-[5rem] justify-center font-mono">
-        <span className="line-clamp-1">{formattedDuration}</span>
-      </ItemCell>
-
-      {/* コメント */}
-      <ItemCell className="w-[calc(100%-5rem)]">
-        <span
-          className={cn('line-clamp-2 !break-words break-keep', commentClass)}
-          style={{
-            backgroundColor: commentBgColor,
-            color: commentFgColor,
-          }}
+    <Dropdown
+      classNames={{
+        backdrop: 'bg-transparent',
+        base: 'max-w-[90vw]',
+        content: 'overflow-hidden',
+      }}
+      backdrop="opaque"
+    >
+      <DropdownTrigger>
+        <div
+          className={cn(
+            'flex flex-row',
+            '!scale-100 !opacity-100',
+            'hover:bg-default/20 aria-expanded:bg-default/20',
+            'dark:hover:bg-default/40 dark:aria-expanded:bg-default/40'
+          )}
         >
-          {comment.body}
-        </span>
-      </ItemCell>
+          {/* 再生時間 */}
+          <ItemCell
+            className={cn(
+              'w-[5rem] justify-center font-mono',
+              'cursor-pointer'
+            )}
+          >
+            <span className="line-clamp-1">{formattedDuration}</span>
+          </ItemCell>
 
-      {/* 投稿日時 */}
-      <ItemCell className="w-52 justify-center font-mono">
-        <span className="line-clamp-1">{formattedDate}</span>
-      </ItemCell>
+          {/* コメント */}
+          <ItemCell className={cn('w-[calc(100%-5rem)]', 'cursor-pointer')}>
+            <span
+              className={cn(
+                'line-clamp-2 !break-words break-keep',
+                commentClass
+              )}
+              style={{
+                backgroundColor: commentBgColor,
+                color: commentFgColor,
+              }}
+            >
+              {comment.body}
+            </span>
+          </ItemCell>
 
-      {/* コマンド */}
-      <ItemCell className="w-full font-mono">
-        <span className="line-clamp-1">{comment.commands.join(' ')}</span>
-      </ItemCell>
-    </div>
+          {/* 投稿日時 */}
+          <ItemCell className="w-52 justify-center font-mono">
+            <span className="line-clamp-1">{formattedDate}</span>
+          </ItemCell>
+
+          {/* コマンド */}
+          <ItemCell className="w-full font-mono">
+            <span className="line-clamp-1">{comment.commands.join(' ')}</span>
+          </ItemCell>
+        </div>
+      </DropdownTrigger>
+
+      <DropdownMenu variant="flat">
+        <DropdownSection aria-label="アクション" showDivider>
+          <DropdownItem
+            key="copy-comment"
+            startContent={<CopyIcon className="size-4 shrink-0" />}
+            onPress={copyCommentBody}
+          >
+            コメントをコピー
+          </DropdownItem>
+          <DropdownItem
+            key="copy-id"
+            startContent={<CopyIcon className="size-4 shrink-0" />}
+            onPress={copyCommentUserId}
+          >
+            ユーザーIDをコピー
+          </DropdownItem>
+        </DropdownSection>
+
+        <DropdownSection title="NG設定" className="mb-0">
+          <DropdownItem
+            key="add-ng-word"
+            startContent={<PlusIcon className="size-4 shrink-0" />}
+            onPress={addNgWord}
+          >
+            コメントを追加
+          </DropdownItem>
+          <DropdownItem
+            key="add-ng-id"
+            startContent={<PlusIcon className="size-4 shrink-0" />}
+            onPress={addNgId}
+          >
+            ユーザーIDを追加
+          </DropdownItem>
+        </DropdownSection>
+      </DropdownMenu>
+    </Dropdown>
   )
 }

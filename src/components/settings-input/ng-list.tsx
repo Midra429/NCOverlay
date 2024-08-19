@@ -2,7 +2,7 @@ import type { SettingsKey, StorageItems } from '@/types/storage'
 import type { NgSettingsContent } from '@/utils/extension/getNgSettings'
 import type { SettingsInputBaseProps } from '.'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Modal,
   ModalContent,
@@ -16,11 +16,11 @@ import {
   cn,
 } from '@nextui-org/react'
 import {
-  ChevronRightIcon,
   PencilIcon,
+  ChevronRightIcon,
   PlusIcon,
-  SaveIcon,
   XIcon,
+  SaveIcon,
 } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
