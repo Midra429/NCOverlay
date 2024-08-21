@@ -100,7 +100,9 @@ export class NCOPatcher {
                 })
               )
             } else {
-              const { title, season } = ncoParser.extract(info.workTitle)
+              const { title, season } = ncoParser.extract(
+                `${info.workTitle} #01`
+              )
 
               extracted.title = title
               extracted.season = season

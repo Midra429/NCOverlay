@@ -48,7 +48,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:vods',
         inputType: 'checkbox',
         label: '動画配信サービス',
-        description: '選択した動画配信サービスで拡張機能を有効にします。',
+        description: '選択した動画配信サービスで\n拡張機能を有効にします。',
         options: Object.entries(VODS).map(([key, value]) => ({
           value: key as VodKey,
           label: value,
@@ -93,7 +93,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           { value: 'normal', label: '通常/dアニメ' },
           { value: 'chapter', label: 'dアニメ(分割)' },
           { value: 'szbh', label: 'コメント専用' },
-          { value: 'jikkyo', label: '実況' },
+          { value: 'jikkyo', label: '実況(過去ログ)' },
         ],
       },
       // {

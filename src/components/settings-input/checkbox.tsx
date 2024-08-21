@@ -40,7 +40,8 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           {props.description && (
             <Tooltip
               classNames={{
-                base: 'pointer-events-none max-w-48',
+                base: 'pointer-events-none',
+                content: 'whitespace-pre-wrap',
               }}
               placement="left"
               size="sm"
