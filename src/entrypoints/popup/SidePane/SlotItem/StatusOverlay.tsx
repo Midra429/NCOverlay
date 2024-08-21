@@ -5,9 +5,7 @@ import { Spinner, cn } from '@nextui-org/react'
 export const StatusOverlay: React.FC<{ status: StateStatus }> = ({
   status,
 }) => {
-  if (status === 'ready' || status === 'error') {
-    return null
-  }
+  if (status === 'ready' || status === 'error') return
 
   return (
     <div

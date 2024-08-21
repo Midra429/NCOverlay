@@ -49,28 +49,36 @@ export class NCOSearcher {
   async autoLoad(
     input: AutoLoadInput,
     options: {
-      chapter?: boolean
+      normal?: boolean
       szbh?: boolean
+      chapter?: boolean
       jikkyo?: boolean
     } = {}
   ) {
     // 検索
     this.#trigger('searching')
 
-    const [searchResult, searchSyobocalResult] = await Promise.all([
-      // // ニコニコ動画 検索
-      // input.title
-      //   ? ncoApiProxy.search({
-      //       rawText: input.title,
-      //       duration: input.duration,
-      //       chapter: options.chapter,
-      //       szbh: options.szbh,
-      //       userAgent,
-      //     })
-      //   : null,
+    const rawText = [
+      input.title,
+      input.seasonText,
+      input.episodeText,
+      input.subtitle,
+    ]
+      .filter(Boolean)
+      .join(' ')
 
-      // ニコニコが死んでるので
-      null,
+    const [searchResult, searchSyobocalResult] = await Promise.all([
+      // ニコニコ動画 検索
+      rawText
+        ? ncoApiProxy.search({
+            rawText,
+            duration: input.duration,
+            normal: options.normal,
+            szbh: options.szbh,
+            chapter: options.chapter,
+            userAgent,
+          })
+        : null,
 
       // ニコニコ実況 過去ログ 検索
       options.jikkyo ? ncoApiProxy.searchSyobocal(input, { userAgent }) : null,
@@ -86,42 +94,43 @@ export class NCOSearcher {
 
     this.#trigger('searched')
 
-    // Logger.log('searchResult:', searchResult)
+    Logger.log('searchResult:', searchResult)
     Logger.log('searchSyobocalResult:', searchSyobocalResult)
 
     // ロード中のデータ
     const loadingSlotDetails: StateSlotDetail[] = []
 
-    // // ニコニコ動画
-    // if (searchResult) {
-    //   const slots: Slot[] = (
-    //     [
-    //       ['normal', searchResult.normal],
-    //       ['chapter', [searchResult.chapter[0]]],
-    //       ['szbh', searchResult.szbh],
-    //     ] as const
-    //   ).flatMap(([type, result]) => {
-    //     return result.map((video) => ({
-    //       type,
-    //       id: video.contentId,
-    //       status: 'loading',
-    //       threads: [],
-    //       info: {
-    //         id: video.contentId,
-    //         title: video.title,
-    //         duration: video.lengthSeconds,
-    //         date: new Date(video.startTime).getTime(),
-    //         count: {
-    //           view: video.viewCounter,
-    //           comment: video.commentCounter,
-    //         },
-    //         thumbnail: video.thumbnailUrl,
-    //       },
-    //     }))
-    //   })
+    // ニコニコ動画
+    if (searchResult) {
+      ;(
+        [
+          ['normal', searchResult.normal],
+          ['szbh', searchResult.szbh],
+          ['chapter', [searchResult.chapter[0]]],
+        ] as const
+      ).forEach(([type, result]) => {
+        result.forEach((video) => {
+          if (!video) return
 
-    //   loadingSlots.push(...slots)
-    // }
+          loadingSlotDetails.push({
+            type,
+            id: video.contentId,
+            status: 'loading',
+            info: {
+              id: video.contentId,
+              title: video.title,
+              duration: video.lengthSeconds,
+              date: new Date(video.startTime).getTime(),
+              count: {
+                view: video.viewCounter,
+                comment: video.commentCounter,
+              },
+              thumbnail: video.thumbnailUrl,
+            },
+          })
+        })
+      })
+    }
 
     // ニコニコ実況 過去ログ
     if (syobocalPrograms) {
@@ -133,13 +142,13 @@ export class NCOSearcher {
         .join(' ')
         .trim()
 
-      const details: StateSlotDetail[] = syobocalPrograms.map((program) => {
+      syobocalPrograms.forEach((program) => {
         const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
 
         const starttime = parseInt(program.StTime) * 1000
         const endtime = parseInt(program.EdTime) * 1000
 
-        return {
+        loadingSlotDetails.push({
           type: 'jikkyo',
           id,
           status: 'loading',
@@ -152,10 +161,8 @@ export class NCOSearcher {
               comment: 0,
             },
           },
-        }
+        })
       })
-
-      loadingSlotDetails.push(...details)
     }
 
     await this.#state.set('slotDetails', loadingSlotDetails)
@@ -164,29 +171,24 @@ export class NCOSearcher {
     this.#trigger('loading')
     await this.#state.set('status', 'loading')
 
-    const [commentsNormal, commentsChapter, commentsSzbh, commentsJikkyo] =
+    const [commentsNormal, commentsSzbh, commentsChapter, commentsJikkyo] =
       await Promise.all([
-        // // ニコニコ動画 コメント 取得
-        // searchResult
-        //   ? this.getNiconicoComments(
-        //       searchResult.normal.map(({ contentId }) => ({ contentId }))
-        //     )
-        //   : null,
-        // searchResult
-        //   ? this.getNiconicoComments(
-        //       searchResult.chapter.map(({ contentId }) => ({ contentId }))
-        //     )
-        //   : null,
-        // searchResult
-        //   ? this.getNiconicoComments(
-        //       searchResult.szbh.map(({ contentId }) => ({ contentId }))
-        //     )
-        //   : null,
-
-        // ニコニコが死んでるので
-        null,
-        null,
-        null,
+        // ニコニコ動画 コメント 取得
+        searchResult
+          ? this.getNiconicoComments(
+              searchResult.normal.map(({ contentId }) => ({ contentId }))
+            )
+          : null,
+        searchResult
+          ? this.getNiconicoComments(
+              searchResult.szbh.map(({ contentId }) => ({ contentId }))
+            )
+          : null,
+        searchResult
+          ? this.getNiconicoComments(
+              searchResult.chapter.map(({ contentId }) => ({ contentId }))
+            )
+          : null,
 
         // ニコニコ実況 過去ログ 取得
         syobocalPrograms
@@ -202,94 +204,101 @@ export class NCOSearcher {
 
     this.#trigger('loaded')
 
-    // Logger.log('commentsNormal:', commentsNormal)
-    // Logger.log('commentsChapter:', commentsChapter)
-    // Logger.log('commentsSzbh:', commentsSzbh)
+    Logger.log('commentsNormal:', commentsNormal)
+    Logger.log('commentsSzbh:', commentsSzbh)
+    Logger.log('commentsChapter:', commentsChapter)
     Logger.log('commentsJikkyo:', commentsJikkyo)
 
     const loadedSlots: StateSlot[] = []
     const updateSlotDetails: StateSlotDetailUpdate[] = []
 
-    // // 通常, コメント専用動画
-    // if (commentsNormal || commentsSzbh) {
-    //   const slots: SlotUpdate[] = (
-    //     [
-    //       [searchResult!.normal, commentsNormal],
-    //       [searchResult!.szbh, commentsSzbh],
-    //     ] as const
-    //   ).flatMap(([result, comments]) => {
-    //     if (!comments) return []
+    // 通常, コメント専用動画
+    if (commentsNormal || commentsSzbh) {
+      ;(
+        [
+          [searchResult!.normal, commentsNormal],
+          [searchResult!.szbh, commentsSzbh],
+        ] as const
+      ).forEach(([result, comments]) => {
+        comments?.forEach((comment, idx) => {
+          if (!comment) return
 
-    //     return comments.flatMap((comment, idx) => {
-    //       if (!comment) return []
+          const id = result[idx].contentId
+          const { data, threads } = comment
 
-    //       const { data, threads } = comment
+          loadedSlots.push({ id, threads })
 
-    //       return {
-    //         id: result[idx].contentId,
-    //         status: 'ready',
-    //         threads,
-    //         info: {
-    //           count: {
-    //             view: data.video.count.view,
-    //             comment: data.video.count.comment,
-    //           },
-    //           thumbnail: data.video.thumbnail.url,
-    //         },
-    //       }
-    //     })
-    //   })
+          updateSlotDetails.push({
+            id,
+            status: 'ready',
+            info: {
+              count: {
+                view: data.video.count.view,
+                comment: data.video.count.comment,
+              },
+              thumbnail: data.video.thumbnail.url,
+            },
+          })
+        })
+      })
+    }
 
-    //   updateSlots.push(...slots)
-    // }
+    // dアニメ・分割
+    if (
+      commentsChapter?.length &&
+      commentsChapter.every((_, idx, ary) => ary.at(idx - 1))
+    ) {
+      const data = searchResult!.chapter[0]
+      const id = data.contentId
 
-    // // dアニメ・分割
-    // if (commentsChapter?.every((_, idx, ary) => ary.at(idx - 1))) {
-    //   const data = searchResult!.chapter[0]
+      const matchSplit = data.title.match(
+        /^(?<title>.+)Chapter\.(?<chapter>[1-9])$/
+      )
+      const title = matchSplit!.groups!.title.trim()
+      const chapterTitle = `${title} Chapter.1 〜 ${commentsChapter.length}`
 
-    //   const matchSplit = data.title.match(
-    //     /^(?<title>.+)Chapter\.(?<chapter>[1-9])$/
-    //   )
-    //   const chapterTitle = `${matchSplit!.groups!.title.trim()} Chapter.1 〜 ${commentsChapter.length}`
+      let tmpOffset = 0
+      let totalDuration = 0
+      let totalCountView = 0
+      let totalCountComment = 0
+      let mergedThreads: V1Thread[] = []
 
-    //   let tmpOffset = 0
-    //   let totalDuration = 0
-    //   let totalCountView = 0
-    //   let totalCountComment = 0
-    //   let mergedThreads: V1Thread[] = []
+      for (const comment of commentsChapter) {
+        const { data, threads } = comment!
 
-    //   for (const comment of commentsChapter) {
-    //     const { data, threads } = comment!
+        if (tmpOffset) {
+          for (const thread of threads) {
+            for (const comment of thread.comments) {
+              comment.vposMs += tmpOffset
+            }
+          }
+        }
 
-    //     if (tmpOffset) {
-    //       for (const thread of threads) {
-    //         for (const comment of thread.comments) {
-    //           comment.vposMs += tmpOffset
-    //         }
-    //       }
-    //     }
+        tmpOffset += data.video.duration * 1000
+        totalDuration += data.video.duration
+        totalCountView += data.video.count.view
+        totalCountComment += data.video.count.comment
+        mergedThreads.push(...threads)
+      }
 
-    //     tmpOffset += data.video.duration * 1000
-    //     totalDuration += data.video.duration
-    //     totalCountView += data.video.count.view
-    //     totalCountComment += data.video.count.comment
-    //     mergedThreads.push(...threads)
-    //   }
+      loadedSlots.push({
+        id,
+        threads: mergedThreads,
+      })
 
-    //   updateSlots.push({
-    //     id: data.contentId,
-    //     status: 'ready',
-    //     threads: mergedThreads,
-    //     info: {
-    //       title: chapterTitle,
-    //       duration: totalDuration,
-    //       count: {
-    //         view: totalCountView,
-    //         comment: totalCountComment,
-    //       },
-    //     },
-    //   })
-    // }
+      updateSlotDetails.push({
+        id,
+        status: 'ready',
+        info: {
+          title: chapterTitle,
+          duration: totalDuration,
+          count: {
+            view: totalCountView,
+            comment: totalCountComment,
+          },
+        },
+      })
+    }
 
     // ニコニコ実況
     commentsJikkyo?.forEach((cmt) => {
@@ -339,47 +348,47 @@ export class NCOSearcher {
     })
   }
 
-  // /**
-  //  * ニコニコ動画のコメント取得
-  //  */
-  // async getNiconicoComments(
-  //   params: {
-  //     contentId: string
-  //     when?: number
-  //   }[]
-  // ): Promise<
-  //   ({
-  //     data: VideoData
-  //     threads: V1Thread[]
-  //   } | null)[]
-  // > {
-  //   // 動画情報取得
-  //   const videos = await Promise.all(
-  //     params.map(({ contentId }) => {
-  //       return ncoApiProxy.niconico.video(contentId)
-  //     })
-  //   )
+  /**
+   * ニコニコ動画のコメント取得
+   */
+  async getNiconicoComments(
+    params: {
+      contentId: string
+      when?: number
+    }[]
+  ): Promise<
+    ({
+      data: VideoData
+      threads: V1Thread[]
+    } | null)[]
+  > {
+    // 動画情報取得
+    const videos = await Promise.all(
+      params.map(({ contentId }) => {
+        return ncoApiProxy.niconico.video(contentId)
+      })
+    )
 
-  //   // コメント取得
-  //   const threadsData = await Promise.all(
-  //     videos.map((video, idx) => {
-  //       return video
-  //         ? ncoApiProxy.niconico.threads(video.comment.nvComment, {
-  //             when: params[idx].when,
-  //           })
-  //         : null
-  //     })
-  //   )
+    // コメント取得
+    const threadsData = await Promise.all(
+      videos.map((video, idx) => {
+        return video
+          ? ncoApiProxy.niconico.threads(video.comment.nvComment, {
+              when: params[idx].when,
+            })
+          : null
+      })
+    )
 
-  //   return threadsData.map((val, idx) => {
-  //     return val
-  //       ? {
-  //           data: videos[idx]!,
-  //           threads: val.threads,
-  //         }
-  //       : null
-  //   })
-  // }
+    return threadsData.map((val, idx) => {
+      return val
+        ? {
+            data: videos[idx]!,
+            threads: val.threads,
+          }
+        : null
+    })
+  }
 
   /**
    * ニコニコ実況 過去ログを取得
@@ -408,7 +417,7 @@ export class NCOSearcher {
           },
           {
             compatV1Thread: true,
-            userAgent: EXT_USER_AGENT,
+            userAgent,
           }
         )
       })

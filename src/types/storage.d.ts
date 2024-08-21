@@ -2,26 +2,41 @@ import type { VodKey, PluginKey } from '@/types/constants'
 import type { NgSettings } from '@/utils/extension/getNgSettings'
 import type { NCOStateItems } from '@/ncoverlay/state'
 
-/** <= v2.x.x */
-export type StorageItems_v0 = {
-  /** 表示・非表示 */
-  enable: boolean
-  /** 不透明度 */
-  opacity: number
-  /** 低パフォーマンスモード */
-  lowPerformance: boolean
-  /** タイトルの一致判定を厳密にする */
-  strictMatch: boolean
-  /** コメント専用動画のコメントを表示 */
-  szbhMethod: boolean
-  /** ニコニコのNG設定を使用 */
-  useNgList: boolean
-  /** アップデート後に更新内容を表示 */
-  showChangelog: boolean
+/** < v3.10.0 */
+export type StorageItems_v1 = {
+  /**
+   * コメント:自動読み込み
+   * @default true
+   */
+  'settings:comment:autoLoad': boolean
+
+  /**
+   * コメント:自動読み込み:コメント専用動画を含める
+   * @default false
+   */
+  'settings:comment:autoLoadSzbh': boolean
+
+  /**
+   * コメント:自動読み込み:dアニメストアのチャプター形式(分割)を含める
+   * @default false
+   */
+  'settings:comment:autoLoadChapter': boolean
+
+  /**
+   * コメント:自動読み込み:ニコニコ実況(過去ログ)を含める
+   * @default false
+   */
+  'settings:comment:autoLoadJikkyo': boolean
+
+  /**
+   * 実験的な機能:タイトル解析でAIを使用する
+   * @default false
+   */
+  'settings:experimental:useAiParser': boolean
 }
 
-/** v3.0.0 <= */
-export type StorageItems_v1 = {
+/** v3.10.0 <= */
+export type StorageItems_v2 = {
   /**
    * テーマ
    * @default 'auto'
@@ -56,25 +71,7 @@ export type StorageItems_v1 = {
    * コメント:自動読み込み
    * @default true
    */
-  'settings:comment:autoLoad': boolean
-
-  /**
-   * コメント:自動読み込み:dアニメストアのチャプター形式(分割)を含める
-   * @default false
-   */
-  'settings:comment:autoLoadChapter': boolean
-
-  /**
-   * コメント:自動読み込み:コメント専用動画を含める
-   * @default false
-   */
-  'settings:comment:autoLoadSzbh': boolean
-
-  /**
-   * コメント:自動読み込み:ニコニコ実況(過去ログ)を含める
-   * @default false
-   */
-  'settings:comment:autoLoadJikkyo': boolean
+  'settings:comment:autoLoads': ('normal' | 'szbh' | 'chapter' | 'jikkyo')[]
 
   /**
    * コメント:NG設定を使用
@@ -199,15 +196,9 @@ export type StorageItems_v1 = {
    * @default []
    */
   'settings:plugins': PluginKey[]
-
-  // /**
-  //  * 実験的な機能:タイトル解析でAIを使用する
-  //  * @default false
-  //  */
-  // 'settings:experimental:useAiParser': boolean
 }
 
-export type StorageItems = StorageItems_v1 & {
+export type StorageItems = StorageItems_v2 & {
   '_migrate_version': number
 
   /**

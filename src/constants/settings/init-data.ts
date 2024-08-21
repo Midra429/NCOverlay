@@ -50,8 +50,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '動画配信サービス',
         description: '選択した動画配信サービスで拡張機能を有効にします。',
         options: Object.entries(VODS).map(([key, value]) => ({
-          label: value,
           value: key as VodKey,
+          label: value,
         })),
       },
       {
@@ -86,34 +86,16 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     icon: MessageSquareTextIcon,
     items: [
       {
-        settingsKey: 'settings:comment:autoLoad',
-        inputType: 'toggle',
+        settingsKey: 'settings:comment:autoLoads',
+        inputType: 'checkbox',
         label: '自動読み込み',
+        options: [
+          { value: 'normal', label: '通常/dアニメ' },
+          { value: 'chapter', label: 'dアニメ(分割)' },
+          { value: 'szbh', label: 'コメント専用' },
+          { value: 'jikkyo', label: '実況' },
+        ],
       },
-      // {
-      //   settingsKey: 'settings:comment:autoLoadChapter',
-      //   inputType: 'toggle',
-      //   label: '自動: dアニメストア (分割)',
-      //   description: '自動読み込みでdアニメストアの分割された動画を含めます。',
-      // },
-      // {
-      //   settingsKey: 'settings:comment:autoLoadSzbh',
-      //   inputType: 'toggle',
-      //   label: '自動: コメント専用動画',
-      //   description: '自動読み込みでコメント専用動画を含めます。',
-      // },
-      {
-        settingsKey: 'settings:comment:autoLoadJikkyo',
-        inputType: 'toggle',
-        label: '自動: ニコニコ実況',
-        description: '自動読み込みでニコニコ実況(過去ログ)を含めます。',
-      },
-      // {
-      //   settingsKey: 'settings:comment:useNglist',
-      //   inputType: 'toggle',
-      //   label: 'NG設定を使用',
-      //   description: 'ログイン中のニコニコアカウントのNG設定を使用します。',
-      // },
       // {
       //   settingsKey: 'settings:comment:amount',
       //   inputType: 'range',
@@ -244,14 +226,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   //   id: 'experimental',
   //   title: '実験機能',
   //   icon: FlaskConicalIcon,
-  //   items: [
-  //     {
-  //       settingsKey: 'settings:experimental:useAiParser',
-  //       inputType: 'toggle',
-  //       label: 'タイトル解析でAIを使用する',
-  //       description: 'VODのタイトル解析でAI（Gemini 1.5 Flash）を使用します。',
-  //     },
-  //   ],
+  //   items: [],
   // },
   {
     id: 'plugins',

@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-
 /**
  * 拡張機能のビルド時に生成されるID
  */

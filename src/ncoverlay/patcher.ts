@@ -66,8 +66,10 @@ export class NCOPatcher {
 
       this.#nco.clear()
 
+      const autoLoads = await settings.get('settings:comment:autoLoads')
+
       // 自動読み込み
-      if (await settings.get('settings:comment:autoLoad')) {
+      if (autoLoads.length) {
         await this.#nco.state.set('status', 'searching')
 
         try {
@@ -148,13 +150,12 @@ export class NCOPatcher {
           Logger.log('state.info:', '\n' + stateInfo)
 
           if (input) {
-            const [chapter, szbh, jikkyo] = await Promise.all([
-              settings.get('settings:comment:autoLoadChapter'),
-              settings.get('settings:comment:autoLoadSzbh'),
-              settings.get('settings:comment:autoLoadJikkyo'),
-            ])
-
-            await this.#nco.searcher.autoLoad(input, { chapter, szbh, jikkyo })
+            await this.#nco.searcher.autoLoad(input, {
+              normal: autoLoads.includes('normal'),
+              szbh: autoLoads.includes('szbh'),
+              chapter: autoLoads.includes('chapter'),
+              jikkyo: autoLoads.includes('jikkyo'),
+            })
           }
         } catch (err) {
           Logger.error('comment:autoLoad', err)

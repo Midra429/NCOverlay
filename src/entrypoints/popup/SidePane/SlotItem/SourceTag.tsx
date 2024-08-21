@@ -19,15 +19,13 @@ const SOURCE_TAG_NAME: {
   [k in Exclude<SourceTagProps['source'], 'normal'>]: string
 } = {
   danime: 'dアニメ',
-  chapter: 'dアニメ･分割',
-  szbh: 'SZBH',
+  chapter: 'dアニメ(分割)',
+  szbh: 'コメント専用',
   jikkyo: '実況',
 }
 
 export const SourceTag: React.FC<SourceTagProps> = ({ source }) => {
-  if (source === 'normal') {
-    return null
-  }
+  if (source === 'normal') return
 
   return (
     <span

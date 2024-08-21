@@ -59,10 +59,9 @@ const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
     return (
       <Image
         classNames={{
-          wrapper: 'h-full bg-foreground-300 p-[1px]',
-          img: 'aspect-video h-full object-contain',
+          wrapper: 'h-full rounded-lg bg-foreground-300 p-[1px]',
+          img: 'aspect-video h-full rounded-lg object-contain',
         }}
-        radius="lg"
         src={detail.info.thumbnail}
       />
     )
@@ -171,9 +170,7 @@ const SlotItemOffset: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
     const ofs = Math.round((detail.offsetMs ?? 0) / 1000)
 
-    if (ofs === 0) {
-      return null
-    }
+    if (ofs === 0) return
 
     return (
       <div className="flex h-full flex-row items-center gap-1">

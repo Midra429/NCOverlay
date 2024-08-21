@@ -30,7 +30,7 @@ import { ItemButton } from '@/components/item-button'
 type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
 
 export type Key = {
-  [key in SettingsNgKey]: StorageItems[key] extends any[] ? key : never
+  [key in SettingsNgKey]: StorageItems[key] extends unknown[] ? key : never
 }[SettingsNgKey]
 
 export type Props<K extends Key = Key> = SettingsInputBaseProps<

@@ -16,10 +16,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:capture:method': 'window',
 
   // コメント
-  'settings:comment:autoLoad': true,
-  'settings:comment:autoLoadChapter': true,
-  'settings:comment:autoLoadSzbh': true,
-  'settings:comment:autoLoadJikkyo': true,
+  'settings:comment:autoLoads': ['normal', 'chapter'],
   'settings:comment:useNglist': false,
   'settings:comment:amount': 1,
   'settings:comment:opacity': 100,
@@ -46,7 +43,4 @@ export const SETTINGS_DEFAULT: SettingItems = {
 
   // プラグイン
   'settings:plugins': [],
-
-  // 実験的な機能
-  // 'settings:experimental:useAiParser': false,
 }
