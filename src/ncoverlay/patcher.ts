@@ -100,9 +100,7 @@ export class NCOPatcher {
                 })
               )
             } else {
-              const { title, season } = ncoParser.extract(
-                `${info.workTitle} 1話 サブタイトル`
-              )
+              const { title, season } = ncoParser.extract(info.workTitle)
 
               extracted.title = title
               extracted.season = season
