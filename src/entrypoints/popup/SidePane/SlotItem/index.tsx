@@ -27,34 +27,57 @@ export type SlotItemProps = {
 // サムネイル
 const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
-    const formattedDuration = formatDuration(detail.info.duration)
+    const duration = (
+      <div
+        className={cn(
+          'absolute bottom-1 right-1 z-10',
+          'flex items-center',
+          'px-1 py-[1px]',
+          'bg-black/40 backdrop-blur-md',
+          'border-1 border-white/25',
+          'rounded-md'
+        )}
+      >
+        <span className="text-tiny text-white">
+          {formatDuration(detail.info.duration)}
+        </span>
+      </div>
+    )
 
     if (detail.type === 'jikkyo') {
       const jkChId = detail.id.split(':')[0] as JikkyoChannelId
 
+      // 実況のチャンネル情報
       return (
-        // 実況のチャンネル情報
-        <div className="h-full rounded-lg bg-content3 p-[1px]">
-          <div
-            className={cn(
-              'flex flex-col items-center justify-center gap-0.5',
-              'aspect-video h-full overflow-hidden rounded-lg',
-              'px-1',
-              'bg-jikkyo dark:bg-jikkyo-700',
-              'select-none'
-            )}
-          >
-            <span className="text-tiny text-white/80 drop-shadow-sm">
-              {jkChId}
-            </span>
-            <span className="line-clamp-1 text-small font-bold text-white drop-shadow-md">
-              {JIKKYO_CHANNELS[jkChId!]}
-            </span>
-            <span className="text-tiny text-white/80 drop-shadow-sm">
-              ({formattedDuration})
-            </span>
+        <>
+          <div className="h-full rounded-lg bg-content3 p-[1px]">
+            <div
+              className={cn(
+                'relative',
+                'flex flex-col items-center justify-center gap-0.5',
+                'aspect-video h-full overflow-hidden rounded-lg',
+                'px-1',
+                'bg-jikkyo dark:bg-jikkyo-700',
+                'select-none'
+              )}
+            >
+              <span
+                className={cn(
+                  'absolute left-1 top-1',
+                  'px-1',
+                  'text-tiny text-white/80'
+                )}
+              >
+                {jkChId}
+              </span>
+              <span className="line-clamp-1 text-small font-bold text-white drop-shadow-md">
+                {JIKKYO_CHANNELS[jkChId!]}
+              </span>
+            </div>
           </div>
-        </div>
+
+          {duration}
+        </>
       )
     }
 
@@ -69,19 +92,7 @@ const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
           draggable={false}
         />
 
-        <div
-          className={cn(
-            'absolute bottom-1 right-1 z-10',
-            'flex items-center',
-            'px-1 py-[1px]',
-            'bg-black/40 backdrop-blur-md',
-            'border-1 border-white/25',
-            'shadow-small',
-            'rounded-md'
-          )}
-        >
-          <span className="text-tiny text-white">{formattedDuration}</span>
-        </div>
+        {duration}
       </>
     )
   }, [detail.id, detail.type, detail.info])
