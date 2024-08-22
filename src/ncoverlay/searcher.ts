@@ -220,11 +220,11 @@ export class NCOSearcher {
           [searchResult!.szbh, commentsSzbh],
         ] as const
       ).forEach(([result, comments]) => {
-        comments?.forEach((comment, idx) => {
-          if (!comment) return
+        comments?.forEach((cmt, idx) => {
+          if (!cmt) return
 
           const id = result[idx].contentId
-          const { data, threads } = comment
+          const { data, threads } = cmt
 
           loadedSlots.push({ id, threads })
 
@@ -243,7 +243,7 @@ export class NCOSearcher {
       })
     }
 
-    // dアニメ・分割
+    // dアニメ(分割)
     if (
       commentsChapter?.length &&
       commentsChapter.every((_, idx, ary) => ary.at(idx - 1))
@@ -323,19 +323,22 @@ export class NCOSearcher {
       })
     })
 
-    for (const { id } of loadingSlotDetails) {
-      const loadedSlotIdx = loadedSlots.findIndex((v) => v.id === id)
-      const updateDetail = updateSlotDetails.find((v) => v.id === id)
+    const slots: StateSlot[] = []
 
-      if (loadedSlotIdx !== -1 && updateDetail?.info?.count?.comment) {
-        await this.#state.update('slotDetails', ['id'], updateDetail)
+    for (const { id } of loadingSlotDetails) {
+      const slot = loadedSlots.find((v) => v.id === id)
+      const detail = updateSlotDetails.find((v) => v.id === id)
+
+      if (slot && detail?.info?.count?.comment) {
+        slots.push(slot)
+
+        await this.#state.update('slotDetails', ['id'], detail)
       } else {
-        loadedSlots.splice(loadedSlotIdx, 1)
         await this.#state.remove('slotDetails', { id })
       }
     }
 
-    await this.#state.set('slots', loadedSlots)
+    await this.#state.set('slots', slots)
 
     this.#trigger('ready')
 
