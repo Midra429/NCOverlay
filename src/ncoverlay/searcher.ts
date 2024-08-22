@@ -67,7 +67,7 @@ export class NCOSearcher {
       .filter(Boolean)
       .join(' ')
 
-    const [searchResult, searchSyobocalResult] = await Promise.all([
+    const [searchResults, searchSyobocalResults] = await Promise.all([
       // ニコニコ動画 検索
       rawText
         ? ncoApiProxy.search({
@@ -87,45 +87,45 @@ export class NCOSearcher {
     const currentTime = Date.now() / 1000
 
     const syobocalPrograms =
-      searchSyobocalResult &&
-      searchSyobocalResult.programs.filter(
+      searchSyobocalResults &&
+      searchSyobocalResults.programs.filter(
         (val) => parseInt(val.EdTime) < currentTime
       )
 
     this.#trigger('searched')
 
-    Logger.log('searchResult:', searchResult)
-    Logger.log('searchSyobocalResult:', searchSyobocalResult)
+    Logger.log('searchResults:', searchResults)
+    Logger.log('searchSyobocalResults:', searchSyobocalResults)
 
     // ロード中のデータ
     const loadingSlotDetails: StateSlotDetail[] = []
 
     // ニコニコ動画
-    if (searchResult) {
+    if (searchResults) {
       ;(
         [
-          ['normal', searchResult.normal],
-          ['szbh', searchResult.szbh],
-          ['chapter', [searchResult.chapter[0]]],
+          ['normal', searchResults.normal],
+          ['szbh', searchResults.szbh],
+          ['chapter', [searchResults.chapter[0]]],
         ] as const
-      ).forEach(([type, result]) => {
-        result.forEach((video) => {
-          if (!video) return
+      ).forEach(([type, results]) => {
+        results.forEach((result) => {
+          if (!result) return
 
           loadingSlotDetails.push({
             type,
-            id: video.contentId,
+            id: result.contentId,
             status: 'loading',
             info: {
-              id: video.contentId,
-              title: video.title,
-              duration: video.lengthSeconds,
-              date: new Date(video.startTime).getTime(),
+              id: result.contentId,
+              title: result.title,
+              duration: result.lengthSeconds,
+              date: new Date(result.startTime).getTime(),
               count: {
-                view: video.viewCounter,
-                comment: video.commentCounter,
+                view: result.viewCounter,
+                comment: result.commentCounter,
               },
-              thumbnail: video.thumbnailUrl,
+              thumbnail: result.thumbnailUrl,
             },
           })
         })
@@ -135,9 +135,9 @@ export class NCOSearcher {
     // ニコニコ実況 過去ログ
     if (syobocalPrograms) {
       const title = [
-        searchSyobocalResult.title.Title,
+        searchSyobocalResults.title.Title,
         `#${input.episodeNumber}`,
-        searchSyobocalResult.subtitle ?? '',
+        searchSyobocalResults.subtitle ?? '',
       ]
         .join(' ')
         .trim()
@@ -174,19 +174,19 @@ export class NCOSearcher {
     const [commentsNormal, commentsSzbh, commentsChapter, commentsJikkyo] =
       await Promise.all([
         // ニコニコ動画 コメント 取得
-        searchResult
+        searchResults
           ? this.getNiconicoComments(
-              searchResult.normal.map(({ contentId }) => ({ contentId }))
+              searchResults.normal.map(({ contentId }) => ({ contentId }))
             )
           : null,
-        searchResult
+        searchResults
           ? this.getNiconicoComments(
-              searchResult.szbh.map(({ contentId }) => ({ contentId }))
+              searchResults.szbh.map(({ contentId }) => ({ contentId }))
             )
           : null,
-        searchResult
+        searchResults
           ? this.getNiconicoComments(
-              searchResult.chapter.map(({ contentId }) => ({ contentId }))
+              searchResults.chapter.map(({ contentId }) => ({ contentId }))
             )
           : null,
 
@@ -216,14 +216,14 @@ export class NCOSearcher {
     if (commentsNormal || commentsSzbh) {
       ;(
         [
-          [searchResult!.normal, commentsNormal],
-          [searchResult!.szbh, commentsSzbh],
+          [searchResults!.normal, commentsNormal],
+          [searchResults!.szbh, commentsSzbh],
         ] as const
-      ).forEach(([result, comments]) => {
+      ).forEach(([results, comments]) => {
         comments?.forEach((cmt, idx) => {
           if (!cmt) return
 
-          const id = result[idx].contentId
+          const id = results[idx].contentId
           const { data, threads } = cmt
 
           loadedSlots.push({ id, threads })
@@ -236,7 +236,10 @@ export class NCOSearcher {
                 view: data.video.count.view,
                 comment: data.video.count.comment,
               },
-              thumbnail: data.video.thumbnail.url,
+              thumbnail:
+                data.video.thumbnail.largeUrl ||
+                data.video.thumbnail.middleUrl ||
+                data.video.thumbnail.url,
             },
           })
         })
@@ -248,10 +251,11 @@ export class NCOSearcher {
       commentsChapter?.length &&
       commentsChapter.every((_, idx, ary) => ary.at(idx - 1))
     ) {
-      const data = searchResult!.chapter[0]
-      const id = data.contentId
+      const result = searchResults!.chapter[0]
+      const id = result.contentId
+      const data = commentsChapter[0]!.data
 
-      const matchSplit = data.title.match(
+      const matchSplit = result.title.match(
         /^(?<title>.+)Chapter\.(?<chapter>[1-9])$/
       )
       const title = matchSplit!.groups!.title.trim()
@@ -296,6 +300,10 @@ export class NCOSearcher {
             view: totalCountView,
             comment: totalCountComment,
           },
+          thumbnail:
+            data.video.thumbnail.largeUrl ||
+            data.video.thumbnail.middleUrl ||
+            data.video.thumbnail.url,
         },
       })
     }
