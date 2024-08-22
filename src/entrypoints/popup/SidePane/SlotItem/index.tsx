@@ -27,6 +27,8 @@ export type SlotItemProps = {
 // サムネイル
 const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
+    const formattedDuration = formatDuration(detail.info.duration)
+
     if (detail.type === 'jikkyo') {
       const jkChId = detail.id.split(':')[0] as JikkyoChannelId
 
@@ -49,7 +51,7 @@ const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
               {JIKKYO_CHANNELS[jkChId!]}
             </span>
             <span className="text-tiny text-white/80 drop-shadow-sm">
-              ({formatDuration(detail.info.duration)})
+              ({formattedDuration})
             </span>
           </div>
         </div>
@@ -57,13 +59,30 @@ const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
     }
 
     return (
-      <Image
-        classNames={{
-          wrapper: 'h-full rounded-lg bg-foreground-300 p-[1px]',
-          img: 'aspect-video h-full rounded-lg object-contain',
-        }}
-        src={detail.info.thumbnail}
-      />
+      <>
+        <Image
+          classNames={{
+            wrapper: 'h-full rounded-lg bg-foreground-300 p-[1px]',
+            img: 'aspect-video h-full rounded-lg object-cover',
+          }}
+          src={detail.info.thumbnail}
+          draggable={false}
+        />
+
+        <div
+          className={cn(
+            'absolute bottom-1 right-1 z-10',
+            'flex items-center',
+            'px-1 py-[1px]',
+            'bg-black/40 backdrop-blur-md',
+            'border-1 border-white/25',
+            'shadow-small',
+            'rounded-md'
+          )}
+        >
+          <span className="text-tiny text-white">{formattedDuration}</span>
+        </div>
+      </>
     )
   }, [detail.id, detail.type, detail.info])
 
