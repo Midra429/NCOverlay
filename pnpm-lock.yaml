@@ -12,11 +12,11 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
       '@midra/nco-api':
-        specifier: ^1.3.8
-        version: 1.3.8
+        specifier: ^1.3.13
+        version: 1.3.13
       '@midra/nco-parser':
-        specifier: ^1.0.10
-        version: 1.0.10
+        specifier: ^1.0.11
+        version: 1.0.11
       '@nextui-org/react':
         specifier: ^2.4.6
         version: 2.4.6(@types/react@18.3.4)(framer-motion@11.3.30(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.10)
@@ -574,11 +574,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@midra/nco-api@1.3.8':
-    resolution: {integrity: sha512-qQ4h2PFauWhfCSlWr5bhmlMtNelYAzXP9NW7ypoub7sU9oZGiIpfKpytUhYEWdvsEHBZfgDDMinmDjataDzbiA==}
+  '@midra/nco-api@1.3.13':
+    resolution: {integrity: sha512-ffgU+fV0q/YhQiXVhYzip4hbSKnl0P8s+ZMDpAjYwpUhljJBfWQtV26K2O60dImBJvMU0MGJob+KZ/2u63brOg==}
 
-  '@midra/nco-parser@1.0.10':
-    resolution: {integrity: sha512-RemITVJGJVKyWIty8UWQ8bWHfkfM6AWHrmDBOSE+NPh47jEpLW42Clh51brMru64IZ0MeeUFxfga3LbytJLJFA==}
+  '@midra/nco-parser@1.0.11':
+    resolution: {integrity: sha512-QhpzwmSjzVbaJjjCTLWUeELbIuR9VdAOJC4rM/xg+0d2bQlFeVuLBUFDJmg2wztDnf6oD+npjW+0B8jLLHRRtQ==}
 
   '@nextui-org/accordion@2.0.38':
     resolution: {integrity: sha512-kFCZU1VaKkUI295Fg3NxuQR2+kZ5vTH4ftIs0oByrOs0+l14dVQGFOd9ZV402fHNykZJt7Sk6oWjTp4Qwl83JA==}
@@ -2997,8 +2997,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  micromatch@4.0.7:
-    resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==}
+  micromatch@4.0.8:
+    resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
   mimic-fn@2.1.0:
@@ -3563,8 +3563,8 @@ packages:
   proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
 
-  publish-browser-extension@2.2.0:
-    resolution: {integrity: sha512-scP2QF7h5J+8dvAf8eQAUVWGv25C3OFkJmWUoVqSpn8wRnMcKFeLIDtlhWuosAF0dLJ4vVVC4NtgsI9V3qunVQ==}
+  publish-browser-extension@2.2.1:
+    resolution: {integrity: sha512-XedtF+ykwKzC5BHkPB0omlG9SSwluGNuk/2lFSGss3N7uf78/hENQLeNsPS41+BP4/npqiNeCeyqeZgRjvviVQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
@@ -4649,11 +4649,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@midra/nco-api@1.3.8':
+  '@midra/nco-api@1.3.13':
     dependencies:
-      '@midra/nco-parser': 1.0.10
+      '@midra/nco-parser': 1.0.11
 
-  '@midra/nco-parser@1.0.10':
+  '@midra/nco-parser@1.0.11':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
 
@@ -5754,7 +5754,7 @@ snapshots:
     dependencies:
       '@react-aria/interactions': 3.21.3(react@18.3.1)
       '@react-aria/utils': 3.24.1(react@18.3.1)
-      '@react-types/shared': 3.23.1(react@18.3.1)
+      '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.12
       clsx: 2.1.1
       react: 18.3.1
@@ -5832,7 +5832,7 @@ snapshots:
     dependencies:
       '@react-aria/ssr': 3.9.5(react@18.3.1)
       '@react-aria/utils': 3.24.1(react@18.3.1)
-      '@react-types/shared': 3.23.1(react@18.3.1)
+      '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.12
       react: 18.3.1
 
@@ -7439,7 +7439,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.7
+      micromatch: 4.0.8
 
   fastq@1.17.1:
     dependencies:
@@ -7942,7 +7942,7 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  micromatch@4.0.7:
+  micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
@@ -8431,7 +8431,7 @@ snapshots:
 
   proto-list@1.2.4: {}
 
-  publish-browser-extension@2.2.0:
+  publish-browser-extension@2.2.1:
     dependencies:
       cac: 6.7.14
       cli-highlight: 2.1.11
@@ -8839,7 +8839,7 @@ snapshots:
       is-glob: 4.0.3
       jiti: 1.21.6
       lilconfig: 2.1.0
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.0.1
@@ -9165,7 +9165,7 @@ snapshots:
       ora: 8.0.1
       picocolors: 1.0.1
       prompts: 2.4.2
-      publish-browser-extension: 2.2.0
+      publish-browser-extension: 2.2.1
       unimport: 3.11.0(rollup@4.21.0)
       vite: 5.4.2(@types/node@22.5.0)(sass@1.77.8)
       vite-node: 2.0.5(@types/node@22.5.0)(sass@1.77.8)

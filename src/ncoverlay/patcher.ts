@@ -80,6 +80,8 @@ export class NCOPatcher {
           if (info) {
             info.duration = Math.floor(info.duration)
 
+            let rawText: string
+
             let extracted: ReturnType<typeof ncoParser.extract> = {
               normalized: '',
               title: null,
@@ -89,6 +91,8 @@ export class NCOPatcher {
             }
 
             if ('rawText' in info) {
+              rawText = info.rawText
+
               extracted = ncoParser.extract(
                 ncoParser.normalizeAll(info.rawText, {
                   adjust: {
@@ -103,6 +107,10 @@ export class NCOPatcher {
               const { title, season } = ncoParser.extract(
                 `${info.workTitle} #01`
               )
+
+              rawText = [info.workTitle, info.episodeTitle]
+                .filter(Boolean)
+                .join(' ')
 
               extracted.title = title
               extracted.season = season
@@ -125,6 +133,7 @@ export class NCOPatcher {
             }
 
             input = {
+              rawText,
               title: extracted.title,
               seasonText: extracted.season?.text,
               seasonNumber: extracted.season?.number,

@@ -90,10 +90,10 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'checkbox',
         label: '自動読み込み',
         options: [
-          { value: 'normal', label: '通常/dアニメ' },
-          { value: 'chapter', label: 'dアニメ(分割)' },
+          { value: 'normal', label: '通常 / dアニメ' },
+          { value: 'chapter', label: 'dアニメ (分割)' },
           { value: 'szbh', label: 'コメント専用' },
-          { value: 'jikkyo', label: '実況(過去ログ)' },
+          { value: 'jikkyo', label: '実況 (過去ログ)' },
         ],
       },
       // {

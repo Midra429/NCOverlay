@@ -16,6 +16,7 @@ import { Logger } from '@/utils/logger'
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 export type AutoLoadInput = {
+  rawText: string
   title?: string | null
   seasonText?: string | null
   seasonNumber?: number | null
@@ -58,27 +59,16 @@ export class NCOSearcher {
     // 検索
     this.#trigger('searching')
 
-    const rawText = [
-      input.title,
-      input.seasonText,
-      input.episodeText,
-      input.subtitle,
-    ]
-      .filter(Boolean)
-      .join(' ')
-
     const [searchResults, searchSyobocalResults] = await Promise.all([
       // ニコニコ動画 検索
-      rawText
-        ? ncoApiProxy.search({
-            rawText,
-            duration: input.duration,
-            normal: options.normal,
-            szbh: options.szbh,
-            chapter: options.chapter,
-            userAgent,
-          })
-        : null,
+      ncoApiProxy.search({
+        rawText: input.rawText,
+        duration: input.duration,
+        normal: options.normal,
+        szbh: options.szbh,
+        chapter: options.chapter,
+        userAgent,
+      }),
 
       // ニコニコ実況 過去ログ 検索
       options.jikkyo ? ncoApiProxy.searchSyobocal(input, { userAgent }) : null,
