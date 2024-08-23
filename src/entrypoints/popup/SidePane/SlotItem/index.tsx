@@ -145,7 +145,7 @@ const SlotItemTitle: React.FC<SlotItemProps> = ({ detail }) => {
           isExternal
         >
           <span
-            className="line-clamp-3 text-tiny font-bold"
+            className="line-clamp-3 break-all text-tiny font-bold"
             title={
               190 < new Blob([detail.info.title]).size
                 ? detail.info.title

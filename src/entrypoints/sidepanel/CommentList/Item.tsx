@@ -10,11 +10,11 @@ import {
   cn,
 } from '@nextui-org/react'
 import { CopyIcon, PlusIcon } from 'lucide-react'
-import { readableColor } from 'color2k'
 
 import { NICONICO_COLOR_COMMANDS, COLOR_CODE_REGEXP } from '@/constants'
 
 import { formatDuration, formatDate } from '@/utils/format'
+import { readableColor } from '@/utils/color'
 import { settings } from '@/utils/settings/extension'
 
 const commentComamndClasses: Record<string, string> = {
@@ -73,7 +73,7 @@ export const Item: React.FC<{
       }
     })
 
-    return [cn(classNames), bgColor, fgColor]
+    return [classNames, bgColor, fgColor]
   }, [comment.commands])
 
   const formattedDuration = useMemo(() => {
@@ -139,14 +139,12 @@ export const Item: React.FC<{
           {/* コメント */}
           <ItemCell className={cn('w-[calc(100%-5rem)]', 'cursor-pointer')}>
             <span
-              className={cn(
-                'line-clamp-2 !break-words break-keep',
-                commentClass
-              )}
+              className={cn('line-clamp-2 break-all', commentClass)}
               style={{
                 backgroundColor: commentBgColor,
                 color: commentFgColor,
               }}
+              title={comment.body}
             >
               {comment.body}
             </span>
