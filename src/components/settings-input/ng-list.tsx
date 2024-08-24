@@ -65,14 +65,15 @@ const filterNgSettingsContents = (contents: (NgSettingsContent | null)[]) => {
 }
 
 const HeaderCell: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLSpanElement>>
+  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
 > = ({ className, ...props }) => {
   return (
-    <span
+    <div
       {...props}
       className={cn(
+        'flex items-center justify-center',
         'flex-shrink-0 py-1.5',
-        'bg-content2 text-center text-content2-foreground',
+        'bg-content2 text-content2-foreground',
         'border-b-1 border-divider',
         'text-tiny font-bold',
         '[&:not(:first-child)]:border-l-1',
@@ -83,10 +84,10 @@ const HeaderCell: React.FC<
 }
 
 const ItemCell: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLSpanElement>>
+  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
 > = ({ className, ...props }) => {
   return (
-    <span
+    <div
       {...props}
       className={cn(
         'flex',

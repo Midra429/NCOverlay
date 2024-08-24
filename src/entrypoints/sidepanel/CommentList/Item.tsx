@@ -28,11 +28,18 @@ const commentComamndClasses: Record<string, string> = {
   big: cn('text-[110%] font-bold'),
 }
 
+const nicoruColors: Record<number, string> = {
+  1: 'rgb(252 216 66 / 10%)',
+  2: 'rgb(252 216 66 / 20%)',
+  3: 'rgb(252 216 66 / 35%)',
+  4: 'rgb(252 216 66 / 50%)',
+}
+
 const ItemCell: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLSpanElement>>
+  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
 > = ({ className, ...props }) => {
   return (
-    <span
+    <div
       {...props}
       className={cn(
         'flex',
@@ -84,6 +91,13 @@ export const Item: React.FC<{
     return formatDate(comment.postedAt)
   }, [comment.postedAt])
 
+  const nicoruColor = useMemo(() => {
+    if (10 <= comment.nicoruCount) return nicoruColors[4]
+    if (6 <= comment.nicoruCount) return nicoruColors[3]
+    if (3 <= comment.nicoruCount) return nicoruColors[2]
+    if (1 <= comment.nicoruCount) return nicoruColors[1]
+  }, [comment.nicoruCount])
+
   const copyCommentBody = useCallback(
     () => navigator.clipboard.writeText(comment.body),
     [comment.body]
@@ -132,12 +146,16 @@ export const Item: React.FC<{
               'w-[5rem] justify-center font-mono',
               'cursor-pointer'
             )}
+            style={{ backgroundColor: nicoruColor }}
           >
             <span className="line-clamp-1">{formattedDuration}</span>
           </ItemCell>
 
           {/* コメント */}
-          <ItemCell className={cn('w-[calc(100%-5rem)]', 'cursor-pointer')}>
+          <ItemCell
+            className={cn('w-[calc(100%-5rem)]', 'cursor-pointer')}
+            style={{ backgroundColor: nicoruColor }}
+          >
             <span
               className={cn('line-clamp-2 break-all', commentClass)}
               style={{
@@ -150,13 +168,27 @@ export const Item: React.FC<{
             </span>
           </ItemCell>
 
+          {/* ニコる */}
+          <ItemCell
+            className="w-12 justify-center font-mono"
+            style={{ backgroundColor: nicoruColor }}
+          >
+            <span className="line-clamp-1">{comment.nicoruCount}</span>
+          </ItemCell>
+
           {/* 投稿日時 */}
-          <ItemCell className="w-52 justify-center font-mono">
+          <ItemCell
+            className="w-52 justify-center font-mono"
+            style={{ backgroundColor: nicoruColor }}
+          >
             <span className="line-clamp-1">{formattedDate}</span>
           </ItemCell>
 
           {/* コマンド */}
-          <ItemCell className="w-full font-mono">
+          <ItemCell
+            className="w-full font-mono"
+            style={{ backgroundColor: nicoruColor }}
+          >
             <span className="line-clamp-1">{comment.commands.join(' ')}</span>
           </ItemCell>
         </div>
