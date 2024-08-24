@@ -166,7 +166,7 @@ const SlotItemTitle: React.FC<SlotItemProps> = ({ detail }) => {
 const SlotItemCounter: React.FC<SlotItemProps> = ({ detail }) => {
   const element = useMemo(() => {
     return (
-      <div className="flex flex-row items-center gap-5">
+      <div className="flex flex-row items-center gap-4">
         {/* 再生数 */}
         {detail.type !== 'jikkyo' && (
           <div className="flex h-full flex-row items-center gap-1">
