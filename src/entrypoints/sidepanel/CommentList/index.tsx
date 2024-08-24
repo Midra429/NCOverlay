@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
+import { useSettings } from '@/hooks/useSettings'
 import { useNcoState, useNcoTime } from '@/hooks/useNco'
 import { filterDisplayThreads } from '@/ncoverlay/state'
 
@@ -48,6 +49,8 @@ export const CommentList: React.FC = memo(() => {
   const [offsetMs, setOffsetMs] = useState(0)
   const [comments, setComments] = useState<V1Thread['comments']>([])
 
+  const { value: fps } = useSettings('settings:comment:fps')
+
   const stateOffset = useNcoState('offset')
   const stateSlots = useNcoState('slots')
   const stateSlotDetails = useNcoState('slotDetails')
@@ -78,6 +81,7 @@ export const CommentList: React.FC = memo(() => {
       virtuoso.current?.scrollToIndex({
         index,
         align: 'end',
+        behavior: fps === 30 ? 'auto' : 'smooth',
       })
     }
   }, [index])
@@ -88,6 +92,8 @@ export const CommentList: React.FC = memo(() => {
   return (
     <Virtuoso
       ref={virtuoso}
+      defaultItemHeight={33}
+      overscan={800}
       components={components}
       data={comments}
       itemContent={(_, data) => <Item comment={data} offsetMs={offsetMs} />}
