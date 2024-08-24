@@ -92,7 +92,7 @@ export const Item: React.FC<{
   }, [comment.postedAt])
 
   const nicoruColor = useMemo(() => {
-    if (10 <= comment.nicoruCount) return nicoruColors[4]
+    if (9 <= comment.nicoruCount) return nicoruColors[4]
     if (6 <= comment.nicoruCount) return nicoruColors[3]
     if (3 <= comment.nicoruCount) return nicoruColors[2]
     if (1 <= comment.nicoruCount) return nicoruColors[1]
