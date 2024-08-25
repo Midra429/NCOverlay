@@ -28,15 +28,17 @@ export const SourceTag: React.FC<SourceTagProps> = ({ source }) => {
   if (source === 'normal') return
 
   return (
-    <span
+    <div
       className={cn(
-        'absolute right-1 top-1',
-        'block rounded-full px-1 py-[0.5px]',
+        'absolute left-[3px] top-[3px] z-10',
+        'block px-1 py-[1px]',
+        'border-1 border-white/80',
+        'rounded-md',
         'text-[11px] leading-[15px]',
         SOURCE_TAG_CLASSES[source]
       )}
     >
       {SOURCE_TAG_NAME[source]}
-    </span>
+    </div>
   )
 }

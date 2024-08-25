@@ -1,19 +1,20 @@
 import { Tooltip, Button } from '@nextui-org/react'
+
 import { webext } from '@/utils/webext'
 
-export const IconLink: React.FC<
-  {
-    icon: React.FC<any>
-    title?: string
-  } & (
-    | {
-        href: string
-      }
-    | {
-        onPress: () => void
-      }
-  )
-> = (props) => (
+export type IconLinkProps =
+  | {
+      icon: React.FC<any>
+      title?: string
+      href: string
+    }
+  | {
+      icon: React.FC<any>
+      title?: string
+      onPress: () => void
+    }
+
+export const IconLink: React.FC<IconLinkProps> = (props) => (
   <Tooltip
     classNames={{
       base: 'pointer-events-none',
@@ -29,7 +30,6 @@ export const IconLink: React.FC<
     }
   >
     <Button
-      className="text-foreground"
       size="sm"
       radius="full"
       variant="light"
@@ -39,8 +39,7 @@ export const IconLink: React.FC<
           ? props.onPress
           : () => webext.tabs.create({ url: props.href })
       }
-    >
-      <props.icon className="size-5 text-foreground-700" title="" />
-    </Button>
+      startContent={<props.icon className="size-5 text-foreground-700" />}
+    />
   </Tooltip>
 )

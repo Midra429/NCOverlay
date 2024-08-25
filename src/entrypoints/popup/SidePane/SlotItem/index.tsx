@@ -1,8 +1,7 @@
-import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { useMemo } from 'react'
-import { Skeleton, Link, Image, cn } from '@nextui-org/react'
+import { useMemo, useState } from 'react'
+import { Skeleton, Link, cn } from '@nextui-org/react'
 import {
   CalendarDaysIcon,
   PlayIcon,
@@ -10,94 +9,18 @@ import {
   ClockIcon,
 } from 'lucide-react'
 
-import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
-
-import { formatDate, formatDuration } from '@/utils/format'
+import { formatDate } from '@/utils/format'
 
 import { PanelItem } from '@/components/panel-item'
 
 import { StatusOverlay } from './StatusOverlay'
-import { SourceTag } from './SourceTag'
-import { Config } from './Config'
+import { Thumbnail } from './Thumbnail'
+import { HideButton } from './HideButton'
+import { TranslucentButton } from './TranslucentButton'
+import { Config, ConfigButton } from './Config'
 
 export type SlotItemProps = {
   detail: StateSlotDetail
-}
-
-// サムネイル
-const SlotItemThumbnail: React.FC<SlotItemProps> = ({ detail }) => {
-  const element = useMemo(() => {
-    const duration = (
-      <div
-        className={cn(
-          'absolute bottom-1 right-1 z-10',
-          'flex items-center',
-          'px-1 py-[1px]',
-          'bg-black/40 backdrop-blur-md',
-          'border-1 border-white/25',
-          'rounded-md'
-        )}
-      >
-        <span className="text-tiny text-white">
-          {formatDuration(detail.info.duration)}
-        </span>
-      </div>
-    )
-
-    if (detail.type === 'jikkyo') {
-      const jkChId = detail.id.split(':')[0] as JikkyoChannelId
-
-      // 実況のチャンネル情報
-      return (
-        <>
-          <div className="h-full rounded-lg bg-content3 p-[1px]">
-            <div
-              className={cn(
-                'relative',
-                'flex flex-col items-center justify-center gap-0.5',
-                'aspect-video h-full overflow-hidden rounded-lg',
-                'px-1',
-                'bg-jikkyo dark:bg-jikkyo-700',
-                'select-none'
-              )}
-            >
-              <span
-                className={cn(
-                  'absolute left-1 top-1',
-                  'px-1',
-                  'text-tiny text-white/80'
-                )}
-              >
-                {jkChId}
-              </span>
-              <span className="line-clamp-1 text-small font-bold text-white drop-shadow-md">
-                {JIKKYO_CHANNELS[jkChId!]}
-              </span>
-            </div>
-          </div>
-
-          {duration}
-        </>
-      )
-    }
-
-    return (
-      <>
-        <Image
-          classNames={{
-            wrapper: 'h-full rounded-lg bg-foreground-300 p-[1px]',
-            img: 'aspect-video h-full rounded-lg object-cover',
-          }}
-          src={detail.info.thumbnail}
-          draggable={false}
-        />
-
-        {duration}
-      </>
-    )
-  }, [detail.id, detail.type, detail.info])
-
-  return element
 }
 
 // 日付
@@ -207,7 +130,7 @@ const SlotItemOffset: React.FC<SlotItemProps> = ({ detail }) => {
         <ClockIcon className="size-3" />
         <span className="text-tiny">
           {0 < ofs && '+'}
-          {ofs.toString()}
+          {ofs.toLocaleString()}
         </span>
       </div>
     )
@@ -217,67 +140,78 @@ const SlotItemOffset: React.FC<SlotItemProps> = ({ detail }) => {
 }
 
 export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
+  const [isConfigOpen, setIsConfigOpen] = useState(false)
+
   return (
-    <PanelItem
-      key="1"
-      className={cn(
-        'relative flex h-24 flex-row gap-2 p-1',
-        detail.status === 'error' && 'bg-danger/30'
-      )}
-    >
-      <div
-        className={cn(
-          'relative h-full flex-shrink-0',
-          detail.hidden && 'opacity-50'
-        )}
-      >
-        {/* サムネイル */}
-        <SlotItemThumbnail detail={detail} />
-
-        {/* ステータス */}
-        <StatusOverlay status={detail.status} />
-      </div>
-
-      {/* 情報 (右) */}
-      <div
-        className={cn(
-          'flex h-full w-full flex-col gap-1',
-          detail.hidden && 'opacity-50'
-        )}
-      >
-        {/* 日付 */}
-        <SlotItemDate detail={detail} />
-
-        {/* タイトル */}
-        <SlotItemTitle detail={detail} />
-
+    <PanelItem className={cn(detail.status === 'error' && 'bg-danger/30')}>
+      <div className="relative flex h-24 flex-row p-1">
         <div
           className={cn(
-            'flex flex-shrink-0 flex-row items-center justify-between',
-            'mr-8 h-4',
-            'text-foreground-500'
+            'relative h-full flex-shrink-0',
+            detail.hidden && 'opacity-50'
           )}
         >
-          {/* 再生数・コメント数 */}
-          <SlotItemCounter detail={detail} />
+          {/* サムネイル */}
+          <Thumbnail detail={detail} />
 
-          {/* オフセット */}
-          <SlotItemOffset detail={detail} />
+          {/* ステータス */}
+          <StatusOverlay status={detail.status} />
+        </div>
+
+        {/* 情報 (右) */}
+        <div
+          className={cn(
+            'flex h-full w-full flex-col gap-1',
+            'mx-2',
+            detail.hidden && 'opacity-50'
+          )}
+        >
+          {/* 日付 */}
+          <SlotItemDate detail={detail} />
+
+          {/* タイトル */}
+          <SlotItemTitle detail={detail} />
+
+          <div
+            className={cn(
+              'flex flex-shrink-0 flex-row items-center justify-between',
+              'h-4 w-full',
+              'text-foreground-500'
+            )}
+          >
+            {/* 再生数・コメント数 */}
+            <SlotItemCounter detail={detail} />
+
+            {/* オフセット */}
+            <SlotItemOffset detail={detail} />
+          </div>
+        </div>
+
+        {/* サイドボタン */}
+        <div
+          className={cn(
+            'flex shrink-0 flex-col justify-between gap-1',
+            detail.status !== 'ready' && 'pointer-events-none opacity-50'
+          )}
+        >
+          <div className="flex shrink-0 flex-col gap-1">
+            {/* 非表示 */}
+            <HideButton detail={detail} />
+
+            {/* 半透明 */}
+            <TranslucentButton detail={detail} />
+          </div>
+
+          {/* 設定ボタン */}
+          <ConfigButton
+            isOpen={isConfigOpen}
+            onPress={() => setIsConfigOpen((val) => !val)}
+          />
         </div>
       </div>
 
-      {/* タグとか */}
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-0',
-          detail.hidden && 'opacity-50'
-        )}
-      >
-        <SourceTag source={detail.type} />
-      </div>
-
       {/* 設定 */}
-      {detail.status === 'ready' && <Config detail={detail} />}
+      <Config detail={detail} isOpen={isConfigOpen} />
     </PanelItem>
   )
 }
