@@ -35,6 +35,7 @@ export const SourceTag: React.FC<SourceTagProps> = ({ source }) => {
         'border-1 border-white/80',
         'rounded-md',
         'text-[11px] leading-[15px]',
+        'select-none',
         SOURCE_TAG_CLASSES[source]
       )}
     >

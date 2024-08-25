@@ -78,7 +78,8 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ detail }) => {
             'bg-black/40 backdrop-blur-md',
             'border-1 border-white/25',
             'rounded-md',
-            'text-[11px] leading-[15px] text-white'
+            'text-[11px] leading-[15px] text-white',
+            'select-none'
           )}
         >
           {formatDuration(detail.info.duration)}
