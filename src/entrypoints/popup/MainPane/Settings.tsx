@@ -5,6 +5,8 @@ import {
   DatabaseIcon,
   CircleEllipsisIcon,
   ClipboardPenIcon,
+  RotateCcwIcon,
+  Trash2Icon,
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
 
@@ -21,6 +23,7 @@ import { useNcoState } from '@/hooks/useNco'
 
 import { IconLink } from '@/components/icon-link'
 import { SettingsInput } from '@/components/settings-input'
+import { ItemLabel } from '@/components/label'
 import { ItemButton } from '@/components/item-button'
 
 const { name, version } = webext.runtime.getManifest()
@@ -159,6 +162,7 @@ const accordionItemStorage = (
         button={{
           variant: 'flat',
           color: 'danger',
+          startContent: <RotateCcwIcon className="size-4" />,
           text: 'リセット',
           onPress: settings.remove,
         }}
@@ -176,6 +180,7 @@ const accordionItemStorage = (
         button={{
           variant: 'flat',
           color: 'danger',
+          startContent: <Trash2Icon className="size-4" />,
           text: '初期化',
           onPress: async () => {
             await storage.remove()
@@ -203,16 +208,16 @@ const accordionItemOthers = (
   >
     <div className="flex flex-col gap-1 py-2">
       {LINKS.map(({ title, label, url }, idx) => (
-        <ItemButton
+        <div
           key={idx}
-          title={title}
-          button={{
-            variant: 'light',
-            color: 'primary',
-            text: <span className="text-small">{label}</span>,
-            onPress: () => webext.tabs.create({ url }),
-          }}
-        />
+          className="flex flex-row items-center justify-between gap-2 py-1"
+        >
+          <ItemLabel title={title} />
+
+          <Link size="sm" color="primary" showAnchorIcon href={url} isExternal>
+            {label}
+          </Link>
+        </div>
       ))}
     </div>
   </AccordionItem>
