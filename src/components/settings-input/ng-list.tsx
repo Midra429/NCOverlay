@@ -197,12 +197,8 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           button={{
             variant: 'flat',
             color: 'default',
-            text: (
-              <div className="flex flex-row items-center gap-2">
-                <PencilIcon className="size-4" />
-                <span>編集</span>
-              </div>
-            ),
+            startContent: <PencilIcon className="size-4" />,
+            text: '編集',
             onPress: onOpen,
           }}
         />

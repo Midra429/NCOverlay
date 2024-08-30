@@ -12,6 +12,8 @@ export const ItemButton: React.FC<{
   button: {
     variant?: ButtonProps['variant']
     color?: ButtonProps['color']
+    startContent?: ButtonProps['startContent']
+    endContent?: ButtonProps['endContent']
     text: React.ReactNode
     onPress: () => void
   }
@@ -32,6 +34,8 @@ export const ItemButton: React.FC<{
       size="sm"
       variant={props.button.variant}
       color={props.button.color}
+      startContent={props.button.startContent}
+      endContent={props.button.endContent}
       onPress={props.button.onPress}
     >
       {props.button.text}
