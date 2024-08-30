@@ -44,7 +44,6 @@ export default defineConfig({
       description,
       homepage_url: GITHUB_URL,
       permissions,
-      host_permissions: ['<all_urls>'],
       browser_specific_settings,
     }
   },
@@ -67,6 +66,13 @@ export default defineConfig({
         })
 
         manifest.content_scripts = manifest.content_scripts.filter(Boolean)
+
+        manifest.host_permissions = [
+          ...new Set([
+            ...(manifest.host_permissions ?? []),
+            ...manifest.content_scripts.flatMap((v) => v.matches),
+          ]),
+        ]
       }
     },
   },
