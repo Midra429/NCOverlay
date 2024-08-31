@@ -103,10 +103,22 @@ export class NCOSearcher {
         results.forEach((result) => {
           if (!result) return
 
+          let offsetMs: number | undefined
+
+          // オフセット調節
+          if (type === 'szbh') {
+            const diff = result.lengthSeconds - input.duration
+
+            if (58 <= diff) {
+              offsetMs = diff * -1000
+            }
+          }
+
           loadingSlotDetails.push({
             type,
             id: result.contentId,
             status: 'loading',
+            offsetMs,
             info: {
               id: result.contentId,
               title: result.title,
