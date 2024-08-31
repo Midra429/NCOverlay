@@ -11,7 +11,7 @@ const SOURCE_TAG_CLASSES: {
 } = {
   danime: cn('bg-danime-400 text-white dark:bg-danime-500'),
   chapter: cn('bg-danime-400 text-white dark:bg-danime-500'),
-  szbh: cn('bg-foreground-400 text-white'),
+  szbh: cn('bg-gray-500 text-white dark:bg-gray-600'),
   jikkyo: cn('bg-jikkyo-600 text-white dark:bg-jikkyo-700'),
 }
 

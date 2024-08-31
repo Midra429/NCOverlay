@@ -95,6 +95,7 @@ export class NCOSearcher {
       ;(
         [
           ['normal', searchResults.normal],
+          ['danime', searchResults.danime],
           ['szbh', searchResults.szbh],
           ['chapter', [searchResults.chapter[0]]],
         ] as const
@@ -161,40 +162,51 @@ export class NCOSearcher {
     this.#trigger('loading')
     await this.#state.set('status', 'loading')
 
-    const [commentsNormal, commentsSzbh, commentsChapter, commentsJikkyo] =
-      await Promise.all([
-        // ニコニコ動画 コメント 取得
-        searchResults
-          ? this.getNiconicoComments(
-              searchResults.normal.map(({ contentId }) => ({ contentId }))
-            )
-          : null,
-        searchResults
-          ? this.getNiconicoComments(
-              searchResults.szbh.map(({ contentId }) => ({ contentId }))
-            )
-          : null,
-        searchResults
-          ? this.getNiconicoComments(
-              searchResults.chapter.map(({ contentId }) => ({ contentId }))
-            )
-          : null,
+    const [
+      commentsNormal,
+      commentsDAnime,
+      commentsSzbh,
+      commentsChapter,
+      commentsJikkyo,
+    ] = await Promise.all([
+      // ニコニコ動画 コメント 取得
+      searchResults
+        ? this.getNiconicoComments(
+            searchResults.normal.map(({ contentId }) => ({ contentId }))
+          )
+        : null,
+      searchResults
+        ? this.getNiconicoComments(
+            searchResults.danime.map(({ contentId }) => ({ contentId }))
+          )
+        : null,
+      searchResults
+        ? this.getNiconicoComments(
+            searchResults.szbh.map(({ contentId }) => ({ contentId }))
+          )
+        : null,
+      searchResults
+        ? this.getNiconicoComments(
+            searchResults.chapter.map(({ contentId }) => ({ contentId }))
+          )
+        : null,
 
-        // ニコニコ実況 過去ログ 取得
-        syobocalPrograms
-          ? this.getJikkyoKakologs(
-              syobocalPrograms.map((val) => ({
-                jkChId: syobocalToJikkyoChId(val.ChID)!,
-                starttime: parseInt(val.StTime),
-                endtime: parseInt(val.EdTime),
-              }))
-            )
-          : null,
-      ])
+      // ニコニコ実況 過去ログ 取得
+      syobocalPrograms
+        ? this.getJikkyoKakologs(
+            syobocalPrograms.map((val) => ({
+              jkChId: syobocalToJikkyoChId(val.ChID)!,
+              starttime: parseInt(val.StTime),
+              endtime: parseInt(val.EdTime),
+            }))
+          )
+        : null,
+    ])
 
     this.#trigger('loaded')
 
     Logger.log('commentsNormal:', commentsNormal)
+    Logger.log('commentsDAnime:', commentsDAnime)
     Logger.log('commentsSzbh:', commentsSzbh)
     Logger.log('commentsChapter:', commentsChapter)
     Logger.log('commentsJikkyo:', commentsJikkyo)
@@ -202,11 +214,12 @@ export class NCOSearcher {
     const loadedSlots: StateSlot[] = []
     const updateSlotDetails: StateSlotDetailUpdate[] = []
 
-    // 通常, コメント専用動画
-    if (commentsNormal || commentsSzbh) {
+    // 通常 / dアニメ, コメント専用動画
+    if (commentsNormal || commentsDAnime || commentsSzbh) {
       ;(
         [
           [searchResults!.normal, commentsNormal],
+          [searchResults!.danime, commentsDAnime],
           [searchResults!.szbh, commentsSzbh],
         ] as const
       ).forEach(([results, comments]) => {
