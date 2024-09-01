@@ -2,11 +2,11 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
-import * as dAnimeApi from '@midra/nco-api/danime'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { injectScript } from '@/utils/dom/injectScript'
+import { ncoApiProxy } from '@/proxy/nco-api'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -15,7 +15,7 @@ import './style.scss'
 const vod: VodKey = 'dAnime'
 
 export default defineContentScript({
-  matches: ['https://animestore.docomo.ne.jp/animestore/*'],
+  matches: ['*://animestore.docomo.ne.jp/animestore/*'],
   runAt: 'document_end',
   main: () => void main(),
 })
@@ -35,7 +35,7 @@ const main = async () => {
     vod,
     getInfo: async () => {
       const partId = new URL(location.href).searchParams.get('partId')
-      const partData = partId ? await dAnimeApi.part(partId) : null
+      const partData = partId ? await ncoApiProxy.danime.part(partId) : null
 
       Logger.log('danime.part:', partData)
 
