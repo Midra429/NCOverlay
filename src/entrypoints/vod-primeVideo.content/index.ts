@@ -81,8 +81,10 @@ const main = async () => {
 
   const patcher = new NCOPatcher({
     vod,
-    getInfo: async (video) => {
-      const player = video?.closest<HTMLElement>('.webPlayerSDKContainer')
+    getInfo: async (nco) => {
+      const player = nco.renderer.video.closest<HTMLElement>(
+        '.webPlayerSDKContainer'
+      )
 
       if (!player) {
         return null

@@ -14,6 +14,14 @@ export const PLUGINS = {
     //   description: 'サムネイル上にコメント数を表示します。',
     // },
   ],
+
+  niconico: [
+    {
+      id: 'windowSizeFullscreen',
+      title: 'フルスクリーンサイズ: ブラウザ',
+      description: 'フルスクリーンをブラウザサイズに強制します。',
+    },
+  ],
 } as const satisfies {
   [key in VodKey]?: {
     id: string

@@ -9,7 +9,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:showChangelog': true,
 
   // 動画配信サービス
-  'settings:vods': [...VOD_KEYS],
+  'settings:vods': [...VOD_KEYS.filter((v) => v !== 'niconico')],
 
   // キャプチャー
   'settings:capture:format': 'jpeg',

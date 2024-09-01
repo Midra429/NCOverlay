@@ -30,7 +30,7 @@ const main = async () => {
 
   const patcher = new NCOPatcher({
     vod,
-    getInfo: async (video) => {
+    getInfo: async (nco) => {
       const seriesTitleElem =
         document.body.querySelector<HTMLElement>('#bch-series-title')
       const storyTitleElem =
@@ -46,7 +46,7 @@ const main = async () => {
           .join(' ')
           .trim() || null
 
-      const duration = video?.duration ?? 0
+      const duration = nco.renderer.video.duration ?? 0
 
       Logger.log('workTitle:', workTitle)
       Logger.log('episodeTitle:', episodeTitle)

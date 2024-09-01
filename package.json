@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.0.0",
-    "@midra/nco-api": "^1.3.21",
+    "@midra/nco-api": "^1.3.22",
     "@midra/nco-parser": "^1.0.16",
     "@nextui-org/react": "^2.4.6",
     "@webext-core/messaging": "^1.4.0",
@@ -28,13 +28,13 @@
     "filesize": "^10.1.4",
     "framer-motion": "^11.3.31",
     "hotkeys-js": "^3.13.7",
-    "lucide-react": "^0.436.0",
+    "lucide-react": "^0.437.0",
     "nanoid": "^5.0.7",
     "nanoid-dictionary": "^4.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hotkeys-hook": "^4.5.0",
-    "react-virtuoso": "^4.10.1"
+    "react-virtuoso": "^4.10.2"
   },
   "devDependencies": {
     "@types/nanoid-dictionary": "^4.2.3",
@@ -43,7 +43,7 @@
     "@wxt-dev/module-react": "^1.1.1",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.5",
-    "postcss": "^8.4.41",
+    "postcss": "^8.4.42",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "sass": "^1.77.8",

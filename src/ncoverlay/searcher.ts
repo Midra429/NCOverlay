@@ -13,6 +13,11 @@ import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 import { MARKERS } from '@/constants/markers'
 
 import { Logger } from '@/utils/logger'
+import { filterNvComment } from '@/utils/extension/filterNvComment'
+import {
+  convertNgSettings,
+  applyNgSettings,
+} from '@/utils/extension/applyNgSetting'
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 export type AutoLoadInput = {
@@ -26,8 +31,6 @@ export type AutoLoadInput = {
   duration: number
 }
 
-const userAgent = EXT_USER_AGENT
-
 export type NCOSearcherEventMap = {
   searching: (this: NCOSearcher) => void
   searched: (this: NCOSearcher) => void
@@ -36,6 +39,8 @@ export type NCOSearcherEventMap = {
   ready: (this: NCOSearcher) => void
   error: (this: NCOSearcher) => void
 }
+
+const userAgent = EXT_USER_AGENT
 
 /**
  * NCOverlayの検索担当
@@ -58,6 +63,10 @@ export class NCOSearcher {
   ) {
     // 検索
     this.#trigger('searching')
+
+    // 読み込み済みのスロットID
+    const loadedIds =
+      (await this.#state.get('slotDetails'))?.map((v) => v.id) ?? []
 
     const [searchResults, searchSyobocalResults] = await Promise.all([
       // ニコニコ動画 検索
@@ -101,7 +110,7 @@ export class NCOSearcher {
         ] as const
       ).forEach(([type, results]) => {
         results.forEach((result) => {
-          if (!result) return
+          if (!result || loadedIds.includes(result.contentId)) return
 
           let offsetMs: number | undefined
 
@@ -148,6 +157,8 @@ export class NCOSearcher {
       syobocalPrograms.forEach((program) => {
         const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
 
+        if (loadedIds.includes(id)) return
+
         const starttime = parseInt(program.StTime) * 1000
         const endtime = parseInt(program.EdTime) * 1000
 
@@ -168,11 +179,21 @@ export class NCOSearcher {
       })
     }
 
-    await this.#state.set('slotDetails', loadingSlotDetails)
+    await this.#state.add('slotDetails', ...loadingSlotDetails)
 
     // コメント取得
     this.#trigger('loading')
     await this.#state.set('status', 'loading')
+
+    const jikkyoIds = loadingSlotDetails
+      .filter((v) => v.type === 'jikkyo')
+      .map((v) => v.id)
+
+    const scPrograms = syobocalPrograms?.filter((program) => {
+      return jikkyoIds.includes(
+        `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
+      )
+    })
 
     const [
       commentsNormal,
@@ -182,31 +203,31 @@ export class NCOSearcher {
       commentsJikkyo,
     ] = await Promise.all([
       // ニコニコ動画 コメント 取得
-      searchResults
-        ? this.getNiconicoComments(
-            searchResults.normal.map(({ contentId }) => ({ contentId }))
-          )
-        : null,
-      searchResults
-        ? this.getNiconicoComments(
-            searchResults.danime.map(({ contentId }) => ({ contentId }))
-          )
-        : null,
-      searchResults
-        ? this.getNiconicoComments(
-            searchResults.szbh.map(({ contentId }) => ({ contentId }))
-          )
-        : null,
-      searchResults
-        ? this.getNiconicoComments(
-            searchResults.chapter.map(({ contentId }) => ({ contentId }))
-          )
-        : null,
+      this.getNiconicoComments(
+        loadingSlotDetails
+          .filter((v) => v.type === 'normal')
+          .map((v) => ({ contentId: v.id }))
+      ),
+      this.getNiconicoComments(
+        loadingSlotDetails
+          .filter((v) => v.type === 'danime')
+          .map((v) => ({ contentId: v.id }))
+      ),
+      this.getNiconicoComments(
+        loadingSlotDetails
+          .filter((v) => v.type === 'szbh')
+          .map((v) => ({ contentId: v.id }))
+      ),
+      this.getNiconicoComments(
+        loadingSlotDetails
+          .filter((v) => v.type === 'chapter')
+          .map((v) => ({ contentId: v.id }))
+      ),
 
       // ニコニコ実況 過去ログ 取得
-      syobocalPrograms
+      scPrograms
         ? this.getJikkyoKakologs(
-            syobocalPrograms.map((val) => ({
+            scPrograms.map((val) => ({
               jkChId: syobocalToJikkyoChId(val.ChID)!,
               starttime: parseInt(val.StTime),
               endtime: parseInt(val.EdTime),
@@ -227,7 +248,7 @@ export class NCOSearcher {
     const updateSlotDetails: StateSlotDetailUpdate[] = []
 
     // 通常 / dアニメ, コメント専用動画
-    if (commentsNormal || commentsDAnime || commentsSzbh) {
+    if (commentsNormal.length || commentsDAnime.length || commentsSzbh.length) {
       ;(
         [
           [searchResults!.normal, commentsNormal],
@@ -241,7 +262,13 @@ export class NCOSearcher {
           const id = results[idx].contentId
           const { data, threads } = cmt
 
-          loadedSlots.push({ id, threads })
+          loadedSlots.push({
+            id,
+            threads: applyNgSettings(
+              threads,
+              convertNgSettings(cmt.data.comment.ng)
+            ),
+          })
 
           updateSlotDetails.push({
             id,
@@ -263,7 +290,7 @@ export class NCOSearcher {
 
     // dアニメ(分割)
     if (
-      commentsChapter?.length &&
+      commentsChapter.length &&
       commentsChapter.every((_, idx, ary) => ary.at(idx - 1))
     ) {
       const result = searchResults!.chapter[0]
@@ -361,7 +388,7 @@ export class NCOSearcher {
       }
     }
 
-    await this.#state.set('slots', slots)
+    await this.#state.add('slots', ...slots)
 
     this.#trigger('ready')
 
@@ -398,11 +425,13 @@ export class NCOSearcher {
     // コメント取得
     const threadsData = await Promise.all(
       videos.map((video, idx) => {
-        return video
-          ? ncoApiProxy.niconico.threads(video.comment.nvComment, {
-              when: params[idx].when,
-            })
-          : null
+        if (!video) return null
+
+        const nvComment = filterNvComment(video.comment)
+
+        return ncoApiProxy.niconico.threads(nvComment, {
+          when: params[idx].when,
+        })
       })
     )
 

@@ -27,7 +27,7 @@ const main = async () => {
 
   const patcher = new NCOPatcher({
     vod,
-    getInfo: async (video) => {
+    getInfo: async (nco) => {
       const id = location.pathname.replace(/\/$/, '').split('/').at(-1)
       const token = getCookie('CT')
 
@@ -46,7 +46,7 @@ const main = async () => {
       const workTitle = episode.lu_title
       const episodeTitle = episode.ep_title
 
-      const duration = video?.duration ?? 0
+      const duration = nco.renderer.video.duration ?? 0
 
       Logger.log('workTitle:', workTitle)
       Logger.log('episodeTitle:', episodeTitle)

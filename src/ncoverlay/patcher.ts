@@ -23,7 +23,7 @@ export class NCOPatcher {
 
   constructor(init: {
     vod: VodKey
-    getInfo: (video: HTMLVideoElement | null) => Promise<
+    getInfo: (nco: NCOverlay) => Promise<
       | (
           | {
               rawText: string
@@ -73,7 +73,7 @@ export class NCOPatcher {
         await this.#nco.state.set('status', 'searching')
 
         try {
-          const info = await this.#getInfo(this.#video)
+          const info = await this.#getInfo(this.#nco)
 
           let input: AutoLoadInput | undefined
 

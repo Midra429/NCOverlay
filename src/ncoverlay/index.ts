@@ -17,7 +17,7 @@ import { NCORenderer } from './renderer'
 import { NCOKeyboard } from './keyboard'
 import { ncoMessenger } from './messaging'
 
-import './style.css'
+import './style.scss'
 
 export type NCOverlayEventMap = {
   playing: (this: NCOverlay, evt: Event) => void

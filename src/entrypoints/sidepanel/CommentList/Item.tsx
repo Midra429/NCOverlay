@@ -176,7 +176,7 @@ export const Item: React.FC<{
             <span className="line-clamp-1">{comment.nicoruCount}</span>
           </ItemCell>
 
-          {/* 投稿日時 */}
+          {/* 書込日時 */}
           <ItemCell
             className="w-52 justify-center font-mono"
             style={{ backgroundColor: nicoruColor }}

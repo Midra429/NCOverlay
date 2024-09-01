@@ -1,0 +1,7 @@
+.NCOverlay {
+  > div[data-name='comment'] {
+    > canvas:not(.NCOverlay-Canvas) {
+      display: none;
+    }
+  }
+}

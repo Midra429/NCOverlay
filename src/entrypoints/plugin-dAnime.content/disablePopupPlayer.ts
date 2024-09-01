@@ -1,7 +1,7 @@
 import type { PluginFunction } from '@/types/constants'
 
 /**
- * ポップアッププレイヤー無効化
+ * ポップアップ無効化
  */
 export const disablePopupPlayer: PluginFunction = () => {
   const _open = window.open

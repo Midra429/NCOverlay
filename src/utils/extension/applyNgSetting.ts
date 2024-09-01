@@ -1,4 +1,5 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { Ng } from '@midra/nco-api/types/niconico/video'
 import type { NgSettings } from './getNgSettings'
 
 export const isNgComment = (
@@ -43,7 +44,23 @@ export const isNgComment = (
   return isNgWord || isNgCommand || isNgId
 }
 
-export const applyNgSetting = (
+export const convertNgSettings = (ng: Ng): NgSettings => {
+  const ngSettings: NgSettings = {
+    words: [],
+    commands: [],
+    ids: [],
+  }
+
+  ng.viewer?.items.forEach((item) => {
+    ngSettings[`${item.type}s` as const]?.push({
+      content: item.source,
+    })
+  })
+
+  return ngSettings
+}
+
+export const applyNgSettings = (
   threads: V1Thread[],
   ngSettings: NgSettings
 ): V1Thread[] => {

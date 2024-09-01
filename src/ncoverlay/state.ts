@@ -182,7 +182,7 @@ export class NCOState {
     const oldValue = await this.get<Key>(key)
 
     const exists = values.some((val) => {
-      return oldValue?.some((old) => equal(old, val))
+      return oldValue?.some((old) => old.id === val.id)
     })
 
     if (!exists) {

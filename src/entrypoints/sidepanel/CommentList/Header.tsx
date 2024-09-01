@@ -23,7 +23,7 @@ const HeaderCell: React.FC<
 export const Header: React.FC = () => {
   return (
     <div className="sticky top-0 z-10 flex flex-row">
-      <HeaderCell className="w-[5rem]">時間</HeaderCell>
+      <HeaderCell className="w-[5rem]">再生時間</HeaderCell>
 
       <HeaderCell className="w-[calc(100%-5rem)]">コメント</HeaderCell>
 
@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
         <SmileIcon className="size-4" strokeWidth={2.5} />
       </HeaderCell>
 
-      <HeaderCell className="w-52">投稿日時</HeaderCell>
+      <HeaderCell className="w-52">書込日時</HeaderCell>
 
       <HeaderCell className="w-full">コマンド</HeaderCell>
     </div>

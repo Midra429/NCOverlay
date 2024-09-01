@@ -25,7 +25,7 @@ const main = async () => {
 
   const patcher = new NCOPatcher({
     vod,
-    getInfo: async (video) => {
+    getInfo: async (nco) => {
       const url = new URL(location.href)
       const seasonId = url.searchParams.get('season')
       const contentId = url.searchParams.get('content')
@@ -49,7 +49,7 @@ const main = async () => {
           .trim() || null
 
       const duration =
-        dataVideo.episode?.playInfo.duration ?? video?.duration ?? 0
+        dataVideo.episode?.playInfo.duration ?? nco.renderer.video.duration ?? 0
 
       Logger.log('workTitle:', workTitle)
       Logger.log('episodeTitle:', episodeTitle)
