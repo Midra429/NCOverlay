@@ -17,15 +17,22 @@ import { formatDuration, formatDate } from '@/utils/format'
 import { readableColor } from '@/utils/color'
 import { settings } from '@/utils/settings/extension'
 
+const commentCellCommandClasses: Record<string, string> = {
+  // 位置: 上
+  ue: cn('justify-center pb-5 pt-0.5'),
+  // 位置: 下
+  shita: cn('justify-center pb-0.5 pt-5'),
+}
+
 const commentComamndClasses: Record<string, string> = {
-  // 半透明
-  _live: cn('opacity-50'),
+  // サイズ: 大
+  big: cn('text-[110%] font-bold'),
+  // サイズ: 小
+  small: cn('text-[75%]'),
   // 明朝体
   mincho: cn('font-serif'),
-  // 小
-  small: cn('text-[75%]'),
-  // 大
-  big: cn('text-[110%] font-bold'),
+  // 半透明
+  _live: cn('opacity-50'),
 }
 
 const nicoruColors: Record<number, string> = {
@@ -57,31 +64,35 @@ export const Item: React.FC<{
   comment: V1Thread['comments'][number]
   offsetMs: number
 }> = ({ comment, offsetMs }) => {
-  const [commentClass, commentBgColor, commentFgColor] = useMemo(() => {
-    const classNames: string[] = []
-    let bgColor: string | undefined
-    let fgColor: string | undefined
+  const { commentCellClass, commentClass, commentBgColor, commentFgColor } =
+    useMemo(() => {
+      const commentCellClass: string[] = []
+      const commentClass: string[] = []
+      let commentBgColor: string | undefined
+      let commentFgColor: string | undefined
 
-    comment.commands.forEach((command) => {
-      if (command === 'white') return
+      comment.commands.forEach((command) => {
+        if (command === 'white') return
 
-      if (command in commentComamndClasses) {
-        classNames.push(commentComamndClasses[command])
-      } else if (
-        command in NICONICO_COLOR_COMMANDS ||
-        COLOR_CODE_REGEXP.test(command)
-      ) {
-        bgColor = NICONICO_COLOR_COMMANDS[command] ?? command
-        fgColor = readableColor(bgColor)
+        if (command in commentCellCommandClasses) {
+          commentCellClass.push(commentCellCommandClasses[command])
+        } else if (command in commentComamndClasses) {
+          commentClass.push(commentComamndClasses[command])
+        } else if (
+          command in NICONICO_COLOR_COMMANDS ||
+          COLOR_CODE_REGEXP.test(command)
+        ) {
+          commentBgColor = NICONICO_COLOR_COMMANDS[command] ?? command
+          commentFgColor = readableColor(commentBgColor)
 
-        classNames.push(
-          cn('m-[-1px] rounded-[5px] border-1 border-foreground-300 px-1')
-        )
-      }
-    })
+          commentClass.push(
+            cn('m-[-1px] rounded-[5px] border-1 border-foreground-300 px-1')
+          )
+        }
+      })
 
-    return [classNames, bgColor, fgColor]
-  }, [comment.commands])
+      return { commentCellClass, commentClass, commentBgColor, commentFgColor }
+    }, [comment.commands])
 
   const formattedDuration = useMemo(() => {
     return formatDuration((comment.vposMs + offsetMs) / 1000)
@@ -153,7 +164,11 @@ export const Item: React.FC<{
 
           {/* コメント */}
           <ItemCell
-            className={cn('w-[calc(100%-5rem)]', 'cursor-pointer')}
+            className={cn(
+              'w-[calc(100%-5rem)]',
+              'cursor-pointer',
+              commentCellClass
+            )}
             style={{ backgroundColor: nicoruColor }}
           >
             <span
