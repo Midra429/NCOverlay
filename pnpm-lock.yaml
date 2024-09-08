@@ -12,11 +12,11 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
       '@midra/nco-api':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.4.1
+        version: 1.4.1
       '@midra/nco-parser':
-        specifier: ^1.0.17
-        version: 1.0.17
+        specifier: ^1.0.18
+        version: 1.0.18
       '@nextui-org/react':
         specifier: ^2.4.6
         version: 2.4.6(@types/react@18.3.5)(framer-motion@11.5.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.10)
@@ -577,11 +577,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@midra/nco-api@1.4.0':
-    resolution: {integrity: sha512-t5L1Of/PcbEQl7Q39pyl2AVibza6lXCc7mBpGEgi2j1SJJa6+W/pMfeTcWXO1qZgRVkMu/0S679EN7Lb8tgccA==}
+  '@midra/nco-api@1.4.1':
+    resolution: {integrity: sha512-8bZcYxJsopl29B6w64bLFE4T3df1gC3bjzY2+Ye8bwbtK4j6PShszPTOTsCGJDaRqXTI+N8BesSObO7rNZPtcQ==}
 
-  '@midra/nco-parser@1.0.17':
-    resolution: {integrity: sha512-nzHhWDwgvtfApwhoa4iqwAzFcFRjEZdhc7v5b8eH1lLbBOUg13BtqCMxk95otAnPe1Y0Wgazx8h6CPMNUlKyNQ==}
+  '@midra/nco-parser@1.0.18':
+    resolution: {integrity: sha512-W93O91md+NmrBj8X+jCEzcYR17i+uT/UkvZj3CxGyiQWAZERCU2hMAxzIgRQyxo/BmfDqyJfk9wDKibHHAN+5A==}
 
   '@nextui-org/accordion@2.0.38':
     resolution: {integrity: sha512-kFCZU1VaKkUI295Fg3NxuQR2+kZ5vTH4ftIs0oByrOs0+l14dVQGFOd9ZV402fHNykZJt7Sk6oWjTp4Qwl83JA==}
@@ -4664,12 +4664,12 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@midra/nco-api@1.4.0':
+  '@midra/nco-api@1.4.1':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
-      '@midra/nco-parser': 1.0.17
+      '@midra/nco-parser': 1.0.18
 
-  '@midra/nco-parser@1.0.17':
+  '@midra/nco-parser@1.0.18':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
 
