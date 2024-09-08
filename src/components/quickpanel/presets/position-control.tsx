@@ -58,7 +58,20 @@ export const PositionControl: React.FC = () => {
 
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
-  const [slotMarkers, setSlotMarkers] = useState<((number | null)[] | null)[]>()
+
+  const markerEnableFlags = useMemo(() => {
+    const flags: boolean[] = Array(MARKERS.length).fill(false)
+
+    stateSlotDetails?.forEach(({ hidden, markers }) => {
+      if (hidden) return
+
+      markers?.forEach((marker, idx) => {
+        flags[idx] ||= !!marker
+      })
+    })
+
+    return flags
+  }, [stateSlotDetails])
 
   useEffect(() => {
     const ofs = stateOffset ?? 0
@@ -67,52 +80,38 @@ export const PositionControl: React.FC = () => {
     setOffset(ofs)
   }, [stateOffset])
 
-  useEffect(() => {
-    setSlotMarkers(
-      stateSlotDetails?.map((v) => (!v.hidden && v.markers) || null)
-    )
-  }, [stateSlotDetails])
-
-  const markerEnableFlags = useMemo(() => {
-    const flags: boolean[] = Array(MARKERS.length).fill(false)
-
-    slotMarkers?.forEach((markers) => {
-      markers?.forEach((marker, idx) => {
-        flags[idx] ||= !!marker
-      })
-    })
-
-    return flags
-  }, [slotMarkers])
-
   const onApply = useCallback(async () => {
     await ncoState?.set('offset', offset)
   }, [offset])
 
   return (
     <PanelItem className="flex flex-col gap-2 px-2.5 py-2">
-      <div className="flex flex-row gap-2">
-        <MarkerButton
-          key="reset"
-          markerIdx={null}
-          placement="top-start"
-          label="オフセットをリセット"
-          shortLabel={<RotateCcwIcon className="size-3" />}
-        />
+      {stateSlotDetails?.some((v) => !v.hidden && v.markers) && (
+        <>
+          <div className="flex flex-row gap-2">
+            <MarkerButton
+              key="reset"
+              markerIdx={null}
+              placement="top-start"
+              label="オフセットをリセット"
+              shortLabel={<RotateCcwIcon className="size-3" />}
+            />
 
-        {MARKERS.map(({ label, shortLabel }, idx, ary) => (
-          <MarkerButton
-            key={idx}
-            markerIdx={idx}
-            placement={idx === ary.length - 1 ? 'top-end' : undefined}
-            label={label}
-            shortLabel={shortLabel}
-            disabled={!markerEnableFlags[idx]}
-          />
-        ))}
-      </div>
+            {MARKERS.map(({ label, shortLabel }, idx, ary) => (
+              <MarkerButton
+                key={idx}
+                markerIdx={idx}
+                placement={idx === ary.length - 1 ? 'top-end' : undefined}
+                label={label}
+                shortLabel={shortLabel}
+                disabled={!markerEnableFlags[idx]}
+              />
+            ))}
+          </div>
 
-      <Divider />
+          <Divider />
+        </>
+      )}
 
       <OffsetControl
         value={offset}
