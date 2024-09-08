@@ -1,5 +1,5 @@
+import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
 import type { VodKey } from '@/types/constants'
-import type { AutoLoadInput } from './searcher'
 
 import { ncoParser } from '@midra/nco-parser'
 
@@ -81,7 +81,7 @@ export class NCOPatcher {
         try {
           const info = await this.#getInfo(this.#nco)
 
-          let input: AutoLoadInput | undefined
+          let input: BuildSearchQueryInput | undefined
 
           if (info) {
             info.duration = Math.floor(info.duration)

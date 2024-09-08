@@ -1,6 +1,7 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { VideoData } from '@midra/nco-api/types/niconico/video'
+import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
 import type {
   NCOState,
   StateSlot,
@@ -53,7 +54,7 @@ export class NCOSearcher {
   }
 
   async autoLoad(
-    input: AutoLoadInput,
+    input: BuildSearchQueryInput,
     options: {
       normal?: boolean
       szbh?: boolean
@@ -71,12 +72,11 @@ export class NCOSearcher {
     const [searchResults, searchSyobocalResults] = await Promise.all([
       // ニコニコ動画 検索
       ncoApiProxy.search({
-        rawText: input.rawText,
-        duration: input.duration,
-        normal: options.normal,
-        szbh: options.szbh,
-        chapter: options.chapter,
-        userAgent,
+        input,
+        options: {
+          ...options,
+          userAgent,
+        },
       }),
 
       // ニコニコ実況 過去ログ 検索
