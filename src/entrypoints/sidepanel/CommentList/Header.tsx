@@ -23,9 +23,9 @@ const HeaderCell: React.FC<
 export const Header: React.FC = () => {
   return (
     <div className="sticky top-0 z-10 flex flex-row">
-      <HeaderCell className="w-[5rem]">再生時間</HeaderCell>
-
       <HeaderCell className="w-[calc(100%-5rem)]">コメント</HeaderCell>
+
+      <HeaderCell className="w-[5rem]">再生時間</HeaderCell>
 
       <HeaderCell className="w-12">
         <SmileIcon className="size-4" strokeWidth={2.5} />

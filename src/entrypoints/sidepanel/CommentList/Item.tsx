@@ -151,17 +151,6 @@ export const Item: React.FC<{
             'dark:hover:bg-default/40 dark:aria-expanded:bg-default/40'
           )}
         >
-          {/* 再生時間 */}
-          <ItemCell
-            className={cn(
-              'w-[5rem] justify-center font-mono',
-              'cursor-pointer'
-            )}
-            style={{ backgroundColor: nicoruColor }}
-          >
-            <span className="line-clamp-1">{formattedDuration}</span>
-          </ItemCell>
-
           {/* コメント */}
           <ItemCell
             className={cn(
@@ -181,6 +170,17 @@ export const Item: React.FC<{
             >
               {comment.body}
             </span>
+          </ItemCell>
+
+          {/* 再生時間 */}
+          <ItemCell
+            className={cn(
+              'w-[5rem] justify-center font-mono',
+              'cursor-pointer'
+            )}
+            style={{ backgroundColor: nicoruColor }}
+          >
+            <span className="line-clamp-1">{formattedDuration}</span>
           </ItemCell>
 
           {/* ニコる */}
