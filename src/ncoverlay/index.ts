@@ -20,11 +20,13 @@ import { ncoMessenger } from './messaging'
 import './style.scss'
 
 export type NCOverlayEventMap = {
-  playing: (this: NCOverlay, evt: Event) => void
-  pause: (this: NCOverlay, evt: Event) => void
-  seeked: (this: NCOverlay, evt: Event) => void
-  timeupdate: (this: NCOverlay, evt: Event) => void
-  loadedmetadata: (this: NCOverlay, evt: Event) => void
+  playing: (this: NCOverlay) => void
+  pause: (this: NCOverlay) => void
+  seeked: (this: NCOverlay) => void
+  timeupdate: (this: NCOverlay) => void
+  loadedmetadata: (this: NCOverlay) => void
+
+  reload: (this: NCOverlay) => void
 }
 
 /**
@@ -63,7 +65,7 @@ export class NCOverlay {
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
       setTimeout(() => {
-        this.#trigger('loadedmetadata', new Event('loadedmetadata'))
+        this.#trigger('loadedmetadata')
       }, 100)
     }
   }
@@ -124,7 +126,7 @@ export class NCOverlay {
   /**
    * 描画するコメントデータを更新する
    */
-  async updateRendererThreads() {
+  async #updateRendererThreads() {
     const threads = await this.state.getThreads()
 
     this.renderer.setThreads(threads)
@@ -147,31 +149,31 @@ export class NCOverlay {
   #videoEventListeners: {
     [type in keyof HTMLVideoElementEventMap]?: (evt: Event) => void
   } = {
-    loadedmetadata: (evt) => {
-      this.#trigger('loadedmetadata', evt)
+    loadedmetadata: () => {
+      this.#trigger('loadedmetadata')
     },
 
-    playing: (evt) => {
+    playing: () => {
       this.renderer.stop()
       this.renderer.start()
 
-      this.#trigger('playing', evt)
+      this.#trigger('playing')
     },
 
-    pause: (evt) => {
+    pause: () => {
       this.renderer.stop()
 
-      this.#trigger('pause', evt)
+      this.#trigger('pause')
     },
 
-    seeked: (evt) => {
+    seeked: () => {
       this.renderer.render()
 
-      this.#trigger('seeked', evt)
+      this.#trigger('seeked')
     },
 
-    timeupdate: (evt) => {
-      this.#trigger('timeupdate', evt)
+    timeupdate: () => {
+      this.#trigger('timeupdate')
     },
   }
 
@@ -191,7 +193,7 @@ export class NCOverlay {
      * 描画データの更新
      */
     const updateRenderer = () => {
-      this.updateRendererThreads()
+      this.#updateRendererThreads()
     }
 
     // 検索ステータス ロード中
@@ -277,6 +279,11 @@ export class NCOverlay {
       })
     )
 
+    // メッセージ (再読み込み)
+    ncoMessenger.onMessage('reload', () => {
+      this.#trigger('reload')
+    })
+
     // メッセージ (インスタンスのID取得)
     ncoMessenger.onMessage('getId', () => {
       return this.id
@@ -317,13 +324,10 @@ export class NCOverlay {
     [type in keyof NCOverlayEventMap]?: NCOverlayEventMap[type][]
   } = {}
 
-  #trigger<Type extends keyof NCOverlayEventMap>(
-    type: Type,
-    ...args: Parameters<NCOverlayEventMap[Type]>
-  ) {
+  #trigger<Type extends keyof NCOverlayEventMap>(type: Type) {
     this.#listeners[type]?.forEach((listener) => {
       try {
-        listener.call(this, ...args)
+        listener.call(this)
       } catch (err) {
         Logger.error(type, err)
       }

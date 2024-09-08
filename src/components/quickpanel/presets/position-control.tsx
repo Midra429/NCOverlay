@@ -1,7 +1,5 @@
-import type { TooltipPlacement } from '@nextui-org/react'
-
 import { useEffect, useMemo, useCallback, useState } from 'react'
-import { Button, Divider, Tooltip } from '@nextui-org/react'
+import { Button, Divider } from '@nextui-org/react'
 import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants/markers'
@@ -9,16 +7,16 @@ import { MARKERS } from '@/constants/markers'
 import { ncoState, useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
+import { Tooltip } from '@/components/tooltip'
 import { PanelItem } from '@/components/panel-item'
 import { OffsetControl } from '@/components/offset-control'
 
 const MarkerButton: React.FC<{
   markerIdx: number | null
-  placement?: TooltipPlacement
   label: React.ReactNode
   shortLabel: React.ReactNode
   disabled?: boolean
-}> = ({ markerIdx, placement, label, shortLabel, disabled }) => {
+}> = ({ markerIdx, label, shortLabel, disabled }) => {
   const onPress = useCallback(async () => {
     try {
       sendNcoMessage('jumpMarker', markerIdx)
@@ -26,18 +24,7 @@ const MarkerButton: React.FC<{
   }, [markerIdx])
 
   return (
-    <Tooltip
-      classNames={{
-        base: 'pointer-events-none max-w-48',
-      }}
-      placement={placement}
-      size="sm"
-      radius="sm"
-      color="foreground"
-      showArrow
-      closeDelay={0}
-      content={label}
-    >
+    <Tooltip content={label}>
       <Button
         className="min-w-0"
         variant="flat"
@@ -92,16 +79,14 @@ export const PositionControl: React.FC = () => {
             <MarkerButton
               key="reset"
               markerIdx={null}
-              placement="top-start"
               label="オフセットをリセット"
               shortLabel={<RotateCcwIcon className="size-3" />}
             />
 
-            {MARKERS.map(({ label, shortLabel }, idx, ary) => (
+            {MARKERS.map(({ label, shortLabel }, idx) => (
               <MarkerButton
                 key={idx}
                 markerIdx={idx}
-                placement={idx === ary.length - 1 ? 'top-end' : undefined}
                 label={label}
                 shortLabel={shortLabel}
                 disabled={!markerEnableFlags[idx]}

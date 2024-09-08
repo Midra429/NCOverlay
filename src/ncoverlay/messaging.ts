@@ -10,6 +10,8 @@ import { webext } from '@/utils/webext'
 type ProtocolMap = {
   getId: (args?: null) => string | null
 
+  reload: (args?: null) => void
+
   jumpMarker: (
     args: Parameters<NCOverlay['jumpMarker']>[0]
   ) => ReturnType<NCOverlay['jumpMarker']>

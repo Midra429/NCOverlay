@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Button, Tooltip, cn } from '@nextui-org/react'
+import { Button, cn } from '@nextui-org/react'
 import { PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
+
+import { Tooltip } from '@/components/tooltip'
 
 export const SidePanelButton: React.FC = () => {
   const [tabId, setTabId] = useState<number>()
@@ -38,17 +40,7 @@ export const SidePanelButton: React.FC = () => {
   }, [tabId, open])
 
   return (
-    <Tooltip
-      classNames={{
-        base: 'pointer-events-none max-w-48',
-      }}
-      size="sm"
-      radius="sm"
-      color="foreground"
-      showArrow
-      closeDelay={0}
-      content={open ? '閉じる' : '開く'}
-    >
+    <Tooltip content={open ? '閉じる' : '開く'}>
       <Button
         className={cn(
           'border-1 border-foreground-100',

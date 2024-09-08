@@ -61,8 +61,14 @@ export class NCOPatcher {
     this.#video = video
     this.#nco = new NCOverlay(this.#video)
 
-    this.#nco.addEventListener('loadedmetadata', async () => {
+    const load = async () => {
       if (!this.#nco) return
+
+      const status = await this.#nco.state.get('status')
+
+      if (status === 'searching' || status === 'loading') {
+        return
+      }
 
       this.#nco.clear()
 
@@ -172,7 +178,10 @@ export class NCOPatcher {
 
         await this.#nco.state.set('status', 'ready')
       }
-    })
+    }
+
+    this.#nco.addEventListener('loadedmetadata', load)
+    this.#nco.addEventListener('reload', load)
 
     this.#nco.addEventListener('timeupdate', function () {
       ncoMessenger

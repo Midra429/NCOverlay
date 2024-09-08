@@ -2,6 +2,7 @@ import type { SettingsInitItem } from '@/types/constants'
 import type { SettingsKey } from '@/types/storage'
 
 import { memo } from 'react'
+import { Divider } from '@nextui-org/react'
 
 import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
@@ -9,13 +10,10 @@ import { SettingsInput } from '@/components/settings-input'
 import { PanelItem } from '@/components/panel-item'
 
 import { ShowHideToggle } from './presets/showhide-toggle'
-import { PositionControl } from './presets/position-control'
-import { CaptureButton } from './presets/capture-button'
+import { ReloadButton } from './presets/reload-button'
 import { SidePanelButton } from './presets/sidepanel-button'
-
-type PanelPresetComponentKey = keyof typeof PANEL_PRESET_CONPONENTS
-
-type PanelItemKey = PanelPresetComponentKey | SettingsKey
+import { CaptureButton } from './presets/capture-button'
+import { ReportButton } from './presets/report-button'
 
 const SETTINGS_INIT_ITEMS = Object.fromEntries(
   SETTINGS_INIT_DATA.flatMap(({ items }) => {
@@ -25,19 +23,10 @@ const SETTINGS_INIT_ITEMS = Object.fromEntries(
   [key in SettingsKey]: SettingsInitItem
 }
 
-const PANEL_PRESET_CONPONENTS = {
-  'panel:ShowHideToggle': ShowHideToggle,
-  'panel:PositionControl': PositionControl,
-}
-
-/**
- * @todo そのうち編集可にする
- */
-const quickpanelItemKeys: PanelItemKey[] = [
-  'panel:ShowHideToggle',
+const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:opacity',
   'settings:comment:scale',
-  'panel:PositionControl',
+  'settings:comment:autoLoads',
 ]
 
 /**
@@ -45,34 +34,36 @@ const quickpanelItemKeys: PanelItemKey[] = [
  */
 export const QuickPanel: React.FC = memo(() => {
   return (
-    <div className="flex flex-col gap-2">
-      {quickpanelItemKeys.map((key) => {
-        let element: React.ReactElement | undefined
+    <div className="flex h-full flex-col gap-2">
+      <div className="flex flex-col gap-2">
+        <ShowHideToggle />
 
-        if (key in SETTINGS_INIT_ITEMS) {
+        {QUICKPANEL_ITEM_KEYS.map((key) => {
           const item = { ...SETTINGS_INIT_ITEMS[key as SettingsKey] }
           const Input = SettingsInput[item.inputType]
 
           delete item.description
 
-          element = (
+          return (
             <PanelItem key={key} className="px-2.5 py-0.5">
               <Input {...(item as any)} />
             </PanelItem>
           )
-        } else if (key in PANEL_PRESET_CONPONENTS) {
-          const Component =
-            PANEL_PRESET_CONPONENTS[key as PanelPresetComponentKey]
+        })}
+      </div>
 
-          element = <Component key={key} />
-        }
+      <div className="flex flex-col gap-2">
+        <Divider />
 
-        return element
-      })}
+        <div className="flex flex-row gap-2">
+          <ReloadButton />
+          <CaptureButton />
+        </div>
 
-      <div className="flex flex-row gap-2">
-        <CaptureButton />
-        <SidePanelButton />
+        <div className="flex flex-row gap-2">
+          <ReportButton />
+          <SidePanelButton />
+        </div>
       </div>
     </div>
   )

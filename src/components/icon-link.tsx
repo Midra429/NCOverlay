@@ -1,6 +1,8 @@
-import { Tooltip, Button } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 
 import { webext } from '@/utils/webext'
+
+import { Tooltip } from '@/components/tooltip'
 
 export type IconLinkProps =
   | {
@@ -16,15 +18,6 @@ export type IconLinkProps =
 
 export const IconLink: React.FC<IconLinkProps> = (props) => (
   <Tooltip
-    classNames={{
-      base: 'pointer-events-none',
-    }}
-    placement="top-end"
-    size="sm"
-    radius="sm"
-    color="foreground"
-    showArrow
-    closeDelay={0}
     content={
       props.title || ('href' in props && new URL(props.href).pathname.slice(1))
     }

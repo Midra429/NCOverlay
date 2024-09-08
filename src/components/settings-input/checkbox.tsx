@@ -1,10 +1,12 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { Tooltip, CheckboxGroup, Checkbox, cn } from '@nextui-org/react'
+import { CheckboxGroup, Checkbox, cn } from '@nextui-org/react'
 import { CircleHelpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
+
+import { Tooltip } from '@/components/tooltip'
 
 export type Key = {
   [key in SettingsKey]: StorageItems[key] extends (string | number)[]
@@ -28,7 +30,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   return (
     <CheckboxGroup
       classNames={{
-        base: 'gap-0 py-2',
+        base: 'gap-0 py-1',
         label: 'my-1 text-small text-foreground',
         wrapper: 'my-1 gap-1.5',
       }}
@@ -38,19 +40,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         <div className="flex flex-row items-center justify-between">
           <span>{props.label}</span>
           {props.description && (
-            <Tooltip
-              classNames={{
-                base: 'pointer-events-none',
-                content: 'whitespace-pre-wrap',
-              }}
-              placement="left"
-              size="sm"
-              radius="sm"
-              color="foreground"
-              showArrow
-              closeDelay={0}
-              content={props.description}
-            >
+            <Tooltip placement="left" content={props.description}>
               <CircleHelpIcon
                 className="text-foreground-400"
                 size={18}

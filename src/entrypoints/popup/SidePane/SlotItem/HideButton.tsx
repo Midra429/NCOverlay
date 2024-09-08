@@ -1,10 +1,12 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useEffect, useState, useCallback } from 'react'
-import { Button, Tooltip, cn } from '@nextui-org/react'
+import { Button, cn } from '@nextui-org/react'
 import { EyeOffIcon } from 'lucide-react'
 
 import { ncoState } from '@/hooks/useNco'
+
+import { Tooltip } from '@/components/tooltip'
 
 export const HideButton: React.FC<{ detail: StateSlotDetail }> = ({
   detail,
@@ -25,18 +27,7 @@ export const HideButton: React.FC<{ detail: StateSlotDetail }> = ({
   }, [detail.id, hidden])
 
   return (
-    <Tooltip
-      classNames={{
-        base: 'pointer-events-none max-w-48',
-      }}
-      placement="left"
-      size="sm"
-      radius="sm"
-      color="foreground"
-      showArrow
-      closeDelay={0}
-      content={hidden ? '表示' : '非表示'}
-    >
+    <Tooltip placement="left" content={hidden ? '表示' : '非表示'}>
       <Button
         className={cn(
           '!size-6 min-h-0 min-w-0',
