@@ -1,10 +1,9 @@
 import type { VirtuosoProps, VirtuosoHandle } from 'react-virtuoso'
 import type { V1Thread } from '@xpadev-net/niconicomments'
 
-import { memo, useEffect, useState, useRef, forwardRef } from 'react'
+import { memo, useMemo, useEffect, useState, useRef, forwardRef } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
-import { useSettings } from '@/hooks/useSettings'
 import { useNcoState, useNcoTime } from '@/hooks/useNco'
 import { filterDisplayThreads } from '@/ncoverlay/state'
 
@@ -15,15 +14,13 @@ const components: VirtuosoProps<
   V1Thread['comments'][number],
   any
 >['components'] = {
-  EmptyPlaceholder: forwardRef(() => {
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <span className="text-small text-foreground-500">
-          コメントはありません
-        </span>
-      </div>
-    )
-  }),
+  EmptyPlaceholder: () => (
+    <div className="flex h-full w-full items-center justify-center">
+      <span className="text-small text-foreground-500">
+        コメントはありません
+      </span>
+    </div>
+  ),
 
   Scroller: forwardRef(({ children, ...props }, ref) => {
     return (
@@ -38,21 +35,18 @@ const components: VirtuosoProps<
 
 export const CommentList: React.FC = memo(() => {
   const [isHover, setIsHover] = useState(false)
-  const [offsetMs, setOffsetMs] = useState(0)
   const [comments, setComments] = useState<V1Thread['comments']>([])
-
-  const { value: fps } = useSettings('settings:comment:fps')
 
   const stateOffset = useNcoState('offset')
   const stateSlots = useNcoState('slots')
   const stateSlotDetails = useNcoState('slotDetails')
   const time = useNcoTime()
 
-  const virtuoso = useRef<VirtuosoHandle>(null)
-
-  useEffect(() => {
-    setOffsetMs((stateOffset ?? 0) * 1000)
+  const offsetMs = useMemo(() => {
+    return (stateOffset ?? 0) * 1000
   }, [stateOffset])
+
+  const virtuoso = useRef<VirtuosoHandle>(null)
 
   useEffect(() => {
     filterDisplayThreads(stateSlots, stateSlotDetails).then((threads) => {
@@ -67,13 +61,13 @@ export const CommentList: React.FC = memo(() => {
   useEffect(() => {
     if (isHover) return
 
-    const index = comments.findLastIndex((cmt) => cmt.vposMs + offsetMs <= time)
+    const currentTime = time - offsetMs
+    const index = comments.findLastIndex((cmt) => cmt.vposMs <= currentTime)
 
     if (index !== -1) {
       virtuoso.current?.scrollToIndex({
         index,
         align: 'end',
-        behavior: fps === 30 ? 'auto' : 'smooth',
       })
     }
   }, [time])

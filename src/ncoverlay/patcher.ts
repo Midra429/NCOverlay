@@ -174,21 +174,13 @@ export class NCOPatcher {
       }
     })
 
-    let tmpTime = -1
-
     this.#nco.addEventListener('timeupdate', function () {
-      const time = Math.floor(this.renderer.video.currentTime)
-
-      if (tmpTime !== time) {
-        tmpTime = time
-
-        ncoMessenger
-          .sendMessage('timeupdate', {
-            id: this.id,
-            time,
-          })
-          .catch(() => {})
-      }
+      ncoMessenger
+        .sendMessage('timeupdate', {
+          id: this.id,
+          time: this.renderer.video.currentTime * 1000,
+        })
+        .catch(() => {})
     })
 
     this.#appendCanvas(this.#video, this.#nco.renderer.canvas)

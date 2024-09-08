@@ -104,14 +104,10 @@ export const useNcoTime = (): number => {
   useEffect(() => {
     if (!ncoId) return
 
-    const callback = (time: number) => {
-      setTime(time * 1000)
-    }
-
-    timeupdateEvent.addEventListener(callback)
+    timeupdateEvent.addEventListener(setTime)
 
     return () => {
-      timeupdateEvent.removeEventListener(callback)
+      timeupdateEvent.removeEventListener(setTime)
     }
   }, [])
 
