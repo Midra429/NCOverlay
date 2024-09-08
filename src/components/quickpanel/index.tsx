@@ -57,11 +57,11 @@ export const QuickPanel: React.FC = memo(() => {
 
         <div className="flex flex-row gap-2">
           <ReloadButton />
-          <CaptureButton />
+          <ReportButton />
         </div>
 
         <div className="flex flex-row gap-2">
-          <ReportButton />
+          <CaptureButton />
           <SidePanelButton />
         </div>
       </div>

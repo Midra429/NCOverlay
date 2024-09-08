@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useCallback, useState } from 'react'
-import { Button, Divider } from '@nextui-org/react'
+import { Button, Divider, cn } from '@nextui-org/react'
 import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants/markers'
@@ -8,7 +8,6 @@ import { ncoState, useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import { Tooltip } from '@/components/tooltip'
-import { PanelItem } from '@/components/panel-item'
 import { OffsetControl } from '@/components/offset-control'
 
 const MarkerButton: React.FC<{
@@ -39,7 +38,11 @@ const MarkerButton: React.FC<{
   )
 }
 
-export const PositionControl: React.FC = () => {
+export type PositionControlProps = {
+  compact?: boolean
+}
+
+export const PositionControl: React.FC<PositionControlProps> = (props) => {
   const stateOffset = useNcoState('offset')
   const stateSlotDetails = useNcoState('slotDetails')
 
@@ -72,7 +75,13 @@ export const PositionControl: React.FC = () => {
   }, [offset])
 
   return (
-    <PanelItem className="flex flex-col gap-2 px-2.5 py-2">
+    <div
+      className={cn(
+        'flex flex-col gap-2 p-2',
+        'bg-content1 text-foreground',
+        'overflow-hidden'
+      )}
+    >
       {stateSlotDetails?.some((v) => !v.hidden && v.markers) && (
         <>
           <div className="flex flex-row gap-2">
@@ -81,6 +90,7 @@ export const PositionControl: React.FC = () => {
               markerIdx={null}
               label="オフセットをリセット"
               shortLabel={<RotateCcwIcon className="size-3" />}
+              disabled={!stateSlotDetails?.some((v) => v.offsetMs)}
             />
 
             {MARKERS.map(({ label, shortLabel }, idx) => (
@@ -99,11 +109,12 @@ export const PositionControl: React.FC = () => {
       )}
 
       <OffsetControl
+        compact={props.compact}
         value={offset}
         isValueChanged={offset !== currentOffset}
         onValueChange={(val) => setOffset(val)}
         onApply={onApply}
       />
-    </PanelItem>
+    </div>
   )
 }

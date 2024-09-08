@@ -75,7 +75,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ detail }) => {
           className={cn(
             'absolute bottom-[3px] right-[3px] z-10',
             'block px-1 py-[1px]',
-            'bg-black/40 backdrop-blur-md',
+            'bg-black/50 backdrop-blur-md',
             'border-1 border-white/25',
             'rounded-md',
             'text-[11px] leading-[15px] text-white',

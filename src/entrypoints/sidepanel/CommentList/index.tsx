@@ -15,7 +15,7 @@ const components: VirtuosoProps<
   any
 >['components'] = {
   EmptyPlaceholder: () => (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="flex size-full items-center justify-center">
       <span className="text-small text-foreground-500">
         コメントはありません
       </span>
@@ -27,7 +27,7 @@ const components: VirtuosoProps<
       <div {...props} className="flex flex-col" ref={ref}>
         <Header />
 
-        <div className="relative h-full w-full">{children}</div>
+        <div className="relative size-full">{children}</div>
       </div>
     )
   }),

@@ -1,3 +1,5 @@
+import { cn } from '@nextui-org/react'
+
 import { ncoState } from '@/hooks/useNco'
 
 import { Layout } from '@/components/layout'
@@ -9,12 +11,18 @@ const App: React.FC = () => {
   const isActive = !!ncoState
 
   return (
-    <Layout className="flex h-fit w-fit flex-row overflow-hidden">
+    <Layout
+      className={cn(
+        'flex h-fit w-fit flex-row',
+        'border-1 border-foreground-200',
+        'overflow-hidden'
+      )}
+    >
       {isActive && (
         <div
           className="border-r-1 border-foreground-200"
           style={{
-            width: 450,
+            width: 440,
             height: 520,
           }}
         >

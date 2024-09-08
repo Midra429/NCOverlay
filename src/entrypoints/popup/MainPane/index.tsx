@@ -33,7 +33,7 @@ export const MainPane: React.FC<{
   quickpanel?: boolean
 }> = memo(({ quickpanel }) => {
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex size-full flex-col">
       {quickpanel ? (
         <Tabs
           classNames={{

@@ -161,7 +161,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
         {/* 情報 (右) */}
         <div
           className={cn(
-            'flex h-full w-full flex-col gap-1',
+            'flex size-full flex-col gap-1',
             'mx-2',
             detail.hidden && 'opacity-50'
           )}
