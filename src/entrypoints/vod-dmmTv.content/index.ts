@@ -41,7 +41,13 @@ const main = async () => {
         return null
       }
 
-      const workTitle = dataVideo.seasonName
+      const workTitle = [
+        ...new Set([dataVideo.titleName, dataVideo.seasonName]),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+
       const episodeTitle =
         [dataVideo.episode?.episodeNumberName, dataVideo.episode?.episodeTitle]
           .filter(Boolean)
