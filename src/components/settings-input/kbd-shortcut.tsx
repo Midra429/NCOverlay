@@ -3,7 +3,7 @@ import type { Runtime } from 'wxt/browser'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ScrollShadow, Button, Kbd, cn } from '@nextui-org/react'
 import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
@@ -12,6 +12,7 @@ import { webext } from '@/utils/webext'
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemLabel } from '@/components/label'
+import { Tooltip } from '@/components/tooltip'
 
 const NEXTUI_KBD_KEYS: Partial<
   Record<'common' | Runtime.PlatformOs, string[]>
@@ -113,6 +114,20 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   const { value, setValue } = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()
 
+  const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    isRecording
+      ? () => {
+          stop()
+          setValue([...keys].join('+'))
+        }
+      : (evt) => {
+          start()
+          setValue('')
+          evt.currentTarget.blur()
+        },
+    [isRecording, keys]
+  )
+
   useEffect(() => {
     webext.runtime.getPlatformInfo().then((v) => setOs(v.os))
   }, [])
@@ -141,29 +156,23 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           ))}
         </ScrollShadow>
 
-        <Button
-          className="shrink-0"
-          size="sm"
-          radius="full"
-          variant="light"
-          isIconOnly
-          onClick={(evt) => {
-            if (isRecording) {
-              stop()
-              setValue([...keys].join('+'))
-            } else {
-              start()
-              setValue('')
-              evt.currentTarget.blur()
+        <Tooltip content={isRecording ? '保存' : '編集'}>
+          <Button
+            className="shrink-0"
+            size="sm"
+            radius="full"
+            variant="light"
+            isIconOnly
+            startContent={
+              isRecording ? (
+                <CheckIcon className="size-4" />
+              ) : (
+                <PencilIcon className="size-4" />
+              )
             }
-          }}
-        >
-          {isRecording ? (
-            <CheckIcon className="size-4" />
-          ) : (
-            <PencilIcon className="size-4" />
-          )}
-        </Button>
+            onClick={onClick}
+          />
+        </Tooltip>
       </div>
     </div>
   )

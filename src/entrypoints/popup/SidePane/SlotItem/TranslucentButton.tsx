@@ -8,37 +8,48 @@ import { ncoState } from '@/hooks/useNco'
 
 import { Tooltip } from '@/components/tooltip'
 
-export const TranslucentButton: React.FC<{ detail: StateSlotDetail }> = ({
-  detail,
+export type TranslucentButton = {
+  id: StateSlotDetail['id']
+  hidden: StateSlotDetail['hidden']
+  translucent: StateSlotDetail['translucent']
+}
+
+export const TranslucentButton: React.FC<TranslucentButton> = ({
+  id,
+  hidden,
+  translucent,
 }) => {
-  const [translucent, setTranslucent] = useState(true)
+  const [tmpTranslucent, setTmpTranslucent] = useState(true)
 
   useEffect(() => {
-    setTranslucent(!!detail.translucent)
-  }, [detail.translucent])
+    setTmpTranslucent(!!translucent)
+  }, [translucent])
 
   const onPress = useCallback(async () => {
-    setTranslucent((val) => !val)
+    setTmpTranslucent((val) => !val)
 
     await ncoState?.update('slotDetails', ['id'], {
-      id: detail.id,
-      translucent: !translucent,
+      id,
+      translucent: !tmpTranslucent,
     })
-  }, [detail.id, translucent])
+  }, [id, tmpTranslucent])
 
   return (
-    <Tooltip placement="left" content={translucent ? '半透明を解除' : '半透明'}>
+    <Tooltip
+      placement="left"
+      content={tmpTranslucent ? '半透明を解除' : '半透明'}
+    >
       <Button
         className={cn(
           '!size-6 min-h-0 min-w-0',
-          !translucent && 'text-foreground-700'
+          !tmpTranslucent && 'text-foreground-700'
         )}
         size="sm"
         radius="full"
-        variant={translucent ? 'solid' : 'light'}
-        color={translucent ? 'primary' : 'default'}
+        variant={tmpTranslucent ? 'solid' : 'light'}
+        color={tmpTranslucent ? 'primary' : 'default'}
         isIconOnly
-        isDisabled={detail.hidden}
+        isDisabled={hidden}
         startContent={<BlendIcon className="size-3.5" />}
         onPress={onPress}
       />

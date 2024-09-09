@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { Button, Divider, Input, cn } from '@nextui-org/react'
 import { RotateCcwIcon, CheckIcon } from 'lucide-react'
 
@@ -16,9 +17,17 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
   isValueChanged,
   compact,
 }) => {
+  const onValueChangeInput = useCallback((val: string) => {
+    onValueChange(Number(val))
+  }, [])
+
+  const onPressReset = useCallback(() => {
+    onValueChange(0)
+  }, [])
+
   return (
     <div className={cn('flex h-fit gap-2', compact ? 'flex-row' : 'flex-col')}>
-      <div className="flex flex-row items-start justify-start gap-1.5">
+      <div className="flex flex-row gap-1.5">
         {[-30, -10, -1].map((sec) => (
           <Button
             key={sec}
@@ -46,7 +55,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           placeholder="0"
           endContent="秒"
           value={value.toString()}
-          onValueChange={(val) => onValueChange(Number(val))}
+          onValueChange={onValueChangeInput}
         />
 
         {[1, 10, 30].map((sec) => (
@@ -73,7 +82,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           isIconOnly={compact}
           isDisabled={value === 0}
           startContent={<RotateCcwIcon className="size-4" />}
-          onPress={() => onValueChange(0)}
+          onPress={onPressReset}
         >
           {!compact && <span>リセット</span>}
         </Button>

@@ -13,15 +13,14 @@ export const ReportButton: React.FC = () => {
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
-
-    webext.tabs.create({
-      url: await getFormsUrl({
-        content: 'bug',
-        vod: stateVod,
-        info: stateInfo,
-        url: stateVod && tab?.url,
-      }),
+    const url = await getFormsUrl({
+      content: 'bug',
+      vod: stateVod,
+      info: stateInfo,
+      url: stateVod && tab?.url,
     })
+
+    webext.tabs.create({ url })
   }, [stateVod, stateInfo])
 
   return (

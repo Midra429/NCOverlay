@@ -60,10 +60,12 @@ const ItemCell: React.FC<
   )
 }
 
-export const Item: React.FC<{
+export type ItemProps = {
   comment: V1Thread['comments'][number]
   offsetMs: number
-}> = ({ comment, offsetMs }) => {
+}
+
+export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
   const { commentCellClass, commentClass, commentBgColor, commentFgColor } =
     useMemo(() => {
       const commentCellClass: string[] = []

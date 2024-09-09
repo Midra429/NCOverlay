@@ -10,7 +10,7 @@ import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { setBadge } from '@/utils/extension/setBadge'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
-import { getNcoId } from '@/utils/extension/getNcoId'
+import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import migration from './migration'
 import registerNcoApiProxy from './registerNcoApiProxy'
@@ -145,7 +145,7 @@ const main = async () => {
   webext.tabs.onUpdated.addListener(async (tabId) => {
     if (tabId === webext.tabs.TAB_ID_NONE) return
 
-    if (!(await getNcoId(tabId))) {
+    if (!(await sendNcoMessage('getId', null, tabId))) {
       webext.sidePanel.setOptions({
         enabled: false,
         path: webext.sidePanel.path,
@@ -165,9 +165,9 @@ const main = async () => {
     webext.contextMenus.onClicked.addListener(async ({ menuItemId }) => {
       switch (menuItemId) {
         case 'report':
-          webext.tabs.create({
-            url: await getFormsUrl(),
-          })
+          const url = await getFormsUrl()
+
+          webext.tabs.create({ url })
 
           break
       }

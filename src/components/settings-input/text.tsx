@@ -23,7 +23,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       label={props.label}
       description={props.description}
       value={value}
-      onValueChange={(val) => setValue(val as any)}
+      onValueChange={setValue}
     />
   )
 }

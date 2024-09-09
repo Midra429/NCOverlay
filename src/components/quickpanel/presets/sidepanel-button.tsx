@@ -11,18 +11,16 @@ export const SidePanelButton: React.FC = () => {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    void (async () => {
-      const tab = await webext.getCurrentActiveTab()
+    webext.getCurrentActiveTab().then(async (tab) => {
+      if (!tab) return
 
-      if (tab) {
-        const { enabled } = await webext.sidePanel.getOptions({
-          tabId: tab.id,
-        })
+      const { enabled } = await webext.sidePanel.getOptions({
+        tabId: tab.id,
+      })
 
-        setTabId(tab.id)
-        setOpen(!!enabled)
-      }
-    })()
+      setTabId(tab.id)
+      setOpen(!!enabled)
+    })
   }, [])
 
   const onPress = useCallback(() => {

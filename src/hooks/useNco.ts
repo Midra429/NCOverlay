@@ -2,10 +2,9 @@ import type { NCOStateItemKey, NCOStateItem } from '@/ncoverlay/state'
 
 import { useEffect, useState } from 'react'
 
-import { getNcoId } from '@/utils/extension/getNcoId'
 import { settings } from '@/utils/settings/extension'
 import { NCOState } from '@/ncoverlay/state'
-import { ncoMessenger } from '@/ncoverlay/messaging'
+import { ncoMessenger, sendNcoMessage } from '@/ncoverlay/messaging'
 
 export let ncoId: string | undefined
 export let ncoState: NCOState | undefined
@@ -29,7 +28,7 @@ ncoMessenger.onMessage('timeupdate', ({ data }) => {
 })
 
 export const initializeNcoState = async (tabId?: number) => {
-  const id = await getNcoId(tabId)
+  const id = await sendNcoMessage('getId', null, tabId)
 
   if (id) {
     ncoId = id

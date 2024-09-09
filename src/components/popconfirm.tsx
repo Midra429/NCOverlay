@@ -1,6 +1,6 @@
 import type { PopoverProps, ButtonProps } from '@nextui-org/react'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
   Popover,
   PopoverTrigger,
@@ -49,6 +49,32 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
   const [isOkLoading, setIsOkLoading] = useState(false)
   const [isCancelLoading, setIsCancelLoading] = useState(false)
 
+  const onPressCancel = useCallback(async () => {
+    if (props.onCancel) {
+      const response = props.onCancel()
+
+      if (response instanceof Promise) {
+        setIsCancelLoading(true)
+        await response
+        setIsCancelLoading(false)
+      }
+    }
+
+    setIsOpen(false)
+  }, [props.onCancel])
+
+  const onPressOk = useCallback(async () => {
+    const response = props.onOk()
+
+    if (response instanceof Promise) {
+      setIsOkLoading(true)
+      await response
+      setIsOkLoading(false)
+    }
+
+    setIsOpen(false)
+  }, [props.onOk])
+
   return (
     <Popover
       classNames={{
@@ -61,7 +87,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
       backdrop="opaque"
       showArrow
       isOpen={isOpen}
-      onOpenChange={(open) => setIsOpen(open)}
+      onOpenChange={setIsOpen}
     >
       <PopoverTrigger>{props.children}</PopoverTrigger>
 
@@ -89,19 +115,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
               color={props.cancelColor || 'default'}
               variant="flat"
               isLoading={isCancelLoading}
-              onPress={async () => {
-                if (props.onCancel) {
-                  const response = props.onCancel()
-
-                  if (response instanceof Promise) {
-                    setIsCancelLoading(true)
-                    await response
-                    setIsCancelLoading(false)
-                  }
-                }
-
-                setIsOpen(false)
-              }}
+              onPress={onPressCancel}
             >
               {props.cancelText || 'キャンセル'}
             </Button>
@@ -112,17 +126,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
               color={props.okColor || 'primary'}
               variant="solid"
               isLoading={isOkLoading}
-              onPress={async () => {
-                const response = props.onOk()
-
-                if (response instanceof Promise) {
-                  setIsOkLoading(true)
-                  await response
-                  setIsOkLoading(false)
-                }
-
-                setIsOpen(false)
-              }}
+              onPress={onPressOk}
             >
               {props.okText || 'OK'}
             </Button>

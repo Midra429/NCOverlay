@@ -11,6 +11,7 @@ import { PanelItem } from '@/components/panel-item'
  */
 export const ShowHideToggle: React.FC = () => {
   const [show, setShow] = useState(true)
+
   const { value: tmpOpacity, setValue: setTmpOpacity } = useStorage(
     'tmp:comment:opacity'
   )

@@ -2,7 +2,7 @@ import type { SettingsKey, StorageItems } from '@/types/storage'
 import type { NgSettingsContent } from '@/utils/extension/getNgSettings'
 import type { SettingsInputBaseProps } from '.'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import {
   Modal,
   ModalContent,
@@ -219,39 +219,49 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         onOpenChange={onOpenChange}
       >
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-row items-center justify-between">
-                <div className="flex flex-row items-center gap-0.5">
-                  <span>NG設定</span>
-                  <ChevronRightIcon className="size-5 opacity-50" />
-                  <span>{props.label}</span>
-                </div>
+          {(onClose) => {
+            const onPressAdd = useCallback(() => {
+              setTmpValue((val) => [...val, { content: '' }])
+            }, [])
 
-                <Button
-                  size="sm"
-                  variant="flat"
-                  radius="full"
-                  color="primary"
-                  startContent={<PlusIcon className="size-4" />}
-                  onPress={() => {
-                    setTmpValue([...tmpValue, { content: '' }])
-                  }}
-                >
-                  追加
-                </Button>
-              </ModalHeader>
+            const onPressSave = useCallback(() => {
+              setValue(filterNgSettingsContents(tmpValue))
 
-              <ModalBody className="max-h-full gap-0 overflow-auto">
-                <Header />
+              onClose()
+            }, [tmpValue])
 
-                <div className="flex flex-col">
-                  {tmpValue.map(
-                    (value, idx, ary) =>
-                      value && (
+            return (
+              <>
+                <ModalHeader className="flex flex-row items-center justify-between">
+                  <div className="flex flex-row items-center gap-0.5">
+                    <span>NG設定</span>
+                    <ChevronRightIcon className="size-5 opacity-50" />
+                    <span>{props.label}</span>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    radius="full"
+                    color="primary"
+                    startContent={<PlusIcon className="size-4" />}
+                    onPress={onPressAdd}
+                  >
+                    追加
+                  </Button>
+                </ModalHeader>
+
+                <ModalBody className="max-h-full gap-0 overflow-auto">
+                  <Header />
+
+                  <div className="flex flex-col">
+                    {tmpValue.map((val, idx, ary) => {
+                      if (!val) return
+
+                      return (
                         <Item
                           key={idx}
-                          init={value}
+                          init={val}
                           onValueChange={(val) => {
                             const tmpAry = [...ary]
 
@@ -261,35 +271,32 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
                           }}
                         />
                       )
-                  )}
-                </div>
-              </ModalBody>
+                    })}
+                  </div>
+                </ModalBody>
 
-              <ModalFooter>
-                <Button
-                  size="sm"
-                  variant="flat"
-                  color="default"
-                  onPress={onClose}
-                >
-                  キャンセル
-                </Button>
+                <ModalFooter>
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    color="default"
+                    onPress={onClose}
+                  >
+                    キャンセル
+                  </Button>
 
-                <Button
-                  size="sm"
-                  color="primary"
-                  startContent={<SaveIcon className="size-4" />}
-                  onPress={() => {
-                    setValue(filterNgSettingsContents(tmpValue))
-
-                    onClose()
-                  }}
-                >
-                  保存
-                </Button>
-              </ModalFooter>
-            </>
-          )}
+                  <Button
+                    size="sm"
+                    color="primary"
+                    startContent={<SaveIcon className="size-4" />}
+                    onPress={onPressSave}
+                  >
+                    保存
+                  </Button>
+                </ModalFooter>
+              </>
+            )
+          }}
         </ModalContent>
       </Modal>
     </>

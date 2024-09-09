@@ -26,7 +26,9 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   )
   const { value, setValue } = useSettings(props.settingsKey)
 
-  useEffect(() => setState(value), [value])
+  useEffect(() => {
+    setState(value)
+  }, [value])
 
   return (
     <Slider
@@ -45,8 +47,8 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           ? (val) => `${props.prefix || ''}${val}${props.suffix || ''}`
           : undefined
       }
-      onChange={(val) => setState(val as number)}
-      onChangeEnd={(val) => setValue(val as number)}
+      onChange={setState as any}
+      onChangeEnd={setValue as any}
     />
   )
 }

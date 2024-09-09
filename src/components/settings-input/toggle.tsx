@@ -31,7 +31,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       }}
       size="sm"
       isSelected={value}
-      onValueChange={(val) => setValue(val)}
+      onValueChange={setValue}
     >
       <ItemLabel title={props.label} description={props.description} />
     </Switch>

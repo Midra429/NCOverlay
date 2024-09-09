@@ -3,11 +3,11 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 import { cn } from '@nextui-org/react'
 
 export type SourceTagProps = {
-  source: StateSlotDetail['type']
+  type: StateSlotDetail['type']
 }
 
 const SOURCE_TAG_CLASSES: {
-  [k in Exclude<SourceTagProps['source'], 'normal'>]: string
+  [k in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   danime: cn('bg-danime-400 text-white dark:bg-danime-500'),
   chapter: cn('bg-danime-400 text-white dark:bg-danime-500'),
@@ -16,7 +16,7 @@ const SOURCE_TAG_CLASSES: {
 }
 
 const SOURCE_TAG_NAME: {
-  [k in Exclude<SourceTagProps['source'], 'normal'>]: string
+  [k in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   danime: 'dアニメ',
   chapter: 'dアニメ(分割)',
@@ -24,8 +24,8 @@ const SOURCE_TAG_NAME: {
   jikkyo: '実況',
 }
 
-export const SourceTag: React.FC<SourceTagProps> = ({ source }) => {
-  if (source === 'normal') return
+export const SourceTag: React.FC<SourceTagProps> = ({ type }) => {
+  if (type === 'normal') return
 
   return (
     <div
@@ -36,10 +36,10 @@ export const SourceTag: React.FC<SourceTagProps> = ({ source }) => {
         'rounded-md',
         'text-[11px] leading-[15px]',
         'select-none',
-        SOURCE_TAG_CLASSES[source]
+        SOURCE_TAG_CLASSES[type]
       )}
     >
-      {SOURCE_TAG_NAME[source]}
+      {SOURCE_TAG_NAME[type]}
     </div>
   )
 }

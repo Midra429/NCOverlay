@@ -1,20 +1,16 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { useMemo, useState } from 'react'
-import { Skeleton, Link, cn } from '@nextui-org/react'
-import {
-  CalendarDaysIcon,
-  PlayIcon,
-  MessageSquareTextIcon,
-  ClockIcon,
-} from 'lucide-react'
-
-import { formatDate } from '@/utils/format'
+import { useCallback, useState } from 'react'
+import { cn } from '@nextui-org/react'
 
 import { PanelItem } from '@/components/panel-item'
 
 import { StatusOverlay } from './StatusOverlay'
 import { Thumbnail } from './Thumbnail'
+import { DateTime } from './DateTime'
+import { Title } from './Title'
+import { Counts } from './Counts'
+import { Offset } from './Offset'
 import { HideButton } from './HideButton'
 import { TranslucentButton } from './TranslucentButton'
 import { Config, ConfigButton } from './Config'
@@ -23,124 +19,12 @@ export type SlotItemProps = {
   detail: StateSlotDetail
 }
 
-// 日付
-const SlotItemDate: React.FC<SlotItemProps> = ({ detail }) => {
-  const element = useMemo(() => {
-    return (
-      <div
-        className={cn(
-          'flex flex-shrink-0 flex-row items-center justify-between',
-          'h-4',
-          'text-foreground-500'
-        )}
-      >
-        <div className="flex h-full flex-row items-center gap-1">
-          <CalendarDaysIcon className="size-3" />
-          <span className="text-tiny">
-            {detail.type !== 'jikkyo'
-              ? formatDate(detail.info.date, 'YYYY/MM/DD(d) hh:mm')
-              : `${formatDate(detail.info.date[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}
-          </span>
-        </div>
-      </div>
-    )
-  }, [detail.type, detail.info.date])
-
-  return element
-}
-
-// タイトル
-const SlotItemTitle: React.FC<SlotItemProps> = ({ detail }) => {
-  const element = useMemo(() => {
-    const { href } = new URL(
-      detail.info.id,
-      detail.type === 'jikkyo'
-        ? `https://cal.syoboi.jp/tid/`
-        : 'https://www.nicovideo.jp/watch/'
-    )
-
-    return (
-      <div className="flex h-full flex-col justify-start">
-        <Link
-          className="underline-offset-2"
-          color="foreground"
-          href={href}
-          isExternal
-        >
-          <span
-            className="line-clamp-3 break-all text-tiny font-bold"
-            title={
-              190 < new Blob([detail.info.title]).size
-                ? detail.info.title
-                : undefined
-            }
-          >
-            {detail.info.title}
-          </span>
-        </Link>
-      </div>
-    )
-  }, [detail.info.id, detail.info.title])
-
-  return element
-}
-
-// カウンター
-const SlotItemCounter: React.FC<SlotItemProps> = ({ detail }) => {
-  const element = useMemo(() => {
-    return (
-      <div className="flex flex-row items-center gap-4">
-        {/* 再生数 */}
-        {detail.type !== 'jikkyo' && (
-          <div className="flex h-full flex-row items-center gap-1">
-            <PlayIcon className="size-3" />
-            <span className="text-tiny">
-              {detail.info.count.view.toLocaleString('ja-JP')}
-            </span>
-          </div>
-        )}
-
-        {/* コメント数 */}
-        <div className="flex h-full flex-row items-center gap-1">
-          <MessageSquareTextIcon className="size-3" />
-          <span className="text-tiny">
-            {detail.info.count.comment ? (
-              detail.info.count.comment.toLocaleString('ja-JP')
-            ) : (
-              <Skeleton className="h-3 w-16" />
-            )}
-          </span>
-        </div>
-      </div>
-    )
-  }, [detail.type, detail.info.count])
-
-  return element
-}
-
-// オフセット
-const SlotItemOffset: React.FC<SlotItemProps> = ({ detail }) => {
-  const element = useMemo(() => {
-    const ofs = Math.round((detail.offsetMs ?? 0) / 1000)
-
-    if (ofs === 0) return
-
-    return (
-      <div className="flex h-full flex-row items-center gap-1">
-        <ClockIcon className="size-3" />
-        <span className="text-tiny">
-          {0 < ofs && '+'}
-          {ofs.toLocaleString()}
-        </span>
-      </div>
-    )
-  }, [detail.offsetMs])
-
-  return element
-}
-
 export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
   const [isConfigOpen, setIsConfigOpen] = useState(false)
+
+  const toggleConfig = useCallback(() => {
+    setIsConfigOpen((val) => !val)
+  }, [])
 
   return (
     <PanelItem className={cn(detail.status === 'error' && 'bg-danger/30')}>
@@ -152,7 +36,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
           )}
         >
           {/* サムネイル */}
-          <Thumbnail detail={detail} />
+          <Thumbnail id={detail.id} type={detail.type} info={detail.info} />
 
           {/* ステータス */}
           <StatusOverlay status={detail.status} />
@@ -167,10 +51,14 @@ export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
           )}
         >
           {/* 日付 */}
-          <SlotItemDate detail={detail} />
+          <DateTime infoDate={detail.info.date} />
 
           {/* タイトル */}
-          <SlotItemTitle detail={detail} />
+          <Title
+            type={detail.type}
+            infoId={detail.info.id}
+            infoTitle={detail.info.title}
+          />
 
           <div
             className={cn(
@@ -180,10 +68,10 @@ export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
             )}
           >
             {/* 再生数・コメント数 */}
-            <SlotItemCounter detail={detail} />
+            <Counts infoCount={detail.info.count} />
 
             {/* オフセット */}
-            <SlotItemOffset detail={detail} />
+            <Offset offsetMs={detail.offsetMs} />
           </div>
         </div>
 
@@ -196,22 +84,23 @@ export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
         >
           <div className="flex shrink-0 flex-col gap-1">
             {/* 非表示 */}
-            <HideButton detail={detail} />
+            <HideButton id={detail.id} hidden={detail.hidden} />
 
             {/* 半透明 */}
-            <TranslucentButton detail={detail} />
+            <TranslucentButton
+              id={detail.id}
+              hidden={detail.hidden}
+              translucent={detail.translucent}
+            />
           </div>
 
           {/* 設定ボタン */}
-          <ConfigButton
-            isOpen={isConfigOpen}
-            onPress={() => setIsConfigOpen((val) => !val)}
-          />
+          <ConfigButton isOpen={isConfigOpen} onPress={toggleConfig} />
         </div>
       </div>
 
       {/* 設定 */}
-      <Config detail={detail} isOpen={isConfigOpen} />
+      <Config isOpen={isConfigOpen} id={detail.id} offsetMs={detail.offsetMs} />
     </PanelItem>
   )
 }

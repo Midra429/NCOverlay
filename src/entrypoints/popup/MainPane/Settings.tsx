@@ -34,14 +34,13 @@ const FormsButton: React.FC = () => {
 
   const onPress = useCallback(async () => {
     const tab = await webext.getCurrentActiveTab()
-
-    webext.tabs.create({
-      url: await getFormsUrl({
-        vod: stateVod,
-        info: stateInfo,
-        url: stateVod && tab?.url,
-      }),
+    const url = await getFormsUrl({
+      vod: stateVod,
+      info: stateInfo,
+      url: stateVod && tab?.url,
     })
+
+    webext.tabs.create({ url })
   }, [stateVod, stateInfo])
 
   return (
@@ -249,12 +248,10 @@ export const Settings: React.FC = memo(() => {
       variant="splitted"
       defaultExpandedKeys={['_info']}
     >
-      {[
-        accordionItemInfo,
-        accordionItemSettings,
-        accordionItemStorage,
-        accordionItemOthers,
-      ].flat()}
+      {accordionItemInfo}
+      {...accordionItemSettings as any}
+      {accordionItemStorage}
+      {accordionItemOthers}
     </Accordion>
   )
 })

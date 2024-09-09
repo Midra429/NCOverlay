@@ -1,3 +1,4 @@
+import type { GetDataType, GetReturnType } from '@webext-core/messaging'
 import type { StorageItems } from '@/types/storage'
 import type { NCOverlay } from '.'
 
@@ -26,18 +27,18 @@ type ProtocolMap = {
 
 export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
 
-export const sendNcoMessage: typeof ncoMessenger.sendMessage = async (
-  ...args
-) => {
-  let tabId: number | undefined
-
-  if (typeof args[2] === 'number') {
-    tabId = args[2]
-  } else {
+export const sendNcoMessage = async <TType extends keyof ProtocolMap>(
+  type: TType,
+  data: GetDataType<ProtocolMap[TType]>,
+  tabId?: number
+): Promise<GetReturnType<ProtocolMap[TType]> | undefined> => {
+  if (typeof tabId === 'undefined') {
     const tab = await webext.getCurrentActiveTab()
 
     tabId = tab?.id
   }
 
-  return ncoMessenger.sendMessage(args[0], args[1], tabId)
+  try {
+    return await ncoMessenger.sendMessage(type, data, tabId)
+  } catch {}
 }

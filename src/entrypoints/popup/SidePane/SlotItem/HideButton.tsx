@@ -8,35 +8,38 @@ import { ncoState } from '@/hooks/useNco'
 
 import { Tooltip } from '@/components/tooltip'
 
-export const HideButton: React.FC<{ detail: StateSlotDetail }> = ({
-  detail,
-}) => {
-  const [hidden, setHidden] = useState(true)
+export type HideButtonProps = {
+  id: StateSlotDetail['id']
+  hidden: StateSlotDetail['hidden']
+}
+
+export const HideButton: React.FC<HideButtonProps> = ({ id, hidden }) => {
+  const [tmpHidden, setTmpHidden] = useState(false)
 
   useEffect(() => {
-    setHidden(!!detail.hidden)
-  }, [detail.hidden])
+    setTmpHidden(!!hidden)
+  }, [hidden])
 
   const onPress = useCallback(async () => {
-    setHidden((val) => !val)
+    setTmpHidden((val) => !val)
 
     await ncoState?.update('slotDetails', ['id'], {
-      id: detail.id,
-      hidden: !hidden,
+      id,
+      hidden: !tmpHidden,
     })
-  }, [detail.id, hidden])
+  }, [id, tmpHidden])
 
   return (
-    <Tooltip placement="left" content={hidden ? '表示' : '非表示'}>
+    <Tooltip placement="left" content={tmpHidden ? '表示' : '非表示'}>
       <Button
         className={cn(
           '!size-6 min-h-0 min-w-0',
-          !hidden && 'text-foreground-700'
+          !tmpHidden && 'text-foreground-700'
         )}
         size="sm"
         radius="full"
-        variant={hidden ? 'solid' : 'light'}
-        color={hidden ? 'primary' : 'default'}
+        variant={tmpHidden ? 'solid' : 'light'}
+        color={tmpHidden ? 'primary' : 'default'}
         isIconOnly
         startContent={<EyeOffIcon className="size-3.5" />}
         onPress={onPress}

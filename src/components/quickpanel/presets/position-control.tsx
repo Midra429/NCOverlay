@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useState } from 'react'
+import { memo, useEffect, useState, useMemo, useCallback } from 'react'
 import { Button, Divider, cn } from '@nextui-org/react'
 import { RotateCcwIcon } from 'lucide-react'
 
@@ -16,10 +16,8 @@ const MarkerButton: React.FC<{
   shortLabel: React.ReactNode
   disabled?: boolean
 }> = ({ markerIdx, label, shortLabel, disabled }) => {
-  const onPress = useCallback(async () => {
-    try {
-      sendNcoMessage('jumpMarker', markerIdx)
-    } catch {}
+  const onPress = useCallback(() => {
+    sendNcoMessage('jumpMarker', markerIdx)
   }, [markerIdx])
 
   return (
@@ -42,7 +40,7 @@ export type PositionControlProps = {
   compact?: boolean
 }
 
-export const PositionControl: React.FC<PositionControlProps> = (props) => {
+export const PositionControl: React.FC<PositionControlProps> = memo((props) => {
   const stateOffset = useNcoState('offset')
   const stateSlotDetails = useNcoState('slotDetails')
 
@@ -63,6 +61,14 @@ export const PositionControl: React.FC<PositionControlProps> = (props) => {
     return flags
   }, [stateSlotDetails])
 
+  const hasMarker = useMemo(() => {
+    return !!stateSlotDetails?.some((v) => !v.hidden && v.markers)
+  }, [stateSlotDetails])
+
+  const resetButtonDisabled = useMemo(() => {
+    return !stateSlotDetails?.some((v) => v.offsetMs)
+  }, [stateSlotDetails])
+
   useEffect(() => {
     const ofs = stateOffset ?? 0
 
@@ -70,27 +76,22 @@ export const PositionControl: React.FC<PositionControlProps> = (props) => {
     setOffset(ofs)
   }, [stateOffset])
 
-  const onApply = useCallback(async () => {
-    await ncoState?.set('offset', offset)
+  const onApply = useCallback(() => {
+    ncoState?.set('offset', offset)
   }, [offset])
 
   return (
     <div
-      className={cn(
-        'flex flex-col gap-2 p-2',
-        'bg-content1 text-foreground',
-        'overflow-hidden'
-      )}
+      className={cn('flex flex-col gap-2 p-2', 'bg-content1 text-foreground')}
     >
-      {stateSlotDetails?.some((v) => !v.hidden && v.markers) && (
+      {hasMarker && (
         <>
           <div className="flex flex-row gap-2">
             <MarkerButton
-              key="reset"
               markerIdx={null}
               label="オフセットをリセット"
               shortLabel={<RotateCcwIcon className="size-3" />}
-              disabled={!stateSlotDetails?.some((v) => v.offsetMs)}
+              disabled={resetButtonDisabled}
             />
 
             {MARKERS.map(({ label, shortLabel }, idx) => (
@@ -112,9 +113,9 @@ export const PositionControl: React.FC<PositionControlProps> = (props) => {
         compact={props.compact}
         value={offset}
         isValueChanged={offset !== currentOffset}
-        onValueChange={(val) => setOffset(val)}
+        onValueChange={setOffset}
         onApply={onApply}
       />
     </div>
   )
-}
+})

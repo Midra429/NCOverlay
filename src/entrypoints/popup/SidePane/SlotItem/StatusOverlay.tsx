@@ -1,10 +1,12 @@
-import type { StateStatus } from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { Spinner, cn } from '@nextui-org/react'
 
-export const StatusOverlay: React.FC<{ status: StateStatus }> = ({
-  status,
-}) => {
+export type StatusOverlayProps = {
+  status: StateSlotDetail['status']
+}
+
+export const StatusOverlay: React.FC<StatusOverlayProps> = ({ status }) => {
   if (status === 'ready' || status === 'error') return
 
   return (

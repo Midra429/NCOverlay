@@ -6,22 +6,22 @@ import { settings } from '@/utils/settings/extension'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 export const capture = async (): Promise<
-  false | StorageItems['settings:capture:method']
+  StorageItems['settings:capture:method'] | false
 > => {
   const {
     'settings:capture:format': captureFormat,
     'settings:capture:method': captureMethod,
   } = await settings.get('settings:capture:format', 'settings:capture:method')
 
-  try {
-    const { format, data } = await sendNcoMessage(
-      'capture',
-      captureMethod === 'copy' ? 'png' : captureFormat
-    )
+  const response = await sendNcoMessage(
+    'capture',
+    captureMethod === 'copy' ? 'png' : captureFormat
+  )
 
-    if (data) {
-      const blob = new Blob([new Uint8Array(data)], {
-        type: `image/${format}`,
+  if (response?.data) {
+    try {
+      const blob = new Blob([new Uint8Array(response.data)], {
+        type: `image/${response.format}`,
       })
 
       switch (captureMethod) {
@@ -42,9 +42,9 @@ export const capture = async (): Promise<
       }
 
       return captureMethod
+    } catch (err) {
+      Logger.error('capture', err)
     }
-  } catch (err) {
-    Logger.error('capture', err)
   }
 
   return false

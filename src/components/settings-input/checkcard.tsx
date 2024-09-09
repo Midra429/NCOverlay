@@ -36,7 +36,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       orientation="vertical"
       label={props.label}
       value={value}
-      onChange={(val) => setValue(val as any)}
+      onChange={setValue as any}
     >
       {props.options.map(({ label, description, value }, idx) => (
         <Checkbox
