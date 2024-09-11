@@ -1,12 +1,7 @@
 /**
  * マーカー
  */
-export const MARKERS: {
-  label: string
-  shortLabel: string
-  regexp: RegExp
-  range?: [start: number | null, end: number | null]
-}[] = [
+export const MARKERS = [
   {
     label: 'ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!!',
     shortLabel: 'ｷﾀ-',
@@ -17,20 +12,29 @@ export const MARKERS: {
     label: 'オープニング',
     shortLabel: 'OP',
     regexp: /^(OP|ＯＰ)$/i,
+    range: [null, null],
   },
   {
     label: 'Aパート',
     shortLabel: 'A',
     regexp: /^(A|Ａ)$/,
+    range: [null, null],
   },
   {
     label: 'Bパート',
     shortLabel: 'B',
     regexp: /^(B|Ｂ)$/,
+    range: [null, null],
   },
   {
     label: 'Cパート',
     shortLabel: 'C',
     regexp: /^(C|Ｃ)$/,
+    range: [null, null],
   },
-]
+] as const satisfies {
+  label: string
+  shortLabel: string
+  regexp: RegExp
+  range: [start: number | null, end: number | null]
+}[]

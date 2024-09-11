@@ -93,7 +93,9 @@ export class NCOverlay {
   /**
    * 指定したマーカーの位置にジャンプ
    */
-  async jumpMarker(marker: number | string | null) {
+  async jumpMarker(
+    marker: number | (typeof MARKERS)[number]['shortLabel'] | null
+  ) {
     const oldDetails = await this.state.get('slotDetails')
     const newDetails = structuredClone(oldDetails)
 
