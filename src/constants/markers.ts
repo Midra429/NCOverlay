@@ -5,7 +5,14 @@ export const MARKERS: {
   label: string
   shortLabel: string
   regexp: RegExp
+  range?: [start: number | null, end: number | null]
 }[] = [
+  {
+    label: 'ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!!',
+    shortLabel: 'ｷﾀ-',
+    regexp: /^(ｷﾀ|キタ)[ｰー━].+[!！]$|^きたあ{0,}$|^(始|はじ)まっ?た$/i,
+    range: [0, 180], // 3分間待ってやる
+  },
   {
     label: 'オープニング',
     shortLabel: 'OP',

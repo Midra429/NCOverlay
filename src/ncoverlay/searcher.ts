@@ -1,6 +1,4 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
-import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
-import type { VideoData } from '@midra/nco-api/types/niconico/video'
 import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
 import type {
   NCOState,
@@ -11,14 +9,14 @@ import type {
 
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
-import { MARKERS } from '@/constants/markers'
-
 import { Logger } from '@/utils/logger'
-import { filterNvComment } from '@/utils/extension/filterNvComment'
+import { getNiconicoComments } from '@/utils/extension/getNiconicoComments'
+import { getJikkyoKakologs } from '@/utils/extension/getJikkyoKakologs'
 import {
   convertNgSettings,
   applyNgSettings,
 } from '@/utils/extension/applyNgSetting'
+
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 export type AutoLoadInput = {
@@ -203,22 +201,22 @@ export class NCOSearcher {
       commentsJikkyo,
     ] = await Promise.all([
       // ニコニコ動画 コメント 取得
-      this.getNiconicoComments(
+      getNiconicoComments(
         loadingSlotDetails
           .filter((v) => v.type === 'normal')
           .map((v) => ({ contentId: v.id }))
       ),
-      this.getNiconicoComments(
+      getNiconicoComments(
         loadingSlotDetails
           .filter((v) => v.type === 'danime')
           .map((v) => ({ contentId: v.id }))
       ),
-      this.getNiconicoComments(
+      getNiconicoComments(
         loadingSlotDetails
           .filter((v) => v.type === 'szbh')
           .map((v) => ({ contentId: v.id }))
       ),
-      this.getNiconicoComments(
+      getNiconicoComments(
         loadingSlotDetails
           .filter((v) => v.type === 'chapter')
           .map((v) => ({ contentId: v.id }))
@@ -226,7 +224,7 @@ export class NCOSearcher {
 
       // ニコニコ実況 過去ログ 取得
       scPrograms
-        ? this.getJikkyoKakologs(
+        ? getJikkyoKakologs(
             scPrograms.map((val) => ({
               jkChId: syobocalToJikkyoChId(val.ChID)!,
               starttime: parseInt(val.StTime),
@@ -398,133 +396,6 @@ export class NCOSearcher {
     ]).then(([slots, slotDetails]) => {
       Logger.log('slots:', slots)
       Logger.log('slotDetails:', slotDetails)
-    })
-  }
-
-  /**
-   * ニコニコ動画のコメント取得
-   */
-  async getNiconicoComments(
-    params: {
-      contentId: string
-      when?: number
-    }[]
-  ): Promise<
-    ({
-      data: VideoData
-      threads: V1Thread[]
-    } | null)[]
-  > {
-    // 動画情報取得
-    const videos = await Promise.all(
-      params.map(({ contentId }) => {
-        return ncoApiProxy.niconico.video(contentId)
-      })
-    )
-
-    // コメント取得
-    const threadsData = await Promise.all(
-      videos.map((video, idx) => {
-        if (!video) return null
-
-        const nvComment = filterNvComment(video.comment)
-
-        return ncoApiProxy.niconico.threads(nvComment, {
-          when: params[idx].when,
-        })
-      })
-    )
-
-    return threadsData.map((val, idx) => {
-      return val
-        ? {
-            data: videos[idx]!,
-            threads: val.threads,
-          }
-        : null
-    })
-  }
-
-  /**
-   * ニコニコ実況 過去ログを取得
-   */
-  async getJikkyoKakologs(
-    params: {
-      jkChId: JikkyoChannelId
-      starttime: number | Date
-      endtime: number | Date
-    }[]
-  ): Promise<
-    ({
-      thread: V1Thread
-      markers: (number | null)[]
-    } | null)[]
-  > {
-    // 過去ログ取得
-    const kakologs = await Promise.all(
-      params.map(({ jkChId, starttime, endtime }) => {
-        return ncoApiProxy.jikkyo.kakolog(
-          jkChId,
-          {
-            starttime,
-            endtime,
-            format: 'json',
-          },
-          {
-            compatV1Thread: true,
-            userAgent,
-          }
-        )
-      })
-    )
-
-    return kakologs.map((thread) => {
-      if (thread) {
-        const markers = this.findMarkers([thread])
-
-        return { thread, markers }
-      } else {
-        return null
-      }
-    })
-  }
-
-  /**
-   * マーカーの位置を探す
-   */
-  findMarkers(threads: V1Thread[]) {
-    const comments = threads
-      .flatMap((thread) => thread.comments)
-      .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
-
-    return MARKERS.map(({ regexp }) => {
-      let tmpCount = 0
-      let tmpVposMs = 0
-
-      comments
-        .filter((cmt) => regexp.test(cmt.body))
-        .forEach((cmt, idx, ary) => {
-          const commentsInRange = ary.slice(idx).filter((val) => {
-            return val.vposMs - cmt.vposMs <= 5000
-          })
-          const count = commentsInRange.length
-
-          if (tmpCount < count) {
-            const first = commentsInRange.at(0)!
-            const last = commentsInRange.at(-1)!
-
-            tmpCount = count
-            tmpVposMs = Math.trunc(
-              first.vposMs + (last.vposMs - first.vposMs) / 4
-            )
-          }
-        })
-
-      if (2 <= tmpCount && tmpVposMs) {
-        return tmpVposMs
-      }
-
-      return null
     })
   }
 
