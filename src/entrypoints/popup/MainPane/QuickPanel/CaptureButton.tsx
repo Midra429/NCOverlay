@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
-import { Button, cn } from '@nextui-org/react'
 import { CameraIcon, CheckIcon, XIcon } from 'lucide-react'
 
 import { capture } from '@/utils/extension/capture'
+
+import { PanelButton } from '@/components/panel-button'
 
 export const CaptureButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -32,13 +33,8 @@ export const CaptureButton: React.FC = () => {
   }, [])
 
   return (
-    <Button
-      className={cn(
-        'border-1 border-foreground-100',
-        'bg-content1 text-foreground',
-        'shadow-small'
-      )}
-      fullWidth
+    <PanelButton
+      compact
       isLoading={isLoading}
       isDisabled={isCopied || isFailed}
       startContent={
@@ -48,9 +44,7 @@ export const CaptureButton: React.FC = () => {
       }
       onPress={onPress}
     >
-      {(isCopied && 'コピーしました') ||
-        (isFailed && '失敗しました') ||
-        'キャプチャー'}
-    </Button>
+      キャプチャー
+    </PanelButton>
   )
 }

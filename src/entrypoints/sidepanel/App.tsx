@@ -3,7 +3,7 @@ import { cn } from '@nextui-org/react'
 import { useNcoStateReady } from '@/hooks/useNco'
 
 import { Layout } from '@/components/layout'
-import { PositionControl } from '@/components/quickpanel/presets/position-control'
+import { PositionControl } from '@/components/position-control'
 
 import { CommentList } from './CommentList'
 

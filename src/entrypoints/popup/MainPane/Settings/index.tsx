@@ -1,10 +1,9 @@
-import { memo, useEffect, useState, useCallback } from 'react'
+import { memo } from 'react'
 import { Accordion, AccordionItem, Divider, Link, cn } from '@nextui-org/react'
 import {
   InfoIcon,
   DatabaseIcon,
   CircleEllipsisIcon,
-  ClipboardPenIcon,
   RotateCcwIcon,
   Trash2Icon,
 } from 'lucide-react'
@@ -14,79 +13,18 @@ import { GITHUB_URL, LINKS } from '@/constants'
 import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
 import { webext } from '@/utils/webext'
-import { filesize } from '@/utils/filesize'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
-import { getFormsUrl } from '@/utils/extension/getFormsUrl'
-
-import { useNcoState } from '@/hooks/useNco'
 
 import { IconLink } from '@/components/icon-link'
 import { SettingsInput } from '@/components/settings-input'
 import { ItemLabel } from '@/components/label'
 import { ItemButton } from '@/components/item-button'
 
+import { FormsButton } from './FormsButton'
+import { StorageSizes } from './StorageSizes'
+
 const { name, version } = webext.runtime.getManifest()
-
-const FormsButton: React.FC = () => {
-  const stateVod = useNcoState('vod')
-  const stateInfo = useNcoState('info')
-
-  const onPress = useCallback(async () => {
-    const tab = await webext.getCurrentActiveTab()
-    const url = await getFormsUrl({
-      vod: stateVod,
-      info: stateInfo,
-      url: stateVod && tab?.url,
-    })
-
-    webext.tabs.create({ url })
-  }, [stateVod, stateInfo])
-
-  return (
-    <IconLink
-      icon={ClipboardPenIcon}
-      title="不具合報告・機能提案"
-      onPress={onPress}
-    />
-  )
-}
-
-const StorageSizes: React.FC = () => {
-  const [storageBytes, setStorageBytes] = useState<number>(0)
-  const [settingsBytes, setSettingsBytes] = useState<number>(0)
-
-  useEffect(() => {
-    const updateStorageSizes = () => {
-      storage.getBytesInUse().then(setStorageBytes)
-      settings.getBytesInUse().then(setSettingsBytes)
-    }
-
-    updateStorageSizes()
-
-    webext.storage.local.onChanged.addListener(updateStorageSizes)
-
-    return () => {
-      webext.storage.local.onChanged.removeListener(updateStorageSizes)
-    }
-  }, [])
-
-  return (
-    <div className="flex flex-row items-center justify-evenly py-1.5">
-      <span className="text-tiny">全体: {filesize(storageBytes)}</span>
-
-      <Divider className="h-4" orientation="vertical" />
-
-      <span className="text-tiny">設定: {filesize(settingsBytes)}</span>
-
-      <Divider className="h-4" orientation="vertical" />
-
-      <span className="text-tiny">
-        その他: {filesize(storageBytes - settingsBytes)}
-      </span>
-    </div>
-  )
-}
 
 /**
  * 情報

@@ -5,7 +5,7 @@ import { Spinner, cn } from '@nextui-org/react'
 
 import { useNcoState } from '@/hooks/useNco'
 
-import { PositionControl } from '@/components/quickpanel/presets/position-control'
+import { PositionControl } from '@/components/position-control'
 
 import { SlotItem } from './SlotItem'
 
@@ -71,7 +71,7 @@ export const SidePane: React.FC = memo(() => {
         )}
       </div>
 
-      <div className="border-t-1 border-foreground-200">
+      <div className="border-t-1 border-divider">
         <PositionControl compact />
       </div>
     </div>

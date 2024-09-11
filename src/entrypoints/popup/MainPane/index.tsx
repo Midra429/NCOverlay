@@ -2,8 +2,7 @@ import { memo } from 'react'
 import { Tabs, Tab } from '@nextui-org/react'
 import { LayoutGridIcon, SettingsIcon } from 'lucide-react'
 
-import { QuickPanel } from '@/components/quickpanel'
-
+import { QuickPanel } from './QuickPanel'
 import { Settings } from './Settings'
 
 const tabItems: {
@@ -44,7 +43,6 @@ export const MainPane: React.FC<{
           fullWidth
           radius="full"
           color="primary"
-          // destroyInactiveTabPanel={false}
           items={tabItems}
         >
           {({ key, title, icon: Icon, children }) => (

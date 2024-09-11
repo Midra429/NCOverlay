@@ -9,11 +9,11 @@ import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 import { SettingsInput } from '@/components/settings-input'
 import { PanelItem } from '@/components/panel-item'
 
-import { ShowHideToggle } from './presets/showhide-toggle'
-import { ReloadButton } from './presets/reload-button'
-import { SidePanelButton } from './presets/sidepanel-button'
-import { CaptureButton } from './presets/capture-button'
-import { ReportButton } from './presets/report-button'
+import { ShowHideToggle } from './ShowHideToggle'
+import { ReloadButton } from './ReloadButton'
+import { SidePanelButton } from './SidePanelButton'
+import { CaptureButton } from './CaptureButton'
+import { ReportButton } from './ReportButton'
 
 const SETTINGS_INIT_ITEMS = Object.fromEntries(
   SETTINGS_INIT_DATA.flatMap(({ items }) => {
@@ -34,7 +34,7 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
  */
 export const QuickPanel: React.FC = memo(() => {
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="flex h-full flex-col justify-between">
       <div className="flex flex-col gap-2">
         <ShowHideToggle />
 
@@ -57,11 +57,8 @@ export const QuickPanel: React.FC = memo(() => {
 
         <div className="flex flex-row gap-2">
           <ReloadButton />
-          <ReportButton />
-        </div>
-
-        <div className="flex flex-row gap-2">
           <CaptureButton />
+          <ReportButton />
           <SidePanelButton />
         </div>
       </div>

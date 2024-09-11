@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Button, cn } from '@nextui-org/react'
 import { PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 
 import { Tooltip } from '@/components/tooltip'
+import { PanelButton } from '@/components/panel-button'
 
 export const SidePanelButton: React.FC = () => {
   const [tabId, setTabId] = useState<number>()
@@ -38,25 +38,18 @@ export const SidePanelButton: React.FC = () => {
   }, [tabId, open])
 
   return (
-    <Tooltip content={open ? '閉じる' : '開く'}>
-      <Button
-        className={cn(
-          'border-1 border-foreground-100',
-          'bg-content1 text-foreground',
-          'shadow-small'
-        )}
-        fullWidth
-        startContent={
-          open ? (
-            <PanelRightCloseIcon className="size-4" />
-          ) : (
-            <PanelRightOpenIcon className="size-4" />
-          )
-        }
-        onPress={onPress}
-      >
-        コメントリスト
-      </Button>
-    </Tooltip>
+    <PanelButton
+      compact
+      startContent={
+        open ? (
+          <PanelRightCloseIcon className="size-4" />
+        ) : (
+          <PanelRightOpenIcon className="size-4" />
+        )
+      }
+      onPress={onPress}
+    >
+      コメント一覧を{open ? '閉じる' : '開く'}
+    </PanelButton>
   )
 }

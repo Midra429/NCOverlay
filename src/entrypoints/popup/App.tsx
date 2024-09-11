@@ -7,6 +7,7 @@ import { SidePane } from './SidePane'
 
 const App: React.FC = () => {
   const isActive = !!ncoState
+  const height = isActive ? 517 : 458
 
   return (
     <Layout className="overflow-hidden border-1 border-divider">
@@ -16,7 +17,7 @@ const App: React.FC = () => {
             className="border-r-1 border-foreground-200"
             style={{
               width: 440,
-              height: 520,
+              height,
             }}
           >
             <SidePane />
@@ -26,7 +27,7 @@ const App: React.FC = () => {
         <div
           style={{
             width: 350,
-            height: isActive ? 520 : 460,
+            height,
           }}
         >
           <MainPane quickpanel={isActive} />
