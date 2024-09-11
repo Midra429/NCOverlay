@@ -26,6 +26,7 @@ const SETTINGS_INIT_ITEMS = Object.fromEntries(
 const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:opacity',
   'settings:comment:scale',
+  'settings:comment:fps',
   'settings:comment:autoLoads',
 ]
 

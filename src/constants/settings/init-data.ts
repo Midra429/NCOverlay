@@ -86,26 +86,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     icon: MessageSquareTextIcon,
     items: [
       {
-        settingsKey: 'settings:comment:autoLoads',
-        inputType: 'checkbox',
-        label: '自動読み込み',
-        options: [
-          { value: 'normal', label: '通常 / dアニメ' },
-          { value: 'chapter', label: 'dアニメ (分割)' },
-          { value: 'szbh', label: 'コメント専用' },
-          { value: 'jikkyo', label: '実況 (過去ログ)' },
-        ],
-      },
-      // {
-      //   settingsKey: 'settings:comment:amount',
-      //   inputType: 'range',
-      //   label: '表示量',
-      //   min: 1,
-      //   max: 5,
-      //   step: 1,
-      //   suffix: '倍',
-      // },
-      {
         settingsKey: 'settings:comment:opacity',
         inputType: 'range',
         label: '不透明度',
@@ -131,6 +111,17 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           { value: 30, label: '30fps' },
           { value: 60, label: '60fps' },
           { value: 0, label: '無制限' },
+        ],
+      },
+      {
+        settingsKey: 'settings:comment:autoLoads',
+        inputType: 'checkbox',
+        label: '自動読み込み',
+        options: [
+          { value: 'normal', label: '通常 / dアニメ' },
+          { value: 'chapter', label: 'dアニメ (分割)' },
+          { value: 'szbh', label: 'コメント専用' },
+          { value: 'jikkyo', label: '実況 (過去ログ)' },
         ],
       },
     ],
@@ -194,6 +185,11 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:kbd:resetGlobalOffset',
         inputType: 'kbd-shortcut',
         label: '全体のオフセットをリセットする',
+      },
+      {
+        settingsKey: 'settings:kbd:jumpMarkerToStart',
+        inputType: 'kbd-shortcut',
+        label: '「ｷﾀ-（開始）」にジャンプ',
       },
       {
         settingsKey: 'settings:kbd:jumpMarkerToOP',
