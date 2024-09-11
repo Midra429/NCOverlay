@@ -74,12 +74,6 @@ export type StorageItems_v2 = {
   'settings:comment:autoLoads': ('normal' | 'szbh' | 'chapter' | 'jikkyo')[]
 
   /**
-   * コメント:NG設定を使用
-   * @default false
-   */
-  'settings:comment:useNglist': boolean
-
-  /**
    * コメント:表示量
    * @description 1 ~ 5倍
    * @default 1
@@ -160,6 +154,12 @@ export type StorageItems_v2 = {
    * @default ''
    */
   'settings:kbd:resetGlobalOffset': string
+
+  /**
+   * キーボード:オフセットを「ｷﾀ-」に飛ばす
+   * @default ''
+   */
+  'settings:kbd:jumpMarkerToStart': string
 
   /**
    * キーボード:オフセットを「オープニング」に飛ばす

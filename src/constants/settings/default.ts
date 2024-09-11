@@ -17,7 +17,6 @@ export const SETTINGS_DEFAULT: SettingItems = {
 
   // コメント
   'settings:comment:autoLoads': ['normal', 'chapter'],
-  'settings:comment:useNglist': false,
   'settings:comment:amount': 1,
   'settings:comment:opacity': 100,
   'settings:comment:scale': 100,
@@ -35,6 +34,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:kbd:increaseGlobalOffset': '',
   'settings:kbd:decreaseGlobalOffset': '',
   'settings:kbd:resetGlobalOffset': '',
+  'settings:kbd:jumpMarkerToStart': '',
   'settings:kbd:jumpMarkerToOP': '',
   'settings:kbd:jumpMarkerToA': '',
   'settings:kbd:jumpMarkerToB': '',

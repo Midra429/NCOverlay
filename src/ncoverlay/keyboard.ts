@@ -75,6 +75,10 @@ export class NCOKeyboard {
         this.setOffset(null)
       }),
 
+      register('settings:kbd:jumpMarkerToStart', () => {
+        this.#functions.jumpMarker('ｷﾀ-')
+      }),
+
       register('settings:kbd:jumpMarkerToOP', () => {
         this.#functions.jumpMarker('OP')
       }),
