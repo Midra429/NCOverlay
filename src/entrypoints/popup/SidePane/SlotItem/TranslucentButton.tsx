@@ -19,7 +19,7 @@ export const TranslucentButton: React.FC<TranslucentButton> = ({
   hidden,
   translucent,
 }) => {
-  const [tmpTranslucent, setTmpTranslucent] = useState(true)
+  const [tmpTranslucent, setTmpTranslucent] = useState(false)
 
   useEffect(() => {
     setTmpTranslucent(!!translucent)
