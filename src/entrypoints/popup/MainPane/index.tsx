@@ -49,7 +49,7 @@ export const MainPane: React.FC<{
             <Tab
               key={key}
               title={
-                <div className="flex flex-row items-center gap-x-1">
+                <div className="flex flex-row items-center gap-1">
                   <Icon className="size-4" />
                   <span>{title}</span>
                 </div>

@@ -57,7 +57,7 @@ export const Segmented: React.FC<SegmentedProps> = (props) => {
             key={key}
             title={
               startContent ? (
-                <div className="flex flex-row items-center gap-x-1">
+                <div className="flex flex-row items-center gap-1">
                   {startContent}
                   <span>{children}</span>
                 </div>

@@ -43,7 +43,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           key={idx}
           classNames={{
             base: cn(
-              'flex flex-row gap-x-0.5',
+              'flex flex-row gap-0.5',
               'm-0 min-h-14 w-full max-w-none',
               'cursor-pointer',
               'rounded-medium border-2 border-transparent',
