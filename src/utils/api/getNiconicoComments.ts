@@ -1,9 +1,9 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { VideoData } from '@midra/nco-api/types/niconico/video'
 
-import { filterNvComment } from '@/utils/extension/filterNvComment'
-
 import { ncoApiProxy } from '@/proxy/nco-api'
+
+import { filterNvComment } from './filterNvComment'
 
 /**
  * ニコニコ動画のコメント取得

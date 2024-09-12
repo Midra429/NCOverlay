@@ -10,12 +10,10 @@ import type {
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
 import { Logger } from '@/utils/logger'
-import { getNiconicoComments } from '@/utils/extension/getNiconicoComments'
-import { getJikkyoKakologs } from '@/utils/extension/getJikkyoKakologs'
-import {
-  convertNgSettings,
-  applyNgSettings,
-} from '@/utils/extension/applyNgSetting'
+import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
+import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
+import { extractNgSettings } from '@/utils/api/extractNgSettings'
+import { applyNgSettings } from '@/utils/api/applyNgSetting'
 
 import { ncoApiProxy } from '@/proxy/nco-api'
 
@@ -264,7 +262,7 @@ export class NCOSearcher {
             id,
             threads: applyNgSettings(
               threads,
-              convertNgSettings(cmt.data.comment.ng)
+              extractNgSettings(cmt.data.comment.ng)
             ),
           })
 

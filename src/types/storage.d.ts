@@ -1,6 +1,16 @@
 import type { VodKey, PluginKey } from '@/types/constants'
-import type { NgSettings } from '@/utils/extension/getNgSettings'
 import type { NCOStateItems } from '@/ncoverlay/state'
+
+export type NgSettingsContent = {
+  content: string
+  isRegExp?: boolean
+}
+
+export type NgSettings = {
+  words: NgSettingsContent[]
+  commands: NgSettingsContent[]
+  ids: NgSettingsContent[]
+}
 
 /** < v3.10.0 */
 export type StorageItems_v1 = {

@@ -1,9 +1,9 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 
-import { findMarkers } from '@/utils/extension/findMarkers'
-
 import { ncoApiProxy } from '@/proxy/nco-api'
+
+import { findMarkers } from './findMarkers'
 
 /**
  * ニコニコ実況 過去ログを取得

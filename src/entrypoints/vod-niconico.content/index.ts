@@ -6,12 +6,10 @@ import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
 import { Logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { filterNvComment } from '@/utils/extension/filterNvComment'
-import {
-  convertNgSettings,
-  applyNgSettings,
-} from '@/utils/extension/applyNgSetting'
 import { injectScript } from '@/utils/dom/injectScript'
+import { filterNvComment } from '@/utils/api/filterNvComment'
+import { extractNgSettings } from '@/utils/api/extractNgSettings'
+import { applyNgSettings } from '@/utils/api/applyNgSetting'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -60,7 +58,7 @@ const main = async () => {
         id: contentId,
         threads: applyNgSettings(
           threadsData.threads,
-          convertNgSettings(videoData.comment.ng)
+          extractNgSettings(videoData.comment.ng)
         ),
       })
 

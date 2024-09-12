@@ -1,19 +1,29 @@
+import type { NgSettingsContent } from '@/types/storage'
+
 import { NICONICO_COLOR_COMMANDS, COLOR_CODE } from '@/constants'
 
 import { settings } from '@/utils/settings/extension'
 
-export type NgSettingsContent = {
-  content: string
-  isRegExp?: boolean
+export type NgSettingsConverted = {
+  words: (string | RegExp)[]
+  commands: (string | RegExp)[]
+  ids: (string | RegExp)[]
 }
 
-export type NgSettings = {
-  words: NgSettingsContent[]
-  commands: NgSettingsContent[]
-  ids: NgSettingsContent[]
+export const convertNgSettingsContent = ({
+  content,
+  isRegExp,
+}: NgSettingsContent): string | RegExp | undefined => {
+  if (isRegExp) {
+    try {
+      return new RegExp(content)
+    } catch {}
+  } else {
+    return content
+  }
 }
 
-export const getNgSettings = async (): Promise<NgSettings> => {
+export const getNgSettings = async (): Promise<NgSettingsConverted> => {
   const values = await settings.get(
     'settings:ng:largeComments',
     'settings:ng:fixedComments',
@@ -48,8 +58,14 @@ export const getNgSettings = async (): Promise<NgSettings> => {
   }
 
   return {
-    words: [...ngWords],
-    commands: [...ngCommands],
-    ids: [...ngIds],
+    words: [...ngWords]
+      .map(convertNgSettingsContent)
+      .filter((v) => typeof v !== 'undefined'),
+    commands: [...ngCommands]
+      .map(convertNgSettingsContent)
+      .filter((v) => typeof v !== 'undefined'),
+    ids: [...ngIds]
+      .map(convertNgSettingsContent)
+      .filter((v) => typeof v !== 'undefined'),
   }
 }

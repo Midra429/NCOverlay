@@ -8,7 +8,7 @@ import equal from 'fast-deep-equal'
 import { storage } from '@/utils/storage/extension'
 import { deepmerge } from '@/utils/deepmerge'
 import { getNgSettings } from '@/utils/extension/getNgSettings'
-import { isNgComment } from '@/utils/extension/applyNgSetting'
+import { isNgComment } from '@/utils/api/applyNgSetting'
 
 export type NCOStateItems = {
   [key: `state:${string}:status`]: StateStatus | null

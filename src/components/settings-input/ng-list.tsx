@@ -1,5 +1,8 @@
-import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { NgSettingsContent } from '@/utils/extension/getNgSettings'
+import type {
+  NgSettingsContent,
+  SettingsKey,
+  StorageItems,
+} from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState, useCallback } from 'react'
