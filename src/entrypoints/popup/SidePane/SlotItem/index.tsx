@@ -62,8 +62,8 @@ export const SlotItem: React.FC<SlotItemProps> = ({ detail }) => {
 
           <div
             className={cn(
-              'flex flex-shrink-0 flex-row items-center justify-between',
-              'h-4 w-full',
+              'flex flex-row items-center justify-between',
+              'h-4 flex-shrink-0',
               'text-foreground-500'
             )}
           >

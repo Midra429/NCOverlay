@@ -18,12 +18,7 @@ export const Title: React.FC<TitleProps> = ({ type, infoId, infoTitle }) => {
 
   return (
     <div className="flex h-full flex-col justify-start">
-      <Link
-        className="underline-offset-2"
-        color="foreground"
-        href={href}
-        isExternal
-      >
+      <Link color="foreground" href={href} isExternal>
         <span
           className="line-clamp-3 break-all text-tiny font-bold"
           title={190 < new Blob([infoTitle]).size ? infoTitle : undefined}

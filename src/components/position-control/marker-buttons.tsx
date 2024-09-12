@@ -31,8 +31,8 @@ export const MarkerButton: React.FC<MarkerButtonProps> = ({
       <Button
         className="min-w-0 text-small"
         variant="flat"
-        fullWidth
         size="sm"
+        fullWidth
         isDisabled={disabled}
         onPress={onPress}
       >

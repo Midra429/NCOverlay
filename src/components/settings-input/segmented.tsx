@@ -28,8 +28,8 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   return (
     <Segmented
       className="py-2"
-      fullWidth
       size="sm"
+      fullWidth
       label={props.label}
       selectedKey={JSON.stringify(value)}
       onSelectionChange={(key) => setValue(JSON.parse(key))}

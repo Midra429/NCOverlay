@@ -6,9 +6,9 @@ export type SegmentedProps = {
   className?: TabsProps['className']
 
   items: SegmentedItem[]
-  fullWidth?: TabsProps['fullWidth']
   size?: TabsProps['size']
   radius?: TabsProps['radius']
+  fullWidth?: TabsProps['fullWidth']
   label?: string
   selectedKey?: string
   defaultSelectedKey?: string
@@ -43,9 +43,9 @@ export const Segmented: React.FC<SegmentedProps> = (props) => {
 
       <Tabs
         color="primary"
-        fullWidth={props.fullWidth}
         size={props.size}
         radius={props.radius}
+        fullWidth={props.fullWidth}
         selectedKey={props.selectedKey}
         defaultSelectedKey={props.defaultSelectedKey}
         onSelectionChange={

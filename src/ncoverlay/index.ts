@@ -1,5 +1,4 @@
 import type { Runtime } from 'wxt/browser'
-import type { setBadge } from '@/utils/extension/setBadge'
 
 import equal from 'fast-deep-equal'
 
@@ -60,7 +59,7 @@ export class NCOverlay {
 
     this.#registerEventListener()
 
-    this.#setBadge(null)
+    sendUtilsMessage('setBadge', { text: null })
 
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
@@ -82,7 +81,7 @@ export class NCOverlay {
     this.#unregisterEventListener()
     this.removeAllEventListeners()
 
-    this.#setBadge(null)
+    sendUtilsMessage('setBadge', { text: null })
   }
 
   clear() {
@@ -133,16 +132,6 @@ export class NCOverlay {
 
     this.renderer.setThreads(threads)
     this.renderer.reload()
-  }
-
-  /**
-   * バッジを設定
-   */
-  #setBadge(
-    text: string | null,
-    color?: Parameters<typeof setBadge>[0]['color']
-  ) {
-    return sendUtilsMessage('setBadge', { text, color })
   }
 
   /**
@@ -202,14 +191,20 @@ export class NCOverlay {
     this.searcher.addEventListener('loading', async () => {
       const size = (await this.state.get('slotDetails'))?.length ?? 0
 
-      this.#setBadge(size ? size.toString() : null, 'yellow')
+      sendUtilsMessage('setBadge', {
+        text: size ? size.toString() : null,
+        color: 'yellow',
+      })
     })
 
     // 検索ステータス 完了
     this.searcher.addEventListener('ready', async () => {
       const size = (await this.state.get('slotDetails'))?.length ?? 0
 
-      this.#setBadge(size ? size.toString() : null, 'green')
+      sendUtilsMessage('setBadge', {
+        text: size ? size.toString() : null,
+        color: 'green',
+      })
 
       updateRenderer()
 

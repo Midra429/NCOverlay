@@ -13,8 +13,8 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate }) => {
   return (
     <div
       className={cn(
-        'flex flex-shrink-0 flex-row items-center justify-between',
-        'h-4',
+        'flex flex-row items-center justify-between',
+        'h-4 flex-shrink-0',
         'text-foreground-500'
       )}
     >
