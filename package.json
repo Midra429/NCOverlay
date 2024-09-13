@@ -28,7 +28,7 @@
     "filesize": "^10.1.6",
     "framer-motion": "^11.5.4",
     "hotkeys-js": "^3.13.7",
-    "lucide-react": "^0.439.0",
+    "lucide-react": "^0.441.0",
     "nanoid": "^5.0.7",
     "nanoid-dictionary": "^4.3.0",
     "react": "^18.3.1",

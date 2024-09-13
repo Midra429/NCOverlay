@@ -43,6 +43,7 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
 
         <Input
           classNames={{
+            inputWrapper: 'border-1 border-divider shadow-none',
             input: cn(
               'text-right',
               '[appearance:textfield]',

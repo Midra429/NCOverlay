@@ -28,15 +28,6 @@ export type AutoLoadInput = {
   duration: number
 }
 
-export type NCOSearcherEventMap = {
-  searching: (this: NCOSearcher) => void
-  searched: (this: NCOSearcher) => void
-  loading: (this: NCOSearcher) => void
-  loaded: (this: NCOSearcher) => void
-  ready: (this: NCOSearcher) => void
-  error: (this: NCOSearcher) => void
-}
-
 const userAgent = EXT_USER_AGENT
 
 /**
@@ -58,9 +49,6 @@ export class NCOSearcher {
       jikkyo?: boolean
     } = {}
   ) {
-    // 検索
-    this.#trigger('searching')
-
     // 読み込み済みのスロットID
     const loadedIds =
       (await this.#state.get('slotDetails'))?.map((v) => v.id) ?? []
@@ -86,8 +74,6 @@ export class NCOSearcher {
       searchSyobocalResults.programs.filter(
         (val) => parseInt(val.EdTime) < currentTime
       )
-
-    this.#trigger('searched')
 
     Logger.log('searchResults:', searchResults)
     Logger.log('searchSyobocalResults:', searchSyobocalResults)
@@ -178,7 +164,6 @@ export class NCOSearcher {
     await this.#state.add('slotDetails', ...loadingSlotDetails)
 
     // コメント取得
-    this.#trigger('loading')
     await this.#state.set('status', 'loading')
 
     const jikkyoIds = loadingSlotDetails
@@ -232,8 +217,6 @@ export class NCOSearcher {
         : null,
     ])
 
-    this.#trigger('loaded')
-
     Logger.log('commentsNormal:', commentsNormal)
     Logger.log('commentsDAnime:', commentsDAnime)
     Logger.log('commentsSzbh:', commentsSzbh)
@@ -258,12 +241,14 @@ export class NCOSearcher {
           const id = results[idx].contentId
           const { data, threads } = cmt
 
+          const applied = applyNgSettings(
+            threads,
+            extractNgSettings(data.comment.ng)
+          )
+
           loadedSlots.push({
             id,
-            threads: applyNgSettings(
-              threads,
-              extractNgSettings(cmt.data.comment.ng)
-            ),
+            threads: applied,
           })
 
           updateSlotDetails.push({
@@ -386,8 +371,6 @@ export class NCOSearcher {
 
     await this.#state.add('slots', ...slots)
 
-    this.#trigger('ready')
-
     Promise.all([
       this.#state.get('slots'),
       this.#state.get('slotDetails'),
@@ -395,45 +378,5 @@ export class NCOSearcher {
       Logger.log('slots:', slots)
       Logger.log('slotDetails:', slotDetails)
     })
-  }
-
-  #listeners: {
-    [type in keyof NCOSearcherEventMap]?: NCOSearcherEventMap[type][]
-  } = {}
-
-  #trigger<Type extends keyof NCOSearcherEventMap>(
-    type: Type,
-    ...args: Parameters<NCOSearcherEventMap[Type]>
-  ) {
-    this.#listeners[type]?.forEach((listener) => {
-      try {
-        listener.call(this, ...args)
-      } catch (err) {
-        Logger.error(type, err)
-      }
-    })
-  }
-
-  addEventListener<Type extends keyof NCOSearcherEventMap>(
-    type: Type,
-    callback: NCOSearcherEventMap[Type]
-  ) {
-    this.#listeners[type] ??= []
-    this.#listeners[type]!.push(callback)
-  }
-
-  removeEventListener<Type extends keyof NCOSearcherEventMap>(
-    type: Type,
-    callback: NCOSearcherEventMap[Type]
-  ) {
-    this.#listeners[type] = this.#listeners[type]?.filter(
-      (cb) => cb !== callback
-    )
-  }
-
-  removeAllEventListeners() {
-    for (const key in this.#listeners) {
-      delete this.#listeners[key as keyof NCOSearcherEventMap]
-    }
   }
 }

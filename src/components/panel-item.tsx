@@ -1,8 +1,8 @@
 import { cn } from '@nextui-org/react'
 
 export type PanelItemProps = {
-  children: React.ReactNode
   className?: string
+  children: React.ReactNode
 }
 
 export const PanelItem: React.FC<PanelItemProps> = (props) => {

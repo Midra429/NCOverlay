@@ -59,12 +59,12 @@ const accordionItemInfo = (
 const accordionItemSettings = SETTINGS_INIT_DATA.map(
   ({ id, title, items, icon: Icon }) => (
     <AccordionItem key={id} title={title} startContent={Icon && <Icon />}>
-      {items.map((item) => {
+      {items.map((item, idx) => {
         const Input = SettingsInput[item.inputType]
 
         return (
           <div
-            key={item.settingsKey}
+            key={idx}
             className={cn(
               'border-foreground-200',
               '[&:not(:first-child)]:border-t-1'
@@ -163,7 +163,7 @@ const accordionItemOthers = (
 export const Settings: React.FC = memo(() => {
   return (
     <Accordion
-      className="p-0"
+      className="p-2"
       itemClasses={{
         base: cn(
           'overflow-hidden',
@@ -172,7 +172,7 @@ export const Settings: React.FC = memo(() => {
           '[&>*]:px-3'
         ),
         heading: cn(
-          'sticky -top-2 z-20',
+          'sticky top-0 z-20',
           'gap-0',
           'mb-[-1px] rounded-t-medium',
           'border-b-1 border-foreground-200',

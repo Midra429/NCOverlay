@@ -10,8 +10,8 @@ const App: React.FC = () => {
   const height = isActive ? 517 : 458
 
   return (
-    <Layout className="overflow-hidden border-1 border-divider">
-      <div className="m-[-1px] flex size-fit flex-row">
+    <Layout className="overflow-hidden">
+      <div className="flex size-fit flex-row">
         {isActive && (
           <div
             className="border-r-1 border-foreground-200"

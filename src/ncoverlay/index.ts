@@ -87,6 +87,8 @@ export class NCOverlay {
   clear() {
     this.state.clear()
     this.renderer.clear()
+
+    sendUtilsMessage('setBadge', { text: null })
   }
 
   /**
@@ -187,33 +189,6 @@ export class NCOverlay {
       this.#updateRendererThreads()
     }
 
-    // 検索ステータス ロード中
-    this.searcher.addEventListener('loading', async () => {
-      const size = (await this.state.get('slotDetails'))?.length ?? 0
-
-      sendUtilsMessage('setBadge', {
-        text: size ? size.toString() : null,
-        color: 'yellow',
-      })
-    })
-
-    // 検索ステータス 完了
-    this.searcher.addEventListener('ready', async () => {
-      const size = (await this.state.get('slotDetails'))?.length ?? 0
-
-      sendUtilsMessage('setBadge', {
-        text: size ? size.toString() : null,
-        color: 'green',
-      })
-
-      updateRenderer()
-
-      if (!this.renderer.video.paused) {
-        this.renderer.stop()
-        this.renderer.start()
-      }
-    })
-
     // ストレージの監視
     this.#storageOnChangeRemoveListeners.push(
       // 設定 (コメント:表示サイズ)
@@ -243,6 +218,35 @@ export class NCOverlay {
       settings.onChange('settings:ng:largeComments', updateRenderer),
       settings.onChange('settings:ng:fixedComments', updateRenderer),
       settings.onChange('settings:ng:coloredComments', updateRenderer),
+
+      // 検索ステータス
+      this.state.onChange('status', async (status) => {
+        const size = (await this.state.get('slotDetails'))?.length ?? 0
+        const text = size ? size.toString() : null
+
+        switch (status) {
+          case 'loading':
+            sendUtilsMessage('setBadge', {
+              text,
+              color: 'yellow',
+            })
+
+            break
+
+          case 'ready':
+            sendUtilsMessage('setBadge', {
+              text,
+              color: 'green',
+            })
+
+            if (!this.renderer.video.paused) {
+              this.renderer.stop()
+              this.renderer.start()
+            }
+
+            break
+        }
+      }),
 
       // 全体のオフセット
       this.state.onChange('offset', (offset) => {
@@ -307,8 +311,6 @@ export class NCOverlay {
 
       this.renderer.video.removeEventListener(type, listener)
     }
-
-    this.searcher.removeAllEventListeners()
 
     while (this.#storageOnChangeRemoveListeners.length) {
       this.#storageOnChangeRemoveListeners.pop()?.()

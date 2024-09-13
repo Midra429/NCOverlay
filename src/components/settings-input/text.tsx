@@ -18,6 +18,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
     <NextUIInput
       classNames={{
         base: 'py-2',
+        inputWrapper: 'border-1 border-divider shadow-none',
       }}
       labelPlacement="outside"
       label={props.label}

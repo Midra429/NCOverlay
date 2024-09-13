@@ -28,6 +28,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         base: 'items-center justify-between gap-5 py-2',
         label: 'flex-shrink-0 p-0 text-small',
         mainWrapper: 'w-32 transition-colors',
+        trigger: 'shadow-none',
         value: 'flex flex-row items-center justify-center gap-2',
       }}
       size="sm"

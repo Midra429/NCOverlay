@@ -1,7 +1,9 @@
-import type { DeepPartial } from 'utility-types'
+import type { DeepPartial, UnionToIntersection } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
 import type { VodKey } from '@/types/constants'
 import type { StorageOnChangeCallback } from '@/utils/storage'
+import type { PlayingInfo } from '@/ncoverlay/patcher'
 
 import equal from 'fast-deep-equal'
 
@@ -34,7 +36,9 @@ export type StateStatus =
 
 export type StateVod = VodKey
 
-export type StateInfo = string
+export type StateInfo = Partial<
+  UnionToIntersection<PlayingInfo> & BuildSearchQueryInput
+>
 
 export type StateOffset = number
 
@@ -167,7 +171,8 @@ export class NCOState {
 
   async getThreads() {
     return filterDisplayThreads(
-      ...(await Promise.all([this.get('slots'), this.get('slotDetails')]))
+      await this.get('slots'),
+      await this.get('slotDetails')
     )
   }
 

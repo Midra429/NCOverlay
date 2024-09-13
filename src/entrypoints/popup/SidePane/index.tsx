@@ -71,9 +71,7 @@ export const SidePane: React.FC = memo(() => {
         )}
       </div>
 
-      <div className="border-t-1 border-divider">
-        <PositionControl compact />
-      </div>
+      <PositionControl className="border-t-1 border-divider" compact />
     </div>
   )
 })

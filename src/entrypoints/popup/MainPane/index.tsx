@@ -1,16 +1,23 @@
 import { memo } from 'react'
 import { Tabs, Tab } from '@nextui-org/react'
-import { LayoutGridIcon, SettingsIcon } from 'lucide-react'
+import { SearchIcon, LayoutGridIcon, SettingsIcon } from 'lucide-react'
 
+import { Search } from './Search'
 import { QuickPanel } from './QuickPanel'
 import { Settings } from './Settings'
 
 const tabItems: {
   key: string
-  title: string
   icon: React.FC<React.ComponentProps<'svg'>>
+  title: string
   children: React.ReactNode
 }[] = [
+  {
+    key: 'search',
+    title: '検索',
+    icon: SearchIcon,
+    children: <Search />,
+  },
   {
     key: 'quickpanel',
     title: 'クイックパネル',
@@ -40,9 +47,11 @@ export const MainPane: React.FC<{
             tabList: 'border-1 border-foreground-100 bg-content1 shadow-small',
             panel: 'h-full overflow-hidden p-0',
           }}
-          fullWidth
-          radius="full"
           color="primary"
+          radius="full"
+          fullWidth
+          destroyInactiveTabPanel={false}
+          defaultSelectedKey="quickpanel"
           items={tabItems}
         >
           {({ key, title, icon: Icon, children }) => (
@@ -55,12 +64,12 @@ export const MainPane: React.FC<{
                 </div>
               }
             >
-              <div className="h-full overflow-y-auto p-2">{children}</div>
+              <div className="h-full overflow-y-auto">{children}</div>
             </Tab>
           )}
         </Tabs>
       ) : (
-        <div className="h-full overflow-y-auto p-2">
+        <div className="h-full overflow-y-auto">
           <Settings />
         </div>
       )}

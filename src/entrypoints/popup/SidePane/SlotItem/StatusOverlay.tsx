@@ -12,10 +12,10 @@ export const StatusOverlay: React.FC<StatusOverlayProps> = ({ status }) => {
   return (
     <div
       className={cn(
-        'absolute inset-0 z-10',
-        'flex size-full items-center justify-center',
+        'absolute inset-[1px] z-10',
+        'flex items-center justify-center',
         'bg-foreground/50 backdrop-blur-[1px]',
-        'rounded-md',
+        'rounded-lg',
         'pointer-events-none'
       )}
     >

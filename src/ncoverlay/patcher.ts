@@ -9,6 +9,19 @@ import { settings } from '@/utils/settings/extension'
 import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
 
+export type PlayingInfo =
+  | {
+      rawText: string
+      duration: number
+    }
+  | {
+      /** <作品名> */
+      workTitle: string
+      /** <話数> <サブタイトル> */
+      episodeTitle?: string | null
+      duration: number
+    }
+
 export class NCOPatcher {
   readonly #vod
   readonly #getInfo
@@ -23,22 +36,7 @@ export class NCOPatcher {
 
   constructor(init: {
     vod: VodKey
-    getInfo: (nco: NCOverlay) => Promise<
-      | (
-          | {
-              rawText: string
-              duration: number
-            }
-          | {
-              /** <作品名> */
-              workTitle: string
-              /** <話数> <サブタイトル> */
-              episodeTitle?: string | null
-              duration: number
-            }
-        )
-      | null
-    >
+    getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   }) {
     this.#vod = init.vod
@@ -152,17 +150,11 @@ export class NCOPatcher {
 
           const parsed = { ...info, ...input }
 
-          Logger.log('parsed:', parsed)
-
-          const stateInfo = Object.entries(parsed)
-            .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
-            .join('\n')
-
           await this.#nco.state.set('vod', this.#vod)
-          await this.#nco.state.set('info', stateInfo)
+          await this.#nco.state.set('info', parsed)
 
           Logger.log('state.vod:', this.#vod)
-          Logger.log('state.info:', '\n' + stateInfo)
+          Logger.log('state.info:', parsed)
 
           if (input) {
             await this.#nco.searcher.autoLoad(input, {
