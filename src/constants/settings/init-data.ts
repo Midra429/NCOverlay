@@ -116,7 +116,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       {
         settingsKey: 'settings:comment:autoLoads',
         inputType: 'checkbox',
-        label: '自動読み込み',
+        label: '自動検索',
         options: [
           { value: 'normal', label: '通常 / dアニメ' },
           { value: 'chapter', label: 'dアニメ (分割)' },

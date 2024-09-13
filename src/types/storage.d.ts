@@ -78,7 +78,7 @@ export type StorageItems_v2 = {
   'settings:capture:method': 'window' | 'copy'
 
   /**
-   * コメント:自動読み込み
+   * コメント:自動検索
    * @default true
    */
   'settings:comment:autoLoads': ('normal' | 'szbh' | 'chapter' | 'jikkyo')[]

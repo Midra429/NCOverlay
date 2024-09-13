@@ -74,7 +74,7 @@ export class NCOPatcher {
 
       const autoLoads = await settings.get('settings:comment:autoLoads')
 
-      // 自動読み込み
+      // 自動検索
       if (autoLoads.length) {
         await this.#nco.state.set('status', 'searching')
 
