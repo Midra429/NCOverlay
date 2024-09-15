@@ -37,14 +37,14 @@ export const Search: React.FC = memo(() => {
       const data = await ncoApi.niconico.video(videoId)
 
       if (data) {
-        const isDanime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
+        const isDAnime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
         const isOfficialAnime = !!data.channel?.isOfficialAnime
 
         setTotalCount(1)
         setSearchResults([
           {
             type:
-              (isDanime && 'danime') ||
+              (isDAnime && 'danime') ||
               (isOfficialAnime && 'official') ||
               'normal',
             id: videoId,
@@ -102,7 +102,7 @@ export const Search: React.FC = memo(() => {
         setTotalCount(Math.ceil(response.meta.totalCount / 20))
         setSearchResults(
           response.data.map((value) => {
-            const isDanime = value.channelId === DANIME_CHANNEL_ID
+            const isDAnime = value.channelId === DANIME_CHANNEL_ID
             const isOfficialAnime = !!(
               value.channelId &&
               value.categoryTags &&
@@ -111,7 +111,7 @@ export const Search: React.FC = memo(() => {
 
             return {
               type:
-                (isDanime && 'danime') ||
+                (isDAnime && 'danime') ||
                 (isOfficialAnime && 'official') ||
                 'normal',
               id: value.contentId,
