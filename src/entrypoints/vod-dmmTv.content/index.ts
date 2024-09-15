@@ -41,12 +41,12 @@ const main = async () => {
         return null
       }
 
-      const workTitle = [
-        ...new Set([dataVideo.titleName, dataVideo.seasonName]),
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .trim()
+      const workTitle = dataVideo.seasonName.includes(dataVideo.titleName)
+        ? dataVideo.seasonName
+        : [dataVideo.titleName, dataVideo.seasonName]
+            .filter(Boolean)
+            .join(' ')
+            .trim()
 
       const episodeTitle =
         [dataVideo.episode?.episodeNumberName, dataVideo.episode?.episodeTitle]
