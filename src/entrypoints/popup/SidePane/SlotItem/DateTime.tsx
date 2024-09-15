@@ -7,9 +7,10 @@ import { formatDate } from '@/utils/format'
 
 export type DateTimeProps = {
   infoDate: StateSlotDetail['info']['date']
+  isSearch?: boolean
 }
 
-export const DateTime: React.FC<DateTimeProps> = ({ infoDate }) => {
+export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
   return (
     <div
       className={cn(
@@ -18,9 +19,16 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate }) => {
         'text-foreground-500'
       )}
     >
-      <div className="flex h-full flex-row items-center gap-1">
-        <CalendarDaysIcon className="size-3" />
-        <span className="text-tiny">
+      <div
+        className={cn(
+          'flex h-full flex-row items-center',
+          isSearch ? 'gap-0.5' : 'gap-1'
+        )}
+      >
+        <CalendarDaysIcon
+          className={isSearch ? 'size-[0.6875rem]' : 'size-3'}
+        />
+        <span className={isSearch ? 'text-min' : 'text-tiny'}>
           {typeof infoDate === 'number'
             ? formatDate(infoDate, 'YYYY/MM/DD(d) hh:mm')
             : `${formatDate(infoDate[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}

@@ -95,8 +95,8 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       <div className="flex flex-col">
         {/* 日付 */}
         {isSearch && (
-          <div className="mx-1 mt-0.5">
-            <DateTime infoDate={detail.info.date} />
+          <div className="mx-1 -mb-0.5 mt-0.5">
+            <DateTime infoDate={detail.info.date} isSearch />
           </div>
         )}
 
@@ -113,7 +113,12 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             )}
           >
             {/* サムネイル */}
-            <Thumbnail id={detail.id} type={detail.type} info={detail.info} />
+            <Thumbnail
+              id={detail.id}
+              type={detail.type}
+              info={detail.info}
+              isSearch={isSearch}
+            />
 
             {isSearch ? (
               // 追加
@@ -153,7 +158,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
               <Counts infoCount={detail.info.count} />
 
               {/* オフセット */}
-              <Offset offsetMs={detail.offsetMs} />
+              {!isSearch && <Offset offsetMs={detail.offsetMs} />}
             </div>
           </div>
 

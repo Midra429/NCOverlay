@@ -37,13 +37,16 @@ export const Search: React.FC = memo(() => {
       const data = await ncoApi.niconico.video(videoId)
 
       if (data) {
+        const isDanime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
+        const isOfficialAnime = !!data.channel?.isOfficialAnime
+
         setTotalCount(1)
         setSearchResults([
           {
             type:
-              data.channel?.id === `ch${DANIME_CHANNEL_ID}`
-                ? 'danime'
-                : 'normal',
+              (isDanime && 'danime') ||
+              (isOfficialAnime && 'official') ||
+              'normal',
             id: videoId,
             status: 'pending',
             info: {
@@ -51,6 +54,7 @@ export const Search: React.FC = memo(() => {
               title: data.video.title,
               duration: data.video.duration,
               date: new Date(data.video.registeredAt).getTime(),
+              tags: data.tag.items.map((v) => v.name),
               count: {
                 view: data.video.count.view,
                 comment: data.video.count.comment,
@@ -81,6 +85,8 @@ export const Search: React.FC = memo(() => {
           'thumbnailUrl',
           'startTime',
           'commentCounter',
+          'categoryTags',
+          'tags',
         ],
         filters: {
           'genre.keyword': ['アニメ'],
@@ -95,22 +101,35 @@ export const Search: React.FC = memo(() => {
       if (response) {
         setTotalCount(Math.ceil(response.meta.totalCount / 20))
         setSearchResults(
-          response.data.map((value) => ({
-            type: value.channelId === DANIME_CHANNEL_ID ? 'danime' : 'normal',
-            id: value.contentId,
-            status: 'pending',
-            info: {
+          response.data.map((value) => {
+            const isDanime = value.channelId === DANIME_CHANNEL_ID
+            const isOfficialAnime = !!(
+              value.channelId &&
+              value.categoryTags &&
+              /(^|\s)アニメ(\s|$)/.test(value.categoryTags)
+            )
+
+            return {
+              type:
+                (isDanime && 'danime') ||
+                (isOfficialAnime && 'official') ||
+                'normal',
               id: value.contentId,
-              title: value.title,
-              duration: value.lengthSeconds,
-              date: new Date(value.startTime).getTime(),
-              count: {
-                view: value.viewCounter,
-                comment: value.commentCounter,
+              status: 'pending',
+              info: {
+                id: value.contentId,
+                title: value.title,
+                duration: value.lengthSeconds,
+                date: new Date(value.startTime).getTime(),
+                tags: value.tags?.split(' ') ?? [],
+                count: {
+                  view: value.viewCounter,
+                  comment: value.commentCounter,
+                },
+                thumbnail: value.thumbnailUrl,
               },
-              thumbnail: value.thumbnailUrl,
-            },
-          }))
+            }
+          })
         )
       } else {
         setTotalCount(0)

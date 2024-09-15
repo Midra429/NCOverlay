@@ -45,8 +45,17 @@ export type StorageItems_v1 = {
   'settings:experimental:useAiParser': boolean
 }
 
-/** v3.10.0 <= */
+/** < v3.13.1 */
 export type StorageItems_v2 = {
+  /**
+   * コメント:自動検索
+   * @default true
+   */
+  'settings:comment:autoLoads': ('normal' | 'szbh' | 'chapter' | 'jikkyo')[]
+}
+
+/** v3.13.1 <= */
+export type StorageItems_v3 = {
   /**
    * テーマ
    * @default 'auto'
@@ -81,7 +90,7 @@ export type StorageItems_v2 = {
    * コメント:自動検索
    * @default true
    */
-  'settings:comment:autoLoads': ('normal' | 'szbh' | 'chapter' | 'jikkyo')[]
+  'settings:comment:autoLoads': ('official' | 'szbh' | 'chapter' | 'jikkyo')[]
 
   /**
    * コメント:表示量
@@ -208,7 +217,7 @@ export type StorageItems_v2 = {
   'settings:plugins': PluginKey[]
 }
 
-export type StorageItems = StorageItems_v2 & {
+export type StorageItems = StorageItems_v3 & {
   '_migrate_version': number
 
   /**

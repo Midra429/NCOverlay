@@ -43,7 +43,7 @@ export class NCOSearcher {
   async autoLoad(
     input: BuildSearchQueryInput,
     options: {
-      normal?: boolean
+      official?: boolean
       szbh?: boolean
       chapter?: boolean
       jikkyo?: boolean
@@ -85,10 +85,10 @@ export class NCOSearcher {
     if (searchResults) {
       ;(
         [
-          ['normal', searchResults.normal],
+          ['official', searchResults.official],
           ['danime', searchResults.danime],
-          ['szbh', searchResults.szbh],
           ['chapter', [searchResults.chapter[0]]],
+          ['szbh', searchResults.szbh],
         ] as const
       ).forEach(([type, results]) => {
         results.forEach((result) => {
@@ -115,6 +115,7 @@ export class NCOSearcher {
               title: result.title,
               duration: result.lengthSeconds,
               date: new Date(result.startTime).getTime(),
+              tags: result.tags?.split(' ') ?? [],
               count: {
                 view: result.viewCounter,
                 comment: result.commentCounter,
@@ -177,7 +178,7 @@ export class NCOSearcher {
     })
 
     const [
-      commentsNormal,
+      commentsOfficial,
       commentsDAnime,
       commentsSzbh,
       commentsChapter,
@@ -186,7 +187,7 @@ export class NCOSearcher {
       // ニコニコ動画 コメント 取得
       getNiconicoComments(
         loadingSlotDetails
-          .filter((v) => v.type === 'normal')
+          .filter((v) => v.type === 'official')
           .map((v) => ({ contentId: v.id }))
       ),
       getNiconicoComments(
@@ -217,7 +218,7 @@ export class NCOSearcher {
         : null,
     ])
 
-    Logger.log('commentsNormal:', commentsNormal)
+    Logger.log('commentsOfficial:', commentsOfficial)
     Logger.log('commentsDAnime:', commentsDAnime)
     Logger.log('commentsSzbh:', commentsSzbh)
     Logger.log('commentsChapter:', commentsChapter)
@@ -226,11 +227,15 @@ export class NCOSearcher {
     const loadedSlots: StateSlot[] = []
     const updateSlotDetails: StateSlotDetailUpdate[] = []
 
-    // 通常 / dアニメ, コメント専用動画
-    if (commentsNormal.length || commentsDAnime.length || commentsSzbh.length) {
+    // 公式 / dアニメ, コメント専用
+    if (
+      commentsOfficial.length ||
+      commentsDAnime.length ||
+      commentsSzbh.length
+    ) {
       ;(
         [
-          [searchResults!.normal, commentsNormal],
+          [searchResults!.official, commentsOfficial],
           [searchResults!.danime, commentsDAnime],
           [searchResults!.szbh, commentsSzbh],
         ] as const

@@ -35,7 +35,7 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
  */
 export const QuickPanel: React.FC = memo(() => {
   return (
-    <div className="flex h-full flex-col justify-between p-2">
+    <div className="flex h-full flex-col gap-2 p-2">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
           <ReloadButton />

@@ -5,17 +5,22 @@ import { Image, cn } from '@nextui-org/react'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
-import { formatDuration } from '@/utils/format'
-
 import { SourceTag } from './SourceTag'
+import { Duration } from './Duration'
 
 export type ThumbnailProps = {
   id: StateSlotDetail['id']
   type: StateSlotDetail['type']
   info: StateSlotDetail['info']
+  isSearch?: boolean
 }
 
-export const Thumbnail: React.FC<ThumbnailProps> = ({ id, type, info }) => {
+export const Thumbnail: React.FC<ThumbnailProps> = ({
+  id,
+  type,
+  info,
+  isSearch,
+}) => {
   let thumbnail: JSX.Element | undefined
 
   if (type === 'jikkyo') {
@@ -34,12 +39,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ id, type, info }) => {
             'select-none'
           )}
         >
-          <span
-            className={cn(
-              'absolute top-[4px]',
-              'text-[11px] leading-[15px] text-white/80'
-            )}
-          >
+          <span className={cn('absolute top-[4px]', 'text-min text-white/80')}>
             {jkChId}
           </span>
           <span
@@ -68,22 +68,10 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ id, type, info }) => {
       {thumbnail}
 
       {/* ソース */}
-      <SourceTag type={type} />
+      <SourceTag type={type} isSearch={isSearch} />
 
       {/* 長さ */}
-      <div
-        className={cn(
-          'absolute bottom-[3px] right-[3px] z-10',
-          'block px-1 py-[1px]',
-          'bg-black/50 backdrop-blur-md',
-          'border-1 border-white/25',
-          'rounded-md',
-          'text-[11px] leading-[15px] text-white',
-          'select-none'
-        )}
-      >
-        {formatDuration(info.duration)}
-      </div>
+      <Duration infoDuration={info.duration} />
     </>
   )
 }

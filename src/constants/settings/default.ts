@@ -16,7 +16,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:capture:method': 'window',
 
   // コメント
-  'settings:comment:autoLoads': ['normal', 'chapter'],
+  'settings:comment:autoLoads': ['official', 'chapter'],
   'settings:comment:amount': 1,
   'settings:comment:opacity': 100,
   'settings:comment:scale': 100,

@@ -93,7 +93,6 @@ const accordionItemStorage = (
 
     <div className="flex flex-col gap-2 py-2">
       <ItemButton
-        key="settings.remove"
         title="設定をリセット"
         description="設定を初期値に戻します。"
         button={{
@@ -111,7 +110,6 @@ const accordionItemStorage = (
       />
 
       <ItemButton
-        key="storage.remove"
         title="ストレージを初期化"
         description="データを全て消去します。"
         button={{

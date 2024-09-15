@@ -15,6 +15,9 @@ export default {
       colors: {
         ...brandColors,
       },
+      fontSize: {
+        min: ['0.6875rem', '0.875rem'],
+      },
     },
   },
   plugins: [

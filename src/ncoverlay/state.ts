@@ -63,12 +63,14 @@ export type StateSlotDetailBase = {
 }
 
 export type StateSlotDetailDefault = StateSlotDetailBase & {
-  type: 'normal' | 'danime' | 'chapter' | 'szbh'
+  type: 'normal' | 'official' | 'danime' | 'chapter' | 'szbh'
   info: {
     id: string
+    channelId?: number
     title: string
     duration: number
     date: number
+    tags: string[]
     count: {
       view: number
       comment: number

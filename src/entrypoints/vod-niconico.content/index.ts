@@ -66,7 +66,7 @@ const main = async () => {
         type:
           videoData.channel.id === `ch${DANIME_CHANNEL_ID}`
             ? 'danime'
-            : 'normal',
+            : 'official',
         id: contentId,
         status: 'ready',
         info: {
@@ -74,6 +74,7 @@ const main = async () => {
           title: videoData.video.title,
           duration: videoData.video.duration,
           date: new Date(videoData.video.registeredAt).getTime(),
+          tags: videoData.tag.items.map((v) => v.name),
           count: {
             view: videoData.video.count.view,
             comment: videoData.video.count.comment,
