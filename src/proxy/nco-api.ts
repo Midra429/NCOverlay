@@ -62,7 +62,10 @@ type ProtocolMap = {
 export const { onMessage, removeAllListeners, sendMessage } =
   defineExtensionMessaging<ProtocolMap>()
 
-export const ncoApiProxy: typeof ncoApi = {
+export const ncoApiProxy: Omit<
+  typeof ncoApi,
+  'setLoggerName' | 'setLoggerLevels'
+> = {
   nco: {
     ai: {
       parse: (...args) => sendMessage('nco.ai.parse', args) as any,

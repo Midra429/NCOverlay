@@ -2,7 +2,7 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { execPlugins } from '@/utils/extension/execPlugins'
 
 import { disablePopupPlayer } from './disablePopupPlayer'
@@ -16,7 +16,7 @@ export default defineContentScript({
 })
 
 const main = () => {
-  Logger.log(`plugin-${vod}.js`)
+  logger.log(`plugin-${vod}.js`)
 
   execPlugins(vod, {
     disablePopupPlayer,

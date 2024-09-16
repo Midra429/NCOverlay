@@ -3,7 +3,7 @@ import type { StorageItems } from '@/types/storage'
 
 import NiconiComments from '@xpadev-net/niconicomments'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { getObjectFitRect } from '@/utils/dom/getObjectFitRect'
 import { sendUtilsMessage } from '@/utils/extension/messaging'
 
@@ -164,7 +164,7 @@ export class NCORenderer {
             format,
           })
         } catch (err) {
-          Logger.error('capture', err)
+          logger.error('capture', err)
         }
 
         document.body.classList.remove('NCOverlay-Capture')

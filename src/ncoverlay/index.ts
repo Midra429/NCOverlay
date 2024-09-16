@@ -4,7 +4,7 @@ import equal from 'fast-deep-equal'
 
 import { MARKERS } from '@/constants/markers'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { uid } from '@/utils/uid'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
@@ -70,7 +70,7 @@ export class NCOverlay {
   }
 
   dispose() {
-    Logger.log('NCOverlay.dispose()')
+    logger.log('NCOverlay.dispose()')
 
     this.state.dispose()
     this.renderer.dispose()
@@ -328,7 +328,7 @@ export class NCOverlay {
       try {
         listener.call(this)
       } catch (err) {
-        Logger.error(type, err)
+        logger.error(type, err)
       }
     })
   }

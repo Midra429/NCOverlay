@@ -1,30 +1,11 @@
-export class Logger {
-  static appName = 'NCOverlay'
-  static header = `[${this.appName}]`
+import * as utilsLogger from '@midra/nco-api/utils/logger'
 
-  static log(message: string, ...args: unknown[]) {
-    console.log(this.header, message, ...args)
-  }
+utilsLogger.setLoggerName('NCOverlay')
+utilsLogger.setLoggerLevels({
+  verbose: true,
+  info: true,
+  warnings: import.meta.env.DEV,
+  errors: import.meta.env.DEV,
+})
 
-  static debug(message: string, ...args: unknown[]) {
-    if (import.meta.env.PROD) return
-
-    console.debug(this.header, message, ...args)
-  }
-
-  static error(message: string, ...args: unknown[]) {
-    console.error(this.header, message, ...args)
-  }
-
-  static group(label: string, ...args: unknown[]) {
-    console.group(`${this.header} - ${label}`, ...args)
-  }
-
-  static groupCollapsed(label: string, ...args: unknown[]) {
-    console.groupCollapsed(`${this.header} - ${label}`, ...args)
-  }
-
-  static groupEnd() {
-    console.groupEnd()
-  }
-}
+export const { logger } = utilsLogger

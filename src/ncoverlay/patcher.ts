@@ -3,7 +3,7 @@ import type { VodKey } from '@/types/constants'
 
 import { ncoParser } from '@midra/nco-parser'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/extension'
 
 import { NCOverlay } from '.'
@@ -153,8 +153,8 @@ export class NCOPatcher {
           await this.#nco.state.set('vod', this.#vod)
           await this.#nco.state.set('info', parsed)
 
-          Logger.log('state.vod:', this.#vod)
-          Logger.log('state.info:', parsed)
+          logger.log('state.vod:', this.#vod)
+          logger.log('state.info:', parsed)
 
           if (input) {
             await this.#nco.searcher.autoLoad(input, {
@@ -165,7 +165,7 @@ export class NCOPatcher {
             })
           }
         } catch (err) {
-          Logger.error('comment:autoLoad', err)
+          logger.error('comment:autoLoad', err)
         }
 
         await this.#nco.state.set('status', 'ready')

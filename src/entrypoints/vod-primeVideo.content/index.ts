@@ -5,7 +5,7 @@ import { normalizeAll } from '@midra/nco-parser/normalize'
 import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 
@@ -77,7 +77,7 @@ const getDetail = (): { title: string } | null => {
 const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
-  Logger.log(`vod-${vod}.js`)
+  logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
     vod,
@@ -103,7 +103,7 @@ const main = async () => {
 
       const detail = getDetail()
 
-      Logger.log('detail:', detail)
+      logger.log('detail:', detail)
 
       const title = detail?.title || titleElem?.textContent
       const season_episode = subtitleElem?.firstChild?.textContent
@@ -145,9 +145,9 @@ const main = async () => {
           .map(formatedToSeconds)
           .reduce((a, b) => a + b) ?? 0
 
-      Logger.log('workTitle:', workTitle)
-      Logger.log('episodeTitle:', episodeTitle)
-      Logger.log('duration:', duration)
+      logger.log('workTitle:', workTitle)
+      logger.log('episodeTitle:', episodeTitle)
+      logger.log('duration:', duration)
 
       return workTitle ? { workTitle, episodeTitle, duration } : null
     },

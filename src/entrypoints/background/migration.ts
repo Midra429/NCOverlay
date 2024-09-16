@@ -1,6 +1,6 @@
 import type { StorageItems_v2 } from '@/types/storage'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { storage } from '@/utils/storage/extension'
 
 export default async () => {
@@ -8,7 +8,7 @@ export default async () => {
 
   // v3.10.0 -> v3.13.1
   if (migrate_version < 3) {
-    Logger.log('migration: v3.x.x -> v3.10.0')
+    logger.log('migration: v3.x.x -> v3.10.0')
 
     const { 'settings:comment:autoLoads': autoLoads } =
       (await storage.get()) as unknown as Partial<StorageItems_v2>

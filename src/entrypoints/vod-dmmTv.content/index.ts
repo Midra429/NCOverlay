@@ -3,7 +3,7 @@ import type { VodKey } from '@/types/constants'
 import { defineContentScript } from 'wxt/sandbox'
 import * as dmmTvApi from '@midra/nco-api/dmmTv'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
@@ -21,7 +21,7 @@ export default defineContentScript({
 const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
-  Logger.log(`vod-${vod}.js`)
+  logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
     vod,
@@ -35,7 +35,7 @@ const main = async () => {
           ? await dmmTvApi.video({ seasonId, contentId })
           : null
 
-      Logger.log('dmmTv.video:', dataVideo)
+      logger.log('dmmTv.video:', dataVideo)
 
       if (!dataVideo?.categories.some((v) => v.id === '15' || v.id === '17')) {
         return null
@@ -57,9 +57,9 @@ const main = async () => {
       const duration =
         dataVideo.episode?.playInfo.duration ?? nco.renderer.video.duration ?? 0
 
-      Logger.log('workTitle:', workTitle)
-      Logger.log('episodeTitle:', episodeTitle)
-      Logger.log('duration:', duration)
+      logger.log('workTitle:', workTitle)
+      logger.log('episodeTitle:', episodeTitle)
+      logger.log('duration:', duration)
 
       return workTitle ? { workTitle, episodeTitle, duration } : null
     },

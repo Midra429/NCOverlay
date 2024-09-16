@@ -5,7 +5,7 @@ import type {
   Plugins,
 } from '@/types/constants'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/page'
 
 export const execPlugins = async <VodKey extends PluginVodKey>(
@@ -21,13 +21,13 @@ export const execPlugins = async <VodKey extends PluginVodKey>(
 
       // プラグイン ON
       if (keys.includes(pluginKey) && !disablePlugins.has(id)) {
-        Logger.log(`plugin (enable): ${id}`)
+        logger.log(`plugin (enable): ${id}`)
 
         disablePlugins.set(id, plugins[id]())
       }
       // プラグイン OFF
       else if (!keys.includes(pluginKey) && disablePlugins.has(id)) {
-        Logger.log(`plugin (disable): ${id}`)
+        logger.log(`plugin (disable): ${id}`)
 
         disablePlugins.get(id)!()
         disablePlugins.delete(id)

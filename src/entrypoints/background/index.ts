@@ -4,7 +4,7 @@ import { defineBackground } from 'wxt/sandbox'
 
 import { GITHUB_URL } from '@/constants'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
@@ -24,7 +24,7 @@ export default defineBackground({
 })
 
 const main = async () => {
-  Logger.log('background.js')
+  logger.log('background.js')
 
   registerNcoApiProxy()
   registerUtilsMessage()
@@ -76,7 +76,7 @@ const main = async () => {
         let timeoutId: NodeJS.Timeout
 
         const dispose = () => {
-          Logger.log('dispose()')
+          logger.log('dispose()')
 
           // バッジリセット
           if (tabId) {
@@ -178,6 +178,6 @@ const main = async () => {
   webext.sidePanel.setOptions({ enabled: false })
 
   settings.get().then((value) => {
-    Logger.log('settings:', value)
+    logger.log('settings:', value)
   })
 }

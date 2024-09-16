@@ -2,7 +2,7 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
@@ -20,7 +20,7 @@ export default defineContentScript({
 const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
-  Logger.log(`vod-${vod}.js`)
+  logger.log(`vod-${vod}.js`)
 
   const patcher = new NCOPatcher({
     vod,
@@ -52,9 +52,9 @@ const main = async () => {
 
       const duration = nco.renderer.video.duration ?? 0
 
-      Logger.log('workTitle:', workTitle)
-      Logger.log('episodeTitle:', episodeTitle)
-      Logger.log('duration:', duration)
+      logger.log('workTitle:', workTitle)
+      logger.log('episodeTitle:', episodeTitle)
+      logger.log('duration:', duration)
 
       return workTitle ? { workTitle, episodeTitle, duration } : null
     },

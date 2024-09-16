@@ -3,7 +3,7 @@ import type { VodKey } from '@/types/constants'
 import { defineContentScript } from 'wxt/sandbox'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { injectScript } from '@/utils/dom/injectScript'
 import { ncoApiProxy } from '@/proxy/nco-api'
@@ -23,7 +23,7 @@ export default defineContentScript({
 const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
-  Logger.log(`vod-${vod}.js`)
+  logger.log(`vod-${vod}.js`)
 
   injectScript('/content-scripts/plugin-dAnime.js')
 
@@ -37,7 +37,7 @@ const main = async () => {
       const partId = new URL(location.href).searchParams.get('partId')
       const partData = partId ? await ncoApiProxy.danime.part(partId) : null
 
-      Logger.log('danime.part:', partData)
+      logger.log('danime.part:', partData)
 
       if (!partData) {
         return null
@@ -65,9 +65,9 @@ const main = async () => {
 
       const duration = partData.partMeasureSecond
 
-      Logger.log('workTitle:', workTitle)
-      Logger.log('episodeTitle:', episodeTitle)
-      Logger.log('duration:', duration)
+      logger.log('workTitle:', workTitle)
+      logger.log('episodeTitle:', episodeTitle)
+      logger.log('duration:', duration)
 
       return workTitle ? { workTitle, episodeTitle, duration } : null
     },

@@ -9,7 +9,7 @@ import type {
 
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
 import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
 import { extractNgSettings } from '@/utils/api/extractNgSettings'
@@ -75,8 +75,8 @@ export class NCOSearcher {
         (val) => parseInt(val.EdTime) < currentTime
       )
 
-    Logger.log('searchResults:', searchResults)
-    Logger.log('searchSyobocalResults:', searchSyobocalResults)
+    logger.log('searchResults:', searchResults)
+    logger.log('searchSyobocalResults:', searchSyobocalResults)
 
     // ロード中のデータ
     const loadingSlotDetails: StateSlotDetail[] = []
@@ -218,11 +218,11 @@ export class NCOSearcher {
         : null,
     ])
 
-    Logger.log('commentsOfficial:', commentsOfficial)
-    Logger.log('commentsDAnime:', commentsDAnime)
-    Logger.log('commentsSzbh:', commentsSzbh)
-    Logger.log('commentsChapter:', commentsChapter)
-    Logger.log('commentsJikkyo:', commentsJikkyo)
+    logger.log('commentsOfficial:', commentsOfficial)
+    logger.log('commentsDAnime:', commentsDAnime)
+    logger.log('commentsSzbh:', commentsSzbh)
+    logger.log('commentsChapter:', commentsChapter)
+    logger.log('commentsJikkyo:', commentsJikkyo)
 
     const loadedSlots: StateSlot[] = []
     const updateSlotDetails: StateSlotDetailUpdate[] = []
@@ -380,8 +380,8 @@ export class NCOSearcher {
       this.#state.get('slots'),
       this.#state.get('slotDetails'),
     ]).then(([slots, slotDetails]) => {
-      Logger.log('slots:', slots)
-      Logger.log('slotDetails:', slotDetails)
+      logger.log('slots:', slots)
+      logger.log('slotDetails:', slotDetails)
     })
   }
 }

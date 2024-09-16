@@ -4,7 +4,7 @@ import { defineContentScript } from 'wxt/sandbox'
 import * as niconicoApi from '@midra/nco-api/niconico'
 import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { injectScript } from '@/utils/dom/injectScript'
 import { filterNvComment } from '@/utils/api/filterNvComment'
@@ -26,7 +26,7 @@ export default defineContentScript({
 const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
-  Logger.log(`vod-${vod}.js`)
+  logger.log(`vod-${vod}.js`)
 
   injectScript('/content-scripts/plugin-niconico.js')
 
@@ -36,7 +36,7 @@ const main = async () => {
       const contentId = location.pathname.split('/').at(-1)!
       const videoData = await niconicoApi.video(contentId)
 
-      Logger.log('niconico.video:', videoData)
+      logger.log('niconico.video:', videoData)
 
       if (!videoData || !videoData.channel?.isOfficialAnime) {
         return null
@@ -89,8 +89,8 @@ const main = async () => {
       const rawText = videoData.video.title
       const duration = videoData.video.duration
 
-      Logger.log('rawText:', rawText)
-      Logger.log('duration:', duration)
+      logger.log('rawText:', rawText)
+      logger.log('duration:', duration)
 
       return rawText ? { rawText, duration } : null
     },

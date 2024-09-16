@@ -1,6 +1,6 @@
 import type { StorageItems } from '@/types/storage'
 
-import { Logger } from '@/utils/logger'
+import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
@@ -43,7 +43,7 @@ export const capture = async (): Promise<
 
       return captureMethod
     } catch (err) {
-      Logger.error('capture', err)
+      logger.error('capture', err)
     }
   }
 
