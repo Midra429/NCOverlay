@@ -5,13 +5,11 @@ import { SearchIcon } from 'lucide-react'
 import { ncoState } from '@/hooks/useNco'
 
 export type SearchInputProps = {
-  isLoading: boolean
   isDisabled: boolean
   onSearch: (value: string) => void
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
-  isLoading,
   isDisabled,
   onSearch,
 }) => {
@@ -31,7 +29,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         }}
         size="sm"
         isClearable
-        isDisabled={isLoading || isDisabled}
+        isDisabled={isDisabled}
         placeholder="キーワード / 動画ID / URL"
         value={tmpValue}
         onValueChange={setTmpValue}
@@ -43,8 +41,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         color="primary"
         isIconOnly
         isDisabled={!tmpValue.trim() || isDisabled}
-        isLoading={isLoading}
-        startContent={!isLoading && <SearchIcon className="size-4" />}
+        startContent={<SearchIcon className="size-4" />}
         onPress={() => onSearch(tmpValue.trim())}
       />
     </div>
