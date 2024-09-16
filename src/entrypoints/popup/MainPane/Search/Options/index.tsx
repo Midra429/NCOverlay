@@ -41,7 +41,7 @@ export const Options: React.FC<OptionsProps> = ({ isOpen }) => {
             <div className="flex size-full flex-row items-center gap-2 pt-2">
               <Sort />
 
-              <Divider orientation="vertical" />
+              <Divider className="h-6" orientation="vertical" />
 
               <LengthRange />
             </div>
