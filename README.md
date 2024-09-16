@@ -112,15 +112,25 @@ pnpm run zip:firefox
 ```
 
 ## ライブラリ
-- [**nco-parser**](https://github.com/Midra429/nco-parser)\
+- **nco-parser**\
+[GitHub](https://github.com/Midra429/nco-parser) / [npm](https://www.npmjs.com/package/@midra/nco-parser)\
 アニメタイトルの解析や比較をするやつ
-- [**nco-api**](https://github.com/Midra429/nco-api)\
+- **nco-api**\
+[GitHub](https://github.com/Midra429/nco-api) / [npm](https://www.npmjs.com/package/@midra/nco-api)\
 NCOverlayで使うAPIをまとめたやつ
 
 ## スペシャルサンクス
-- [**xpadev-net/niconicomments**](https://github.com/xpadev-net/niconicomments)
-- [**しょぼいカレンダー**](https://cal.syoboi.jp/)
-- [**ニコニコ実況 過去ログ API**](https://jikkyo.tsukumijima.net/)
+- **xpadev-net/niconicomments**\
+[GitHub](https://github.com/xpadev-net/niconicomments) / [npm](https://www.npmjs.com/package/@xpadev-net/niconicomments)\
+コメント描画
+
+- **しょぼいカレンダー**\
+https://docs.cal.syoboi.jp/spec/json.php/\
+番組検索、放送時間取得
+
+- **ニコニコ実況 過去ログ API**\
+https://jikkyo.tsukumijima.net/\
+ニコニコ実況の過去ログ
 
 ## ライセンス
 当ライセンスは [MIT](LICENSE.txt) ライセンスの規約に基づいて付与されています。
