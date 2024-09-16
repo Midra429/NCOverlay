@@ -11,7 +11,6 @@ import {
 
 import { Sort } from './Sort'
 import { LengthRange } from './LengthRange'
-import { Divider } from '@nextui-org/react'
 
 const transitionVariants: Variants = {
   exit: { ...TRANSITION_VARIANTS.collapse.exit, overflowY: 'hidden' },
@@ -40,8 +39,6 @@ export const Options: React.FC<OptionsProps> = ({ isOpen }) => {
           >
             <div className="flex size-full flex-row items-center gap-2 pt-2">
               <Sort />
-
-              <Divider className="h-6" orientation="vertical" />
 
               <LengthRange />
             </div>
