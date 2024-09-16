@@ -26,37 +26,8 @@
 
 ※ 増減する可能性あり
 
-## 使い方
-整備中...
-
-<!-- コメントは自動で取得・表示されるので何もしなくてOK。\
-取得したコメント数は拡張機能のアイコンに表示されます。
-
-dアニメストア ニコニコ支店のコメントを取得・表示するには、同じブラウザでニコニコにログインしてください。
-
-### ポップアップ
-- コメントの表示/非表示
-- 設定
-  - 不透明度: コメントの不透明度
-  - 低パフォーマンスモード
-    - コメントの描画: 30FPS固定
-    - サイドパネル: 自動スクロールのアニメーション無効化
-  - タイトルの一致判定を緩くする
-  - コメント専用動画を表示
-  - ニコニコのNG設定を使用 (要ログイン)
-- 表示中のコメントの元動画の確認
-
-### サイドパネル (Chromeのみ)
-- コメントの一覧表示
-  - 自動スクロール
-  - コマンドによる文字装飾を一部反映
-
-詳しい使い方はこちら\
-https://github.com/Midra429/NCOverlay/releases/tag/v1.1.0
-
-### スクリーンショット
-拡張機能のアイコンの右クリックメニュー > スクリーンショット\
-※ 一部VODのみ対応 (ABEMA / TVer / バンダイチャンネル) -->
+<!-- ## 使い方 -->
+<!-- 整備中... -->
 
 ## インストール
 ### Chrome Web Store
@@ -66,7 +37,7 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ## 不具合報告・機能提案など
-- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)\
+- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)<br>
 (NCOverlay経由でアクセスすると、バージョンやOSなどの情報が自動入力されます)
 - GitHubの[Issues](https://github.com/Midra429/NCOverlay/issues)
 - SNSアカウント宛にメッセージやメンション
@@ -112,24 +83,25 @@ pnpm run zip:firefox
 ```
 
 ## ライブラリ
-- **nco-parser**\
-[GitHub](https://github.com/Midra429/nco-parser) / [npm](https://www.npmjs.com/package/@midra/nco-parser)\
+- **nco-parser**<br>
+[GitHub](https://github.com/Midra429/nco-parser) / [npm](https://www.npmjs.com/package/@midra/nco-parser)<br>
 アニメタイトルの解析や比較をするやつ
-- **nco-api**\
-[GitHub](https://github.com/Midra429/nco-api) / [npm](https://www.npmjs.com/package/@midra/nco-api)\
+
+- **nco-api**<br>
+[GitHub](https://github.com/Midra429/nco-api) / [npm](https://www.npmjs.com/package/@midra/nco-api)<br>
 NCOverlayで使うAPIをまとめたやつ
 
 ## スペシャルサンクス
-- **xpadev-net/niconicomments**\
-[GitHub](https://github.com/xpadev-net/niconicomments) / [npm](https://www.npmjs.com/package/@xpadev-net/niconicomments)\
+- **xpadev-net/niconicomments**<br>
+[GitHub](https://github.com/xpadev-net/niconicomments) / [npm](https://www.npmjs.com/package/@xpadev-net/niconicomments)<br>
 コメント描画
 
-- **しょぼいカレンダー**\
-https://docs.cal.syoboi.jp/spec/json.php/\
+- **しょぼいカレンダー**<br>
+https://docs.cal.syoboi.jp/spec/json.php/<br>
 番組検索、放送時間取得
 
-- **ニコニコ実況 過去ログ API**\
-https://jikkyo.tsukumijima.net/\
+- **ニコニコ実況 過去ログ API**<br>
+https://jikkyo.tsukumijima.net/<br>
 ニコニコ実況の過去ログ
 
 ## ライセンス
