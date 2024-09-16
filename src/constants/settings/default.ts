@@ -15,6 +15,10 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:capture:format': 'jpeg',
   'settings:capture:method': 'window',
 
+  // 検索
+  'settings:search:sort': '-startTime',
+  'settings:search:lengthRange': [null, null],
+
   // コメント
   'settings:comment:autoLoads': ['official', 'chapter'],
   'settings:comment:amount': 1,

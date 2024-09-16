@@ -17,11 +17,11 @@ export const Duration: React.FC<DurationProps> = ({
     <div
       className={cn(
         'absolute bottom-[3px] right-[3px] z-10',
-        isSearch ? 'px-0.5 py-[0.5px]' : 'px-1 py-[1px]',
+        'px-1 py-[1px]',
         'bg-black/50 backdrop-blur-md',
         'border-1 border-white/25',
         'rounded-md',
-        'text-min text-white',
+        'text-mini text-white',
         'select-none'
       )}
     >

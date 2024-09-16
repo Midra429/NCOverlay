@@ -1,3 +1,4 @@
+import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems } from '@/ncoverlay/state'
 
@@ -10,39 +11,6 @@ export type NgSettings = {
   words: NgSettingsContent[]
   commands: NgSettingsContent[]
   ids: NgSettingsContent[]
-}
-
-/** < v3.10.0 */
-export type StorageItems_v1 = {
-  /**
-   * コメント:自動読み込み
-   * @default true
-   */
-  'settings:comment:autoLoad': boolean
-
-  /**
-   * コメント:自動読み込み:コメント専用動画を含める
-   * @default false
-   */
-  'settings:comment:autoLoadSzbh': boolean
-
-  /**
-   * コメント:自動読み込み:dアニメストアのチャプター形式(分割)を含める
-   * @default false
-   */
-  'settings:comment:autoLoadChapter': boolean
-
-  /**
-   * コメント:自動読み込み:ニコニコ実況(過去ログ)を含める
-   * @default false
-   */
-  'settings:comment:autoLoadJikkyo': boolean
-
-  /**
-   * 実験的な機能:タイトル解析でAIを使用する
-   * @default false
-   */
-  'settings:experimental:useAiParser': boolean
 }
 
 /** < v3.13.1 */
@@ -85,6 +53,16 @@ export type StorageItems_v3 = {
    * @default 'jpeg'
    */
   'settings:capture:method': 'window' | 'copy'
+
+  /**
+   * 検索:ソート順
+   */
+  'settings:search:sort': SearchQuerySort
+
+  /**
+   * 検索:再生時間
+   */
+  'settings:search:lengthRange': [start: number | null, end: number | null]
 
   /**
    * コメント:自動検索

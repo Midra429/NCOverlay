@@ -39,7 +39,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
             'select-none'
           )}
         >
-          <span className={cn('absolute top-[4px]', 'text-min text-white/80')}>
+          <span className={cn('absolute top-[4px]', 'text-mini text-white/80')}>
             {jkChId}
           </span>
           <span

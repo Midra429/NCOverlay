@@ -180,8 +180,8 @@ export const Settings: React.FC = memo(() => {
         startContent: '[&>*]:size-4',
         content: 'flex flex-col overflow-hidden py-[1px]',
       }}
-      isCompact
       variant="splitted"
+      isCompact
       defaultExpandedKeys={['_info']}
     >
       {accordionItemInfo}

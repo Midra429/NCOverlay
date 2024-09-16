@@ -22,7 +22,7 @@ const transitionVariants: Variants = {
   enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
 }
 
-export const ConfigButton: React.FC<{
+export const OptionsButton: React.FC<{
   isOpen: boolean
   onPress: () => void
 }> = ({ isOpen, onPress }) => {
@@ -84,11 +84,11 @@ const SlotOffsetControl: React.FC<SlotOffsetControlProps> = ({
   )
 }
 
-export type ConfigProps = {
+export type OptionsProps = {
   isOpen: boolean
 } & SlotOffsetControlProps
 
-export const Config: React.FC<ConfigProps> = ({ isOpen, id, offsetMs }) => {
+export const Options: React.FC<OptionsProps> = ({ isOpen, id, offsetMs }) => {
   const willChange = useWillChange()
 
   return (
@@ -96,7 +96,7 @@ export const Config: React.FC<ConfigProps> = ({ isOpen, id, offsetMs }) => {
       {isOpen && (
         <LazyMotion features={domAnimation}>
           <m.div
-            key="slot-config"
+            key="slot-options"
             style={{ willChange }}
             initial="exit"
             animate="enter"

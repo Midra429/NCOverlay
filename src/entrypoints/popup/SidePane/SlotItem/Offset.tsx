@@ -12,7 +12,7 @@ export const Offset: React.FC<OffsetProps> = ({ offsetMs }) => {
   return (
     ofs !== 0 && (
       <div className="flex h-full flex-row items-center gap-1">
-        <ClockIcon className="size-3" />
+        <ClockIcon className="size-tiny" />
         <span className="text-tiny">
           {0 < ofs && '+'}
           {ofs.toLocaleString()}

@@ -1,5 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
+import { useMemo } from 'react'
 import { Link, cn } from '@nextui-org/react'
 
 export type TitleProps = {
@@ -15,21 +16,28 @@ export const Title: React.FC<TitleProps> = ({
   infoTitle,
   isSearch,
 }) => {
-  const { href } = new URL(
-    infoId,
-    type === 'jikkyo'
-      ? `https://cal.syoboi.jp/tid/`
-      : 'https://www.nicovideo.jp/watch/'
-  )
+  const href = useMemo(() => {
+    return new URL(
+      infoId,
+      type === 'jikkyo'
+        ? `https://cal.syoboi.jp/tid/`
+        : 'https://www.nicovideo.jp/watch/'
+    ).href
+  }, [type, infoId])
+
+  const titleAttr = useMemo(() => {
+    return (isSearch ? 130 : 190) < new Blob([infoTitle]).size
+      ? infoTitle
+      : undefined
+  }, [infoTitle, isSearch])
 
   const title = (
     <span
-      className="line-clamp-3 break-all text-tiny font-bold"
-      title={
-        (isSearch ? 100 : 190) < new Blob([infoTitle]).size
-          ? infoTitle
-          : undefined
-      }
+      className={cn(
+        'line-clamp-3 break-all font-bold',
+        isSearch ? 'text-mini' : 'text-tiny'
+      )}
+      title={titleAttr}
     >
       {infoTitle}
     </span>

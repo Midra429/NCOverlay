@@ -25,10 +25,8 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
           isSearch ? 'gap-0.5' : 'gap-1'
         )}
       >
-        <CalendarDaysIcon
-          className={isSearch ? 'size-[0.6875rem]' : 'size-3'}
-        />
-        <span className={isSearch ? 'text-min' : 'text-tiny'}>
+        <CalendarDaysIcon className={isSearch ? 'size-mini' : 'size-tiny'} />
+        <span className={isSearch ? 'text-mini' : 'text-tiny'}>
           {typeof infoDate === 'number'
             ? formatDate(infoDate, 'YYYY/MM/DD(d) hh:mm')
             : `${formatDate(infoDate[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}

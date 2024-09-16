@@ -34,10 +34,10 @@ export const SourceTag: React.FC<SourceTagProps> = ({ type, isSearch }) => {
     <div
       className={cn(
         'absolute left-[3px] top-[3px] z-10',
-        isSearch ? 'px-0.5 py-[0.5px]' : 'px-1 py-[1px]',
+        'px-1 py-[1px]',
         'border-1 border-white/80',
         'rounded-md',
-        'text-min',
+        'text-mini',
         'select-none',
         SOURCE_TAG_CLASSES[type]
       )}

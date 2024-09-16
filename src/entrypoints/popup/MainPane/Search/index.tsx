@@ -1,3 +1,4 @@
+import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { memo, useMemo, useState, useCallback } from 'react'
@@ -7,6 +8,7 @@ import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
 import { extractVideoId } from '@/utils/api/extractVideoId'
 
+import { useSettings } from '@/hooks/useSettings'
 import { useNcoState } from '@/hooks/useNco'
 
 import { SearchInput } from './Input'
@@ -60,7 +62,11 @@ const searchByVideoId = async (
 
 const searchByKeyword = async (
   keyword: string,
-  page: number
+  page: number,
+  options?: {
+    sort?: SearchQuerySort
+    lengthRange?: [start: number | null, end: number | null]
+  }
 ): Promise<SearchResult | null> => {
   const limit = 20
   const offset = limit * (page - 1)
@@ -83,8 +89,14 @@ const searchByKeyword = async (
     filters: {
       'genre.keyword': ['アニメ'],
       'commentCounter': { gt: 0 },
+      'lengthSeconds': options?.lengthRange
+        ? {
+            gte: options.lengthRange[0] ?? undefined,
+            lte: options.lengthRange[1] ?? undefined,
+          }
+        : undefined,
     },
-    _sort: '-startTime',
+    _sort: options?.sort ?? '-startTime',
     _offset: offset,
     _limit: limit,
     _context: EXT_USER_AGENT,
@@ -133,36 +145,45 @@ export const Search: React.FC = memo(() => {
   const [totalCount, setTotalCount] = useState(0)
   const [slotDetails, setSlotDetails] = useState<StateSlotDetail[]>([])
 
+  const { value: sort } = useSettings('settings:search:sort')
+  const { value: lengthRange } = useSettings('settings:search:lengthRange')
+
   const stateStatus = useNcoState('status')
 
   const isReady = useMemo(() => {
     return !(stateStatus === 'searching' || stateStatus === 'loading')
   }, [stateStatus])
 
-  const search = useCallback(async (value: string, page: number) => {
-    setIsLoading(true)
+  const search = useCallback(
+    async (value: string, page: number) => {
+      setIsLoading(true)
 
-    setCurrentPage(page)
-    setSlotDetails([])
+      setCurrentPage(page)
+      setSlotDetails([])
 
-    const videoId = extractVideoId(value)
+      const videoId = extractVideoId(value)
 
-    const result = videoId
-      ? await searchByVideoId(videoId)
-      : await searchByKeyword(value, page)
+      const result = videoId
+        ? await searchByVideoId(videoId)
+        : await searchByKeyword(value, page, {
+            sort,
+            lengthRange,
+          })
 
-    if (result) {
-      setTotalCount(result.total)
-      setSlotDetails(result.details)
-    } else {
-      setTotalCount(0)
-    }
+      if (result) {
+        setTotalCount(result.total)
+        setSlotDetails(result.details)
+      } else {
+        setTotalCount(0)
+      }
 
-    setIsLoading(false)
-  }, [])
+      setIsLoading(false)
+    },
+    [sort, lengthRange]
+  )
 
   return (
-    <div className={cn('flex flex-col', 'h-full')}>
+    <div className="flex h-full flex-col">
       <div
         className={cn(
           'flex flex-col gap-2',

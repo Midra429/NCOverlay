@@ -12,7 +12,7 @@ const classGroups = twMergeConfig.classGroups as Record<
   Writable<NonNullable<(typeof twMergeConfig)['classGroups']>[string]>
 >
 
-classGroups!['font-size'].push({ text: ['min'] })
+classGroups!['font-size'].push({ text: ['mini'] })
 
 export type LayoutProps = {
   children: React.ReactNode
