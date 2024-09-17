@@ -32,14 +32,14 @@ export const LengthRange: React.FC = () => {
         innerWrapper: '!pt-0',
         selectorIcon: 'end-1.5',
         value: 'text-mini',
-        popoverContent: 'rounded-md',
+        popoverContent: 'rounded-lg',
         listbox: 'p-0',
       }}
       size="sm"
       fullWidth
       label="再生時間"
       startContent={
-        <ClockIcon className="size-medium shrink-0 text-foreground-500" />
+        <ClockIcon className="size-small shrink-0 text-foreground-500" />
       }
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}

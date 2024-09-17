@@ -8,12 +8,11 @@ import {
   MessageSquareTextIcon,
   MessageSquareOffIcon,
   BlocksIcon,
-  // FlaskConicalIcon,
   KeyboardIcon,
 } from 'lucide-react'
 
-import { VODS } from '../vods'
-import { PLUGINS } from '../plugins'
+import { VODS } from '@/constants/vods'
+import { PLUGINS } from '@/constants/plugins'
 
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
@@ -28,18 +27,18 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: 'テーマ',
         options: [
           {
-            value: 'auto',
             label: '自動',
+            value: 'auto',
             icon: SunMoonIcon,
           },
           {
-            value: 'light',
             label: 'ライト',
+            value: 'light',
             icon: SunIcon,
           },
           {
-            value: 'dark',
             label: 'ダーク',
+            value: 'dark',
             icon: MoonIcon,
           },
         ],
@@ -50,8 +49,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '動画配信サービス',
         description: '選択した動画配信サービスで\n拡張機能を有効にします。',
         options: Object.entries(VODS).map(([key, value]) => ({
-          value: key as VodKey,
           label: value,
+          value: key as VodKey,
         })),
       },
       {
@@ -59,8 +58,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'select',
         label: 'キャプチャー: 形式',
         options: [
-          { value: 'jpeg', label: 'JPEG' },
-          { value: 'png', label: 'PNG' },
+          { label: 'JPEG', value: 'jpeg' },
+          { label: 'PNG', value: 'png' },
         ],
       },
       {
@@ -68,8 +67,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'select',
         label: 'キャプチャー: 方式',
         options: [
-          { value: 'window', label: 'ウィンドウ' },
-          { value: 'copy', label: 'コピー' },
+          { label: 'ウィンドウ', value: 'window' },
+          { label: 'コピー', value: 'copy' },
         ],
       },
       {
@@ -108,9 +107,9 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'select',
         label: 'フレームレート',
         options: [
-          { value: 30, label: '30fps' },
-          { value: 60, label: '60fps' },
-          { value: 0, label: '無制限' },
+          { label: '30fps', value: 30 },
+          { label: '60fps', value: 60 },
+          { label: '無制限', value: 0 },
         ],
       },
       {
@@ -118,10 +117,10 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'checkbox',
         label: '自動検索',
         options: [
-          { value: 'official', label: '公式 / dアニメ' },
-          { value: 'chapter', label: 'dアニメ (分割)' },
-          { value: 'szbh', label: 'コメント専用' },
-          { value: 'jikkyo', label: '実況 (過去ログ)' },
+          { label: '公式 / dアニメ', value: 'official' },
+          { label: 'dアニメ (分割)', value: 'chapter' },
+          { label: 'コメント専用', value: 'szbh' },
+          { label: '実況 (過去ログ)', value: 'jikkyo' },
         ],
       },
     ],
@@ -218,12 +217,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       },
     ],
   },
-  // {
-  //   id: 'experimental',
-  //   title: '実験機能',
-  //   icon: FlaskConicalIcon,
-  //   items: [],
-  // },
   {
     id: 'plugins',
     title: 'プラグイン',

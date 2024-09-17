@@ -59,6 +59,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           className="min-w-6 shrink-0 p-0"
           size="sm"
           variant="light"
+          disableRipple
           startContent={
             <ChevronDownIcon
               className={cn(
