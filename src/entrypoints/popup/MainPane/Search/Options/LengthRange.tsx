@@ -17,7 +17,7 @@ const LENGTH_RANGE_OPTIONS: {
 ]
 
 export const LengthRange: React.FC = () => {
-  const { value, setValue } = useSettings('settings:search:lengthRange')
+  const [value, setValue] = useSettings('settings:search:lengthRange')
 
   return (
     <Select

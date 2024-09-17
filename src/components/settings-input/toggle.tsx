@@ -17,7 +17,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
 > & {}
 
 export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
-  const { value, setValue } = useSettings(props.settingsKey)
+  const [value, setValue] = useSettings(props.settingsKey)
 
   return (
     <Switch

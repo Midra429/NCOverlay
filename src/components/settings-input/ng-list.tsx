@@ -182,7 +182,7 @@ const Item: React.FC<{
 
 export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])
-  const { value, setValue } = useSettings(props.settingsKey)
+  const [value, setValue] = useSettings(props.settingsKey)
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 

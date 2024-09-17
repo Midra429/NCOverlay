@@ -20,7 +20,7 @@ const SORT_OPTIONS: {
 ]
 
 export const Sort: React.FC = () => {
-  const { value, setValue } = useSettings('settings:search:sort')
+  const [value, setValue] = useSettings('settings:search:sort')
 
   return (
     <Select

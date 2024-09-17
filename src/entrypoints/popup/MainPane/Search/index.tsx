@@ -145,8 +145,8 @@ export const Search: React.FC = memo(() => {
   const [totalCount, setTotalCount] = useState(0)
   const [slotDetails, setSlotDetails] = useState<StateSlotDetail[]>([])
 
-  const { value: sort } = useSettings('settings:search:sort')
-  const { value: lengthRange } = useSettings('settings:search:lengthRange')
+  const [sort] = useSettings('settings:search:sort')
+  const [lengthRange] = useSettings('settings:search:lengthRange')
 
   const stateStatus = useNcoState('status')
 

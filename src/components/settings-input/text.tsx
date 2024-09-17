@@ -12,7 +12,7 @@ export type Key = {
 export type Props<K extends Key = Key> = SettingsInputBaseProps<K, 'text'> & {}
 
 export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
-  const { value, setValue } = useSettings(props.settingsKey)
+  const [value, setValue] = useSettings(props.settingsKey)
 
   return (
     <NextUIInput

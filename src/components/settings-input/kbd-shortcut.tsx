@@ -111,7 +111,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
 
 export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   const [os, setOs] = useState<Runtime.PlatformOs>()
-  const { value, setValue } = useSettings(props.settingsKey)
+  const [value, setValue] = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()
 
   const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(

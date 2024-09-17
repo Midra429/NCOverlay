@@ -24,7 +24,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   const [state, setState] = useState<number>(
     SETTINGS_DEFAULT[props.settingsKey]
   )
-  const { value, setValue } = useSettings(props.settingsKey)
+  const [value, setValue] = useSettings(props.settingsKey)
 
   useEffect(() => {
     setState(value)
