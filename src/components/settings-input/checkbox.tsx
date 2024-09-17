@@ -60,15 +60,17 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             base: cn(
               'flex-1',
               'm-0 min-w-fit max-w-none',
-              'cursor-pointer',
-              'rounded-full border-2 border-transparent',
+              'px-1.5 py-1',
+              'bg-default-100 hover:bg-default-200',
+              'rounded-full',
+              'border-1 border-default-200 hover:border-default-400',
               'data-[selected=true]:border-primary',
-              'bg-default-100 px-1.5 py-1',
-              'hover:bg-default-200'
+              'transition-colors motion-reduce:transition-none',
+              'cursor-pointer'
             ),
             wrapper: cn(
               'm-0 rounded-full',
-              'before:rounded-full before:!bg-content2',
+              'before:rounded-full before:border-1 before:!bg-default-50',
               'after:rounded-full'
             ),
             label: 'flex w-full flex-row',

@@ -28,9 +28,10 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         base: 'items-center justify-between gap-5 py-2',
         label: 'flex-shrink-0 p-0 text-small',
         mainWrapper: 'w-32 transition-colors',
-        trigger: 'border-1 border-divider shadow-none',
+        trigger: 'border-1 shadow-none',
         value: 'flex flex-row items-center justify-center gap-2',
       }}
+      variant="faded"
       size="sm"
       label={props.label}
       labelPlacement="outside-left"

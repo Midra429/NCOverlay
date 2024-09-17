@@ -27,17 +27,14 @@ export const Sort: React.FC = () => {
       classNames={{
         base: 'shrink-[2]',
         label: 'hidden',
-        trigger: cn(
-          'h-6 min-h-6 px-1.5',
-          'border-1 border-divider',
-          'shadow-none'
-        ),
+        trigger: cn('h-6 min-h-6 px-1.5', 'border-1 shadow-none'),
         innerWrapper: '!pt-0',
         selectorIcon: 'end-1.5',
         value: 'text-mini',
         popoverContent: 'rounded-lg',
         listbox: 'p-0',
       }}
+      variant="faded"
       size="sm"
       fullWidth
       label="並び替え"

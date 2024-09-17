@@ -12,15 +12,9 @@ export type ThumbnailProps = {
   id: StateSlotDetail['id']
   type: StateSlotDetail['type']
   info: StateSlotDetail['info']
-  isSearch?: boolean
 }
 
-export const Thumbnail: React.FC<ThumbnailProps> = ({
-  id,
-  type,
-  info,
-  isSearch,
-}) => {
+export const Thumbnail: React.FC<ThumbnailProps> = ({ id, type, info }) => {
   let thumbnail: JSX.Element | undefined
 
   if (type === 'jikkyo') {
@@ -68,7 +62,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
       {thumbnail}
 
       {/* ソース */}
-      <SourceTag type={type} isSearch={isSearch} />
+      <SourceTag type={type} />
 
       {/* 長さ */}
       <Duration infoDuration={info.duration} />

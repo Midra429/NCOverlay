@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { Skeleton } from '@nextui-org/react'
+import { cn, Skeleton } from '@nextui-org/react'
 import { PlayIcon, MessageSquareTextIcon } from 'lucide-react'
 
 export type CountsProps = {
@@ -30,7 +30,7 @@ export const Counts: React.FC<CountsProps> = ({ infoCount, isSearch }) => {
           {infoCount.comment ? (
             infoCount.comment.toLocaleString('ja-JP')
           ) : (
-            <Skeleton className="h-3 w-16" />
+            <Skeleton className={cn('w-16', isSearch ? 'h-mini' : 'h-tiny')} />
           )}
         </span>
       </div>

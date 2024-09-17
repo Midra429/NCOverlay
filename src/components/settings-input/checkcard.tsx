@@ -45,15 +45,17 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             base: cn(
               'flex flex-row gap-0.5',
               'm-0 min-h-14 w-full max-w-none',
-              'cursor-pointer',
-              'rounded-medium border-2 border-transparent',
+              'px-2 py-1.5',
+              'bg-default-100 hover:bg-default-200',
+              'rounded-medium',
+              'border-1 border-default-200 hover:border-default-400',
               'data-[selected=true]:border-primary',
-              'bg-default-100 px-2 py-1.5',
-              'hover:bg-default-200'
+              'transition-colors motion-reduce:transition-none',
+              'cursor-pointer'
             ),
             wrapper: cn(
               'rounded-full',
-              'before:rounded-full before:!bg-content2',
+              'before:rounded-full before:border-1 before:!bg-default-50',
               'after:rounded-full'
             ),
             label: 'w-full',

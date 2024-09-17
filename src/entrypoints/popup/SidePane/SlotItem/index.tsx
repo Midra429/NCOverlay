@@ -91,7 +91,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       <div
         className={cn(
           'relative flex flex-row p-1',
-          isSearch ? 'h-[5.375rem] gap-1.5' : 'h-[5.75rem] gap-2'
+          isSearch ? 'h-[5.125rem] gap-1.5' : 'h-[5.75rem] gap-2'
         )}
       >
         <div
@@ -101,12 +101,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           )}
         >
           {/* サムネイル */}
-          <Thumbnail
-            id={detail.id}
-            type={detail.type}
-            info={detail.info}
-            isSearch={isSearch}
-          />
+          <Thumbnail id={detail.id} type={detail.type} info={detail.info} />
 
           {isSearch ? (
             // 追加
@@ -120,9 +115,8 @@ export const SlotItem: React.FC<SlotItemProps> = ({
         {/* 情報 (右) */}
         <div
           className={cn(
-            'flex size-full flex-col',
-            detail.hidden && 'opacity-50',
-            isSearch ? 'gap-0.5' : 'gap-0.5'
+            'flex size-full flex-col gap-0.5',
+            detail.hidden && 'opacity-50'
           )}
         >
           {/* 日付 */}
@@ -139,7 +133,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           <div
             className={cn(
               'flex flex-row items-center justify-between',
-              'h-4 flex-shrink-0',
+              'h-fit flex-shrink-0',
               'text-foreground-500'
             )}
           >

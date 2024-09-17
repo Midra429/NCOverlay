@@ -15,16 +15,11 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
     <div
       className={cn(
         'flex flex-row items-center justify-between',
-        'h-4 flex-shrink-0',
+        'h-fit flex-shrink-0',
         'text-foreground-500'
       )}
     >
-      <div
-        className={cn(
-          'flex h-full flex-row items-center',
-          isSearch ? 'gap-0.5' : 'gap-1'
-        )}
-      >
+      <div className="flex h-full flex-row items-center gap-1">
         <CalendarDaysIcon className={isSearch ? 'size-mini' : 'size-tiny'} />
         <span className={isSearch ? 'text-mini' : 'text-tiny'}>
           {typeof infoDate === 'number'

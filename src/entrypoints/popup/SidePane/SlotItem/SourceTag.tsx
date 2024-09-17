@@ -4,7 +4,6 @@ import { cn } from '@nextui-org/react'
 
 export type SourceTagProps = {
   type: StateSlotDetail['type']
-  isSearch?: boolean
 }
 
 const SOURCE_TAG_CLASSES: {
@@ -27,7 +26,7 @@ const SOURCE_TAG_NAME: {
   jikkyo: '実況',
 }
 
-export const SourceTag: React.FC<SourceTagProps> = ({ type, isSearch }) => {
+export const SourceTag: React.FC<SourceTagProps> = ({ type }) => {
   if (type === 'normal') return
 
   return (

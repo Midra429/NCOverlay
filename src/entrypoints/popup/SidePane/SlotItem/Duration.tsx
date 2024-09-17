@@ -6,13 +6,9 @@ import { formatDuration } from '@/utils/format'
 
 export type DurationProps = {
   infoDuration: StateSlotDetail['info']['duration']
-  isSearch?: boolean
 }
 
-export const Duration: React.FC<DurationProps> = ({
-  infoDuration,
-  isSearch,
-}) => {
+export const Duration: React.FC<DurationProps> = ({ infoDuration }) => {
   return (
     <div
       className={cn(
