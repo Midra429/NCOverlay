@@ -11,16 +11,16 @@ import { ncoState } from '@/hooks/useNco'
 
 import { PanelItem } from '@/components/panel-item'
 
-import { StatusOverlay } from './StatusOverlay'
-import { AddButton } from './AddButton'
-import { Thumbnail } from './Thumbnail'
-import { DateTime } from './DateTime'
-import { Title } from './Title'
-import { Counts } from './Counts'
-import { Offset } from './Offset'
-import { HideButton } from './HideButton'
-import { TranslucentButton } from './TranslucentButton'
-import { Options, OptionsButton } from './Options'
+import { StatusOverlay } from './status-overlay'
+import { AddButton } from './add-button'
+import { Thumbnail } from './thumbnail'
+import { DateTime } from './date-time'
+import { Title } from './title'
+import { Counts } from './counts'
+import { Offset } from './offset'
+import { HideButton } from './hide-button'
+import { TranslucentButton } from './translucent-button'
+import { Options, OptionsButton } from './options'
 
 export type SlotItemProps = {
   detail: StateSlotDetail

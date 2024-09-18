@@ -5,8 +5,8 @@ import { Image, cn } from '@nextui-org/react'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
-import { SourceTag } from './SourceTag'
-import { Duration } from './Duration'
+import { SourceTag } from './source-tag'
+import { Duration } from './duration'
 
 export type ThumbnailProps = {
   id: StateSlotDetail['id']
