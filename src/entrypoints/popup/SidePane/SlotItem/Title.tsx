@@ -2,6 +2,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useMemo } from 'react'
 import { Link, cn } from '@nextui-org/react'
+import { useOverflowDetector } from 'react-detectable-overflow'
 
 export type TitleProps = {
   type: StateSlotDetail['type']
@@ -16,20 +17,16 @@ export const Title: React.FC<TitleProps> = ({
   infoTitle,
   isSearch,
 }) => {
-  const href = useMemo(() => {
+  const { ref, overflow } = useOverflowDetector()
+
+  const { href } = useMemo(() => {
     return new URL(
       infoId,
       type === 'jikkyo'
         ? `https://cal.syoboi.jp/tid/`
         : 'https://www.nicovideo.jp/watch/'
-    ).href
+    )
   }, [type, infoId])
-
-  const titleAttr = useMemo(() => {
-    return (isSearch ? 130 : 190) < new Blob([infoTitle]).size
-      ? infoTitle
-      : undefined
-  }, [infoTitle, isSearch])
 
   const title = (
     <span
@@ -37,7 +34,8 @@ export const Title: React.FC<TitleProps> = ({
         'line-clamp-3 break-all font-bold',
         isSearch ? 'text-mini' : 'text-tiny'
       )}
-      title={titleAttr}
+      title={overflow ? infoTitle : undefined}
+      ref={ref}
     >
       {infoTitle}
     </span>

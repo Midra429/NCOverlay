@@ -10,6 +10,7 @@ import {
   cn,
 } from '@nextui-org/react'
 import { CopyIcon, PlusIcon } from 'lucide-react'
+import { useOverflowDetector } from 'react-detectable-overflow'
 
 import { NICONICO_COLOR_COMMANDS, COLOR_CODE_REGEXP } from '@/constants'
 
@@ -66,6 +67,8 @@ export type ItemProps = {
 }
 
 export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
+  const { ref, overflow } = useOverflowDetector()
+
   const { commentCellClass, commentClass, commentBgColor, commentFgColor } =
     useMemo(() => {
       const commentCellClass: string[] = []
@@ -168,7 +171,8 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
                 backgroundColor: commentBgColor,
                 color: commentFgColor,
               }}
-              title={comment.body}
+              title={overflow ? comment.body : undefined}
+              ref={ref}
             >
               {comment.body}
             </span>
