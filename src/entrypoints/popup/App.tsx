@@ -7,7 +7,7 @@ import { SidePane } from './SidePane'
 
 const App: React.FC = () => {
   const isActive = !!ncoState
-  const height = isActive ? 517 : 458
+  const height = isActive ? 507 : 458
 
   return (
     <Layout className="overflow-hidden">

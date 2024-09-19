@@ -24,7 +24,10 @@ export const LengthRange: React.FC = () => {
       classNames={{
         base: 'shrink-[3]',
         label: 'hidden',
-        trigger: cn('h-6 min-h-6 px-1.5', 'border-1 shadow-none'),
+        trigger: cn(
+          'h-6 min-h-6 px-1.5',
+          'border-1 border-divider shadow-none'
+        ),
         innerWrapper: '!pt-0',
         selectorIcon: 'end-1.5',
         value: 'text-mini',

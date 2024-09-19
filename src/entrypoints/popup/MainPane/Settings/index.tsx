@@ -1,3 +1,5 @@
+import type { AccordionItemProps } from '@nextui-org/react'
+
 import { memo } from 'react'
 import { Accordion, AccordionItem, Divider, Link, cn } from '@nextui-org/react'
 import {
@@ -26,11 +28,20 @@ import { StorageSizes } from './StorageSizes'
 
 const { name, version } = webext.runtime.getManifest()
 
+const accordionItemClassNames: AccordionItemProps['classNames'] = {
+  indicator: cn('-rotate-90 data-[open=true]:rotate-90'),
+}
+
 /**
  * 情報
  */
 const accordionItemInfo = (
-  <AccordionItem key="_info" title="情報" startContent={<InfoIcon />}>
+  <AccordionItem
+    key="_info"
+    classNames={accordionItemClassNames}
+    title="情報"
+    startContent={<InfoIcon />}
+  >
     <div className="flex flex-col gap-1 py-2">
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row gap-2 text-medium">
@@ -58,7 +69,12 @@ const accordionItemInfo = (
  */
 const accordionItemSettings = SETTINGS_INIT_DATA.map(
   ({ id, title, items, icon: Icon }) => (
-    <AccordionItem key={id} title={title} startContent={Icon && <Icon />}>
+    <AccordionItem
+      key={id}
+      classNames={accordionItemClassNames}
+      title={title}
+      startContent={Icon && <Icon />}
+    >
       {items.map((item, idx) => {
         const Input = SettingsInput[item.inputType]
 
@@ -66,6 +82,7 @@ const accordionItemSettings = SETTINGS_INIT_DATA.map(
           <div
             key={idx}
             className={cn(
+              'py-0.5',
               'border-foreground-200',
               '[&:not(:first-child)]:border-t-1'
             )}
@@ -84,6 +101,7 @@ const accordionItemSettings = SETTINGS_INIT_DATA.map(
 const accordionItemStorage = (
   <AccordionItem
     key="_storage"
+    classNames={accordionItemClassNames}
     title="ストレージ"
     startContent={<DatabaseIcon />}
   >
@@ -98,7 +116,7 @@ const accordionItemStorage = (
         button={{
           variant: 'flat',
           color: 'danger',
-          startContent: <RotateCcwIcon className="size-4" />,
+          startContent: <RotateCcwIcon />,
           text: 'リセット',
           onPress: settings.remove,
         }}
@@ -115,7 +133,7 @@ const accordionItemStorage = (
         button={{
           variant: 'flat',
           color: 'danger',
-          startContent: <Trash2Icon className="size-4" />,
+          startContent: <Trash2Icon />,
           text: '初期化',
           onPress: async () => {
             await storage.remove()
@@ -138,6 +156,7 @@ const accordionItemStorage = (
 const accordionItemOthers = (
   <AccordionItem
     key="_others"
+    classNames={accordionItemClassNames}
     title="その他"
     startContent={<CircleEllipsisIcon />}
   >

@@ -64,8 +64,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             <ChevronDownIcon
               className={cn(
                 'size-4',
-                'ease transition-transform duration-150 motion-reduce:transition-none',
-                'data-[open=true]:rotate-180'
+                'transition-transform',
+                'rotate-0 data-[open=true]:rotate-180'
               )}
               data-open={isOptionsOpen}
             />

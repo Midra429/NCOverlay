@@ -95,10 +95,20 @@ const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
   const key =
     OS_KEYS['common']?.[kbdKey] || (os && OS_KEYS[os]?.[kbdKey]) || kbdKey
 
-  return isNextUiKbdKey(key, os) ? (
-    <Kbd className="shrink-0" keys={key} />
-  ) : (
-    <Kbd className="shrink-0">{key[0].toUpperCase() + key.slice(1)}</Kbd>
+  const isKey = isNextUiKbdKey(key, os)
+
+  return (
+    <Kbd
+      className={cn(
+        'shrink-0 px-2 py-0.5',
+        'bg-content1',
+        'border-1 border-foreground-300',
+        'shadow-none'
+      )}
+      keys={isKey ? key : undefined}
+    >
+      {!isKey && key[0].toUpperCase() + key.slice(1)}
+    </Kbd>
   )
 }
 
@@ -133,46 +143,54 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   }, [])
 
   return (
-    <div className="flex flex-col justify-between gap-1.5 py-2.5">
+    <div className="flex flex-col justify-between gap-2 py-2">
       <ItemLabel title={props.label} description={props.description} />
 
-      <div className="flex flex-row items-center gap-2">
-        <ScrollShadow
+      <div className="flex flex-row items-center gap-1">
+        <div
           className={cn(
-            'flex flex-row items-center gap-1',
-            'h-10 w-full p-1.5',
-            'rounded-medium',
-            'border-1 border-foreground-200',
-            isRecording && 'border-primary bg-primary/15'
+            'h-8 w-full',
+            'rounded-small',
+            'border-1 border-divider',
+            'data-[recording=true]:border-primary',
+            'bg-default-100',
+            'overflow-x-hidden',
+            'transition-colors !duration-150'
           )}
-          orientation="horizontal"
-          hideScrollBar
+          data-recording={isRecording}
         >
-          {(isRecording ? [...keys] : value.split('+')).map((key, idx) => (
-            <div key={key} className="flex flex-row items-center gap-1">
-              {idx !== 0 && <PlusIcon className="size-3.5 shrink-0" />}
-              <KeyboardKey kbdKey={key} os={os} />
-            </div>
-          ))}
-        </ScrollShadow>
+          <ScrollShadow
+            className={cn(
+              'flex flex-row items-center gap-1',
+              'size-full px-0.5'
+            )}
+            orientation="horizontal"
+            hideScrollBar
+          >
+            {(isRecording ? [...keys] : value.split('+')).map((key, idx) => (
+              <div key={key} className="flex flex-row items-center gap-1">
+                {idx !== 0 && <PlusIcon className="size-3 shrink-0" />}
+                <KeyboardKey kbdKey={key} os={os} />
+              </div>
+            ))}
+          </ScrollShadow>
+        </div>
 
-        <Tooltip content={isRecording ? '保存' : '編集'}>
-          <Button
-            className="shrink-0"
-            size="sm"
-            radius="full"
-            variant="light"
-            isIconOnly
-            startContent={
-              isRecording ? (
-                <CheckIcon className="size-4" />
-              ) : (
-                <PencilIcon className="size-4" />
-              )
-            }
-            onClick={onClick}
-          />
-        </Tooltip>
+        <Button
+          className="shrink-0"
+          size="sm"
+          variant="light"
+          radius="full"
+          isIconOnly
+          startContent={
+            isRecording ? (
+              <CheckIcon className="size-4" />
+            ) : (
+              <PencilIcon className="size-4" />
+            )
+          }
+          onClick={onClick}
+        />
       </div>
     </div>
   )

@@ -43,12 +43,13 @@ export const MainPane: React.FC<{
       {quickpanel ? (
         <Tabs
           classNames={{
-            base: 'border-b-1 border-foreground-200 p-2',
-            tabList: 'border-1 border-foreground-100 bg-content1 shadow-small',
+            base: 'border-b-1 border-foreground-200 bg-content1 p-2',
+            tabList: 'bg-content1 p-0',
+            cursor: 'rounded-full',
             panel: 'h-full overflow-hidden p-0',
           }}
           color="primary"
-          radius="full"
+          radius="none"
           fullWidth
           destroyInactiveTabPanel={false}
           defaultSelectedKey="quickpanel"

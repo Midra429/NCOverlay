@@ -30,9 +30,9 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   return (
     <CheckboxGroup
       classNames={{
-        base: 'gap-0 py-1',
-        label: 'my-1 text-small text-foreground',
-        wrapper: 'my-1 gap-1.5',
+        base: 'gap-2 py-2',
+        label: 'text-small text-foreground',
+        wrapper: 'gap-1.5',
       }}
       size="sm"
       orientation="horizontal"
@@ -63,7 +63,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
               'px-1.5 py-1',
               'bg-default-100 hover:bg-default-200',
               'rounded-full',
-              'border-1 border-default-200 hover:border-default-400',
+              'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
               'cursor-pointer'

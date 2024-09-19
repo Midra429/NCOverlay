@@ -29,7 +29,8 @@ export const ItemButton: React.FC<{
         'min-w-24 shrink-0',
         props.button.variant === 'flat' &&
           props.button.color === 'default' &&
-          'text-foreground'
+          'text-foreground',
+        '[&>svg]:size-4'
       )}
       size="sm"
       variant={props.button.variant}
