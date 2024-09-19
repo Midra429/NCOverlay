@@ -167,12 +167,20 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             orientation="horizontal"
             hideScrollBar
           >
-            {(isRecording ? [...keys] : value.split('+')).map((key, idx) => (
-              <div key={key} className="flex flex-row items-center gap-1">
-                {idx !== 0 && <PlusIcon className="size-3 shrink-0" />}
-                <KeyboardKey kbdKey={key} os={os} />
-              </div>
-            ))}
+            {!isRecording && !value && (
+              <span className="select-none pl-1.5 text-small text-foreground-500">
+                未設定
+              </span>
+            )}
+
+            {(isRecording ? [...keys] : value.split('+'))
+              .filter(Boolean)
+              .map((key, idx) => (
+                <div key={key} className="flex flex-row items-center gap-1">
+                  {idx !== 0 && <PlusIcon className="size-3 shrink-0" />}
+                  <KeyboardKey kbdKey={key} os={os} />
+                </div>
+              ))}
           </ScrollShadow>
         </div>
 
