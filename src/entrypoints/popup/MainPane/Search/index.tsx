@@ -189,7 +189,7 @@ export const Search: React.FC = memo(() => {
           'flex flex-col gap-2',
           'p-2',
           'bg-content1',
-          'border-b-1 border-divider'
+          'border-b-1 border-foreground-200'
         )}
       >
         <SearchInput
@@ -216,7 +216,9 @@ export const Search: React.FC = memo(() => {
         )}
       </div>
 
-      <div className={cn('p-2', 'bg-content1', 'border-t-1 border-divider')}>
+      <div
+        className={cn('p-2', 'bg-content1', 'border-t-1 border-foreground-200')}
+      >
         <Pagination
           page={currentPage}
           total={totalCount}

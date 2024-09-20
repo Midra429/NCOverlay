@@ -73,7 +73,7 @@ export const MarkerButtons: React.FC = () => {
         className={cn(
           'flex flex-row gap-2',
           'p-2',
-          'border-b-1 border-divider'
+          'border-b-1 border-foreground-200'
         )}
       >
         <MarkerButton

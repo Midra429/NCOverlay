@@ -34,6 +34,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                 'border-1 border-divider shadow-none',
                 'rounded-r-none'
               ),
+              input: 'pr-5',
+              clearButton: 'end-1 mr-0 p-1',
             }}
             size="sm"
             isClearable

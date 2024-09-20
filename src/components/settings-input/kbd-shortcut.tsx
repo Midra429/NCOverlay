@@ -3,12 +3,13 @@ import type { Runtime } from 'wxt/browser'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { ScrollShadow, Button, Kbd, cn } from '@nextui-org/react'
 import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
 
 import { webext } from '@/utils/webext'
+
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemLabel } from '@/components/label'
@@ -101,8 +102,8 @@ const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
     <Kbd
       className={cn(
         'shrink-0 px-2 py-0.5',
-        'bg-content1',
-        'border-1 border-foreground-300',
+        'bg-content1 text-content1-foreground/80',
+        'border-1 border-content1-foreground/25',
         'shadow-none'
       )}
       keys={isKey ? key : undefined}
@@ -161,7 +162,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         >
           <ScrollShadow
             className={cn(
-              'flex flex-row items-center gap-1',
+              'flex flex-row items-center gap-0.5',
               'size-full px-0.5'
             )}
             orientation="horizontal"
@@ -176,7 +177,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             {(isRecording ? [...keys] : value.split('+'))
               .filter(Boolean)
               .map((key, idx) => (
-                <div key={key} className="flex flex-row items-center gap-1">
+                <div key={key} className="flex flex-row items-center gap-0.5">
                   {idx !== 0 && <PlusIcon className="size-3 shrink-0" />}
                   <KeyboardKey kbdKey={key} os={os} />
                 </div>
@@ -184,21 +185,23 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           </ScrollShadow>
         </div>
 
-        <Button
-          className="shrink-0"
-          size="sm"
-          variant="light"
-          radius="full"
-          isIconOnly
-          startContent={
-            isRecording ? (
-              <CheckIcon className="size-4" />
-            ) : (
-              <PencilIcon className="size-4" />
-            )
-          }
-          onClick={onClick}
-        />
+        <Tooltip content={isRecording ? '完了' : '編集'}>
+          <Button
+            className="shrink-0"
+            size="sm"
+            variant="light"
+            radius="full"
+            isIconOnly
+            startContent={
+              isRecording ? (
+                <CheckIcon className="size-4" />
+              ) : (
+                <PencilIcon className="size-4" />
+              )
+            }
+            onClick={onClick}
+          />
+        </Tooltip>
       </div>
     </div>
   )
