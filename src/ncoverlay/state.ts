@@ -118,7 +118,7 @@ export const filterDisplayThreads = async (
     if (!slot) return
 
     slot.threads.forEach((thread) => {
-      const key = `${thread.id}${thread.fork}`
+      const key = `${thread.fork}:${thread.id}`
 
       if (threadMap.has(key)) {
         return

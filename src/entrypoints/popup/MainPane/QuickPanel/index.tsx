@@ -26,7 +26,7 @@ const SETTINGS_INIT_ITEMS = Object.fromEntries(
 const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:opacity',
   'settings:comment:scale',
-  'settings:comment:fps',
+  'settings:comment:amount',
   'settings:comment:autoLoads',
 ]
 
@@ -35,19 +35,28 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
  */
 export const QuickPanel: React.FC = memo(() => {
   return (
-    <div className="flex h-full flex-col gap-2 p-2">
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-row gap-2">
+    <div className="flex h-full flex-col gap-2">
+      <div className="flex flex-col">
+        <div className="flex flex-row">
           <ReloadButton />
+
+          <Divider orientation="vertical" />
+
           <CaptureButton />
+
+          <Divider orientation="vertical" />
+
           <ReportButton />
+
+          <Divider orientation="vertical" />
+
           <SidePanelButton />
         </div>
 
         <Divider />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 px-2">
         <ShowHideToggle />
 
         {QUICKPANEL_ITEM_KEYS.map((key) => {

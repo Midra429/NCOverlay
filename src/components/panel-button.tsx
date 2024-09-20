@@ -4,31 +4,25 @@ import { Button, cn } from '@nextui-org/react'
 import { Tooltip } from './tooltip'
 
 export type PanelButtonProps = ButtonProps & {
-  compact?: boolean
+  label?: string
 }
 
 export const PanelButton: React.FC<PanelButtonProps> = (props) => {
-  const button = (
-    <Button
-      {...props}
-      className={cn(
-        'min-w-0',
-        'border-1 border-foreground-100',
-        'bg-content1 text-foreground',
-        !props.isDisabled && 'shadow-small',
-        props.className
-      )}
-      size={props.compact ? 'sm' : 'md'}
-      variant="flat"
-      fullWidth
-    >
-      {!props.compact && props.children}
-    </Button>
-  )
-
-  return props.compact ? (
-    <Tooltip content={props.children}>{button}</Tooltip>
-  ) : (
-    button
+  return (
+    <Tooltip content={props.label}>
+      <Button
+        {...props}
+        className={cn(
+          'h-9 min-w-0',
+          'bg-content1 text-foreground',
+          '[&>svg]:size-[1.125rem]',
+          props.className
+        )}
+        size="sm"
+        variant="flat"
+        radius="none"
+        fullWidth
+      />
+    </Tooltip>
   )
 }

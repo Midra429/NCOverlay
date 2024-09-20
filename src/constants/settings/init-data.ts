@@ -85,6 +85,16 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     icon: MessageSquareTextIcon,
     items: [
       {
+        settingsKey: 'settings:comment:fps',
+        inputType: 'select',
+        label: 'フレームレート',
+        options: [
+          { label: '30fps', value: 30 },
+          { label: '60fps', value: 60 },
+          { label: '無制限', value: 0 },
+        ],
+      },
+      {
         settingsKey: 'settings:comment:opacity',
         inputType: 'range',
         label: '不透明度',
@@ -103,14 +113,15 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         suffix: '%',
       },
       {
-        settingsKey: 'settings:comment:fps',
-        inputType: 'select',
-        label: 'フレームレート',
-        options: [
-          { label: '30fps', value: 30 },
-          { label: '60fps', value: 60 },
-          { label: '無制限', value: 0 },
-        ],
+        settingsKey: 'settings:comment:amount',
+        inputType: 'range',
+        label: '表示量',
+        description:
+          '表示するコメントの量（1倍で約1,000コメ）。\n倍率が高くなるほど取得に時間がかかります。',
+        min: 1,
+        max: 5,
+        step: 1,
+        suffix: '倍',
       },
       {
         settingsKey: 'settings:comment:autoLoads',

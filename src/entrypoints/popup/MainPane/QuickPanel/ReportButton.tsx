@@ -26,11 +26,9 @@ export const ReportButton: React.FC = () => {
 
   return (
     <PanelButton
-      compact
-      startContent={<ClipboardPenIcon className="size-4" />}
+      label="不具合報告"
+      startContent={<ClipboardPenIcon />}
       onPress={onPress}
-    >
-      不具合報告
-    </PanelButton>
+    />
   )
 }

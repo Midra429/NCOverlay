@@ -31,24 +31,32 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   }, [value])
 
   return (
-    <Slider
-      classNames={{
-        base: 'overflow-hidden py-2',
-      }}
-      size="md"
-      label={props.label}
-      minValue={props.min}
-      maxValue={props.max}
-      step={props.step}
-      showSteps={(props.max - props.min) / props.step <= 10}
-      value={state}
-      getValue={
-        props.prefix || props.suffix
-          ? (val) => `${props.prefix || ''}${val}${props.suffix || ''}`
-          : undefined
-      }
-      onChange={setState as any}
-      onChangeEnd={setValue as any}
-    />
+    <div className="flex flex-col">
+      <Slider
+        classNames={{
+          base: 'overflow-hidden py-2',
+        }}
+        size="md"
+        label={props.label}
+        minValue={props.min}
+        maxValue={props.max}
+        step={props.step}
+        showSteps={(props.max - props.min) / props.step <= 10}
+        value={state}
+        getValue={
+          props.prefix || props.suffix
+            ? (val) => `${props.prefix || ''}${val}${props.suffix || ''}`
+            : undefined
+        }
+        onChange={setState as any}
+        onChangeEnd={setValue as any}
+      />
+
+      {props.description && (
+        <span className="mb-2 whitespace-pre-wrap text-tiny text-foreground-400">
+          {props.description}
+        </span>
+      )}
+    </div>
   )
 }

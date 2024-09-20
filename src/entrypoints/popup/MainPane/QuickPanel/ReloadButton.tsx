@@ -19,12 +19,10 @@ export const ReloadButton: React.FC = () => {
 
   return (
     <PanelButton
-      compact
+      label="再読み込み"
+      startContent={!isLoading && <RefreshCwIcon />}
       isLoading={isLoading}
-      startContent={!isLoading && <RefreshCwIcon className="size-4" />}
       onPress={onPress}
-    >
-      再読み込み
-    </PanelButton>
+    />
   )
 }

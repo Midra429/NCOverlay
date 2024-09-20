@@ -12,8 +12,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
       '@midra/nco-api':
-        specifier: ^1.5.4
-        version: 1.5.4
+        specifier: ^1.5.5
+        version: 1.5.5
       '@midra/nco-parser':
         specifier: ^1.0.19
         version: 1.0.19
@@ -580,8 +580,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@midra/nco-api@1.5.4':
-    resolution: {integrity: sha512-l5lCd2BipdrjQDv9LVeNe0wCMO43aogsp83iJztrGIHFbydIa92Zzn+7+/K9+zCQid5GiSNt1t4CZJPrqxlrdw==}
+  '@midra/nco-api@1.5.5':
+    resolution: {integrity: sha512-7WK7Z1F9OwQfLotEzzQlHBS0VpB0ulk/NlIPRmFuW3xwvCnty9lZzaIyU6NptBwUPPx6RuTeRfusSqmBYJaC8Q==}
 
   '@midra/nco-parser@1.0.19':
     resolution: {integrity: sha512-kdTThDt6tru2RrXFzig4b5SlUyZNs7Ea68JwFU96Ikg7odaBwOu2jDOsejmbr55YsBAZCFYlQsMzt9ESOCIFKg==}
@@ -2359,8 +2359,8 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  electron-to-chromium@1.5.25:
-    resolution: {integrity: sha512-kMb204zvK3PsSlgvvwzI3wBIcAw15tRkYk+NQdsjdDtcQWTp2RABbMQ9rUBy8KNEOM+/E6ep+XC3AykiWZld4g==}
+  electron-to-chromium@1.5.26:
+    resolution: {integrity: sha512-Z+OMe9M/V6Ep9n/52+b7lkvYEps26z4Yz3vjWL1V61W0q+VLF1pOHhMY17sa4roz4AWmULSI8E6SAojZA5L0YQ==}
 
   emoji-regex@10.4.0:
     resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
@@ -4699,7 +4699,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@midra/nco-api@1.5.4':
+  '@midra/nco-api@1.5.5':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
       '@midra/nco-parser': 1.0.19
@@ -5807,7 +5807,7 @@ snapshots:
     dependencies:
       '@react-aria/interactions': 3.21.3(react@18.3.1)
       '@react-aria/utils': 3.24.1(react@18.3.1)
-      '@react-types/shared': 3.23.1(react@18.3.1)
+      '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.13
       clsx: 2.1.1
       react: 18.3.1
@@ -5885,7 +5885,7 @@ snapshots:
     dependencies:
       '@react-aria/ssr': 3.9.5(react@18.3.1)
       '@react-aria/utils': 3.24.1(react@18.3.1)
-      '@react-types/shared': 3.23.1(react@18.3.1)
+      '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.13
       react: 18.3.1
 
@@ -6937,7 +6937,7 @@ snapshots:
   browserslist@4.23.3:
     dependencies:
       caniuse-lite: 1.0.30001662
-      electron-to-chromium: 1.5.25
+      electron-to-chromium: 1.5.26
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.3)
 
@@ -7349,7 +7349,7 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  electron-to-chromium@1.5.25: {}
+  electron-to-chromium@1.5.26: {}
 
   emoji-regex@10.4.0: {}
 

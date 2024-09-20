@@ -39,17 +39,9 @@ export const SidePanelButton: React.FC = () => {
 
   return (
     <PanelButton
-      compact
-      startContent={
-        open ? (
-          <PanelRightCloseIcon className="size-4" />
-        ) : (
-          <PanelRightOpenIcon className="size-4" />
-        )
-      }
+      label={`コメント一覧を${open ? '閉じる' : '開く'}`}
+      startContent={open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
       onPress={onPress}
-    >
-      コメント一覧を{open ? '閉じる' : '開く'}
-    </PanelButton>
+    />
   )
 }

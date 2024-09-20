@@ -34,17 +34,15 @@ export const CaptureButton: React.FC = () => {
 
   return (
     <PanelButton
-      compact
+      label="キャプチャー"
+      startContent={
+        (isCopied && <CheckIcon />) ||
+        (isFailed && <XIcon />) ||
+        (!isLoading && <CameraIcon />)
+      }
       isLoading={isLoading}
       isDisabled={isCopied || isFailed}
-      startContent={
-        (isCopied && <CheckIcon className="size-4" />) ||
-        (isFailed && <XIcon className="size-4" />) ||
-        (!isLoading && <CameraIcon className="size-4" />)
-      }
       onPress={onPress}
-    >
-      キャプチャー
-    </PanelButton>
+    />
   )
 }

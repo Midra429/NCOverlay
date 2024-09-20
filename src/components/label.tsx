@@ -6,7 +6,7 @@ export const ItemLabel: React.FC<{
     <div className="flex flex-col gap-0.5">
       <span className="text-small text-foreground">{props.title}</span>
       {props.description && (
-        <span className="text-tiny text-foreground-400">
+        <span className="whitespace-pre-wrap text-tiny text-foreground-400">
           {props.description}
         </span>
       )}

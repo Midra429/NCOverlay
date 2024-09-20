@@ -20,11 +20,11 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:search:lengthRange': [null, null],
 
   // コメント
-  'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
-  'settings:comment:amount': 1,
+  'settings:comment:fps': 60,
   'settings:comment:opacity': 100,
   'settings:comment:scale': 100,
-  'settings:comment:fps': 60,
+  'settings:comment:amount': 1,
+  'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
 
   // NG設定
   'settings:ng:words': [],

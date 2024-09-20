@@ -65,23 +65,11 @@ export type StorageItems_v3 = {
   'settings:search:lengthRange': [start: number | null, end: number | null]
 
   /**
-   * コメント:自動検索
-   * @default true
+   * コメント:フレームレート
+   * @description 30, 60, 0 (無制限)
+   * @default 60
    */
-  'settings:comment:autoLoads': (
-    | 'official'
-    | 'danime'
-    | 'chapter'
-    | 'szbh'
-    | 'jikkyo'
-  )[]
-
-  /**
-   * コメント:表示量
-   * @description 1 ~ 5倍
-   * @default 1
-   */
-  'settings:comment:amount': number
+  'settings:comment:fps': 30 | 60 | 0
 
   /**
    * コメント:不透明度
@@ -98,11 +86,23 @@ export type StorageItems_v3 = {
   'settings:comment:scale': number
 
   /**
-   * コメント:フレームレート
-   * @description 30, 60, 0 (無制限)
-   * @default 60
+   * コメント:表示量
+   * @description 1 ~ 5倍
+   * @default 1
    */
-  'settings:comment:fps': 30 | 60 | 0
+  'settings:comment:amount': number
+
+  /**
+   * コメント:自動検索
+   * @default true
+   */
+  'settings:comment:autoLoads': (
+    | 'official'
+    | 'danime'
+    | 'chapter'
+    | 'szbh'
+    | 'jikkyo'
+  )[]
 
   /**
    * NG設定:コメント
