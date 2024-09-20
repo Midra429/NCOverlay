@@ -20,7 +20,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:search:lengthRange': [null, null],
 
   // コメント
-  'settings:comment:autoLoads': ['official', 'chapter'],
+  'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
   'settings:comment:amount': 1,
   'settings:comment:opacity': 100,
   'settings:comment:scale': 100,

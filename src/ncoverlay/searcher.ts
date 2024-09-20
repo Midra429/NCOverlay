@@ -1,5 +1,8 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
-import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
+import type {
+  BuildSearchQueryInput,
+  BuildSearchQueryOptions,
+} from '@midra/nco-api/search/lib/buildSearchQuery'
 import type {
   NCOState,
   StateSlot,
@@ -17,17 +20,6 @@ import { applyNgSettings } from '@/utils/api/applyNgSetting'
 
 import { ncoApiProxy } from '@/proxy/nco-api'
 
-export type AutoLoadInput = {
-  rawText: string
-  title?: string | null
-  seasonText?: string | null
-  seasonNumber?: number | null
-  episodeText?: string | null
-  episodeNumber?: number | null
-  subtitle?: string | null
-  duration: number
-}
-
 const userAgent = EXT_USER_AGENT
 
 /**
@@ -42,10 +34,7 @@ export class NCOSearcher {
 
   async autoLoad(
     input: BuildSearchQueryInput,
-    options: {
-      official?: boolean
-      szbh?: boolean
-      chapter?: boolean
+    options: Omit<BuildSearchQueryOptions, 'userAgent'> & {
       jikkyo?: boolean
     } = {}
   ) {
@@ -180,8 +169,8 @@ export class NCOSearcher {
     const [
       commentsOfficial,
       commentsDAnime,
-      commentsSzbh,
       commentsChapter,
+      commentsSzbh,
       commentsJikkyo,
     ] = await Promise.all([
       // ニコニコ動画 コメント 取得
@@ -197,12 +186,12 @@ export class NCOSearcher {
       ),
       getNiconicoComments(
         loadingSlotDetails
-          .filter((v) => v.type === 'szbh')
+          .filter((v) => v.type === 'chapter')
           .map((v) => ({ contentId: v.id }))
       ),
       getNiconicoComments(
         loadingSlotDetails
-          .filter((v) => v.type === 'chapter')
+          .filter((v) => v.type === 'szbh')
           .map((v) => ({ contentId: v.id }))
       ),
 
@@ -220,14 +209,14 @@ export class NCOSearcher {
 
     logger.log('commentsOfficial:', commentsOfficial)
     logger.log('commentsDAnime:', commentsDAnime)
-    logger.log('commentsSzbh:', commentsSzbh)
     logger.log('commentsChapter:', commentsChapter)
+    logger.log('commentsSzbh:', commentsSzbh)
     logger.log('commentsJikkyo:', commentsJikkyo)
 
     const loadedSlots: StateSlot[] = []
     const updateSlotDetails: StateSlotDetailUpdate[] = []
 
-    // 公式 / dアニメ, コメント専用
+    // 公式, dアニメ, コメント専用
     if (
       commentsOfficial.length ||
       commentsDAnime.length ||

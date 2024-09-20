@@ -159,8 +159,9 @@ export class NCOPatcher {
           if (input) {
             await this.#nco.searcher.autoLoad(input, {
               official: autoLoads.includes('official'),
-              szbh: autoLoads.includes('szbh'),
+              danime: autoLoads.includes('danime'),
               chapter: autoLoads.includes('chapter'),
+              szbh: autoLoads.includes('szbh'),
               jikkyo: autoLoads.includes('jikkyo'),
             })
           }

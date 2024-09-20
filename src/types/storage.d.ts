@@ -68,7 +68,13 @@ export type StorageItems_v3 = {
    * コメント:自動検索
    * @default true
    */
-  'settings:comment:autoLoads': ('official' | 'szbh' | 'chapter' | 'jikkyo')[]
+  'settings:comment:autoLoads': (
+    | 'official'
+    | 'danime'
+    | 'chapter'
+    | 'szbh'
+    | 'jikkyo'
+  )[]
 
   /**
    * コメント:表示量
