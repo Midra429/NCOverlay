@@ -16,6 +16,7 @@ export const PanelButton: React.FC<PanelButtonProps> = (props) => {
           'h-9 min-w-0',
           'bg-content1 text-foreground',
           '[&>svg]:size-[1.125rem]',
+          '[&>svg]:pointer-events-none',
           props.className
         )}
         size="sm"
