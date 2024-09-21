@@ -24,9 +24,7 @@ export const getNiconicoComments = async (
 
   // 動画情報取得
   const videos = await Promise.all(
-    params.map(({ contentId }) => {
-      return ncoApiProxy.niconico.video(contentId)
-    })
+    params.map((v) => ncoApiProxy.niconico.video(v.contentId))
   )
 
   // コメント取得
@@ -37,56 +35,63 @@ export const getNiconicoComments = async (
       const nvComment = filterNvComment(videoData.comment)
 
       if (1 < amount) {
-        const baseThreadsData = await ncoApiProxy.niconico.threads(nvComment, {
-          when: params[idx].when ?? Math.floor(new Date().getTime() / 1000),
+        const additionals = {
+          when: params[idx].when ?? Math.floor(Date.now() / 1000),
           res_from: -1000,
-        })
+        }
 
-        const main = baseThreadsData?.threads
+        const baseThreadsData = await ncoApiProxy.niconico.threads(
+          nvComment,
+          additionals
+        )
+        const baseMainThread = baseThreadsData?.threads
           .filter((v) => v.fork === 'main')
           .reduce((prev, current) => {
             return prev.commentCount < current.commentCount ? current : prev
           })
 
         if (
-          !main ||
-          !main.commentCount ||
-          !main.comments.length ||
-          main.comments[0].no < 5
+          !baseMainThread?.comments.length ||
+          baseMainThread.comments[0].no < 5
         ) {
           return baseThreadsData
         }
 
-        nvComment.params.targets = nvComment.params.targets.filter((target) => {
-          return `${target.fork}:${target.id}` === `${main.fork}:${main.id}`
+        nvComment.params.targets = nvComment.params.targets.filter((val) => {
+          return (
+            val.fork === baseMainThread.fork && val.id === baseMainThread.id
+          )
         })
 
-        let when = Math.floor(
-          new Date(main.comments[0].postedAt).getTime() / 1000
+        additionals.when = Math.floor(
+          new Date(baseMainThread.comments[0].postedAt).getTime() / 1000
         )
 
         let count = amount - 1
 
         while (0 < count--) {
-          const response = await ncoApiProxy.niconico.threads(nvComment, {
-            when,
-            res_from: -1000,
+          const threadsData = await ncoApiProxy.niconico.threads(
+            nvComment,
+            additionals
+          )
+          const mainThread = threadsData?.threads.find((val) => {
+            return (
+              val.fork === baseMainThread.fork && val.id === baseMainThread.id
+            )
           })
 
-          if (!response) break
+          if (!mainThread?.comments.length) break
 
-          const { comments } = response.threads.find((thread) => {
-            return `${thread.fork}:${thread.id}` === `${main.fork}:${main.id}`
-          })!
+          baseMainThread.comments.push(...mainThread.comments)
 
-          main.comments.push(...comments)
+          if (mainThread.comments[0].no < 5) break
 
-          if (!comments.length || comments[0].no < 5) break
-
-          when = Math.floor(new Date(comments[0].postedAt).getTime() / 1000)
+          additionals.when = Math.floor(
+            new Date(mainThread.comments[0].postedAt).getTime() / 1000
+          )
         }
 
-        main.comments = main.comments.sort((a, b) => a.no - b.no)
+        baseMainThread.comments.sort((a, b) => a.no - b.no)
 
         return baseThreadsData
       } else {

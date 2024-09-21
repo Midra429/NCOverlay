@@ -117,7 +117,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'range',
         label: '表示量',
         description:
-          '表示するコメントの量（1倍で約1,000コメ）。\n倍率が高くなるほど取得に時間がかかります。',
+          'コメント数の目安: 2倍(2,000) 〜 5倍(5,000)\n倍率が高くなるほど取得に時間がかかります。',
         min: 1,
         max: 5,
         step: 1,
