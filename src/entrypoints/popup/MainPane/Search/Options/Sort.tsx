@@ -34,7 +34,7 @@ export const Sort: React.FC = () => {
         innerWrapper: '!pt-0',
         selectorIcon: 'end-1.5',
         value: 'text-mini',
-        popoverContent: 'rounded-lg',
+        popoverContent: 'rounded-lg border-1 border-foreground-100',
         listbox: 'p-0',
       }}
       variant="faded"

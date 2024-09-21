@@ -65,7 +65,12 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           <div className="flex flex-col gap-0.5">
             <span className="line-clamp-2 text-small">{label}</span>
             {description && (
-              <span className="line-clamp-2 text-tiny text-foreground-500">
+              <span
+                className={cn(
+                  'line-clamp-2 text-tiny',
+                  'text-foreground-500 dark:text-foreground-600'
+                )}
+              >
                 {description}
               </span>
             )}

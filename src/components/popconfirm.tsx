@@ -104,7 +104,12 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
         <div className="flex flex-col gap-1.5">
           <span className="font-semibold">{props.title}</span>
 
-          <span className="text-tiny text-default-500">
+          <span
+            className={cn(
+              'text-tiny',
+              'text-foreground-400 dark:text-foreground-500'
+            )}
+          >
             {props.description}
           </span>
 

@@ -2,7 +2,7 @@ import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
-import { Slider } from '@nextui-org/react'
+import { Slider, cn } from '@nextui-org/react'
 
 import { SETTINGS_DEFAULT } from '@/constants/settings/default'
 
@@ -53,7 +53,12 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       />
 
       {props.description && (
-        <span className="mb-2 whitespace-pre-wrap text-tiny text-foreground-400">
+        <span
+          className={cn(
+            'mb-2 whitespace-pre-wrap text-tiny',
+            'text-foreground-400 dark:text-foreground-500'
+          )}
+        >
           {props.description}
         </span>
       )}
