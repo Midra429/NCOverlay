@@ -210,7 +210,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       <Modal
         classNames={{
           wrapper: 'justify-end',
-          base: 'max-w-[350px]',
+          base: 'max-w-[370px]',
           header: 'border-b-1 border-divider px-3 py-2 text-medium',
           body: 'p-0',
           footer: 'border-t-1 border-divider px-3 py-2',

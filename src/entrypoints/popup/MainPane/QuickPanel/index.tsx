@@ -36,24 +36,20 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
 export const QuickPanel: React.FC = memo(() => {
   return (
     <div className="flex h-full flex-col gap-2">
-      <div className="flex flex-col">
-        <div className="flex flex-row">
-          <ReloadButton />
+      <div className="flex flex-row border-b-1 border-foreground-200">
+        <ReloadButton />
 
-          <Divider orientation="vertical" />
+        <Divider orientation="vertical" />
 
-          <CaptureButton />
+        <CaptureButton />
 
-          <Divider orientation="vertical" />
+        <Divider orientation="vertical" />
 
-          <ReportButton />
+        <ReportButton />
 
-          <Divider orientation="vertical" />
+        <Divider orientation="vertical" />
 
-          <SidePanelButton />
-        </div>
-
-        <Divider />
+        <SidePanelButton />
       </div>
 
       <div className="flex flex-col gap-2 px-2">

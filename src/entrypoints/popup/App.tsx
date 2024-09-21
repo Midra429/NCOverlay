@@ -16,7 +16,7 @@ const App: React.FC = () => {
           <div
             className="border-r-1 border-foreground-200"
             style={{
-              width: 440,
+              width: 430,
               height,
             }}
           >
@@ -26,7 +26,7 @@ const App: React.FC = () => {
 
         <div
           style={{
-            width: 350,
+            width: 370,
             height,
           }}
         >

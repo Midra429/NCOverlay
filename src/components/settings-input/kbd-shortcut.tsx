@@ -101,7 +101,8 @@ const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
   return (
     <Kbd
       className={cn(
-        'shrink-0 px-2 py-0.5',
+        'justify-center',
+        'min-w-8 shrink-0 px-2 py-0.5',
         'bg-content1 text-content1-foreground/80',
         'border-1 border-content1-foreground/25',
         'shadow-none'
