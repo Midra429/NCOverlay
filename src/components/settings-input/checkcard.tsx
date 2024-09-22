@@ -44,7 +44,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           classNames={{
             base: cn(
               'flex flex-row gap-0.5',
-              'm-0 min-h-14 w-full max-w-none',
+              'm-0 min-h-12 w-full max-w-none',
               'px-2 py-1.5',
               'bg-default-100 hover:bg-default-200',
               'rounded-medium',

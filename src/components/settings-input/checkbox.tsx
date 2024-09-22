@@ -32,7 +32,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       classNames={{
         base: 'gap-2 py-2',
         label: 'text-small text-foreground',
-        wrapper: 'gap-1.5',
+        wrapper: 'gap-x-[5px] gap-y-1.5',
       }}
       size="sm"
       orientation="horizontal"
