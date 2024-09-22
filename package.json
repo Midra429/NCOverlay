@@ -1,7 +1,7 @@
 {
   "name": "ncoverlay",
   "displayName": "NCOverlay",
-  "version": "3.14.2",
+  "version": "3.15.0",
   "description": "動画配信サービスの再生画面にニコニコのコメントを表示する拡張機能",
   "author": "Midra <me@midra.me> (https://github.com/Midra429)",
   "license": "MIT",
