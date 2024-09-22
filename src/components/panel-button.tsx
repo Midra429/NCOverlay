@@ -14,14 +14,12 @@ export const PanelButton: React.FC<PanelButtonProps> = (props) => {
         {...props}
         className={cn(
           'h-[37px] min-w-0',
-          'bg-content1 text-foreground-700',
           '[&>svg]:size-[1.2rem]',
           '[&>svg]:pointer-events-none',
-          'data-[hover=true]:bg-content2',
           props.className
         )}
         size="sm"
-        variant="flat"
+        variant="light"
         radius="none"
         fullWidth
       />

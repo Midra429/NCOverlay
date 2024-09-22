@@ -36,7 +36,7 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
 export const QuickPanel: React.FC = memo(() => {
   return (
     <div className="flex h-full flex-col gap-2">
-      <div className="flex flex-row border-b-1 border-foreground-200">
+      <div className="flex flex-row border-b-1 border-foreground-200 bg-content1">
         <ReloadButton />
 
         <Divider orientation="vertical" />
