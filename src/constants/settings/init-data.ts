@@ -237,10 +237,10 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       settingsKey: 'settings:plugins',
       inputType: 'checkcard',
       label: VODS[key as VodKey],
-      options: value.map(({ id, title, description }) => ({
-        label: title,
-        description: description,
-        value: `${key}:${id}` as PluginKey,
+      options: value.map((val) => ({
+        label: val.title,
+        description: 'description' in val ? val.description : undefined,
+        value: `${key}:${val.id}` as PluginKey,
       })),
     })),
   },

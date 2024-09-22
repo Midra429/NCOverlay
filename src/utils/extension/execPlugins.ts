@@ -12,6 +12,12 @@ export const execPlugins = async <VodKey extends PluginVodKey>(
   vod: VodKey,
   plugins: Plugins<VodKey>
 ) => {
+  const enabledVods = await settings.get('settings:vods')
+
+  if (!enabledVods.includes(vod)) return
+
+  logger.log(`plugin-${vod}.js`)
+
   const pluginIds = Object.keys(plugins) as PluginId<VodKey>[]
   const disablePlugins = new Map<PluginId<VodKey>, () => void>()
 

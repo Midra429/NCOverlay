@@ -2,6 +2,8 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 
+import { MATCHES } from '@/constants/matches'
+
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
@@ -15,7 +17,7 @@ import './style.scss'
 const vod: VodKey = 'fod'
 
 export default defineContentScript({
-  matches: ['https://fod.fujitv.co.jp/*'],
+  matches: MATCHES[vod],
   runAt: 'document_end',
   main: () => void main(),
 })

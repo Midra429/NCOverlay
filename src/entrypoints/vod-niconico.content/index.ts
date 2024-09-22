@@ -4,9 +4,10 @@ import { defineContentScript } from 'wxt/sandbox'
 import * as niconicoApi from '@midra/nco-api/niconico'
 import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
+import { MATCHES } from '@/constants/matches'
+
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { injectScript } from '@/utils/dom/injectScript'
 import { filterNvComment } from '@/utils/api/filterNvComment'
 import { extractNgSettings } from '@/utils/api/extractNgSettings'
 import { applyNgSettings } from '@/utils/api/applyNgSetting'
@@ -18,7 +19,7 @@ import './style.scss'
 const vod: VodKey = 'niconico'
 
 export default defineContentScript({
-  matches: ['https://www.nicovideo.jp/watch/*'],
+  matches: MATCHES[vod],
   runAt: 'document_end',
   main: () => void main(),
 })
@@ -27,8 +28,6 @@ const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   logger.log(`vod-${vod}.js`)
-
-  injectScript('/content-scripts/plugin-niconico.js')
 
   const patcher = new NCOPatcher({
     vod,

@@ -2,7 +2,8 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 
-import { logger } from '@/utils/logger'
+import { MATCHES } from '@/constants/matches'
+
 import { execPlugins } from '@/utils/extension/execPlugins'
 
 import { disablePopupPlayer } from './disablePopupPlayer'
@@ -10,15 +11,11 @@ import { disablePopupPlayer } from './disablePopupPlayer'
 const vod: VodKey = 'dAnime'
 
 export default defineContentScript({
-  matches: ['https://animestore.docomo.ne.jp/animestore/*'],
+  matches: MATCHES[vod],
   world: 'MAIN',
-  main: () => void main(),
+  main: () => {
+    execPlugins(vod, {
+      disablePopupPlayer,
+    })
+  },
 })
-
-const main = () => {
-  logger.log(`plugin-${vod}.js`)
-
-  execPlugins(vod, {
-    disablePopupPlayer,
-  })
-}

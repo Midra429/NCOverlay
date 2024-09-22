@@ -4,6 +4,8 @@ import { defineContentScript } from 'wxt/sandbox'
 import { normalizeAll } from '@midra/nco-parser/normalize'
 import * as abemaApi from '@midra/nco-api/abema'
 
+import { MATCHES } from '@/constants/matches'
+
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
@@ -14,7 +16,7 @@ import './style.scss'
 const vod: VodKey = 'abema'
 
 export default defineContentScript({
-  matches: ['https://abema.tv/*'],
+  matches: MATCHES[vod],
   runAt: 'document_end',
   main: () => void main(),
 })

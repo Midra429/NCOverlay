@@ -49,28 +49,6 @@ export default defineConfig({
     }
   },
 
-  hooks: {
-    'build:manifestGenerated'(_, manifest) {
-      if (manifest.content_scripts) {
-        manifest.content_scripts.forEach((script, idx, ary) => {
-          // @ts-ignore
-          if (script.world === 'MAIN' && script.js) {
-            manifest.web_accessible_resources ??= []
-            // @ts-ignore
-            manifest.web_accessible_resources.push({
-              matches: script.matches.map((v) => `${new URL(v).origin}/*`),
-              resources: script.js,
-            })
-
-            delete ary[idx]
-          }
-        })
-
-        manifest.content_scripts = manifest.content_scripts.filter(Boolean)
-      }
-    },
-  },
-
   srcDir: 'src',
   outDir: 'dist',
   imports: false,

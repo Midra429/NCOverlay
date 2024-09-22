@@ -3,9 +3,10 @@ import type { VodKey } from '@/types/constants'
 import { defineContentScript } from 'wxt/sandbox'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
+import { MATCHES } from '@/constants/matches'
+
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { injectScript } from '@/utils/dom/injectScript'
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
@@ -15,7 +16,7 @@ import './style.scss'
 const vod: VodKey = 'dAnime'
 
 export default defineContentScript({
-  matches: ['*://animestore.docomo.ne.jp/animestore/*'],
+  matches: MATCHES[vod],
   runAt: 'document_end',
   main: () => void main(),
 })
@@ -24,8 +25,6 @@ const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
   logger.log(`vod-${vod}.js`)
-
-  injectScript('/content-scripts/plugin-dAnime.js')
 
   const video = document.body.querySelector<HTMLVideoElement>('video#video')
 

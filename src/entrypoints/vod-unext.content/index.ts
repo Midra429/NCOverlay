@@ -3,6 +3,8 @@ import type { VodKey } from '@/types/constants'
 import { defineContentScript } from 'wxt/sandbox'
 import * as unextApi from '@midra/nco-api/unext'
 
+import { MATCHES } from '@/constants/matches'
+
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
@@ -13,7 +15,7 @@ import './style.scss'
 const vod: VodKey = 'unext'
 
 export default defineContentScript({
-  matches: ['https://video.unext.jp/*'],
+  matches: MATCHES[vod],
   runAt: 'document_end',
   main: () => void main(),
 })

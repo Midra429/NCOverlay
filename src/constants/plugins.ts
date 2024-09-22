@@ -15,17 +15,37 @@ export const PLUGINS = {
     // },
   ],
 
+  abema: [
+    {
+      id: 'windowSizeFullscreen',
+      title: 'フルスクリーン (ブラウザサイズ)',
+    },
+  ],
+
+  bandaiChannel: [
+    {
+      id: 'windowSizeFullscreen',
+      title: 'フルスクリーン (ブラウザサイズ)',
+    },
+  ],
+
   niconico: [
     {
       id: 'windowSizeFullscreen',
-      title: 'フルスクリーンサイズ: ブラウザ',
-      description: 'フルスクリーンをブラウザサイズに強制します。',
+      title: 'フルスクリーン (ブラウザサイズ)',
+    },
+  ],
+
+  tver: [
+    {
+      id: 'windowSizeFullscreen',
+      title: 'フルスクリーン (ブラウザサイズ)',
     },
   ],
 } as const satisfies {
   [key in VodKey]?: {
     id: string
     title: string
-    description: string
+    description?: string
   }[]
 }

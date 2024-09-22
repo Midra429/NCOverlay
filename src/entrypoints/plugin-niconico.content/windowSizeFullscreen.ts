@@ -1,7 +1,7 @@
 import type { PluginFunction } from '@/types/constants'
 
 /**
- * フルスクリーンサイズ: ブラウザ
+ * フルスクリーン (ブラウザサイズ)
  */
 export const windowSizeFullscreen: PluginFunction = () => {
   const _requestFullscreen = Element.prototype.requestFullscreen

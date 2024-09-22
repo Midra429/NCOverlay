@@ -8,7 +8,7 @@ import { execPlugins } from '@/utils/extension/execPlugins'
 
 import { windowSizeFullscreen } from './windowSizeFullscreen'
 
-const vod: VodKey = 'niconico'
+const vod: VodKey = 'tver'
 
 export default defineContentScript({
   matches: MATCHES[vod],

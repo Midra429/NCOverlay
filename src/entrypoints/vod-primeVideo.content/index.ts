@@ -5,6 +5,8 @@ import { normalize, normalizeAll } from '@midra/nco-parser/normalize'
 import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
+import { MATCHES } from '@/constants/matches'
+
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
@@ -17,7 +19,7 @@ import './style.scss'
 const vod: VodKey = 'primeVideo'
 
 export default defineContentScript({
-  matches: ['https://www.amazon.co.jp/*'],
+  matches: MATCHES[vod],
   runAt: 'document_end',
   main: () => void main(),
 })

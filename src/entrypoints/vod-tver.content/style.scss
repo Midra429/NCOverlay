@@ -6,3 +6,27 @@
     }
   }
 }
+
+.NCOverlay-Plugin-windowSizeFullscreen {
+  overflow: hidden;
+
+  div[js-fullscreen-target] {
+    position: fixed !important;
+    inset: 0px !important;
+    z-index: 9999 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0px !important;
+    min-height: 0px !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0px !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+  }
+}
