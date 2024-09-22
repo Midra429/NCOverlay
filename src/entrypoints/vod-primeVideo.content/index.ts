@@ -1,7 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import { normalizeAll } from '@midra/nco-parser/normalize'
+import { normalize, normalizeAll } from '@midra/nco-parser/normalize'
 import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
 
@@ -116,6 +116,10 @@ const main = async () => {
         season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
       )
 
+      const seasonNumVague = Number(
+        normalize(title ?? '').match(/(?<=[^\d]+)[2-9]$/)?.[0] ?? -1
+      )
+
       const titleSeason = title && extractSeason(title)[0]
       const subtitleEpisode =
         subtitle &&
@@ -127,17 +131,19 @@ const main = async () => {
           })
         )[0]
 
+      const seasonText =
+        !titleSeason && 2 <= seasonNum && seasonNum !== seasonNumVague
+          ? `${seasonNum}期`
+          : null
+
+      const episodeText =
+        !subtitleEpisode && 0 <= episodeNum ? `${episodeNum}話` : null
+
       const workTitle =
-        [title, !titleSeason && 2 <= seasonNum && `${seasonNum}期`]
-          .filter(Boolean)
-          .join(' ')
-          .trim() || null
+        [title, seasonText].filter(Boolean).join(' ').trim() || null
 
       const episodeTitle =
-        [!subtitleEpisode && 0 <= episodeNum && `${episodeNum}話`, subtitle]
-          .filter(Boolean)
-          .join(' ')
-          .trim() || null
+        [episodeText, subtitle].filter(Boolean).join(' ').trim() || null
 
       const duration =
         timeindicatorElem?.textContent
