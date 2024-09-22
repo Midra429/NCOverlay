@@ -1,7 +1,7 @@
 import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { memo, useMemo, useState, useCallback } from 'react'
+import { memo, useMemo, useState, useCallback, useEffect } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
 import { ncoApi } from '@midra/nco-api'
 import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
@@ -156,6 +156,8 @@ export const Search: React.FC = memo(() => {
 
   const search = useCallback(
     async (value: string, page: number) => {
+      if (!value) return
+
       setIsLoading(true)
 
       setCurrentPage(page)
@@ -181,6 +183,10 @@ export const Search: React.FC = memo(() => {
     },
     [sort, lengthRange]
   )
+
+  useEffect(() => {
+    search(inputValue, 1)
+  }, [search])
 
   return (
     <div className="flex h-full flex-col">
