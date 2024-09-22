@@ -3,7 +3,7 @@ import type { Runtime } from 'wxt/browser'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Fragment, useEffect, useState, useCallback } from 'react'
 import { ScrollShadow, Button, Kbd, cn } from '@nextui-org/react'
 import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
@@ -162,27 +162,31 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           data-recording={isRecording}
         >
           <ScrollShadow
-            className={cn(
-              'flex flex-row items-center gap-0.5',
-              'size-full px-0.5'
-            )}
+            className="size-full"
             orientation="horizontal"
             hideScrollBar
           >
-            {!isRecording && !value && (
-              <span className="select-none pl-1.5 text-small text-foreground-500">
-                未設定
-              </span>
-            )}
-
-            {(isRecording ? [...keys] : value.split('+'))
-              .filter(Boolean)
-              .map((key, idx) => (
-                <div key={key} className="flex flex-row items-center gap-0.5">
-                  {idx !== 0 && <PlusIcon className="size-3 shrink-0" />}
-                  <KeyboardKey kbdKey={key} os={os} />
-                </div>
-              ))}
+            <div
+              className={cn(
+                'flex flex-row items-center gap-0.5',
+                'h-full w-max px-0.5'
+              )}
+            >
+              {isRecording || value ? (
+                (isRecording ? [...keys] : value.split('+'))
+                  .filter(Boolean)
+                  .map((key, idx) => (
+                    <Fragment key={idx}>
+                      {idx !== 0 && <PlusIcon className="size-3 shrink-0" />}
+                      <KeyboardKey kbdKey={key} os={os} />
+                    </Fragment>
+                  ))
+              ) : (
+                <span className="select-none pl-1 text-small text-foreground-500">
+                  未設定
+                </span>
+              )}
+            </div>
           </ScrollShadow>
         </div>
 
