@@ -1,9 +1,10 @@
 import type { SettingItems } from '@/types/storage'
 
-import { Select, SelectItem, cn } from '@nextui-org/react'
 import { ClockIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
+
+import { Select, SelectItem } from '@/components/select'
 
 const LENGTH_RANGE_OPTIONS: {
   label: string
@@ -23,19 +24,8 @@ export const LengthRange: React.FC = () => {
     <Select
       classNames={{
         base: 'shrink-[3]',
-        label: 'hidden',
-        trigger: cn(
-          'h-6 min-h-6 px-1.5',
-          'border-1 border-divider shadow-none'
-        ),
-        innerWrapper: '!pt-0',
-        selectorIcon: 'end-1.5',
-        value: 'text-mini',
-        popoverContent: 'rounded-lg border-1 border-foreground-100',
-        listbox: 'p-0',
       }}
-      variant="faded"
-      size="sm"
+      size="mini"
       fullWidth
       label="再生時間"
       startContent={

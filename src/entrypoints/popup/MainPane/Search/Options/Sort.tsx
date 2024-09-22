@@ -1,9 +1,10 @@
 import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 
-import { Select, SelectItem, cn } from '@nextui-org/react'
 import { ArrowDownUpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
+
+import { Select, SelectItem } from '@/components/select'
 
 const SORT_OPTIONS: {
   label: string
@@ -26,19 +27,8 @@ export const Sort: React.FC = () => {
     <Select
       classNames={{
         base: 'shrink-[2]',
-        label: 'hidden',
-        trigger: cn(
-          'h-6 min-h-6 px-1.5',
-          'border-1 border-divider shadow-none'
-        ),
-        innerWrapper: '!pt-0',
-        selectorIcon: 'end-1.5',
-        value: 'text-mini',
-        popoverContent: 'rounded-lg border-1 border-foreground-100',
-        listbox: 'p-0',
       }}
-      variant="faded"
-      size="sm"
+      size="mini"
       fullWidth
       label="並び替え"
       startContent={

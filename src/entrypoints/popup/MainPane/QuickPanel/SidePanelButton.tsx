@@ -3,7 +3,6 @@ import { PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 
-import { Tooltip } from '@/components/tooltip'
 import { PanelButton } from '@/components/panel-button'
 
 export const SidePanelButton: React.FC = () => {
