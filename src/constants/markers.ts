@@ -27,6 +27,12 @@ export const MARKERS = [
     range: [null, null],
   },
   {
+    label: 'エンディング',
+    shortLabel: 'ED',
+    regexp: /^(ED|ＥＤ)$/,
+    range: [null, null],
+  },
+  {
     label: 'Cパート',
     shortLabel: 'C',
     regexp: /^(C|Ｃ)$/,

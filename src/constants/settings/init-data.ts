@@ -218,6 +218,11 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '「B（Bパート）」にジャンプ',
       },
       {
+        settingsKey: 'settings:kbd:jumpMarkerToED',
+        inputType: 'kbd-shortcut',
+        label: '「ED（エンディング）」にジャンプ',
+      },
+      {
         settingsKey: 'settings:kbd:jumpMarkerToC',
         inputType: 'kbd-shortcut',
         label: '「C（Cパート）」にジャンプ',

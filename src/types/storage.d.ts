@@ -165,25 +165,31 @@ export type StorageItems_v3 = {
   'settings:kbd:jumpMarkerToStart': string
 
   /**
-   * キーボード:オフセットを「オープニング」に飛ばす
+   * キーボード:オフセットを「OP」に飛ばす
    * @default ''
    */
   'settings:kbd:jumpMarkerToOP': string
 
   /**
-   * キーボード:オフセットを「Aパート」に飛ばす
+   * キーボード:オフセットを「A」に飛ばす
    * @default ''
    */
   'settings:kbd:jumpMarkerToA': string
 
   /**
-   * キーボード:オフセットを「Bパート」に飛ばす
+   * キーボード:オフセットを「B」に飛ばす
    * @default ''
    */
   'settings:kbd:jumpMarkerToB': string
 
   /**
-   * キーボード:オフセットを「Cパート」に飛ばす
+   * キーボード:オフセットを「ED」に飛ばす
+   * @default ''
+   */
+  'settings:kbd:jumpMarkerToED': string
+
+  /**
+   * キーボード:オフセットを「C」に飛ばす
    * @default ''
    */
   'settings:kbd:jumpMarkerToC': string

@@ -42,6 +42,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:kbd:jumpMarkerToOP': '',
   'settings:kbd:jumpMarkerToA': '',
   'settings:kbd:jumpMarkerToB': '',
+  'settings:kbd:jumpMarkerToED': '',
   'settings:kbd:jumpMarkerToC': '',
   'settings:kbd:resetMarker': '',
 

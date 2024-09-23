@@ -91,6 +91,10 @@ export class NCOKeyboard {
         this.#functions.jumpMarker('B')
       }),
 
+      register('settings:kbd:jumpMarkerToED', () => {
+        this.#functions.jumpMarker('ED')
+      }),
+
       register('settings:kbd:jumpMarkerToC', () => {
         this.#functions.jumpMarker('C')
       }),
