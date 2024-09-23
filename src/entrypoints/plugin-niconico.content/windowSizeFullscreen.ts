@@ -8,7 +8,7 @@ export const windowSizeFullscreen: PluginFunction = () => {
   const _exitFullscreen = Document.prototype.exitFullscreen
 
   Element.prototype.requestFullscreen = new Proxy(_requestFullscreen, {
-    apply: (_, thisArg) => {
+    apply: async (_, thisArg) => {
       Object.defineProperty(document, 'fullscreenElement', {
         get: () => thisArg,
         configurable: true,
@@ -19,7 +19,7 @@ export const windowSizeFullscreen: PluginFunction = () => {
   })
 
   Document.prototype.exitFullscreen = new Proxy(_exitFullscreen, {
-    apply: () => {
+    apply: async () => {
       Object.defineProperty(document, 'fullscreenElement', {
         get: () => null,
         configurable: true,

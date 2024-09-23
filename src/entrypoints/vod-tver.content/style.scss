@@ -7,26 +7,14 @@
   }
 }
 
-.NCOverlay-Plugin-windowSizeFullscreen {
-  overflow: hidden;
+[nco-fullscreen] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
 
-  div[js-fullscreen-target] {
-    position: fixed !important;
-    inset: 0px !important;
-    z-index: 9999 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 0px !important;
-    min-height: 0px !important;
-    max-width: none !important;
-    max-height: none !important;
-    margin: 0px !important;
-    box-sizing: border-box !important;
-    transform: none !important;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
+  > div[class^='player_aspectRatioWrapper__'] {
+    width: min(100vw, 177.78vh);
+    padding-top: min(56.25vw, 100vh);
   }
 }
