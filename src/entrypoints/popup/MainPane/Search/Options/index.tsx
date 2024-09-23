@@ -19,9 +19,10 @@ const transitionVariants: Variants = {
 
 export type OptionsProps = {
   isOpen: boolean
+  isDisabled?: boolean
 }
 
-export const Options: React.FC<OptionsProps> = ({ isOpen }) => {
+export const Options: React.FC<OptionsProps> = ({ isOpen, isDisabled }) => {
   const willChange = useWillChange()
 
   return (
@@ -38,9 +39,9 @@ export const Options: React.FC<OptionsProps> = ({ isOpen }) => {
             onKeyDown={(e) => e.stopPropagation()}
           >
             <div className="flex size-full flex-row items-center gap-2 pt-2">
-              <Sort />
+              <Sort isDisabled={isDisabled} />
 
-              <LengthRange />
+              <LengthRange isDisabled={isDisabled} />
             </div>
           </m.div>
         </LazyMotion>

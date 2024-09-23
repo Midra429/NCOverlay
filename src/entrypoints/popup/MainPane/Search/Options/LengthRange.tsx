@@ -17,7 +17,11 @@ const LENGTH_RANGE_OPTIONS: {
   { label: '1時間以上', value: [60 * 60, null] },
 ]
 
-export const LengthRange: React.FC = () => {
+export type LengthRangeProps = {
+  isDisabled?: boolean
+}
+
+export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
   const [value, setValue] = useSettings('settings:search:lengthRange')
 
   return (
@@ -28,6 +32,7 @@ export const LengthRange: React.FC = () => {
       size="mini"
       fullWidth
       label="再生時間"
+      isDisabled={isDisabled}
       startContent={
         <ClockIcon className="size-small shrink-0 text-foreground-500" />
       }

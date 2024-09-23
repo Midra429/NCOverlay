@@ -20,7 +20,11 @@ const SORT_OPTIONS: {
   { label: '再生時間が短い順', value: '+lengthSeconds' },
 ]
 
-export const Sort: React.FC = () => {
+export type SortProps = {
+  isDisabled?: boolean
+}
+
+export const Sort: React.FC<SortProps> = ({ isDisabled }) => {
   const [value, setValue] = useSettings('settings:search:sort')
 
   return (
@@ -31,6 +35,7 @@ export const Sort: React.FC = () => {
       size="mini"
       fullWidth
       label="並び替え"
+      isDisabled={isDisabled}
       startContent={
         <ArrowDownUpIcon className="size-small shrink-0 text-foreground-500" />
       }

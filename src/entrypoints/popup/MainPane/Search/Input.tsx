@@ -76,7 +76,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         />
       </div>
 
-      <Options isOpen={isOptionsOpen} />
+      <Options isOpen={isOptionsOpen} isDisabled={isDisabled} />
     </div>
   )
 }
