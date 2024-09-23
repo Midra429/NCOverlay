@@ -16,7 +16,7 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
       className={cn(
         'flex flex-row items-center justify-between',
         'h-fit flex-shrink-0',
-        'text-foreground-500'
+        'text-foreground-500 dark:text-foreground-600'
       )}
     >
       <div className="flex h-full flex-row items-center gap-1">

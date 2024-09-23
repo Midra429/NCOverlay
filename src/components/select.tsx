@@ -30,7 +30,7 @@ const select = tv({
     helperWrapper: '',
     description: [
       'whitespace-pre-wrap text-tiny',
-      'text-foreground-400 dark:text-foreground-500',
+      'text-foreground-500 dark:text-foreground-600',
     ],
     errorMessage: '',
   } satisfies Record<SelectSlots, string | string[]>,

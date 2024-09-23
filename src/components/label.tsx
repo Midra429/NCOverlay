@@ -11,7 +11,7 @@ export const ItemLabel: React.FC<{
         <span
           className={cn(
             'whitespace-pre-wrap text-tiny',
-            'text-foreground-400 dark:text-foreground-500'
+            'text-foreground-500 dark:text-foreground-600'
           )}
         >
           {props.description}

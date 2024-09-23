@@ -42,7 +42,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           {props.description && (
             <Tooltip placement="left" content={props.description}>
               <CircleHelpIcon
-                className="text-foreground-400 dark:text-foreground-500"
+                className="text-foreground-500 dark:text-foreground-600"
                 size={18}
                 cursor="help"
               />

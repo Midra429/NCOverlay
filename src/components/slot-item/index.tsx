@@ -134,7 +134,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             className={cn(
               'flex flex-row items-center justify-between',
               'h-fit flex-shrink-0',
-              'text-foreground-500'
+              'text-foreground-500 dark:text-foreground-600'
             )}
           >
             {/* 再生数・コメント数 */}

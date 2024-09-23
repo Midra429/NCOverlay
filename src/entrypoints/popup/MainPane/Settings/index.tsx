@@ -48,7 +48,7 @@ const accordionItemInfo = (
         <div className="flex flex-row gap-2 text-medium">
           <span className="font-bold">{name}</span>
           <Link
-            className="text-[length:inherit] text-foreground-400 dark:text-foreground-500"
+            className="text-[length:inherit] text-foreground-500 dark:text-foreground-600"
             href={`${GITHUB_URL}/releases/tag/v${version}`}
             isExternal
           >
