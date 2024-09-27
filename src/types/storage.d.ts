@@ -88,7 +88,7 @@ export type StorageItems_v3 = {
 
   /**
    * コメント:表示量
-   * @description 1 ~ 5倍
+   * @description 1 ~ 10倍
    * @default 1
    */
   'settings:comment:amount': number
