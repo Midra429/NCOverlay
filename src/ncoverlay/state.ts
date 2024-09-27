@@ -97,15 +97,20 @@ export type StateSlotDetail = StateSlotDetailDefault | StateSlotDetailJikkyo
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
 
+export type V1ThreadWithType = Pick<StateSlotDetail, 'type'> & V1Thread
+
+export type V1ThreadCommentWithType = Pick<StateSlotDetail, 'type'> &
+  V1Thread['comments'][number]
+
 export const filterDisplayThreads = async (
   slots: StateSlot[] | null,
   details: StateSlotDetail[] | null
-): Promise<V1Thread[] | null> => {
+): Promise<V1ThreadWithType[] | null> => {
   if (!slots?.length || !details?.length) {
     return null
   }
 
-  const threadMap = new Map<string, V1Thread>()
+  const threadMap = new Map<string, V1ThreadWithType>()
   const ngSettings = await getNgSettings()
 
   details.forEach((detail) => {
@@ -141,7 +146,12 @@ export const filterDisplayThreads = async (
       const commentCount = comments.length
 
       if (thread.commentCount) {
-        threadMap.set(key, { ...thread, comments, commentCount })
+        threadMap.set(key, {
+          ...thread,
+          type: detail.type,
+          comments,
+          commentCount,
+        })
       }
     })
   })

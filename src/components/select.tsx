@@ -1,4 +1,5 @@
 import type {
+  SlotsToClasses,
   SelectProps as NextUISelectProps,
   SelectSlots,
 } from '@nextui-org/react'
@@ -33,7 +34,7 @@ const select = tv({
       'text-foreground-500 dark:text-foreground-600',
     ],
     errorMessage: '',
-  } satisfies Record<SelectSlots, string | string[]>,
+  } satisfies SlotsToClasses<SelectSlots>,
   variants: {
     size: {
       sm: {

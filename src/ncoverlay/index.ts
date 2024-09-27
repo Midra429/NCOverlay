@@ -280,14 +280,19 @@ export class NCOverlay {
       })
     )
 
-    // メッセージ (再読み込み)
-    ncoMessenger.onMessage('reload', () => {
-      this.#trigger('reload')
-    })
-
     // メッセージ (インスタンスのID取得)
     ncoMessenger.onMessage('getId', () => {
       return this.id
+    })
+
+    // メッセージ (現在の再生時間を取得)
+    ncoMessenger.onMessage('getCurrentTime', () => {
+      return this.renderer.video.currentTime
+    })
+
+    // メッセージ (再読み込み)
+    ncoMessenger.onMessage('reload', () => {
+      this.#trigger('reload')
     })
 
     // メッセージ (マーカー)

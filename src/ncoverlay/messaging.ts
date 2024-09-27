@@ -11,6 +11,8 @@ import { webext } from '@/utils/webext'
 type ProtocolMap = {
   getId: (args?: null) => string | null
 
+  getCurrentTime: (args?: null) => number
+
   reload: (args?: null) => void
 
   jumpMarker: (
