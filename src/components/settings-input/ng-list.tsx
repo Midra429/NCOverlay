@@ -75,7 +75,7 @@ const HeaderCell: React.FC<
       {...props}
       className={cn(
         'flex items-center justify-center',
-        'flex-shrink-0 py-1.5',
+        'shrink-0 py-1.5',
         'bg-content2 text-content2-foreground',
         'border-b-1 border-divider',
         'text-tiny font-bold',
@@ -94,7 +94,7 @@ const ItemCell: React.FC<
       {...props}
       className={cn(
         'flex',
-        'flex-shrink-0 p-1.5',
+        'shrink-0 p-1.5',
         'border-b-1 border-divider',
         'text-small',
         '[&:not(:first-child)]:border-l-1',

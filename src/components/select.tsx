@@ -38,7 +38,7 @@ const select = tv({
     size: {
       sm: {
         base: 'items-center justify-between gap-5 py-2',
-        label: 'flex-shrink-0 p-0 text-small',
+        label: 'shrink-0 p-0 text-small',
         mainWrapper: 'transition-colors',
         value: 'flex flex-row items-center justify-center gap-2',
       },

@@ -79,7 +79,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           value={value}
         >
           <div className="w-full min-w-2" />
-          <span className="line-clamp-1 max-w-full flex-shrink-0">{label}</span>
+          <span className="line-clamp-1 max-w-full shrink-0">{label}</span>
           <div className="w-full min-w-1" />
         </Checkbox>
       ))}

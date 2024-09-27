@@ -92,7 +92,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
       <PopoverTrigger>{props.children}</PopoverTrigger>
 
       <PopoverContent>
-        <div className="flex h-5 flex-shrink-0 items-center">
+        <div className="flex h-5 shrink-0 items-center">
           {props.icon || (
             <InfoIcon
               className={popoverIcon({ color: props.okColor })}
