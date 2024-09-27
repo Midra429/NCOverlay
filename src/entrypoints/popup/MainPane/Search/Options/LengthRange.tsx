@@ -42,6 +42,7 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
       {LENGTH_RANGE_OPTIONS.map(({ value, label }) => (
         <SelectItem
           key={JSON.stringify(value)}
+          variant="flat"
           classNames={{
             base: 'gap-1 rounded-md px-1.5 py-1',
             title: 'text-tiny',

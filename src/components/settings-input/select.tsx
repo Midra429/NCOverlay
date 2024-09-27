@@ -43,6 +43,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       {props.options.map(({ label, value, icon: Icon }) => (
         <SelectItem
           key={JSON.stringify(value)}
+          variant="flat"
           startContent={Icon && <Icon className="size-4" />}
         >
           {label}
