@@ -9,6 +9,7 @@ import * as Checkbox from './checkbox'
 import * as Checkcard from './checkcard'
 import * as KbdShortcut from './kbd-shortcut'
 import * as NgList from './ng-list'
+import * as ChSelector from './ch-selector'
 
 export type SettingsInputBaseProps<
   K extends SettingsKey,
@@ -30,6 +31,7 @@ export type SettingsInputProps = {
   'checkcard': Checkcard.Props
   'kbd-shortcut': KbdShortcut.Props
   'ng-list': NgList.Props
+  'ch-selector': ChSelector.Props
 }
 
 export const SettingsInput = {
@@ -42,4 +44,5 @@ export const SettingsInput = {
   'checkcard': Checkcard.Input,
   'kbd-shortcut': KbdShortcut.Input,
   'ng-list': NgList.Input,
+  'ch-selector': ChSelector.Input,
 }

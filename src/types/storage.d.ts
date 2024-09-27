@@ -1,3 +1,4 @@
+import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems } from '@/ncoverlay/state'
@@ -103,6 +104,12 @@ export type StorageItems_v3 = {
     | 'szbh'
     | 'jikkyo'
   )[]
+
+  /**
+   * コメント:実況チャンネル
+   * @default []
+   */
+  'settings:comment:jikkyoChannelIds': JikkyoChannelId[]
 
   /**
    * NG設定:コメント

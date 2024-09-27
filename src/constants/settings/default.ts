@@ -1,5 +1,7 @@
+import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { SettingItems } from '@/types/storage'
 
+import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 import { VOD_KEYS } from '../vods'
 
 /** 設定のデフォルト値 */
@@ -25,6 +27,9 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:scale': 100,
   'settings:comment:amount': 1,
   'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
+  'settings:comment:jikkyoChannelIds': Object.keys(
+    JIKKYO_CHANNELS
+  ) as JikkyoChannelId[],
 
   // NG設定
   'settings:ng:words': [],

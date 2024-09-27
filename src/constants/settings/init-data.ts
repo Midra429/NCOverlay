@@ -1,4 +1,5 @@
 import type { VodKey, PluginKey, SettingsInitData } from '@/types/constants'
+import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 
 import {
   SunMoonIcon,
@@ -10,6 +11,7 @@ import {
   BlocksIcon,
   KeyboardIcon,
 } from 'lucide-react'
+import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
 import { VODS } from '@/constants/vods'
 import { PLUGINS } from '@/constants/plugins'
@@ -134,6 +136,16 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           { label: 'コメント専用', value: 'szbh' },
           { label: '実況(過去ログ)', value: 'jikkyo' },
         ],
+      },
+      {
+        settingsKey: 'settings:comment:jikkyoChannelIds',
+        inputType: 'ch-selector',
+        label: '実況チャンネル',
+        // description: '自動検索の対象チャンネル。',
+        options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
+          label: `${id}: ${val}`,
+          value: id as JikkyoChannelId,
+        })),
       },
     ],
   },

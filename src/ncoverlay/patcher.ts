@@ -157,12 +157,17 @@ export class NCOPatcher {
           logger.log('state.info:', parsed)
 
           if (input) {
+            const jikkyoChannelIds = await settings.get(
+              'settings:comment:jikkyoChannelIds'
+            )
+
             await this.#nco.searcher.autoLoad(input, {
               official: autoLoads.includes('official'),
               danime: autoLoads.includes('danime'),
               chapter: autoLoads.includes('chapter'),
               szbh: autoLoads.includes('szbh'),
               jikkyo: autoLoads.includes('jikkyo'),
+              jikkyoChannelIds,
             })
           }
         } catch (err) {

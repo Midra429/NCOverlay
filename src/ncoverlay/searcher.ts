@@ -1,4 +1,5 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type {
   BuildSearchQueryInput,
   BuildSearchQueryOptions,
@@ -10,6 +11,7 @@ import type {
   StateSlotDetailUpdate,
 } from './state'
 
+import { jikkyoToSyobocalChId } from '@midra/nco-api/utils/jikkyoToSyobocalChId'
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
 import { logger } from '@/utils/logger'
@@ -36,8 +38,15 @@ export class NCOSearcher {
     input: BuildSearchQueryInput,
     options: Omit<BuildSearchQueryOptions, 'userAgent'> & {
       jikkyo?: boolean
+      jikkyoChannelIds?: JikkyoChannelId[]
     } = {}
   ) {
+    const { jikkyo, jikkyoChannelIds, ...searchOptions } = options
+
+    const channelIds = jikkyoChannelIds
+      ?.map(jikkyoToSyobocalChId)
+      .filter((v) => v !== null)
+
     // 読み込み済みのスロットID
     const loadedIds =
       (await this.#state.get('slotDetails'))?.map((v) => v.id) ?? []
@@ -47,13 +56,18 @@ export class NCOSearcher {
       ncoApiProxy.search({
         input,
         options: {
-          ...options,
+          ...searchOptions,
           userAgent,
         },
       }),
 
       // ニコニコ実況 過去ログ 検索
-      options.jikkyo ? ncoApiProxy.searchSyobocal(input, { userAgent }) : null,
+      jikkyo
+        ? ncoApiProxy.searchSyobocal(input, {
+            channelIds,
+            userAgent,
+          })
+        : null,
     ])
 
     const currentTime = Date.now() / 1000
