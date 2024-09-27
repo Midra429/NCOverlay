@@ -181,8 +181,9 @@ const Item: React.FC<{
 }
 
 export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
-  const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])
   const [value, setValue] = useSettings(props.settingsKey)
+
+  const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
@@ -195,7 +196,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       <div className="py-2">
         <ItemButton
           key={props.settingsKey}
-          title={`${props.label}`}
+          title={props.label}
           description={`${value.length}件`}
           button={{
             variant: 'flat',
@@ -211,9 +212,9 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         classNames={{
           wrapper: 'justify-end',
           base: 'max-w-[370px]',
-          header: 'border-b-1 border-divider px-3 py-2 text-medium',
+          header: 'border-b-1 border-divider p-2 text-medium',
           body: 'p-0',
-          footer: 'border-t-1 border-divider px-3 py-2',
+          footer: 'border-t-1 border-divider p-2',
         }}
         size="full"
         hideCloseButton
@@ -235,23 +236,10 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
 
             return (
               <>
-                <ModalHeader className="flex flex-row items-center justify-between">
-                  <div className="flex flex-row items-center gap-0.5">
-                    <span>NG設定</span>
-                    <ChevronRightIcon className="size-5 opacity-50" />
-                    <span>{props.label}</span>
-                  </div>
-
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    radius="full"
-                    color="primary"
-                    startContent={<PlusIcon className="size-4" />}
-                    onPress={onPressAdd}
-                  >
-                    追加
-                  </Button>
+                <ModalHeader className="flex flex-row items-center gap-0.5">
+                  <span>NG設定</span>
+                  <ChevronRightIcon className="size-5 opacity-50" />
+                  <span>{props.label}</span>
                 </ModalHeader>
 
                 <ModalBody className="max-h-full gap-0 overflow-auto">
@@ -278,24 +266,36 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
                   </div>
                 </ModalBody>
 
-                <ModalFooter>
+                <ModalFooter className="justify-between">
                   <Button
                     size="sm"
                     variant="flat"
-                    color="default"
-                    onPress={onClose}
+                    color="primary"
+                    startContent={<PlusIcon className="size-4" />}
+                    onPress={onPressAdd}
                   >
-                    キャンセル
+                    追加
                   </Button>
 
-                  <Button
-                    size="sm"
-                    color="primary"
-                    startContent={<SaveIcon className="size-4" />}
-                    onPress={onPressSave}
-                  >
-                    保存
-                  </Button>
+                  <div className="flex flex-row gap-2">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color="default"
+                      onPress={onClose}
+                    >
+                      キャンセル
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      color="primary"
+                      startContent={<SaveIcon className="size-4" />}
+                      onPress={onPressSave}
+                    >
+                      保存
+                    </Button>
+                  </div>
                 </ModalFooter>
               </>
             )

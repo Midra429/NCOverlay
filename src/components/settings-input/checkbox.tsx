@@ -59,9 +59,10 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           classNames={{
             base: cn(
               'flex-1',
-              'm-0 min-w-fit max-w-none',
-              'px-1.5 py-1',
+              'min-w-fit max-w-none',
+              'm-0 px-1.5 py-1',
               'bg-default-100 hover:bg-default-200',
+              'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-full',
               'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',

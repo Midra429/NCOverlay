@@ -43,10 +43,11 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           key={idx}
           classNames={{
             base: cn(
-              'flex flex-row gap-0.5',
-              'm-0 min-h-12 w-full max-w-none',
-              'px-2 py-1.5',
+              'gap-0.5',
+              'min-h-12 w-full max-w-none',
+              'm-0 px-2 py-1.5',
               'bg-default-100 hover:bg-default-200',
+              'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-medium',
               'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
@@ -58,23 +59,21 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
               'before:rounded-full before:border-1 before:!bg-default-50',
               'after:rounded-full'
             ),
-            label: 'w-full',
+            label: 'flex w-full flex-col gap-0.5',
           }}
           value={value}
         >
-          <div className="flex flex-col gap-0.5">
-            <span className="line-clamp-2 text-small">{label}</span>
-            {description && (
-              <span
-                className={cn(
-                  'line-clamp-2 text-tiny',
-                  'text-foreground-500 dark:text-foreground-600'
-                )}
-              >
-                {description}
-              </span>
-            )}
-          </div>
+          <span className="line-clamp-2 text-small">{label}</span>
+          {description && (
+            <span
+              className={cn(
+                'line-clamp-2 text-tiny',
+                'text-foreground-500 dark:text-foreground-600'
+              )}
+            >
+              {description}
+            </span>
+          )}
         </Checkbox>
       ))}
     </CheckboxGroup>

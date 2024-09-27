@@ -156,6 +156,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             'border-1 border-divider',
             'data-[recording=true]:border-primary',
             'bg-default-100',
+            'data-[recording=true]:bg-primary/15 dark:data-[recording=true]:bg-primary/20',
             'overflow-x-hidden',
             'transition-colors !duration-150'
           )}
