@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Switch, cn } from '@nextui-org/react'
+import { Switch } from '@nextui-org/react'
 
 import { useStorage } from '@/hooks/useStorage'
 import { useSettings } from '@/hooks/useSettings'
@@ -23,11 +23,11 @@ export const ShowHideToggle: React.FC = () => {
     <PanelItem>
       <Switch
         classNames={{
-          base: cn(
+          base: [
             'flex flex-row-reverse justify-between gap-2',
             'w-full max-w-full p-2.5',
-            'overflow-hidden'
-          ),
+            'overflow-hidden',
+          ],
           wrapper: 'm-0',
         }}
         size="sm"

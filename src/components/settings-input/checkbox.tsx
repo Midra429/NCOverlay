@@ -1,7 +1,7 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { CheckboxGroup, Checkbox, cn } from '@nextui-org/react'
+import { CheckboxGroup, Checkbox } from '@nextui-org/react'
 import { CircleHelpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
@@ -57,7 +57,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         <Checkbox
           key={idx}
           classNames={{
-            base: cn(
+            base: [
               'flex-1',
               'min-w-fit max-w-none',
               'm-0 px-1.5 py-1',
@@ -67,13 +67,13 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
               'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
-              'cursor-pointer'
-            ),
-            wrapper: cn(
+              'cursor-pointer',
+            ],
+            wrapper: [
               'm-0 rounded-full',
               'before:rounded-full before:border-1 before:!bg-default-50',
-              'after:rounded-full'
-            ),
+              'after:rounded-full',
+            ],
             label: 'flex w-full flex-row',
           }}
           value={value}

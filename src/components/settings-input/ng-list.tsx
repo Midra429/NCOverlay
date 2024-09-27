@@ -135,10 +135,10 @@ const Item: React.FC<{
       <ItemCell className="w-[calc(100%-7rem)] p-0">
         <NextUIInput
           classNames={{
-            inputWrapper: cn(
+            inputWrapper: [
               'h-full shadow-none',
-              isRegExpValidated && 'bg-transparent'
-            ),
+              isRegExpValidated && 'bg-transparent',
+            ],
           }}
           size="sm"
           radius="none"

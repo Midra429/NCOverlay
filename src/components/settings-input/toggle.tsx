@@ -1,7 +1,7 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { Switch, cn } from '@nextui-org/react'
+import { Switch } from '@nextui-org/react'
 
 import { useSettings } from '@/hooks/useSettings'
 
@@ -22,11 +22,11 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   return (
     <Switch
       classNames={{
-        base: cn(
+        base: [
           'flex flex-row-reverse justify-between gap-2',
           'w-full max-w-full py-2',
-          'overflow-hidden'
-        ),
+          'overflow-hidden',
+        ],
         wrapper: 'm-0',
       }}
       size="sm"

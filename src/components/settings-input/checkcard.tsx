@@ -42,7 +42,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         <Checkbox
           key={idx}
           classNames={{
-            base: cn(
+            base: [
               'gap-0.5',
               'min-h-12 w-full max-w-none',
               'm-0 px-2 py-1.5',
@@ -52,13 +52,13 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
               'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
-              'cursor-pointer'
-            ),
-            wrapper: cn(
+              'cursor-pointer',
+            ],
+            wrapper: [
               'rounded-full',
               'before:rounded-full before:border-1 before:!bg-default-50',
-              'after:rounded-full'
-            ),
+              'after:rounded-full',
+            ],
             label: 'flex w-full flex-col gap-0.5',
           }}
           value={value}

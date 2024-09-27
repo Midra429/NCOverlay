@@ -18,7 +18,6 @@ import {
   CheckboxGroup,
   Checkbox,
   useDisclosure,
-  cn,
 } from '@nextui-org/react'
 import {
   PencilIcon,
@@ -86,7 +85,7 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
         <Checkbox
           key={idx}
           classNames={{
-            base: cn(
+            base: [
               'w-[calc(50%-0.375rem/2)] max-w-none',
               'm-0 px-1.5 py-1',
               'bg-default-100 hover:bg-default-200',
@@ -95,13 +94,13 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
               'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
-              'cursor-pointer'
-            ),
-            wrapper: cn(
+              'cursor-pointer',
+            ],
+            wrapper: [
               'rounded-full',
               'before:rounded-full before:border-1 before:!bg-default-50',
-              'after:rounded-full'
-            ),
+              'after:rounded-full',
+            ],
             label: 'flex w-full flex-col',
           }}
           value={id}

@@ -78,10 +78,10 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
   return (
     <Popover
       classNames={{
-        content: cn(
+        content: [
           'flex flex-row items-start gap-1.5 p-2.5',
-          'border-1 border-foreground-100'
-        ),
+          'border-1 border-foreground-100',
+        ],
       }}
       placement={props.placement}
       backdrop="opaque"

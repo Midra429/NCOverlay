@@ -1,4 +1,4 @@
-import { Button, Pagination as NextUIPagination, cn } from '@nextui-org/react'
+import { Button, Pagination as NextUIPagination } from '@nextui-org/react'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
 export type PaginationProps = {
@@ -29,10 +29,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         classNames={{
           base: '-m-2 p-2',
           wrapper: 'shadow-none',
-          item: cn(
+          item: [
             'bg-default/40 shadow-none',
-            '[&:first-of-type:last-of-type]:rounded-full'
-          ),
+            '[&:first-of-type:last-of-type]:rounded-full',
+          ],
         }}
         size="sm"
         radius="full"

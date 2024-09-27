@@ -30,10 +30,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         <div className="flex w-full flex-row">
           <Input
             classNames={{
-              inputWrapper: cn(
+              inputWrapper: [
                 'border-1 border-divider shadow-none',
-                'rounded-r-none'
-              ),
+                'rounded-r-none',
+              ],
               input: 'pr-5',
               clearButton: 'end-1 mr-0 p-1',
             }}
