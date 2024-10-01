@@ -46,8 +46,12 @@ export default () => {
     return ncoApi.danime.part(...data)
   })
 
-  onMessage('abema.program', ({ data }) => {
-    return ncoApi.abema.program(...data)
+  onMessage('abema.v1.video.programs', ({ data }) => {
+    return ncoApi.abema.v1.video.programs(...data)
+  })
+
+  onMessage('abema.v1.media.slots', ({ data }) => {
+    return ncoApi.abema.v1.media.slots(...data)
   })
 
   onMessage('dmmTv.video', ({ data }) => {

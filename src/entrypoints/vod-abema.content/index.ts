@@ -26,19 +26,42 @@ const main = async () => {
 
   logger.log(`vod-${vod}.js`)
 
+  const getProgramId = async () => {
+    let programId: string | undefined
+
+    const { pathname } = location
+
+    if (/^\/video\/episode\/.+$/.test(pathname)) {
+      programId = pathname.split('/').at(-1)
+    } else if (/^\/channels\/[^\/]+\/slots\/.+$/.test(pathname)) {
+      const id = pathname.split('/').at(-1)
+      const token = localStorage.getItem('abm_token')
+
+      if (id && token) {
+        const slot = await abemaApi.v1.media.slots(id, token)
+
+        logger.log('abema.v1.media.slots:', slot)
+
+        programId = slot?.displayProgramId
+      }
+    }
+
+    return programId ?? null
+  }
+
   const patcher = new NCOPatcher({
     vod,
     getInfo: async () => {
-      const id = location.pathname.split('/').at(-1)
+      const programId = await getProgramId()
       const token = localStorage.getItem('abm_token')
 
-      if (!id || !token) {
+      if (!programId || !token) {
         return null
       }
 
-      const program = await abemaApi.program(id, token)
+      const program = await abemaApi.v1.video.programs(programId, token)
 
-      logger.log('abema.program:', program)
+      logger.log('abema.v1.video.programs:', program)
 
       if (program?.genre.id !== 'animation') {
         return null
@@ -90,7 +113,12 @@ const main = async () => {
     if (patcher.nco && !document.body.contains(patcher.nco.renderer.video)) {
       patcher.dispose()
     } else if (!patcher.nco) {
-      if (location.pathname.startsWith('/video/episode/')) {
+      const { pathname } = location
+
+      if (
+        /^\/video\/episode\/.+$/.test(pathname) ||
+        /^\/channels\/[^\/]+\/slots\/.+$/.test(pathname)
+      ) {
         const video = document.body.querySelector<HTMLVideoElement>(
           '.com-a-Video__video > video[preload][src]'
         )

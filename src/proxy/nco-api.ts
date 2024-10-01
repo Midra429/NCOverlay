@@ -42,9 +42,13 @@ type ProtocolMap = {
     args: Parameters<typeof ncoApi.danime.part>
   ) => Awaited<ReturnType<typeof ncoApi.danime.part>>
 
-  'abema.program': (
-    args: Parameters<typeof ncoApi.abema.program>
-  ) => Awaited<ReturnType<typeof ncoApi.abema.program>>
+  'abema.v1.video.programs': (
+    args: Parameters<typeof ncoApi.abema.v1.video.programs>
+  ) => Awaited<ReturnType<typeof ncoApi.abema.v1.video.programs>>
+
+  'abema.v1.media.slots': (
+    args: Parameters<typeof ncoApi.abema.v1.media.slots>
+  ) => Awaited<ReturnType<typeof ncoApi.abema.v1.media.slots>>
 
   'dmmTv.video': (
     args: Parameters<typeof ncoApi.dmmTv.video>
@@ -99,7 +103,15 @@ export const ncoApiProxy: Omit<
   },
 
   abema: {
-    program: (...args) => sendMessage('abema.program', args) as any,
+    v1: {
+      video: {
+        programs: (...args) =>
+          sendMessage('abema.v1.video.programs', args) as any,
+      },
+      media: {
+        slots: (...args) => sendMessage('abema.v1.media.slots', args) as any,
+      },
+    },
   },
 
   dmmTv: {
