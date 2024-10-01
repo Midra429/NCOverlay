@@ -85,7 +85,10 @@ const main = async () => {
       let episodeTitle: string | undefined
 
       if (workTitle !== program.episode.title) {
-        episodeTitle = program.episode.title
+        episodeTitle = program.episode.title.replace(
+          /^最終(?:回|話)(?=\s)/,
+          `第${program.episode.number}話`
+        )
       }
 
       const duration = program.info.duration
