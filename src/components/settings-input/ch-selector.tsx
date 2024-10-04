@@ -158,9 +158,9 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         classNames={{
           wrapper: 'justify-end',
           base: 'max-w-[370px]',
-          header: 'border-b-1 border-divider p-2 text-medium',
+          header: 'border-b-1 border-foreground-200 p-2 text-medium',
           body: 'p-0',
-          footer: 'border-t-1 border-divider p-2',
+          footer: 'border-t-1 border-foreground-200 p-2',
         }}
         size="full"
         hideCloseButton
@@ -187,10 +187,22 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
 
             return (
               <>
-                <ModalHeader className="flex flex-row items-center gap-0.5">
-                  <span>コメント</span>
-                  <ChevronRightIcon className="size-5 opacity-50" />
-                  <span>{props.label}</span>
+                <ModalHeader className="flex flex-row justify-between">
+                  <div className="flex flex-row items-center gap-0.5">
+                    <span>コメント</span>
+                    <ChevronRightIcon className="size-5 opacity-50" />
+                    <span>{props.label}</span>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    color="danger"
+                    startContent={<RotateCcwIcon className="size-4" />}
+                    onPress={onPressReset}
+                  >
+                    リセット
+                  </Button>
                 </ModalHeader>
 
                 <ModalBody className="max-h-full gap-0 overflow-auto">
@@ -224,36 +236,24 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
                   </Tabs>
                 </ModalBody>
 
-                <ModalFooter className="justify-between">
+                <ModalFooter>
                   <Button
                     size="sm"
                     variant="flat"
-                    color="danger"
-                    startContent={<RotateCcwIcon className="size-4" />}
-                    onPress={onPressReset}
+                    color="default"
+                    onPress={onClose}
                   >
-                    リセット
+                    キャンセル
                   </Button>
 
-                  <div className="flex flex-row gap-2">
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      color="default"
-                      onPress={onClose}
-                    >
-                      キャンセル
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      color="primary"
-                      startContent={<SaveIcon className="size-4" />}
-                      onPress={onPressSave}
-                    >
-                      保存
-                    </Button>
-                  </div>
+                  <Button
+                    size="sm"
+                    color="primary"
+                    startContent={<SaveIcon className="size-4" />}
+                    onPress={onPressSave}
+                  >
+                    保存
+                  </Button>
                 </ModalFooter>
               </>
             )
