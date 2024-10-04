@@ -12,6 +12,7 @@ import { ncoState } from '@/hooks/useNco'
 import { PanelItem } from '@/components/panel-item'
 
 import { StatusOverlay } from './status-overlay'
+import { ButtonsOverlay } from './buttons-overlay'
 import { AddButton } from './add-button'
 import { Thumbnail } from './thumbnail'
 import { DateTime } from './date-time'
@@ -79,7 +80,14 @@ export const SlotItem: React.FC<SlotItemProps> = ({
     }
 
     await ncoState?.set('status', 'ready')
-  }, [detail, isSearch])
+  }, [detail])
+
+  const onPressRemove = useCallback(async () => {
+    const { id } = detail
+
+    await ncoState?.remove('slotDetails', { id })
+    await ncoState?.remove('slots', { id })
+  }, [detail.id])
 
   return (
     <PanelItem
@@ -107,8 +115,12 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             // 追加
             <AddButton onPress={onPressAdd} />
           ) : (
-            // ステータス
-            <StatusOverlay status={detail.status} />
+            <>
+              <ButtonsOverlay status={detail.status} onRemove={onPressRemove} />
+
+              {/* ステータス */}
+              <StatusOverlay status={detail.status} />
+            </>
           )}
         </div>
 
