@@ -57,11 +57,11 @@ const accordionItemInfo = (
         </div>
 
         <div className="flex flex-row gap-0.5">
-          <IconLink
+          {/* <IconLink
             icon={ClipboardListIcon}
             title="利用者アンケート ①"
             href="https://docs.google.com/forms/d/e/1FAIpQLSfVL8ub7t1qMGLI7BH0ypdV7Ctib6Sns-_VbKhiaRMGLloczw/viewform"
-          />
+          /> */}
           <FormsButton />
           <IconLink icon={SiGithub} href={GITHUB_URL} />
         </div>
