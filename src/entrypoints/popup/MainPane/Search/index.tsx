@@ -20,7 +20,7 @@ type SearchResult = {
   details: StateSlotDetail[]
 }
 
-const searchByVideoId = async (
+const searchNiconicoByVideoId = async (
   videoId: string
 ): Promise<SearchResult | null> => {
   const data = await ncoApi.niconico.video(videoId)
@@ -60,7 +60,7 @@ const searchByVideoId = async (
   return null
 }
 
-const searchByKeyword = async (
+const searchNiconicoByKeyword = async (
   keyword: string,
   page: number,
   options?: {
@@ -154,7 +154,7 @@ export const Search: React.FC = memo(() => {
     return !(stateStatus === 'searching' || stateStatus === 'loading')
   }, [stateStatus])
 
-  const search = useCallback(
+  const searchNiconico = useCallback(
     async (value: string, page: number) => {
       if (!value) return
 
@@ -166,8 +166,8 @@ export const Search: React.FC = memo(() => {
       const videoId = extractVideoId(value)
 
       const result = videoId
-        ? await searchByVideoId(videoId)
-        : await searchByKeyword(value, page, {
+        ? await searchNiconicoByVideoId(videoId)
+        : await searchNiconicoByKeyword(value, page, {
             sort,
             lengthRange,
           })
@@ -185,8 +185,8 @@ export const Search: React.FC = memo(() => {
   )
 
   useEffect(() => {
-    search(inputValue, 1)
-  }, [search])
+    searchNiconico(inputValue, 1)
+  }, [searchNiconico])
 
   return (
     <div className="flex h-full flex-col">
@@ -202,7 +202,7 @@ export const Search: React.FC = memo(() => {
           isDisabled={!isReady || isLoading}
           onSearch={(value) => {
             setInputValue(value)
-            search(value, 1)
+            searchNiconico(value, 1)
           }}
         />
       </div>
@@ -222,15 +222,13 @@ export const Search: React.FC = memo(() => {
         )}
       </div>
 
-      <div
-        className={cn('p-2', 'bg-content1', 'border-t-1 border-foreground-200')}
-      >
+      <div className="border-t-1 border-foreground-200 bg-content1 p-2">
         <Pagination
           page={currentPage}
           total={totalCount}
           isDisabled={!isReady || isLoading}
           onPageChange={(page) => {
-            search(inputValue, page)
+            searchNiconico(inputValue, page)
           }}
         />
       </div>

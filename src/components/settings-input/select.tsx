@@ -25,6 +25,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   return (
     <Select
       classNames={{
+        base: 'py-2',
         mainWrapper: 'w-32',
       }}
       size="sm"
