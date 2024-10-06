@@ -7,11 +7,6 @@ import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState, useCallback } from 'react'
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
   Tabs,
   Tab,
@@ -34,6 +29,7 @@ import {
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemButton } from '@/components/item-button'
+import { Modal } from '@/components/modal'
 
 const CH_GROUPS = {
   dtv: {
@@ -124,6 +120,15 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
+  const onReset = useCallback(() => {
+    setDtvChIds(Object.keys(JIKKYO_CHANNELS_DTV) as JikkyoDtvChannelId[])
+    setBsCsChIds(Object.keys(JIKKYO_CHANNELS_BS_CS) as JikkyoBsCsChannelId[])
+  }, [])
+
+  const onSave = useCallback(() => {
+    setValue([...dtvChIds, ...bsCsChIds])
+  }, [dtvChIds, bsCsChIds])
+
   useEffect(() => {
     if (isOpen) {
       const dtvIds = value.filter((id) => id in JIKKYO_CHANNELS_DTV)
@@ -155,110 +160,54 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       </div>
 
       <Modal
-        classNames={{
-          wrapper: 'justify-end',
-          base: 'max-w-[370px]',
-          header: 'border-b-1 border-foreground-200 p-2 text-medium',
-          body: 'p-0',
-          footer: 'border-t-1 border-foreground-200 p-2',
-        }}
-        size="full"
-        hideCloseButton
-        isKeyboardDismissDisabled={true}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        okText="保存"
+        okIcon={<SaveIcon className="size-4" />}
+        onOk={onSave}
+        header={
+          <div className="flex flex-row items-center gap-0.5">
+            <span>コメント</span>
+            <ChevronRightIcon className="size-5 opacity-50" />
+            <span>{props.label}</span>
+          </div>
+        }
+        headerEndContent={
+          <Button
+            size="sm"
+            variant="flat"
+            color="danger"
+            startContent={<RotateCcwIcon className="size-4" />}
+            onPress={onReset}
+          >
+            リセット
+          </Button>
+        }
       >
-        <ModalContent>
-          {(onClose) => {
-            const onPressReset = useCallback(() => {
-              setDtvChIds(
-                Object.keys(JIKKYO_CHANNELS_DTV) as JikkyoDtvChannelId[]
-              )
-              setBsCsChIds(
-                Object.keys(JIKKYO_CHANNELS_BS_CS) as JikkyoBsCsChannelId[]
-              )
-            }, [])
-
-            const onPressSave = useCallback(() => {
-              setValue([...dtvChIds, ...bsCsChIds])
-
-              onClose()
-            }, [dtvChIds, bsCsChIds])
-
-            return (
-              <>
-                <ModalHeader className="flex flex-row justify-between">
-                  <div className="flex flex-row items-center gap-0.5">
-                    <span>コメント</span>
-                    <ChevronRightIcon className="size-5 opacity-50" />
-                    <span>{props.label}</span>
-                  </div>
-
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    color="danger"
-                    startContent={<RotateCcwIcon className="size-4" />}
-                    onPress={onPressReset}
-                  >
-                    リセット
-                  </Button>
-                </ModalHeader>
-
-                <ModalBody className="max-h-full gap-0 overflow-auto">
-                  <Tabs
-                    classNames={{
-                      base: 'border-b-1 border-foreground-200',
-                      tabList: 'p-0',
-                      tab: 'h-10 p-0',
-                      panel: 'h-full overflow-auto p-0',
-                    }}
-                    variant="underlined"
-                    color="primary"
-                    fullWidth
-                    destroyInactiveTabPanel={false}
-                  >
-                    <Tab key="dtv" title="地デジ">
-                      <ChSelector
-                        type="dtv"
-                        chIds={dtvChIds}
-                        setChIds={setDtvChIds}
-                      />
-                    </Tab>
-
-                    <Tab key="bs_cs" title="BS / CS">
-                      <ChSelector
-                        type="bs_cs"
-                        chIds={bsCsChIds}
-                        setChIds={setBsCsChIds}
-                      />
-                    </Tab>
-                  </Tabs>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    color="default"
-                    onPress={onClose}
-                  >
-                    キャンセル
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    color="primary"
-                    startContent={<SaveIcon className="size-4" />}
-                    onPress={onPressSave}
-                  >
-                    保存
-                  </Button>
-                </ModalFooter>
-              </>
-            )
+        <Tabs
+          classNames={{
+            base: 'border-b-1 border-foreground-200',
+            tabList: 'p-0',
+            tab: 'h-10 p-0',
+            panel: 'h-full overflow-auto p-0',
           }}
-        </ModalContent>
+          variant="underlined"
+          color="primary"
+          fullWidth
+          destroyInactiveTabPanel={false}
+        >
+          <Tab key="dtv" title="地デジ">
+            <ChSelector type="dtv" chIds={dtvChIds} setChIds={setDtvChIds} />
+          </Tab>
+
+          <Tab key="bs_cs" title="BS / CS">
+            <ChSelector
+              type="bs_cs"
+              chIds={bsCsChIds}
+              setChIds={setBsCsChIds}
+            />
+          </Tab>
+        </Tabs>
       </Modal>
     </>
   )

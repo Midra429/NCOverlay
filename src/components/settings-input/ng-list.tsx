@@ -7,11 +7,6 @@ import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState, useCallback } from 'react'
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
   Switch,
   Input as NextUIInput,
@@ -29,6 +24,7 @@ import {
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemButton } from '@/components/item-button'
+import { Modal } from '@/components/modal'
 
 type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
 
@@ -187,6 +183,14 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
+  const onAdd = useCallback(() => {
+    setTmpValue((val) => [...val, { content: '' }])
+  }, [])
+
+  const onSave = useCallback(() => {
+    setValue(filterNgSettingsContents(tmpValue))
+  }, [tmpValue])
+
   useEffect(() => {
     setTmpValue(isOpen ? value : [])
   }, [isOpen])
@@ -209,98 +213,51 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       </div>
 
       <Modal
-        classNames={{
-          wrapper: 'justify-end',
-          base: 'max-w-[370px]',
-          header: 'border-b-1 border-foreground-200 p-2 text-medium',
-          body: 'p-0',
-          footer: 'border-t-1 border-foreground-200 p-2',
-        }}
-        size="full"
-        hideCloseButton
-        isKeyboardDismissDisabled={true}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        okText="保存"
+        okIcon={<SaveIcon className="size-4" />}
+        onOk={onSave}
+        header={
+          <div className="flex flex-row items-center gap-0.5">
+            <span>NG設定</span>
+            <ChevronRightIcon className="size-5 opacity-50" />
+            <span>{props.label}</span>
+          </div>
+        }
+        headerEndContent={
+          <Button
+            size="sm"
+            variant="flat"
+            color="primary"
+            startContent={<PlusIcon className="size-4" />}
+            onPress={onAdd}
+          >
+            追加
+          </Button>
+        }
       >
-        <ModalContent>
-          {(onClose) => {
-            const onPressAdd = useCallback(() => {
-              setTmpValue((val) => [...val, { content: '' }])
-            }, [])
+        <Header />
 
-            const onPressSave = useCallback(() => {
-              setValue(filterNgSettingsContents(tmpValue))
-
-              onClose()
-            }, [tmpValue])
+        <div className="flex flex-col">
+          {tmpValue.map((val, idx, ary) => {
+            if (!val) return
 
             return (
-              <>
-                <ModalHeader className="flex flex-row justify-between">
-                  <div className="flex flex-row items-center gap-0.5">
-                    <span>NG設定</span>
-                    <ChevronRightIcon className="size-5 opacity-50" />
-                    <span>{props.label}</span>
-                  </div>
+              <Item
+                key={idx}
+                init={val}
+                onValueChange={(val) => {
+                  const tmpAry = [...ary]
 
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    color="primary"
-                    startContent={<PlusIcon className="size-4" />}
-                    onPress={onPressAdd}
-                  >
-                    追加
-                  </Button>
-                </ModalHeader>
+                  tmpAry[idx] = val
 
-                <ModalBody className="max-h-full gap-0 overflow-auto">
-                  <Header />
-
-                  <div className="flex flex-col">
-                    {tmpValue.map((val, idx, ary) => {
-                      if (!val) return
-
-                      return (
-                        <Item
-                          key={idx}
-                          init={val}
-                          onValueChange={(val) => {
-                            const tmpAry = [...ary]
-
-                            tmpAry[idx] = val
-
-                            setTmpValue(tmpAry)
-                          }}
-                        />
-                      )
-                    })}
-                  </div>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    color="default"
-                    onPress={onClose}
-                  >
-                    キャンセル
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    color="primary"
-                    startContent={<SaveIcon className="size-4" />}
-                    onPress={onPressSave}
-                  >
-                    保存
-                  </Button>
-                </ModalFooter>
-              </>
+                  setTmpValue(tmpAry)
+                }}
+              />
             )
-          }}
-        </ModalContent>
+          })}
+        </div>
       </Modal>
     </>
   )
