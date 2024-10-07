@@ -20,27 +20,14 @@ import {
   RotateCcwIcon,
   SaveIcon,
 } from 'lucide-react'
-import {
-  JIKKYO_CHANNELS,
-  JIKKYO_CHANNELS_DTV,
-  JIKKYO_CHANNELS_BS_CS,
-} from '@midra/nco-api/constants'
+import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
+
+import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
 
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemButton } from '@/components/item-button'
 import { Modal } from '@/components/modal'
-
-const CH_GROUPS = {
-  dtv: {
-    title: '地デジ',
-    ids: Object.keys(JIKKYO_CHANNELS_DTV) as JikkyoDtvChannelId[],
-  },
-  bs_cs: {
-    title: 'BS / CS',
-    ids: Object.keys(JIKKYO_CHANNELS_BS_CS) as JikkyoBsCsChannelId[],
-  },
-}
 
 export type Key = 'settings:comment:jikkyoChannelIds'
 
@@ -55,7 +42,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
 }
 
 type ChSelectorProps = {
-  type: keyof typeof CH_GROUPS
+  type: keyof typeof JIKKYO_CHANNEL_GROUPS
   chIds: JikkyoDtvChannelId[] | JikkyoBsCsChannelId[]
   setChIds:
     | ((ids: JikkyoDtvChannelId[]) => void)
@@ -63,7 +50,7 @@ type ChSelectorProps = {
 }
 
 const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
-  const channel = CH_GROUPS[type]
+  const CHANNEL = JIKKYO_CHANNEL_GROUPS[type]
 
   return (
     <CheckboxGroup
@@ -73,11 +60,11 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
       }}
       size="sm"
       orientation="horizontal"
-      label={channel.title}
+      label={CHANNEL.TITLE}
       value={chIds}
       onChange={setChIds as any}
     >
-      {channel.ids.map((id, idx) => (
+      {CHANNEL.IDS.map((id, idx) => (
         <Checkbox
           key={idx}
           classNames={{
@@ -116,29 +103,33 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [dtvChIds, setDtvChIds] = useState<JikkyoDtvChannelId[]>([])
-  const [bsCsChIds, setBsCsChIds] = useState<JikkyoBsCsChannelId[]>([])
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const [stvChIds, setStvChIds] = useState<JikkyoBsCsChannelId[]>([])
 
   const onReset = useCallback(() => {
-    setDtvChIds(Object.keys(JIKKYO_CHANNELS_DTV) as JikkyoDtvChannelId[])
-    setBsCsChIds(Object.keys(JIKKYO_CHANNELS_BS_CS) as JikkyoBsCsChannelId[])
+    setDtvChIds(JIKKYO_CHANNEL_GROUPS.DTV.IDS)
+    setStvChIds(JIKKYO_CHANNEL_GROUPS.STV.IDS)
   }, [])
 
   const onSave = useCallback(() => {
-    setValue([...dtvChIds, ...bsCsChIds])
-  }, [dtvChIds, bsCsChIds])
+    setValue([...dtvChIds, ...stvChIds])
+  }, [dtvChIds, stvChIds])
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   useEffect(() => {
     if (isOpen) {
-      const dtvIds = value.filter((id) => id in JIKKYO_CHANNELS_DTV)
-      const bsCsIds = value.filter((id) => id in JIKKYO_CHANNELS_BS_CS)
+      const dtvIds = value.filter((id) => {
+        return JIKKYO_CHANNEL_GROUPS.DTV.IDS.includes(id as JikkyoDtvChannelId)
+      })
+      const stvIds = value.filter((id) => {
+        return JIKKYO_CHANNEL_GROUPS.STV.IDS.includes(id as JikkyoBsCsChannelId)
+      })
 
       setDtvChIds(dtvIds as JikkyoDtvChannelId[])
-      setBsCsChIds(bsCsIds as JikkyoBsCsChannelId[])
+      setStvChIds(stvIds as JikkyoBsCsChannelId[])
     } else {
       setDtvChIds([])
-      setBsCsChIds([])
+      setStvChIds([])
     }
   }, [isOpen])
 
@@ -186,26 +177,22 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       >
         <Tabs
           classNames={{
-            base: 'border-b-1 border-foreground-200',
+            base: 'border-b-1 border-foreground-200 bg-content1',
             tabList: 'p-0',
             tab: 'h-10 p-0',
-            panel: 'h-full overflow-auto p-0',
+            panel: 'overflow-auto bg-content1 p-0',
           }}
           variant="underlined"
           color="primary"
           fullWidth
           destroyInactiveTabPanel={false}
         >
-          <Tab key="dtv" title="地デジ">
-            <ChSelector type="dtv" chIds={dtvChIds} setChIds={setDtvChIds} />
+          <Tab key="DTV" title="地デジ">
+            <ChSelector type="DTV" chIds={dtvChIds} setChIds={setDtvChIds} />
           </Tab>
 
-          <Tab key="bs_cs" title="BS / CS">
-            <ChSelector
-              type="bs_cs"
-              chIds={bsCsChIds}
-              setChIds={setBsCsChIds}
-            />
+          <Tab key="STV" title="BS / CS">
+            <ChSelector type="STV" chIds={stvChIds} setChIds={setStvChIds} />
           </Tab>
         </Tabs>
       </Modal>
