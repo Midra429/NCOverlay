@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Button, Input, cn } from '@nextui-org/react'
-import { SearchIcon, ChevronDownIcon } from 'lucide-react'
+import { TvMinimalIcon, SearchIcon, ChevronDownIcon } from 'lucide-react'
+import { SiNiconico } from '@icons-pack/react-simple-icons'
 
 import { ncoState } from '@/hooks/useNco'
+
+import { Select, SelectItem } from '@/components/select'
 
 import { Options } from './Options'
 
@@ -15,6 +18,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   isDisabled,
   onSearch,
 }) => {
+  const [source, setSource] = useState<'niconico' | 'syobocal'>('niconico')
   const [tmpValue, setTmpValue] = useState('')
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
@@ -28,19 +32,54 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     <div className="flex flex-col">
       <div className="flex flex-row gap-1">
         <div className="flex w-full flex-row">
+          <Select
+            classNames={{
+              base: 'w-10',
+              trigger: 'block rounded-r-none px-0 [&>svg]:hidden',
+              innerWrapper: 'w-full',
+              popoverContent: 'w-56',
+            }}
+            size="sm"
+            defaultSelectedKeys={['niconico']}
+            selectedKeys={[source]}
+            disabledKeys={['syobocal']}
+            renderValue={([{ props }]) => props?.startContent}
+            onSelectionChange={([key]) => setSource((key as any) || 'niconico')}
+          >
+            <SelectItem
+              key="niconico"
+              variant="flat"
+              startContent={<SiNiconico className="size-4" />}
+            >
+              ニコニコ動画
+            </SelectItem>
+            <SelectItem
+              key="syobocal"
+              variant="flat"
+              startContent={<TvMinimalIcon className="size-4" />}
+            >
+              しょぼいカレンダー
+            </SelectItem>
+          </Select>
+
           <Input
             classNames={{
               inputWrapper: [
                 'border-1 border-divider shadow-none',
-                'rounded-r-none',
+                'border-x-0',
               ],
               input: 'pr-5',
               clearButton: 'end-1 mr-0 p-1',
             }}
+            radius="none"
             size="sm"
             isClearable
             isDisabled={isDisabled}
-            placeholder="キーワード / 動画ID / URL"
+            placeholder={
+              (source === 'niconico' && 'キーワード / 動画ID / URL') ||
+              (source === 'syobocal' && '番組名 / タイトルID / URL') ||
+              undefined
+            }
             value={tmpValue}
             onValueChange={setTmpValue}
           />
@@ -66,8 +105,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             <ChevronDownIcon
               className={cn(
                 'size-4',
-                'transition-transform',
-                'rotate-0 data-[open=true]:rotate-180'
+                'rotate-0 data-[open=true]:rotate-180',
+                'transition-transform'
               )}
               data-open={isOptionsOpen}
             />
