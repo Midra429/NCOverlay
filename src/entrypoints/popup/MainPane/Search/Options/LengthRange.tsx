@@ -1,5 +1,6 @@
 import type { SettingItems } from '@/types/storage'
 
+import { cn } from '@nextui-org/react'
 import { ClockIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
@@ -34,7 +35,12 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
       label="再生時間"
       isDisabled={isDisabled}
       startContent={
-        <ClockIcon className="size-small shrink-0 text-foreground-500" />
+        <ClockIcon
+          className={cn(
+            'size-small shrink-0',
+            'text-foreground-500 dark:text-foreground-600'
+          )}
+        />
       }
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}
@@ -42,12 +48,12 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
       {LENGTH_RANGE_OPTIONS.map(({ value, label }) => (
         <SelectItem
           key={JSON.stringify(value)}
-          variant="flat"
           classNames={{
             base: 'gap-1 rounded-md px-1.5 py-1',
             title: 'text-tiny',
             selectedIcon: '!size-mini',
           }}
+          variant="flat"
         >
           {label}
         </SelectItem>

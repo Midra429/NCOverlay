@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 import {
   Select as NextUISelect,
   SelectItem as NextUISelectItem,
+  SelectSection as NextUISelectSection,
   tv,
 } from '@nextui-org/react'
 
@@ -85,3 +86,5 @@ export const Select: React.FC<SelectProps> = (props) => {
 }
 
 export const SelectItem = NextUISelectItem
+
+export const SelectSection = NextUISelectSection

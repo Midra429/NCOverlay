@@ -82,7 +82,7 @@ export type StateSlotDetailDefault = StateSlotDetailBase & {
 export type StateSlotDetailJikkyo = StateSlotDetailBase & {
   type: 'jikkyo'
   info: {
-    id: string
+    id: string | null
     title: string
     duration: number
     date: [start: number, end: number]

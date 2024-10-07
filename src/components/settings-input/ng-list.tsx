@@ -181,8 +181,6 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
 
   const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
-
   const onAdd = useCallback(() => {
     setTmpValue((val) => [...val, { content: '' }])
   }, [])
@@ -190,6 +188,8 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   const onSave = useCallback(() => {
     setValue(filterNgSettingsContents(tmpValue))
   }, [tmpValue])
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   useEffect(() => {
     setTmpValue(isOpen ? value : [])
@@ -239,7 +239,7 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
       >
         <Header />
 
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-content1">
           {tmpValue.map((val, idx, ary) => {
             if (!val) return
 
