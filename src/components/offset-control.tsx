@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Button, Divider, Input, cn } from '@nextui-org/react'
+import { Button, ButtonGroup, Divider, Input, cn } from '@nextui-org/react'
 import { RotateCcwIcon, CheckIcon } from 'lucide-react'
 
 export type OffsetControlProps = {
@@ -28,18 +28,20 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
   return (
     <div className={cn('flex h-fit gap-2', compact ? 'flex-row' : 'flex-col')}>
       <div className="flex flex-row gap-1.5">
-        {[-30, -10, -1].map((sec) => (
-          <Button
-            key={sec}
-            size="sm"
-            variant="flat"
-            radius="full"
-            isIconOnly
-            onPress={() => onValueChange(value + sec)}
-          >
-            {sec}
-          </Button>
-        ))}
+        <ButtonGroup size="sm" variant="flat">
+          {[-30, -10, -1].map((sec) => (
+            <Button
+              key={sec}
+              className={cn(
+                'min-w-8 px-2',
+                'border-divider [&:not(:first-child)]:border-l-1'
+              )}
+              onPress={() => onValueChange(value + sec)}
+            >
+              {sec}
+            </Button>
+          ))}
+        </ButtonGroup>
 
         <Input
           classNames={{
@@ -59,18 +61,20 @@ export const OffsetControl: React.FC<OffsetControlProps> = ({
           onValueChange={onValueChangeInput}
         />
 
-        {[1, 10, 30].map((sec) => (
-          <Button
-            key={sec}
-            size="sm"
-            variant="flat"
-            radius="full"
-            isIconOnly
-            onPress={() => onValueChange(value + sec)}
-          >
-            +{sec}
-          </Button>
-        ))}
+        <ButtonGroup size="sm" variant="flat">
+          {[1, 10, 30].map((sec) => (
+            <Button
+              key={sec}
+              className={cn(
+                'min-w-8 px-2',
+                'border-divider [&:not(:first-child)]:border-l-1'
+              )}
+              onPress={() => onValueChange(value + sec)}
+            >
+              +{sec}
+            </Button>
+          ))}
+        </ButtonGroup>
       </div>
 
       {compact && <Divider className="h-8" orientation="vertical" />}
