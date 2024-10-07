@@ -93,12 +93,14 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
   const onAdd = useCallback(async () => {
     if (!slotDetail) return
 
-    await ncoState?.set('status', 'loading')
-
     await ncoState?.add('slotDetails', {
       ...slotDetail,
       status: 'loading',
     })
+
+    await ncoState?.set('status', 'loading')
+
+    const { id } = slotDetail
 
     const [comment] = await getJikkyoKakologs([
       {
@@ -112,7 +114,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
       const { thread, markers } = comment
 
       await ncoState?.update('slotDetails', ['id'], {
-        id: thread.id as string,
+        id,
         status: 'ready',
         markers,
         info: {
@@ -123,13 +125,11 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
       })
 
       await ncoState?.add('slots', {
-        id: thread.id as string,
+        id,
         threads: [thread],
       })
     } else {
-      await ncoState?.remove('slotDetails', {
-        id: slotDetail.id,
-      })
+      await ncoState?.remove('slotDetails', { id })
     }
 
     await ncoState?.set('status', 'ready')

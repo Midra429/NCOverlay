@@ -37,12 +37,12 @@ export const SlotItem: React.FC<SlotItemProps> = ({
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
   const onPressAdd = useCallback(async () => {
-    await ncoState?.set('status', 'loading')
-
     await ncoState?.add('slotDetails', {
       ...detail,
       status: 'loading',
     })
+
+    await ncoState?.set('status', 'loading')
 
     const { id } = detail
 
@@ -83,10 +83,14 @@ export const SlotItem: React.FC<SlotItemProps> = ({
   }, [detail])
 
   const onPressRemove = useCallback(async () => {
+    await ncoState?.set('status', 'loading')
+
     const { id } = detail
 
     await ncoState?.remove('slotDetails', { id })
     await ncoState?.remove('slots', { id })
+
+    await ncoState?.set('status', 'ready')
   }, [detail.id])
 
   return (
