@@ -14,11 +14,15 @@ export type ModalProps = {
   isOpen: NextUIModalProps['isOpen']
   onOpenChange: NextUIModalProps['onOpenChange']
   onClose?: NextUIModalProps['onClose']
+
   okText?: string
-  cancelText?: string
   okIcon?: React.ReactNode
-  cancelIcon?: React.ReactNode
+  isOkDisabled?: boolean
   onOk: () => void
+
+  cancelText?: string
+  cancelIcon?: React.ReactNode
+
   header: React.ReactNode
   headerEndContent?: React.ReactNode
   children: React.ReactNode
@@ -51,11 +55,14 @@ export const Modal: React.FC<ModalProps> = (props) => {
           return (
             <>
               <NextUIModalHeader className="flex flex-row justify-between">
-                {props.header}
+                <div className="flex min-h-8 flex-row items-center">
+                  {props.header}
+                </div>
+
                 {props.headerEndContent}
               </NextUIModalHeader>
 
-              <NextUIModalBody className="max-h-full gap-0 overflow-auto">
+              <NextUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
                 {props.children}
               </NextUIModalBody>
 
@@ -73,6 +80,7 @@ export const Modal: React.FC<ModalProps> = (props) => {
                 <Button
                   size="sm"
                   color="primary"
+                  isDisabled={props.isOkDisabled}
                   startContent={props.okIcon}
                   onPress={onPressOk}
                 >

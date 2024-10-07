@@ -4,6 +4,7 @@ import { useNcoState } from '@/hooks/useNco'
 
 import { PositionControl } from '@/components/position-control'
 
+import { Header } from './Header'
 import { SlotItems } from './SlotItems'
 import { StatusOverlay } from './StatusOverlay'
 
@@ -15,6 +16,8 @@ export const SidePane: React.FC = memo(() => {
 
   return (
     <div className="flex h-full flex-col">
+      <Header />
+
       <div className="relative size-full overflow-y-auto p-2">
         {stateSlotDetails?.length ? (
           <SlotItems details={stateSlotDetails} />

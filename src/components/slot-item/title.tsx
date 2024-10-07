@@ -19,19 +19,21 @@ export const Title: React.FC<TitleProps> = ({
 }) => {
   const { ref, overflow } = useOverflowDetector()
 
-  const { href } = useMemo(() => {
-    return new URL(
-      infoId,
-      type === 'jikkyo'
-        ? `https://cal.syoboi.jp/tid/`
-        : 'https://www.nicovideo.jp/watch/'
-    )
+  const url = useMemo(() => {
+    return infoId
+      ? new URL(
+          infoId,
+          type === 'jikkyo'
+            ? `https://cal.syoboi.jp/tid/`
+            : 'https://www.nicovideo.jp/watch/'
+        )
+      : null
   }, [type, infoId])
 
   const title = (
     <span
       className={cn(
-        'line-clamp-3 break-all font-bold',
+        'line-clamp-3 whitespace-pre-wrap break-all font-bold',
         isSearch ? 'text-mini' : 'text-tiny'
       )}
       title={overflow ? infoTitle : undefined}
@@ -43,10 +45,10 @@ export const Title: React.FC<TitleProps> = ({
 
   return (
     <div className="flex h-full flex-col justify-start">
-      {isSearch ? (
+      {isSearch || !url ? (
         title
       ) : (
-        <Link color="foreground" href={href} isExternal>
+        <Link color="foreground" href={url.href} isExternal>
           {title}
         </Link>
       )}

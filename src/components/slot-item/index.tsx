@@ -109,11 +109,18 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           )}
         >
           {/* サムネイル */}
-          <Thumbnail id={detail.id} type={detail.type} info={detail.info} />
+          <Thumbnail
+            id={detail.id}
+            type={detail.type}
+            info={detail.info}
+            isSearch={isSearch}
+          />
 
           {isSearch ? (
-            // 追加
-            <AddButton onPress={onPressAdd} />
+            detail.type !== 'jikkyo' && (
+              // 追加
+              <AddButton onPress={onPressAdd} />
+            )
           ) : (
             <>
               <ButtonsOverlay status={detail.status} onRemove={onPressRemove} />

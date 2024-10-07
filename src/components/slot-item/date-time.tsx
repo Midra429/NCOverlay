@@ -24,7 +24,7 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
         <span className={isSearch ? 'text-mini' : 'text-tiny'}>
           {typeof infoDate === 'number'
             ? formatDate(infoDate, 'YYYY/MM/DD(d) hh:mm')
-            : `${formatDate(infoDate[0], 'YYYY/MM/DD(d) hh:mm:ss')} 〜`}
+            : `${formatDate(infoDate[0], 'YYYY/MM/DD(d) hh:mm')} 〜`}
         </span>
       </div>
     </div>

@@ -12,9 +12,15 @@ export type ThumbnailProps = {
   id: StateSlotDetail['id']
   type: StateSlotDetail['type']
   info: StateSlotDetail['info']
+  isSearch?: boolean
 }
 
-export const Thumbnail: React.FC<ThumbnailProps> = ({ id, type, info }) => {
+export const Thumbnail: React.FC<ThumbnailProps> = ({
+  id,
+  type,
+  info,
+  isSearch,
+}) => {
   let thumbnail: JSX.Element | undefined
 
   if (type === 'jikkyo') {
@@ -37,7 +43,11 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({ id, type, info }) => {
             {jkChId}
           </span>
           <span
-            className={cn('line-clamp-1', 'text-small font-bold text-white')}
+            className={cn(
+              'line-clamp-1',
+              'font-bold text-white',
+              isSearch ? 'text-mini' : 'text-small'
+            )}
           >
             {JIKKYO_CHANNELS[jkChId!]}
           </span>
