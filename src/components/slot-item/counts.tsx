@@ -1,20 +1,26 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { cn, Skeleton } from '@nextui-org/react'
+import { Skeleton } from '@nextui-org/react'
 import { PlayIcon, MessageSquareTextIcon } from 'lucide-react'
 
 export type CountsProps = {
+  status: StateSlotDetail['status']
   infoCount: StateSlotDetail['info']['count']
   isSearch?: boolean
 }
 
-export const Counts: React.FC<CountsProps> = ({ infoCount, isSearch }) => {
+export const Counts: React.FC<CountsProps> = ({
+  status,
+  infoCount,
+  isSearch,
+}) => {
   return (
     <div className="flex flex-row items-center gap-4">
       {/* 再生数 */}
       {'view' in infoCount && (
         <div className="flex h-full flex-row items-center gap-1">
           <PlayIcon className={isSearch ? 'size-mini' : 'size-tiny'} />
+
           <span className={isSearch ? 'text-mini' : 'text-tiny'}>
             {infoCount.view.toLocaleString('ja-JP')}
           </span>
@@ -26,13 +32,16 @@ export const Counts: React.FC<CountsProps> = ({ infoCount, isSearch }) => {
         <MessageSquareTextIcon
           className={isSearch ? 'size-mini' : 'size-tiny'}
         />
-        <span className={isSearch ? 'text-mini' : 'text-tiny'}>
-          {infoCount.comment ? (
-            infoCount.comment.toLocaleString('ja-JP')
-          ) : (
-            <Skeleton className={cn('w-16', isSearch ? 'h-mini' : 'h-tiny')} />
-          )}
-        </span>
+
+        <Skeleton
+          classNames={{
+            base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-[4px]'],
+            content: [isSearch ? 'text-mini' : 'text-tiny'],
+          }}
+          isLoaded={0 < infoCount.comment || status === 'ready'}
+        >
+          {infoCount.comment.toLocaleString('ja-JP')}
+        </Skeleton>
       </div>
     </div>
   )
