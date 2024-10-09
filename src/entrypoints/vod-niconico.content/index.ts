@@ -1,16 +1,14 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import * as niconicoApi from '@midra/nco-api/niconico'
 import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
 import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { filterNvComment } from '@/utils/api/filterNvComment'
-import { extractNgSettings } from '@/utils/api/extractNgSettings'
-import { applyNgSettings } from '@/utils/api/applyNgSetting'
+import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
+import { ncoApiProxy } from '@/proxy/nco-api'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -29,47 +27,45 @@ const main = async () => {
 
   logger.log(`vod-${vod}.js`)
 
+  let onChangeRemoveListener: (() => void) | null = null
+
   const patcher = new NCOPatcher({
     vod,
     getInfo: async (nco) => {
-      const contentId = location.pathname.split('/').at(-1)!
-      const videoData = await niconicoApi.video(contentId)
+      const wrapper = nco.renderer.video.closest('div[data-name="inner"]')
+
+      wrapper?.classList.remove('NCOverlay')
+
+      onChangeRemoveListener?.()
+      onChangeRemoveListener = nco.state.onChange(
+        'slotDetails',
+        (newDetail, oldDetail) => {
+          if (!oldDetail?.length && newDetail?.length) {
+            wrapper?.classList.add('NCOverlay')
+          } else if (oldDetail?.length && !newDetail?.length) {
+            wrapper?.classList.remove('NCOverlay')
+          }
+        }
+      )
+
+      const id = location.pathname.split('/').at(-1)!
+      const videoData = await ncoApiProxy.niconico.video(id)
 
       logger.log('niconico.video:', videoData)
 
-      if (!videoData || !videoData.channel?.isOfficialAnime) {
+      if (!videoData?.channel?.isOfficialAnime) {
         return null
       }
 
-      const threadsData = await niconicoApi.threads(
-        filterNvComment(videoData.comment)
-      )
-
-      if (!threadsData) {
-        return null
-      }
-
-      nco.renderer.video
-        .closest('div[data-name="inner"]')
-        ?.classList.add('NCOverlay')
-
-      nco.state.add('slots', {
-        id: contentId,
-        threads: applyNgSettings(
-          threadsData.threads,
-          extractNgSettings(videoData.comment.ng)
-        ),
-      })
-
-      nco.state.add('slotDetails', {
+      await nco.state.add('slotDetails', {
         type:
-          videoData.channel.id === `ch${DANIME_CHANNEL_ID}`
+          videoData.channel?.id === `ch${DANIME_CHANNEL_ID}`
             ? 'danime'
             : 'official',
-        id: contentId,
-        status: 'ready',
+        id,
+        status: 'loading',
         info: {
-          id: contentId,
+          id,
           title: videoData.video.title,
           duration: videoData.video.duration,
           date: new Date(videoData.video.registeredAt).getTime(),
@@ -85,13 +81,30 @@ const main = async () => {
         },
       })
 
-      const rawText = videoData.video.title
-      const duration = videoData.video.duration
+      const [comment] = await getNiconicoComments([videoData])
 
-      logger.log('rawText:', rawText)
-      logger.log('duration:', duration)
+      if (comment) {
+        const { data, threads } = comment
 
-      return rawText ? { rawText, duration } : null
+        await nco.state.update('slotDetails', ['id'], {
+          id,
+          status: 'ready',
+        })
+
+        await nco.state.add('slots', { id, threads })
+
+        const rawText = data.video.title
+        const duration = data.video.duration
+
+        logger.log('rawText:', rawText)
+        logger.log('duration:', duration)
+
+        return { rawText, duration }
+      } else {
+        await nco.state.remove('slotDetails', { id })
+      }
+
+      return null
     },
     appendCanvas: (video, canvas) => {
       video
