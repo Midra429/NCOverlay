@@ -101,7 +101,7 @@ export class NCOSearcher {
           if (type === 'szbh') {
             const diff = result.lengthSeconds - input.duration
 
-            if (58 <= diff) {
+            if (50 <= diff) {
               offsetMs = diff * -1000
             }
           }
@@ -197,9 +197,7 @@ export class NCOSearcher {
           .map((v) => ({ contentId: v.id }))
       ),
       getNiconicoComments(
-        loadingSlotDetails
-          .filter((v) => v.type === 'chapter')
-          .map((v) => ({ contentId: v.id }))
+        searchResults.chapter.map((v) => ({ contentId: v.contentId }))
       ),
       getNiconicoComments(
         loadingSlotDetails
