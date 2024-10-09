@@ -20,28 +20,37 @@ type SearchResult = {
   details: StateSlotDetail[]
 }
 
-const searchNiconicoByVideoId = async (
-  videoId: string
+const searchNiconicoById = async (
+  contentId: string
 ): Promise<SearchResult | null> => {
-  const data = await ncoApi.niconico.video(videoId)
+  const data = await ncoApi.niconico.video(contentId)
 
   if (data) {
+    const tags = data.tag.items.map((v) => v.name)
+
     const isDAnime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
     const isOfficialAnime = !!data.channel?.isOfficialAnime
+    const isSzbh = !!(
+      data.owner &&
+      /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i.test(tags.join(' '))
+    )
 
     const total = 1
     const details: StateSlotDetail[] = [
       {
         type:
-          (isDAnime && 'danime') || (isOfficialAnime && 'official') || 'normal',
-        id: videoId,
+          (isDAnime && 'danime') ||
+          (isOfficialAnime && 'official') ||
+          (isSzbh && 'szbh') ||
+          'normal',
+        id: contentId,
         status: 'pending',
         info: {
-          id: videoId,
+          id: contentId,
           title: data.video.title,
           duration: data.video.duration,
           date: new Date(data.video.registeredAt).getTime(),
-          tags: data.tag.items.map((v) => v.name),
+          tags,
           count: {
             view: data.video.count.view,
             comment: data.video.count.comment,
@@ -77,6 +86,7 @@ const searchNiconicoByKeyword = async (
     fields: [
       'contentId',
       'title',
+      'userId',
       'channelId',
       'viewCounter',
       'lengthSeconds',
@@ -111,10 +121,18 @@ const searchNiconicoByKeyword = async (
         value.categoryTags &&
         /(^|\s)アニメ(\s|$)/.test(value.categoryTags)
       )
+      const isSzbh = !!(
+        value.userId &&
+        value.tags &&
+        /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i.test(value.tags)
+      )
 
       return {
         type:
-          (isDAnime && 'danime') || (isOfficialAnime && 'official') || 'normal',
+          (isDAnime && 'danime') ||
+          (isOfficialAnime && 'official') ||
+          (isSzbh && 'szbh') ||
+          'normal',
         id: value.contentId,
         status: 'pending',
         info: {
@@ -166,7 +184,7 @@ export const Search: React.FC = memo(() => {
       const videoId = extractVideoId(value)
 
       const result = videoId
-        ? await searchNiconicoByVideoId(videoId)
+        ? await searchNiconicoById(videoId)
         : await searchNiconicoByKeyword(value, page, {
             sort,
             lengthRange,
