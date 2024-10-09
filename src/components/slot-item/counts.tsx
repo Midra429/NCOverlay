@@ -38,6 +38,7 @@ export const Counts: React.FC<CountsProps> = ({
             base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-[4px]'],
             content: [isSearch ? 'text-mini' : 'text-tiny'],
           }}
+          disableAnimation={isSearch}
           isLoaded={0 < infoCount.comment || status === 'ready'}
         >
           {infoCount.comment.toLocaleString('ja-JP')}

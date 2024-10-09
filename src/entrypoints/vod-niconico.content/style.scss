@@ -5,3 +5,12 @@
     }
   }
 }
+
+// フルスクリーン (ブラウザサイズ)
+section:has(> style:first-child) {
+  .grid-area_\[player\] {
+    div[data-styling-id=':r3:'] {
+      background-color: #000;
+    }
+  }
+}
