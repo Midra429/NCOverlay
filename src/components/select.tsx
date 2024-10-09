@@ -85,6 +85,6 @@ export const Select: React.FC<SelectProps> = (props) => {
   )
 }
 
-export const SelectItem = NextUISelectItem
-
 export const SelectSection = NextUISelectSection
+
+export const SelectItem = NextUISelectItem

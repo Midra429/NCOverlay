@@ -6,7 +6,7 @@ import { NICONICO_GENRES } from '@midra/nco-api/constants'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectItem } from '@/components/select'
+import { Select, SelectSection, SelectItem } from '@/components/select'
 
 export type GenreProps = {
   isDisabled?: boolean
@@ -35,19 +35,21 @@ export const Genre: React.FC<GenreProps> = ({ isDisabled }) => {
       selectedKeys={[value]}
       onSelectionChange={([key]) => setValue(key as NiconicoGenre)}
     >
-      {['未指定', ...NICONICO_GENRES].map((value) => (
-        <SelectItem
-          key={value}
-          classNames={{
-            base: 'gap-1 rounded-md px-1.5 py-1',
-            title: 'text-tiny',
-            selectedIcon: '!size-mini',
-          }}
-          variant="flat"
-        >
-          {value}
-        </SelectItem>
-      ))}
+      <SelectSection className="mb-0" title="ジャンル">
+        {['未指定', ...NICONICO_GENRES].map((value) => (
+          <SelectItem
+            key={value}
+            classNames={{
+              base: 'gap-1 rounded-md px-1.5 py-1',
+              title: 'text-tiny',
+              selectedIcon: '!size-mini',
+            }}
+            variant="flat"
+          >
+            {value}
+          </SelectItem>
+        ))}
+      </SelectSection>
     </Select>
   )
 }

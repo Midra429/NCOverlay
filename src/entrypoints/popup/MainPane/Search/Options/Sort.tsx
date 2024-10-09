@@ -5,7 +5,7 @@ import { ArrowDownUpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectItem } from '@/components/select'
+import { Select, SelectSection, SelectItem } from '@/components/select'
 
 const SORT_OPTIONS: {
   label: string
@@ -72,19 +72,21 @@ export const Sort: React.FC<SortProps> = ({ isDisabled }) => {
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}
     >
-      {SORT_OPTIONS.map(({ value, label }) => (
-        <SelectItem
-          key={JSON.stringify(value)}
-          classNames={{
-            base: 'gap-1 rounded-md px-1.5 py-1',
-            title: 'text-tiny',
-            selectedIcon: '!size-mini',
-          }}
-          variant="flat"
-        >
-          {label}
-        </SelectItem>
-      ))}
+      <SelectSection className="mb-0" title="並び替え">
+        {SORT_OPTIONS.map(({ value, label }) => (
+          <SelectItem
+            key={JSON.stringify(value)}
+            classNames={{
+              base: 'gap-1 rounded-md px-1.5 py-1',
+              title: 'text-tiny',
+              selectedIcon: '!size-mini',
+            }}
+            variant="flat"
+          >
+            {label}
+          </SelectItem>
+        ))}
+      </SelectSection>
     </Select>
   )
 }

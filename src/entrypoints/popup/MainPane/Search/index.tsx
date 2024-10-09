@@ -97,14 +97,14 @@ const searchNiconicoByKeyword = async (
       startTime.gte = current
         .add(options.dateRange[0])
         .toString()
-        .replace(/\[.+\]/, '')
+        .replace(/\[.+\]$/, '')
     }
 
     if (options.dateRange[1]) {
       startTime.lte = current
         .add(options.dateRange[1])
         .toString()
-        .replace(/\[.+\]/, '')
+        .replace(/\[.+\]$/, '')
     }
   }
 

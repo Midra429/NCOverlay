@@ -5,7 +5,7 @@ import { ClockIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectItem } from '@/components/select'
+import { Select, SelectSection, SelectItem } from '@/components/select'
 
 const LENGTH_RANGE_OPTIONS: {
   label: string
@@ -60,19 +60,21 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}
     >
-      {LENGTH_RANGE_OPTIONS.map(({ value, label }) => (
-        <SelectItem
-          key={JSON.stringify(value)}
-          classNames={{
-            base: 'gap-1 rounded-md px-1.5 py-1',
-            title: 'text-tiny',
-            selectedIcon: '!size-mini',
-          }}
-          variant="flat"
-        >
-          {label}
-        </SelectItem>
-      ))}
+      <SelectSection className="mb-0" title="再生時間">
+        {LENGTH_RANGE_OPTIONS.map(({ value, label }) => (
+          <SelectItem
+            key={JSON.stringify(value)}
+            classNames={{
+              base: 'gap-1 rounded-md px-1.5 py-1',
+              title: 'text-tiny',
+              selectedIcon: '!size-mini',
+            }}
+            variant="flat"
+          >
+            {label}
+          </SelectItem>
+        ))}
+      </SelectSection>
     </Select>
   )
 }
