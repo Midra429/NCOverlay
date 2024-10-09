@@ -1,19 +1,23 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { VideoData } from '@midra/nco-api/types/niconico/video'
 
-import { ncoApiProxy } from '@/proxy/nco-api'
-
 import { settings } from '@/utils/settings/extension'
 import { filterNvComment } from '@/utils/api/filterNvComment'
+import { extractNgSettings } from '@/utils/api/extractNgSettings'
+import { applyNgSettings } from '@/utils/api/applyNgSetting'
+import { ncoApiProxy } from '@/proxy/nco-api'
 
 /**
  * ニコニコ動画のコメント取得
  */
 export const getNiconicoComments = async (
-  params: {
-    contentId: string
-    when?: number
-  }[]
+  params: (
+    | {
+        contentId: string
+        when?: number
+      }
+    | VideoData
+  )[]
 ): Promise<
   ({
     data: VideoData
@@ -24,7 +28,11 @@ export const getNiconicoComments = async (
 
   // 動画情報取得
   const videos = await Promise.all(
-    params.map((v) => ncoApiProxy.niconico.video(v.contentId))
+    params.map((val) => {
+      return 'contentId' in val
+        ? ncoApiProxy.niconico.video(val.contentId)
+        : val
+    })
   )
 
   // コメント取得
@@ -36,7 +44,10 @@ export const getNiconicoComments = async (
 
       if (1 < amount) {
         const additionals = {
-          when: params[idx].when ?? Math.floor(Date.now() / 1000),
+          when:
+            'when' in params[idx]
+              ? params[idx].when
+              : Math.floor(Date.now() / 1000),
           res_from: -1000,
         }
 
@@ -96,17 +107,22 @@ export const getNiconicoComments = async (
         return baseThreadsData
       } else {
         return ncoApiProxy.niconico.threads(nvComment, {
-          when: params[idx].when,
+          when: 'when' in params[idx] ? params[idx].when : undefined,
         })
       }
     })
   )
 
   return threadsData.map((val, idx) => {
+    const videoData = videos[idx]!
+
     return val
       ? {
-          data: videos[idx]!,
-          threads: val.threads,
+          data: videoData,
+          threads: applyNgSettings(
+            val.threads,
+            extractNgSettings(videoData.comment.ng)
+          ),
         }
       : null
   })

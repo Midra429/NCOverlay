@@ -17,8 +17,6 @@ import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 import { logger } from '@/utils/logger'
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
 import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
-import { extractNgSettings } from '@/utils/api/extractNgSettings'
-import { applyNgSettings } from '@/utils/api/applyNgSetting'
 
 import { ncoApiProxy } from '@/proxy/nco-api'
 
@@ -249,16 +247,6 @@ export class NCOSearcher {
           const id = results[idx].contentId
           const { data, threads } = cmt
 
-          const applied = applyNgSettings(
-            threads,
-            extractNgSettings(data.comment.ng)
-          )
-
-          loadedSlots.push({
-            id,
-            threads: applied,
-          })
-
           updateSlotDetails.push({
             id,
             status: 'ready',
@@ -273,6 +261,8 @@ export class NCOSearcher {
                 data.video.thumbnail.url,
             },
           })
+
+          loadedSlots.push({ id, threads })
         })
       })
     }
@@ -316,11 +306,6 @@ export class NCOSearcher {
         mergedThreads.push(...threads)
       }
 
-      loadedSlots.push({
-        id,
-        threads: mergedThreads,
-      })
-
       updateSlotDetails.push({
         id,
         status: 'ready',
@@ -337,6 +322,11 @@ export class NCOSearcher {
             data.video.thumbnail.url,
         },
       })
+
+      loadedSlots.push({
+        id,
+        threads: mergedThreads,
+      })
     }
 
     // ニコニコ実況
@@ -344,11 +334,6 @@ export class NCOSearcher {
       if (!cmt) return
 
       const { thread, markers } = cmt
-
-      loadedSlots.push({
-        id: thread.id as string,
-        threads: [thread],
-      })
 
       updateSlotDetails.push({
         id: thread.id as string,
@@ -359,6 +344,11 @@ export class NCOSearcher {
             comment: thread.commentCount,
           },
         },
+      })
+
+      loadedSlots.push({
+        id: thread.id as string,
+        threads: [thread],
       })
     })
 
@@ -379,12 +369,7 @@ export class NCOSearcher {
 
     await this.#state.add('slots', ...slots)
 
-    Promise.all([
-      this.#state.get('slots'),
-      this.#state.get('slotDetails'),
-    ]).then(([slots, slotDetails]) => {
-      logger.log('slots:', slots)
-      logger.log('slotDetails:', slotDetails)
-    })
+    logger.log('slots:', await this.#state.get('slots'))
+    logger.log('slotDetails:', await this.#state.get('slotDetails'))
   }
 }

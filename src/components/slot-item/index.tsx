@@ -4,8 +4,6 @@ import { useCallback, useState } from 'react'
 import { cn } from '@nextui-org/react'
 
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
-import { extractNgSettings } from '@/utils/api/extractNgSettings'
-import { applyNgSettings } from '@/utils/api/applyNgSetting'
 
 import { ncoState } from '@/hooks/useNco'
 
@@ -51,11 +49,6 @@ export const SlotItem: React.FC<SlotItemProps> = ({
     if (comment) {
       const { data, threads } = comment
 
-      const applied = applyNgSettings(
-        threads,
-        extractNgSettings(data.comment.ng)
-      )
-
       await ncoState?.update('slotDetails', ['id'], {
         id,
         status: 'ready',
@@ -71,10 +64,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
         },
       })
 
-      await ncoState?.add('slots', {
-        id,
-        threads: applied,
-      })
+      await ncoState?.add('slots', { id, threads })
     } else {
       await ncoState?.remove('slotDetails', { id })
     }
