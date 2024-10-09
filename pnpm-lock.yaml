@@ -15,8 +15,8 @@ importers:
         specifier: ^3.5.6
         version: 3.5.6
       '@midra/nco-api':
-        specifier: ^1.6.2
-        version: 1.6.2
+        specifier: ^1.6.4
+        version: 1.6.4
       '@midra/nco-parser':
         specifier: ^1.0.24
         version: 1.0.24
@@ -106,8 +106,8 @@ importers:
         specifier: ^3.4.13
         version: 3.4.13
       typescript:
-        specifier: ^5.6.2
-        version: 5.6.2
+        specifier: ^5.6.3
+        version: 5.6.3
       utility-types:
         specifier: ^3.11.0
         version: 3.11.0
@@ -525,17 +525,17 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@formatjs/ecma402-abstract@2.0.0':
-    resolution: {integrity: sha512-rRqXOqdFmk7RYvj4khklyqzcfQl9vEL/usogncBHRZfZBDOwMGuSRNFl02fu5KGHXdbinju+YXyuR+Nk8xlr/g==}
+  '@formatjs/ecma402-abstract@2.1.0':
+    resolution: {integrity: sha512-SE2V2PE03K9U/YQZ3nxEOysRkQ/CfSwLHR789Uk9N0PTiWT6I+17UTDI97zYEwC1mbnjefqmtjbL8nunjPwGjw==}
 
   '@formatjs/fast-memoize@2.2.0':
     resolution: {integrity: sha512-hnk/nY8FyrL5YxwP9e4r9dqeM6cAbo8PeU9UjyXojZMNvVad2Z06FAVHyR3Ecw6fza+0GH7vdJgiKIVXTMbSBA==}
 
-  '@formatjs/icu-messageformat-parser@2.7.8':
-    resolution: {integrity: sha512-nBZJYmhpcSX0WeJ5SDYUkZ42AgR3xiyhNCsQweFx3cz/ULJjym8bHAzWKvG5e2+1XO98dBYC0fWeeAECAVSwLA==}
+  '@formatjs/icu-messageformat-parser@2.7.9':
+    resolution: {integrity: sha512-9Z5buDRMsTbplXknvRlDmnpWhZrayNVcVvkH0+SSz8Ll4XD/7Tcn8m1IjxM3iBJSwQbxwxb7/g0Fkx3d4j2osw==}
 
-  '@formatjs/icu-skeleton-parser@1.8.2':
-    resolution: {integrity: sha512-k4ERKgw7aKGWJZgTarIcNEmvyTVD9FYh0mTrrBMHZ1b8hUu6iOJ4SzsZlo3UNAvHYa+PnvntIwRPt1/vy4nA9Q==}
+  '@formatjs/icu-skeleton-parser@1.8.3':
+    resolution: {integrity: sha512-TsKAP013ayZFbWWR2KWy+f9QVZh0yDFTPK3yE4OqU2gnzafvmKTodRtJLVpfZmpXWJ5y7BWD1AsyT14mcbLzig==}
 
   '@formatjs/intl-localematcher@0.5.4':
     resolution: {integrity: sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==}
@@ -583,8 +583,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@midra/nco-api@1.6.2':
-    resolution: {integrity: sha512-KDrIP37qGL0rPSWKuXdn7+oRGyvMFZDyhrWn/fWovxWDNvdyIYs4+NdnypiK3pG9xNK+5+PTl5Aykf8Gb7Q5SA==}
+  '@midra/nco-api@1.6.4':
+    resolution: {integrity: sha512-VV3igPg1PmC+VrHa+SPZQCbDPsMUZ3BuyOSAw1jkqruRDdX9x/yzYehkndb8YCaxvVB7rz3XgjOdMTyn94Znlg==}
 
   '@midra/nco-parser@1.0.24':
     resolution: {integrity: sha512-KTPNHIDBeo+kjMjg9gmjY6S0yjpkXKkpkgo5lCmNdrFGZjRAdhAIWQx+9PSt2nsVjBGjjzfBVd347+UZgo+L/g==}
@@ -2702,8 +2702,8 @@ packages:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
     engines: {node: '>=10'}
 
-  intl-messageformat@10.5.14:
-    resolution: {integrity: sha512-IjC6sI0X7YRjjyVH9aUgdftcmZK7WXdHeil4KwbjDnRWjnVitKpAx3rr6t6di1joFp5188VqKcobOPA6mCLG/w==}
+  intl-messageformat@10.6.0:
+    resolution: {integrity: sha512-AYKl/DY1nl75pJU8EK681JOVL40uQTNJe3yEMXKfydDFoz+5hNrM/PqjchueSMKGKCZKBVgeexqZwy3uC2B36Q==}
 
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
@@ -4040,8 +4040,8 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  typescript@5.6.2:
-    resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
+  typescript@5.6.3:
+    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -4626,8 +4626,9 @@ snapshots:
   '@esbuild/win32-x64@0.23.1':
     optional: true
 
-  '@formatjs/ecma402-abstract@2.0.0':
+  '@formatjs/ecma402-abstract@2.1.0':
     dependencies:
+      '@formatjs/fast-memoize': 2.2.0
       '@formatjs/intl-localematcher': 0.5.4
       tslib: 2.7.0
 
@@ -4635,15 +4636,15 @@ snapshots:
     dependencies:
       tslib: 2.7.0
 
-  '@formatjs/icu-messageformat-parser@2.7.8':
+  '@formatjs/icu-messageformat-parser@2.7.9':
     dependencies:
-      '@formatjs/ecma402-abstract': 2.0.0
-      '@formatjs/icu-skeleton-parser': 1.8.2
+      '@formatjs/ecma402-abstract': 2.1.0
+      '@formatjs/icu-skeleton-parser': 1.8.3
       tslib: 2.7.0
 
-  '@formatjs/icu-skeleton-parser@1.8.2':
+  '@formatjs/icu-skeleton-parser@1.8.3':
     dependencies:
-      '@formatjs/ecma402-abstract': 2.0.0
+      '@formatjs/ecma402-abstract': 2.1.0
       tslib: 2.7.0
 
   '@formatjs/intl-localematcher@0.5.4':
@@ -4663,7 +4664,7 @@ snapshots:
   '@internationalized/message@3.1.5':
     dependencies:
       '@swc/helpers': 0.5.13
-      intl-messageformat: 10.5.14
+      intl-messageformat: 10.6.0
 
   '@internationalized/number@3.5.4':
     dependencies:
@@ -4699,7 +4700,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@midra/nco-api@1.6.2':
+  '@midra/nco-api@1.6.4':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
       '@midra/nco-parser': 1.0.24
@@ -5807,7 +5808,7 @@ snapshots:
     dependencies:
       '@react-aria/interactions': 3.21.3(react@18.3.1)
       '@react-aria/utils': 3.24.1(react@18.3.1)
-      '@react-types/shared': 3.23.1(react@18.3.1)
+      '@react-types/shared': 3.25.0(react@18.3.1)
       '@swc/helpers': 0.5.13
       clsx: 2.1.1
       react: 18.3.1
@@ -5885,7 +5886,7 @@ snapshots:
     dependencies:
       '@react-aria/ssr': 3.9.6(react@18.3.1)
       '@react-aria/utils': 3.24.1(react@18.3.1)
-      '@react-types/shared': 3.23.1(react@18.3.1)
+      '@react-types/shared': 3.25.0(react@18.3.1)
       '@swc/helpers': 0.5.13
       react: 18.3.1
 
@@ -7740,11 +7741,11 @@ snapshots:
 
   ini@2.0.0: {}
 
-  intl-messageformat@10.5.14:
+  intl-messageformat@10.6.0:
     dependencies:
-      '@formatjs/ecma402-abstract': 2.0.0
+      '@formatjs/ecma402-abstract': 2.1.0
       '@formatjs/fast-memoize': 2.2.0
-      '@formatjs/icu-messageformat-parser': 2.7.8
+      '@formatjs/icu-messageformat-parser': 2.7.9
       tslib: 2.7.0
 
   invariant@2.2.4:
@@ -8990,7 +8991,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typescript@5.6.2: {}
+  typescript@5.6.3: {}
 
   ufo@1.5.4: {}
 

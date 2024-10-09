@@ -10,6 +10,8 @@ import {
 } from 'framer-motion'
 
 import { Sort } from './Sort'
+import { DateRange } from './DateRange'
+import { Genre } from './Genre'
 import { LengthRange } from './LengthRange'
 
 const transitionVariants: Variants = {
@@ -38,10 +40,18 @@ export const Options: React.FC<OptionsProps> = ({ isOpen, isDisabled }) => {
             variants={transitionVariants}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            <div className="flex size-full flex-row items-center gap-2 pt-2">
-              <Sort isDisabled={isDisabled} />
+            <div className="flex size-full flex-col gap-2 pt-2">
+              <div className="flex flex-row gap-2">
+                <Sort isDisabled={isDisabled} />
 
-              <LengthRange isDisabled={isDisabled} />
+                <DateRange isDisabled={isDisabled} />
+              </div>
+
+              <div className="flex flex-row gap-2">
+                <Genre isDisabled={isDisabled} />
+
+                <LengthRange isDisabled={isDisabled} />
+              </div>
             </div>
           </m.div>
         </LazyMotion>

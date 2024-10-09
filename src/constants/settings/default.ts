@@ -19,6 +19,8 @@ export const SETTINGS_DEFAULT: SettingItems = {
 
   // 検索
   'settings:search:sort': '-startTime',
+  'settings:search:dateRange': [null, null],
+  'settings:search:genre': 'アニメ',
   'settings:search:lengthRange': [null, null],
 
   // コメント

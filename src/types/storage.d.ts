@@ -1,4 +1,8 @@
-import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
+import type { DateTimeDuration } from '@internationalized/date'
+import type {
+  NiconicoGenre,
+  JikkyoChannelId,
+} from '@midra/nco-api/types/constants'
 import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems } from '@/ncoverlay/state'
@@ -59,6 +63,19 @@ export type StorageItems_v3 = {
    * 検索:ソート順
    */
   'settings:search:sort': SearchQuerySort
+
+  /**
+   * 検索:投稿日時
+   */
+  'settings:search:dateRange': [
+    start: DateTimeDuration | null,
+    end: DateTimeDuration | null,
+  ]
+
+  /**
+   * 検索:ジャンル
+   */
+  'settings:search:genre': '未指定' | NiconicoGenre
 
   /**
    * 検索:再生時間

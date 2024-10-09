@@ -11,14 +11,38 @@ const SORT_OPTIONS: {
   label: string
   value: SearchQuerySort
 }[] = [
-  { label: '投稿日時が新しい順', value: '-startTime' },
-  { label: '投稿日時が古い順', value: '+startTime' },
-  { label: '再生数が多い順', value: '-viewCounter' },
-  { label: '再生数が少ない順', value: '+viewCounter' },
-  { label: 'コメント数が多い順', value: '-commentCounter' },
-  { label: 'コメント数が少ない順', value: '+commentCounter' },
-  { label: '再生時間が長い順', value: '-lengthSeconds' },
-  { label: '再生時間が短い順', value: '+lengthSeconds' },
+  {
+    label: '投稿日時が新しい順',
+    value: '-startTime',
+  },
+  {
+    label: '投稿日時が古い順',
+    value: '+startTime',
+  },
+  {
+    label: '再生数が多い順',
+    value: '-viewCounter',
+  },
+  {
+    label: '再生数が少ない順',
+    value: '+viewCounter',
+  },
+  {
+    label: 'コメント数が多い順',
+    value: '-commentCounter',
+  },
+  {
+    label: 'コメント数が少ない順',
+    value: '+commentCounter',
+  },
+  {
+    label: '再生時間が長い順',
+    value: '-lengthSeconds',
+  },
+  {
+    label: '再生時間が短い順',
+    value: '+lengthSeconds',
+  },
 ]
 
 export type SortProps = {
@@ -31,7 +55,7 @@ export const Sort: React.FC<SortProps> = ({ isDisabled }) => {
   return (
     <Select
       classNames={{
-        base: 'shrink-[2]',
+        base: 'shrink-[4]',
       }}
       size="mini"
       fullWidth

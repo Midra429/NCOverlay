@@ -1,8 +1,11 @@
+import type { DateTimeDuration } from '@internationalized/date'
+import type { NiconicoGenre } from '@midra/nco-api/types/constants'
 import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { memo, useMemo, useState, useCallback, useEffect } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
+import { now, getLocalTimeZone } from '@internationalized/date'
 import { ncoApi } from '@midra/nco-api'
 import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
@@ -74,11 +77,36 @@ const searchNiconicoByKeyword = async (
   page: number,
   options?: {
     sort?: SearchQuerySort
+    dateRange?: [start: DateTimeDuration | null, end: DateTimeDuration | null]
+    genre?: '未指定' | NiconicoGenre
     lengthRange?: [start: number | null, end: number | null]
   }
 ): Promise<SearchResult | null> => {
   const limit = 20
   const offset = limit * (page - 1)
+
+  const startTime: {
+    gte?: string
+    lte?: string
+  } = {}
+
+  if (options?.dateRange) {
+    const current = now(getLocalTimeZone())
+
+    if (options.dateRange[0]) {
+      startTime.gte = current
+        .add(options.dateRange[0])
+        .toString()
+        .replace(/\[.+\]/, '')
+    }
+
+    if (options.dateRange[1]) {
+      startTime.lte = current
+        .add(options.dateRange[1])
+        .toString()
+        .replace(/\[.+\]/, '')
+    }
+  }
 
   const response = await ncoApi.niconico.search({
     q: keyword,
@@ -97,8 +125,12 @@ const searchNiconicoByKeyword = async (
       'tags',
     ],
     filters: {
-      'genre.keyword': ['アニメ'],
       'commentCounter': { gt: 0 },
+      startTime,
+      'genre.keyword':
+        options?.genre && options.genre !== '未指定'
+          ? [options.genre]
+          : undefined,
       'lengthSeconds': options?.lengthRange
         ? {
             gte: options.lengthRange[0] ?? undefined,
@@ -164,6 +196,8 @@ export const Search: React.FC = memo(() => {
   const [slotDetails, setSlotDetails] = useState<StateSlotDetail[]>([])
 
   const [sort] = useSettings('settings:search:sort')
+  const [dateRange] = useSettings('settings:search:dateRange')
+  const [genre] = useSettings('settings:search:genre')
   const [lengthRange] = useSettings('settings:search:lengthRange')
 
   const stateStatus = useNcoState('status')
@@ -187,6 +221,8 @@ export const Search: React.FC = memo(() => {
         ? await searchNiconicoById(videoId)
         : await searchNiconicoByKeyword(value, page, {
             sort,
+            dateRange,
+            genre,
             lengthRange,
           })
 
@@ -199,7 +235,7 @@ export const Search: React.FC = memo(() => {
 
       setIsLoading(false)
     },
-    [sort, lengthRange]
+    [sort, dateRange, genre, lengthRange]
   )
 
   useEffect(() => {

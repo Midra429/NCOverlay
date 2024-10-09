@@ -18,7 +18,7 @@
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.0.0",
     "@internationalized/date": "^3.5.6",
-    "@midra/nco-api": "^1.6.2",
+    "@midra/nco-api": "^1.6.4",
     "@midra/nco-parser": "^1.0.24",
     "@nextui-org/react": "^2.4.8",
     "@webext-core/messaging": "^1.4.0",
@@ -50,7 +50,7 @@
     "prettier-plugin-tailwindcss": "^0.6.8",
     "sass": "^1.79.4",
     "tailwindcss": "^3.4.13",
-    "typescript": "^5.6.2",
+    "typescript": "^5.6.3",
     "utility-types": "^3.11.0",
     "wxt": "^0.19.11"
   }

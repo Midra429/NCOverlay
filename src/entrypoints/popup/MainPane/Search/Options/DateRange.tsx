@@ -1,44 +1,44 @@
 import type { SettingItems } from '@/types/storage'
 
 import { cn } from '@nextui-org/react'
-import { ClockIcon } from 'lucide-react'
+import { CalendarDaysIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
 import { Select, SelectItem } from '@/components/select'
 
-const LENGTH_RANGE_OPTIONS: {
+const DATE_RANGE_OPTIONS: {
   label: string
-  value: SettingItems['settings:search:lengthRange']
+  value: SettingItems['settings:search:dateRange']
 }[] = [
   {
     label: '未指定',
     value: [null, null],
   },
   {
-    label: '5分以内',
-    value: [null, 60 * 5],
+    label: '24時間以内',
+    value: [{ days: -1 }, null],
   },
   {
-    label: '10分以内',
-    value: [null, 60 * 10],
+    label: '1週間以内',
+    value: [{ weeks: -1 }, null],
   },
   {
-    label: '20分以上',
-    value: [60 * 20, null],
+    label: '1ヶ月以内',
+    value: [{ months: -1 }, null],
   },
   {
-    label: '1時間以上',
-    value: [60 * 60, null],
+    label: '1年以内',
+    value: [{ years: -1 }, null],
   },
 ]
 
-export type LengthRangeProps = {
+export type DateRangeProps = {
   isDisabled?: boolean
 }
 
-export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
-  const [value, setValue] = useSettings('settings:search:lengthRange')
+export const DateRange: React.FC<DateRangeProps> = ({ isDisabled }) => {
+  const [value, setValue] = useSettings('settings:search:dateRange')
 
   return (
     <Select
@@ -47,10 +47,10 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
       }}
       size="mini"
       fullWidth
-      label="再生時間"
+      label="投稿日時"
       isDisabled={isDisabled}
       startContent={
-        <ClockIcon
+        <CalendarDaysIcon
           className={cn(
             'size-small shrink-0',
             'text-foreground-500 dark:text-foreground-600'
@@ -60,7 +60,7 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}
     >
-      {LENGTH_RANGE_OPTIONS.map(({ value, label }) => (
+      {DATE_RANGE_OPTIONS.map(({ value, label }) => (
         <SelectItem
           key={JSON.stringify(value)}
           classNames={{

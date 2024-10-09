@@ -141,7 +141,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:comment:jikkyoChannelIds',
         inputType: 'ch-selector',
         label: '実況チャンネル',
-        // description: '自動検索の対象チャンネル。',
+        description: '自動検索の対象チャンネル。',
         options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
           label: `${id}: ${val}`,
           value: id as JikkyoChannelId,
