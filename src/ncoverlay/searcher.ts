@@ -11,6 +11,7 @@ import type {
   StateSlotDetailUpdate,
 } from './state'
 
+import { REGEXP_DANIME_CHAPTER } from '@midra/nco-api/constants'
 import { jikkyoToSyobocalChId } from '@midra/nco-api/utils/jikkyoToSyobocalChId'
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
@@ -274,9 +275,7 @@ export class NCOSearcher {
       const id = result.contentId
       const data = commentsChapter[0]!.data
 
-      const matchSplit = result.title.match(
-        /^(?<title>.+)Chapter\.(?<chapter>[1-9])$/
-      )
+      const matchSplit = result.title.match(REGEXP_DANIME_CHAPTER)
       const title = matchSplit!.groups!.title.trim()
       const chapterTitle = `${title} Chapter.1 〜 ${commentsChapter.length}`
 
