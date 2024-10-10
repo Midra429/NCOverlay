@@ -106,6 +106,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           <Thumbnail
             id={detail.id}
             type={detail.type}
+            isAutoLoaded={detail.isAutoLoaded}
             info={detail.info}
             isSearch={isSearch}
           />

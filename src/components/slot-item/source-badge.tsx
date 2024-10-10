@@ -6,7 +6,7 @@ export type SourceTagProps = {
   type: StateSlotDetail['type']
 }
 
-const SOURCE_TAG_CLASSES: {
+const SOURCE_BADGE_CLASSES: {
   [k in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   official: cn('bg-[#ffe248] text-black dark:bg-[#ffd700]'),
@@ -16,7 +16,7 @@ const SOURCE_TAG_CLASSES: {
   jikkyo: cn('bg-jikkyo-600 text-white dark:bg-jikkyo-700'),
 }
 
-const SOURCE_TAG_NAME: {
+const SOURCE_BADGE_NAME: {
   [k in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   official: '公式',
@@ -26,7 +26,7 @@ const SOURCE_TAG_NAME: {
   jikkyo: '実況',
 }
 
-export const SourceTag: React.FC<SourceTagProps> = ({ type }) => {
+export const SourceBadge: React.FC<SourceTagProps> = ({ type }) => {
   if (type === 'normal') return
 
   return (
@@ -38,10 +38,10 @@ export const SourceTag: React.FC<SourceTagProps> = ({ type }) => {
         'rounded-md',
         'text-mini',
         'select-none',
-        SOURCE_TAG_CLASSES[type]
+        SOURCE_BADGE_CLASSES[type]
       )}
     >
-      {SOURCE_TAG_NAME[type]}
+      {SOURCE_BADGE_NAME[type]}
     </div>
   )
 }

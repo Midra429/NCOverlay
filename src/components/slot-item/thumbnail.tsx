@@ -5,12 +5,14 @@ import { Image, cn } from '@nextui-org/react'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
-import { SourceTag } from './source-tag'
+import { SourceBadge } from './source-badge'
+import { AutoLoadedBadge } from './auto-loaded-badge'
 import { Duration } from './duration'
 
 export type ThumbnailProps = {
   id: StateSlotDetail['id']
   type: StateSlotDetail['type']
+  isAutoLoaded: StateSlotDetail['isAutoLoaded']
   info: StateSlotDetail['info']
   isSearch?: boolean
 }
@@ -18,6 +20,7 @@ export type ThumbnailProps = {
 export const Thumbnail: React.FC<ThumbnailProps> = ({
   id,
   type,
+  isAutoLoaded,
   info,
   isSearch,
 }) => {
@@ -72,7 +75,10 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
       {thumbnail}
 
       {/* ソース */}
-      <SourceTag type={type} />
+      <SourceBadge type={type} />
+
+      {/* 自動 / 手動 */}
+      {!isSearch && <AutoLoadedBadge isAutoLoaded={isAutoLoaded} />}
 
       {/* 長さ */}
       <Duration infoDuration={info.duration} />

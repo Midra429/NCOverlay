@@ -14,10 +14,10 @@ export const Duration: React.FC<DurationProps> = ({ infoDuration }) => {
       className={cn(
         'absolute bottom-[3px] right-[3px] z-10',
         'px-1 py-[1px]',
-        'bg-black/50 backdrop-blur-md',
         'border-1 border-white/25',
         'rounded-md',
-        'text-mini text-white',
+        'text-mini',
+        'bg-black/50 text-white backdrop-blur-md',
         'select-none'
       )}
     >
