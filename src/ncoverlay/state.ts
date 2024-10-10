@@ -24,6 +24,14 @@ export type NCOStateItems = {
 export type NCOStateItemKey =
   keyof NCOStateItems extends `state:${string}:${infer K}` ? K : never
 
+export type NCOStateArrayItemKey = {
+  [key in keyof NCOStateItems]: NCOStateItems[key] extends unknown[] | null
+    ? key
+    : never
+}[keyof NCOStateItems] extends `state:${string}:${infer K}`
+  ? K
+  : never
+
 export type NCOStateItem<T extends NCOStateItemKey> =
   NCOStateItems[`state:${string}:${T}`]
 
@@ -48,6 +56,7 @@ export type StateSlot = {
    */
   id: string
   threads: V1Thread[]
+  isAutoLoaded?: boolean
 }
 
 export type StateSlotDetailBase = {
@@ -60,6 +69,7 @@ export type StateSlotDetailBase = {
   offsetMs?: number
   translucent?: boolean
   hidden?: boolean
+  isAutoLoaded?: boolean
 }
 
 export type StateSlotDetailDefault = StateSlotDetailBase & {
@@ -125,9 +135,7 @@ export const filterDisplayThreads = async (
     slot.threads.forEach((thread) => {
       const key = `${thread.fork}:${thread.id}`
 
-      if (threadMap.has(key)) {
-        return
-      }
+      if (threadMap.has(key)) return
 
       const comments = thread.comments
         .filter((cmt) => !isNgComment(cmt, ngSettings))
@@ -192,7 +200,7 @@ export class NCOState {
     return storage.set(`state:${this.ncoId}:${key}`, value as any)
   }
 
-  async add<Key extends 'slots' | 'slotDetails'>(
+  async add<Key extends NCOStateArrayItemKey>(
     key: Key,
     ...values: NonNullable<NCOStateItem<Key>>
   ) {
@@ -212,7 +220,7 @@ export class NCOState {
   }
 
   async update<
-    Key extends 'slots' | 'slotDetails',
+    Key extends NCOStateArrayItemKey,
     Value extends NonNullable<NCOStateItem<Key>>,
     UpdateValue extends Value extends Array<any> ? Value[number] : Value,
     UpdateFixedProps extends (keyof UpdateValue)[],
@@ -270,14 +278,14 @@ export class NCOState {
       if (Array.isArray(oldValue)) {
         const entries = Object.entries(target)
 
-        const idx = oldValue.findIndex((old) => {
-          return entries.every(([k, v]) => equal(old[k as keyof typeof old], v))
+        const newValue = oldValue.filter((old) => {
+          return !entries.every(([key, val]) => {
+            return equal(old[key as keyof typeof old], val)
+          })
         })
 
-        if (idx !== -1) {
-          oldValue.splice(idx, 1)
-
-          return this.set(key, oldValue)
+        if (oldValue.length !== newValue.length) {
+          return this.set(key, newValue as Value)
         }
       }
     } else {
@@ -285,15 +293,15 @@ export class NCOState {
     }
   }
 
-  clear() {
-    return storage.remove(
-      `state:${this.ncoId}:status`,
-      `state:${this.ncoId}:vod`,
-      `state:${this.ncoId}:info`,
-      `state:${this.ncoId}:offset`,
-      `state:${this.ncoId}:slots`,
-      `state:${this.ncoId}:slotDetails`
-    )
+  async clear() {
+    await Promise.all([
+      this.remove('status'),
+      this.remove('vod'),
+      this.remove('info'),
+      this.remove('offset'),
+      this.remove('slots'),
+      this.remove('slotDetails'),
+    ])
   }
 
   onChange<Key extends NCOStateItemKey>(

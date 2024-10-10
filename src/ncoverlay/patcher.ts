@@ -68,14 +68,12 @@ export class NCOPatcher {
         return
       }
 
-      this.#nco.clear()
+      await this.#nco.state.set('status', 'searching')
 
       const autoLoads = await settings.get('settings:comment:autoLoads')
 
       // 自動検索
       if (autoLoads.length) {
-        await this.#nco.state.set('status', 'searching')
-
         try {
           const info = await this.#getInfo(this.#nco)
 
@@ -173,13 +171,26 @@ export class NCOPatcher {
         } catch (err) {
           logger.error('comment:autoLoad', err)
         }
-
-        await this.#nco.state.set('status', 'ready')
       }
+
+      await this.#nco.state.set('status', 'ready')
     }
 
-    this.#nco.addEventListener('loadedmetadata', load)
-    this.#nco.addEventListener('reload', load)
+    this.#nco.addEventListener('loadedmetadata', async function () {
+      await this.clear()
+
+      load()
+    })
+
+    this.#nco.addEventListener('reload', async function () {
+      await Promise.all([
+        this.state.remove('status'),
+        this.state.remove('slots', { isAutoLoaded: true }),
+        this.state.remove('slotDetails', { isAutoLoaded: true }),
+      ])
+
+      load()
+    })
 
     this.#nco.addEventListener('timeupdate', function () {
       ncoMessenger

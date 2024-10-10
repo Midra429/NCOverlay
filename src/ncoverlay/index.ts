@@ -84,11 +84,11 @@ export class NCOverlay {
     sendUtilsMessage('setBadge', { text: null })
   }
 
-  clear() {
-    this.state.clear()
+  async clear() {
+    await this.state.clear()
     this.renderer.clear()
 
-    sendUtilsMessage('setBadge', { text: null })
+    await sendUtilsMessage('setBadge', { text: null })
   }
 
   /**

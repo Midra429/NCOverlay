@@ -177,7 +177,5 @@ const main = async () => {
   // サイドパネル
   webext.sidePanel.setOptions({ enabled: false })
 
-  settings.get().then((value) => {
-    logger.log('settings:', value)
-  })
+  logger.log('settings:', await settings.get())
 }

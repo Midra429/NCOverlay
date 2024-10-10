@@ -21,8 +21,6 @@ import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
 
 import { ncoApiProxy } from '@/proxy/nco-api'
 
-const userAgent = EXT_USER_AGENT
-
 /**
  * NCOverlayの検索担当
  */
@@ -40,6 +38,7 @@ export class NCOSearcher {
       jikkyoChannelIds?: JikkyoChannelId[]
     } = {}
   ) {
+    const isAutoLoaded = true
     const { jikkyo, jikkyoChannelIds, ...searchOptions } = options
 
     const channelIds = jikkyoChannelIds
@@ -56,7 +55,7 @@ export class NCOSearcher {
         input,
         options: {
           ...searchOptions,
-          userAgent,
+          userAgent: EXT_USER_AGENT,
         },
       }),
 
@@ -64,7 +63,7 @@ export class NCOSearcher {
       jikkyo
         ? ncoApiProxy.searchSyobocal(input, {
             channelIds,
-            userAgent,
+            userAgent: EXT_USER_AGENT,
           })
         : null,
     ])
@@ -112,6 +111,7 @@ export class NCOSearcher {
             id: result.contentId,
             status: 'loading',
             offsetMs,
+            isAutoLoaded,
             info: {
               id: result.contentId,
               title: result.title,
@@ -151,6 +151,7 @@ export class NCOSearcher {
           type: 'jikkyo',
           id,
           status: 'loading',
+          isAutoLoaded,
           info: {
             id: program.TID,
             title,
@@ -261,7 +262,7 @@ export class NCOSearcher {
             },
           })
 
-          loadedSlots.push({ id, threads })
+          loadedSlots.push({ id, threads, isAutoLoaded })
         })
       })
     }
@@ -323,6 +324,7 @@ export class NCOSearcher {
       loadedSlots.push({
         id,
         threads: mergedThreads,
+        isAutoLoaded,
       })
     }
 
@@ -346,6 +348,7 @@ export class NCOSearcher {
       loadedSlots.push({
         id: thread.id as string,
         threads: [thread],
+        isAutoLoaded,
       })
     })
 
