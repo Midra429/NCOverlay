@@ -18,13 +18,16 @@ export type ModalProps = {
   okText?: string
   okIcon?: React.ReactNode
   isOkDisabled?: boolean
-  onOk: () => void
+  onOk?: () => void
 
   cancelText?: string
   cancelIcon?: React.ReactNode
 
-  header: React.ReactNode
+  header?: React.ReactNode
   headerEndContent?: React.ReactNode
+
+  footer?: React.ReactNode
+
   children: React.ReactNode
 }
 
@@ -48,45 +51,55 @@ export const Modal: React.FC<ModalProps> = (props) => {
       <NextUIModalContent>
         {(onClose) => {
           const onPressOk = useCallback(() => {
-            props.onOk()
+            props.onOk?.()
             onClose()
           }, [props.onOk])
 
           return (
             <>
-              <NextUIModalHeader className="flex flex-row justify-between">
-                <div className="flex min-h-8 flex-row items-center">
-                  {props.header}
-                </div>
+              {props.header && (
+                <NextUIModalHeader className="flex flex-row justify-between">
+                  <div className="flex min-h-8 flex-row items-center">
+                    {props.header}
+                  </div>
 
-                {props.headerEndContent}
-              </NextUIModalHeader>
+                  {props.headerEndContent}
+                </NextUIModalHeader>
+              )}
 
               <NextUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
                 {props.children}
               </NextUIModalBody>
 
-              <NextUIModalFooter>
-                <Button
-                  size="sm"
-                  variant="flat"
-                  color="default"
-                  startContent={props.cancelIcon}
-                  onPress={onClose}
-                >
-                  {props.cancelText || 'キャンセル'}
-                </Button>
+              {props.footer !== false && (
+                <NextUIModalFooter>
+                  {props.footer ?? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        color="default"
+                        startContent={props.cancelIcon}
+                        onPress={onClose}
+                      >
+                        {props.cancelText || 'キャンセル'}
+                      </Button>
 
-                <Button
-                  size="sm"
-                  color="primary"
-                  isDisabled={props.isOkDisabled}
-                  startContent={props.okIcon}
-                  onPress={onPressOk}
-                >
-                  {props.okText || 'OK'}
-                </Button>
-              </NextUIModalFooter>
+                      {props.onOk && (
+                        <Button
+                          size="sm"
+                          color="primary"
+                          isDisabled={props.isOkDisabled}
+                          startContent={props.okIcon}
+                          onPress={onPressOk}
+                        >
+                          {props.okText || 'OK'}
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </NextUIModalFooter>
+              )}
             </>
           )
         }}

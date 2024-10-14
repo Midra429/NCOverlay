@@ -60,29 +60,6 @@ export type StorageItems_v3 = {
   'settings:capture:method': 'window' | 'copy'
 
   /**
-   * 検索:ソート順
-   */
-  'settings:search:sort': SearchQuerySort
-
-  /**
-   * 検索:投稿日時
-   */
-  'settings:search:dateRange': [
-    start: DateTimeDuration | null,
-    end: DateTimeDuration | null,
-  ]
-
-  /**
-   * 検索:ジャンル
-   */
-  'settings:search:genre': '未指定' | NiconicoGenre
-
-  /**
-   * 検索:再生時間
-   */
-  'settings:search:lengthRange': [start: number | null, end: number | null]
-
-  /**
    * コメント:フレームレート
    * @description 30, 60, 0 (無制限)
    * @default 60
@@ -229,6 +206,33 @@ export type StorageItems_v3 = {
    * @default []
    */
   'settings:plugins': PluginKey[]
+
+  /**
+   * 検索:ソート順
+   * @default '-startTime'
+   */
+  'settings:search:sort': SearchQuerySort
+
+  /**
+   * 検索:投稿日時
+   * @default [null, null]
+   */
+  'settings:search:dateRange': [
+    start: DateTimeDuration | null,
+    end: DateTimeDuration | null,
+  ]
+
+  /**
+   * 検索:ジャンル
+   * @default 'アニメ'
+   */
+  'settings:search:genre': '未指定' | NiconicoGenre
+
+  /**
+   * 検索:再生時間
+   * @default [null, null]
+   */
+  'settings:search:lengthRange': [start: number | null, end: number | null]
 }
 
 export type StorageItems = StorageItems_v3 & {

@@ -14,19 +14,16 @@ export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
   return (
     <div
       className={cn(
-        'flex flex-row items-center justify-between',
-        'h-fit shrink-0',
+        'flex shrink-0 flex-row items-center gap-1',
         'text-foreground-500 dark:text-foreground-600'
       )}
     >
-      <div className="flex h-full flex-row items-center gap-1">
-        <CalendarDaysIcon className={isSearch ? 'size-mini' : 'size-tiny'} />
-        <span className={isSearch ? 'text-mini' : 'text-tiny'}>
-          {typeof infoDate === 'number'
-            ? formatDate(infoDate, 'YYYY/MM/DD(d) hh:mm')
-            : `${formatDate(infoDate[0], 'YYYY/MM/DD(d) hh:mm')} 〜`}
-        </span>
-      </div>
+      <CalendarDaysIcon className={isSearch ? 'size-mini' : 'size-tiny'} />
+      <span className={isSearch ? 'text-mini' : 'text-tiny'}>
+        {typeof infoDate === 'number'
+          ? formatDate(infoDate, 'YYYY/MM/DD(d) hh:mm')
+          : `${formatDate(infoDate[0], 'YYYY/MM/DD(d) hh:mm')} 〜`}
+      </span>
     </div>
   )
 }

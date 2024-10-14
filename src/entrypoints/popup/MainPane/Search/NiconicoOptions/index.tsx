@@ -19,12 +19,15 @@ const transitionVariants: Variants = {
   enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
 }
 
-export type OptionsProps = {
+export type NiconicoOptionsProps = {
   isOpen: boolean
   isDisabled?: boolean
 }
 
-export const Options: React.FC<OptionsProps> = ({ isOpen, isDisabled }) => {
+export const NiconicoOptions: React.FC<NiconicoOptionsProps> = ({
+  isOpen,
+  isDisabled,
+}) => {
   const willChange = useWillChange()
 
   return (
@@ -32,7 +35,7 @@ export const Options: React.FC<OptionsProps> = ({ isOpen, isDisabled }) => {
       {isOpen && (
         <LazyMotion features={domAnimation}>
           <m.div
-            key="search-options"
+            key="search-niconico-options"
             style={{ willChange }}
             initial="exit"
             animate="enter"

@@ -6,11 +6,13 @@ import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/slot-item'
 
-export type ResultsProps = {
-  items: StateSlotDetail[]
+export type NiconicoResultsProps = {
+  details: StateSlotDetail[]
 }
 
-export const Results: React.FC<ResultsProps> = ({ items }) => {
+export const NiconicoResults: React.FC<NiconicoResultsProps> = ({
+  details,
+}) => {
   const stateSlotDetails = useNcoState('slotDetails')
 
   const ids = useMemo(() => {
@@ -19,12 +21,12 @@ export const Results: React.FC<ResultsProps> = ({ items }) => {
 
   return (
     <div className="flex flex-col gap-2">
-      {items.map((item) => (
+      {details.map((detail) => (
         <SlotItem
-          key={item.id}
-          detail={item}
+          key={detail.id}
+          detail={detail}
           isSearch
-          isDisabled={ids?.includes(item.id)}
+          isDisabled={ids?.includes(detail.id)}
         />
       ))}
     </div>

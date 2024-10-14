@@ -35,7 +35,7 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
  */
 export const QuickPanel: React.FC = memo(() => {
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="flex h-full flex-col">
       <div className="flex flex-row border-b-1 border-foreground-200 bg-content1">
         <ReloadButton />
 
@@ -52,7 +52,7 @@ export const QuickPanel: React.FC = memo(() => {
         <SidePanelButton />
       </div>
 
-      <div className="flex flex-col gap-2 px-2">
+      <div className="flex h-full flex-col gap-2 overflow-y-auto p-2">
         <ShowHideToggle />
 
         {QUICKPANEL_ITEM_KEYS.map((key) => {

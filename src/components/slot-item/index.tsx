@@ -1,9 +1,15 @@
-import type { StateSlotDetail } from '@/ncoverlay/state'
+import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
+import type {
+  StateSlot,
+  StateSlotDetail,
+  StateSlotDetailUpdate,
+} from '@/ncoverlay/state'
 
 import { useCallback, useState } from 'react'
 import { cn } from '@nextui-org/react'
 
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
+import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
 
 import { ncoState } from '@/hooks/useNco'
 
@@ -42,29 +48,64 @@ export const SlotItem: React.FC<SlotItemProps> = ({
 
     await ncoState?.set('status', 'loading')
 
-    const { id } = detail
+    const { type, id, info } = detail
 
-    const [comment] = await getNiconicoComments([{ contentId: id }])
+    let slotDetail: StateSlotDetailUpdate | undefined
+    let slot: StateSlot | undefined
 
-    if (comment) {
-      const { data, threads } = comment
-
-      await ncoState?.update('slotDetails', ['id'], {
-        id,
-        status: 'ready',
-        info: {
-          count: {
-            view: data.video.count.view,
-            comment: data.video.count.comment,
-          },
-          thumbnail:
-            data.video.thumbnail.largeUrl ||
-            data.video.thumbnail.middleUrl ||
-            data.video.thumbnail.url,
+    if (type === 'jikkyo') {
+      const [comment] = await getJikkyoKakologs([
+        {
+          jkChId: id.split(':')[0] as JikkyoChannelId,
+          starttime: info.date[0] / 1000,
+          endtime: info.date[1] / 1000,
         },
-      })
+      ])
 
-      await ncoState?.add('slots', { id, threads })
+      if (comment) {
+        const { thread, markers } = comment
+
+        slotDetail = {
+          id,
+          status: 'ready',
+          markers,
+          info: {
+            count: {
+              comment: thread.commentCount,
+            },
+          },
+        }
+
+        slot = { id, threads: [thread] }
+      }
+    } else {
+      const [comment] = await getNiconicoComments([{ contentId: id }])
+
+      if (comment) {
+        const { data, threads } = comment
+
+        slotDetail = {
+          id,
+          status: 'ready',
+          info: {
+            count: {
+              view: data.video.count.view,
+              comment: data.video.count.comment,
+            },
+            thumbnail:
+              data.video.thumbnail.largeUrl ||
+              data.video.thumbnail.middleUrl ||
+              data.video.thumbnail.url,
+          },
+        }
+
+        slot = { id, threads }
+      }
+    }
+
+    if (slotDetail && slot) {
+      await ncoState?.update('slotDetails', ['id'], slotDetail)
+      await ncoState?.add('slots', slot)
     } else {
       await ncoState?.remove('slotDetails', { id })
     }
@@ -93,7 +134,12 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       <div
         className={cn(
           'relative flex flex-row p-1',
-          isSearch ? 'h-[5.125rem] gap-1.5' : 'h-[5.75rem] gap-2'
+          isSearch
+            ? [
+                'gap-1.5',
+                detail.type === 'jikkyo' ? 'h-[4.25rem]' : 'h-[5.125rem]',
+              ]
+            : 'h-[5.75rem] gap-2'
         )}
       >
         <div
@@ -112,10 +158,8 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           />
 
           {isSearch ? (
-            detail.type !== 'jikkyo' && (
-              // 追加
-              <AddButton onPress={onPressAdd} />
-            )
+            // 追加
+            <AddButton onPress={onPressAdd} />
           ) : (
             <>
               <ButtonsOverlay status={detail.status} onRemove={onPressRemove} />
@@ -146,8 +190,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
 
           <div
             className={cn(
-              'flex flex-row items-center justify-between',
-              'h-fit shrink-0',
+              'flex shrink-0 flex-row items-center justify-between',
               'text-foreground-500 dark:text-foreground-600'
             )}
           >

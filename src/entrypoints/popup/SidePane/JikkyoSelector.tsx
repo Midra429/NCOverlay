@@ -50,35 +50,42 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
   )
 
   const stateStatus = useNcoState('status')
+  const stateSlotDetails = useNcoState('slotDetails')
 
   const isReady = useMemo(() => {
     return !(stateStatus === 'searching' || stateStatus === 'loading')
   }, [stateStatus])
 
-  const isValid = useMemo(() => {
-    if (!jkChId || 0 < endDateTime.compare(currentDateTime)) {
-      return false
-    }
-
-    const dateTimeDiff = endDateTime.compare(startDateTime)
-
-    return 0 < dateTimeDiff && dateTimeDiff <= MAX_DURATION
-  }, [jkChId, startDateTime, endDateTime])
+  const ids = useMemo(() => {
+    return stateSlotDetails?.map((v) => v.id)
+  }, [stateSlotDetails])
 
   const slotDetail = useMemo<StateSlotDetailJikkyo | null>(() => {
-    if (!isValid) return null
+    const dateTimeDiff = endDateTime.compare(startDateTime)
+
+    if (
+      !jkChId ||
+      // まだ終わってない
+      0 < endDateTime.compare(currentDateTime) ||
+      // 終了日時 <= 開始日時
+      dateTimeDiff <= 0 ||
+      // 6時間以上
+      MAX_DURATION < dateTimeDiff
+    ) {
+      return null
+    }
 
     const starttime = startDateTime.toDate().getTime()
     const endtime = endDateTime.toDate().getTime()
 
     return {
       type: 'jikkyo',
-      id: `${jkChId!}:${starttime / 1000}-${endtime / 1000}`,
+      id: `${jkChId}:${starttime / 1000}-${endtime / 1000}`,
       status: 'pending',
       info: {
         id: null,
         title: [
-          `${jkChId!}: ${JIKKYO_CHANNELS[jkChId!]}`,
+          `${jkChId}: ${JIKKYO_CHANNELS[jkChId]}`,
           `${formatDate(starttime, 'YYYY/MM/DD hh:mm')} 〜 ${formatDate(endtime, 'hh:mm')}`,
         ].join('\n'),
         duration: (endtime - starttime) / 1000,
@@ -141,7 +148,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
       onOpenChange={onOpenChange}
       okText="追加"
       okIcon={<PlusIcon className="size-4" />}
-      isOkDisabled={!isValid || !isReady}
+      isOkDisabled={!isReady || !slotDetail || ids?.includes(slotDetail.id)}
       onOk={onAdd}
       header={
         <div className="flex flex-row items-center gap-0.5">
@@ -272,7 +279,13 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
       </div>
 
       <div className="p-2">
-        {slotDetail && <SlotItem detail={slotDetail} isSearch />}
+        {slotDetail && (
+          <SlotItem
+            detail={slotDetail}
+            isSearch
+            isDisabled={ids?.includes(slotDetail.id)}
+          />
+        )}
       </div>
     </Modal>
   )

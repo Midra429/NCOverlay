@@ -70,33 +70,50 @@ export class NCOPatcher {
 
       await this.#nco.state.set('status', 'searching')
 
-      const autoLoads = await settings.get('settings:comment:autoLoads')
+      try {
+        const info = await this.#getInfo(this.#nco)
 
-      // 自動検索
-      if (autoLoads.length) {
-        try {
-          const info = await this.#getInfo(this.#nco)
+        let input: BuildSearchQueryInput | undefined
 
-          let input: BuildSearchQueryInput | undefined
+        if (info) {
+          info.duration = Math.floor(info.duration)
 
-          if (info) {
-            info.duration = Math.floor(info.duration)
+          let rawText: string
 
-            let rawText: string
+          let extracted: ReturnType<typeof ncoParser.extract> = {
+            normalized: '',
+            title: null,
+            season: null,
+            episode: null,
+            subtitle: null,
+          }
 
-            let extracted: ReturnType<typeof ncoParser.extract> = {
-              normalized: '',
-              title: null,
-              season: null,
-              episode: null,
-              subtitle: null,
-            }
+          if ('rawText' in info) {
+            rawText = info.rawText
 
-            if ('rawText' in info) {
-              rawText = info.rawText
+            extracted = ncoParser.extract(
+              ncoParser.normalizeAll(info.rawText, {
+                adjust: {
+                  letterCase: false,
+                },
+                remove: {
+                  space: false,
+                },
+              })
+            )
+          } else {
+            const { title, season } = ncoParser.extract(`${info.workTitle} #01`)
 
-              extracted = ncoParser.extract(
-                ncoParser.normalizeAll(info.rawText, {
+            rawText = [info.workTitle, info.episodeTitle]
+              .filter(Boolean)
+              .join(' ')
+
+            extracted.title = title
+            extracted.season = season
+
+            if (info.episodeTitle) {
+              const { episode, subtitle } = ncoParser.extract(
+                ncoParser.normalizeAll(`タイトル ${info.episodeTitle}`, {
                   adjust: {
                     letterCase: false,
                   },
@@ -105,72 +122,51 @@ export class NCOPatcher {
                   },
                 })
               )
-            } else {
-              const { title, season } = ncoParser.extract(
-                `${info.workTitle} #01`
-              )
 
-              rawText = [info.workTitle, info.episodeTitle]
-                .filter(Boolean)
-                .join(' ')
-
-              extracted.title = title
-              extracted.season = season
-
-              if (info.episodeTitle) {
-                const { episode, subtitle } = ncoParser.extract(
-                  ncoParser.normalizeAll(`タイトル ${info.episodeTitle}`, {
-                    adjust: {
-                      letterCase: false,
-                    },
-                    remove: {
-                      space: false,
-                    },
-                  })
-                )
-
-                extracted.episode = episode
-                extracted.subtitle = subtitle
-              }
-            }
-
-            input = {
-              rawText,
-              title: extracted.title,
-              seasonText: extracted.season?.text,
-              seasonNumber: extracted.season?.number,
-              episodeText: extracted.episode?.text,
-              episodeNumber: extracted.episode?.number,
-              subtitle: extracted.subtitle,
-              duration: info.duration,
+              extracted.episode = episode
+              extracted.subtitle = subtitle
             }
           }
 
-          const parsed = { ...info, ...input }
-
-          await this.#nco.state.set('vod', this.#vod)
-          await this.#nco.state.set('info', parsed)
-
-          logger.log('state.vod:', this.#vod)
-          logger.log('state.info:', parsed)
-
-          if (input) {
-            const jikkyoChannelIds = await settings.get(
-              'settings:comment:jikkyoChannelIds'
-            )
-
-            await this.#nco.searcher.autoLoad(input, {
-              official: autoLoads.includes('official'),
-              danime: autoLoads.includes('danime'),
-              chapter: autoLoads.includes('chapter'),
-              szbh: autoLoads.includes('szbh'),
-              jikkyo: autoLoads.includes('jikkyo'),
-              jikkyoChannelIds,
-            })
+          input = {
+            rawText,
+            title: extracted.title,
+            seasonText: extracted.season?.text,
+            seasonNumber: extracted.season?.number,
+            episodeText: extracted.episode?.text,
+            episodeNumber: extracted.episode?.number,
+            subtitle: extracted.subtitle,
+            duration: info.duration,
           }
-        } catch (err) {
-          logger.error('comment:autoLoad', err)
         }
+
+        const parsed = { ...info, ...input }
+
+        await this.#nco.state.set('vod', this.#vod)
+        await this.#nco.state.set('info', parsed)
+
+        logger.log('state.vod:', this.#vod)
+        logger.log('state.info:', parsed)
+
+        const autoLoads = await settings.get('settings:comment:autoLoads')
+
+        // 自動検索
+        if (autoLoads.length && input) {
+          const jikkyoChannelIds = await settings.get(
+            'settings:comment:jikkyoChannelIds'
+          )
+
+          await this.#nco.searcher.autoLoad(input, {
+            official: autoLoads.includes('official'),
+            danime: autoLoads.includes('danime'),
+            chapter: autoLoads.includes('chapter'),
+            szbh: autoLoads.includes('szbh'),
+            jikkyo: autoLoads.includes('jikkyo'),
+            jikkyoChannelIds,
+          })
+        }
+      } catch (err) {
+        logger.error('patcher:load', err)
       }
 
       await this.#nco.state.set('status', 'ready')

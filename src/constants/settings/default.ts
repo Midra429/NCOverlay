@@ -17,12 +17,6 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:capture:format': 'jpeg',
   'settings:capture:method': 'window',
 
-  // 検索
-  'settings:search:sort': '-startTime',
-  'settings:search:dateRange': [null, null],
-  'settings:search:genre': 'アニメ',
-  'settings:search:lengthRange': [null, null],
-
   // コメント
   'settings:comment:fps': 60,
   'settings:comment:opacity': 100,
@@ -55,4 +49,10 @@ export const SETTINGS_DEFAULT: SettingItems = {
 
   // プラグイン
   'settings:plugins': [],
+
+  // 検索 (設定には非表示)
+  'settings:search:sort': '-startTime',
+  'settings:search:dateRange': [null, null],
+  'settings:search:genre': 'アニメ',
+  'settings:search:lengthRange': [null, null],
 }

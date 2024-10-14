@@ -1,4 +1,5 @@
 import type { NiconicoGenre } from '@midra/nco-api/types/constants'
+import type { SettingItems } from '@/types/storage'
 
 import { cn } from '@nextui-org/react'
 import { ShapesIcon } from 'lucide-react'
@@ -7,6 +8,11 @@ import { NICONICO_GENRES } from '@midra/nco-api/constants'
 import { useSettings } from '@/hooks/useSettings'
 
 import { Select, SelectSection, SelectItem } from '@/components/select'
+
+const GENRES: SettingItems['settings:search:genre'][] = [
+  '未指定',
+  ...NICONICO_GENRES,
+]
 
 export type GenreProps = {
   isDisabled?: boolean
@@ -36,7 +42,7 @@ export const Genre: React.FC<GenreProps> = ({ isDisabled }) => {
       onSelectionChange={([key]) => setValue(key as NiconicoGenre)}
     >
       <SelectSection className="mb-0" title="ジャンル">
-        {['未指定', ...NICONICO_GENRES].map((value) => (
+        {GENRES.map((value) => (
           <SelectItem
             key={value}
             classNames={{

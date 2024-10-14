@@ -1,246 +1,122 @@
-import type { DateTimeDuration } from '@internationalized/date'
-import type { NiconicoGenre } from '@midra/nco-api/types/constants'
-import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
+import type { SearchNiconicoOptions } from '@/utils/api/searchNiconico'
 import type { StateSlotDetail } from '@/ncoverlay/state'
+import type { SearchSource, SearchInputHandle } from './Input'
+import type { ScTitleItem } from './SyobocalResults/TitleItem'
 
-import { memo, useMemo, useState, useCallback, useEffect } from 'react'
+import { memo, useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
-import { now, getLocalTimeZone } from '@internationalized/date'
-import { ncoApi } from '@midra/nco-api'
-import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
 import { extractVideoId } from '@/utils/api/extractVideoId'
+import { extractSyobocalId } from '@/utils/api/extractSyobocalId'
+import {
+  searchNiconicoByIds,
+  searchNiconicoByKeyword,
+} from '@/utils/api/searchNiconico'
 
 import { useSettings } from '@/hooks/useSettings'
 import { useNcoState } from '@/hooks/useNco'
 
 import { SearchInput } from './Input'
-import { Results } from './Results'
+import { NiconicoResults } from './NiconicoResults'
+import { SyobocalResults } from './SyobocalResults'
 import { Pagination } from './Pagination'
-
-type SearchResult = {
-  total: number
-  details: StateSlotDetail[]
-}
-
-const searchNiconicoById = async (
-  contentId: string
-): Promise<SearchResult | null> => {
-  const data = await ncoApi.niconico.video(contentId)
-
-  if (data) {
-    const tags = data.tag.items.map((v) => v.name)
-
-    const isDAnime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
-    const isOfficialAnime = !!data.channel?.isOfficialAnime
-    const isSzbh = !!(
-      data.owner &&
-      /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i.test(tags.join(' '))
-    )
-
-    const total = 1
-    const details: StateSlotDetail[] = [
-      {
-        type:
-          (isDAnime && 'danime') ||
-          (isOfficialAnime && 'official') ||
-          (isSzbh && 'szbh') ||
-          'normal',
-        id: contentId,
-        status: 'pending',
-        info: {
-          id: contentId,
-          title: data.video.title,
-          duration: data.video.duration,
-          date: new Date(data.video.registeredAt).getTime(),
-          tags,
-          count: {
-            view: data.video.count.view,
-            comment: data.video.count.comment,
-          },
-          thumbnail:
-            data.video.thumbnail.largeUrl ||
-            data.video.thumbnail.middleUrl ||
-            data.video.thumbnail.url,
-        },
-      },
-    ]
-
-    return { total, details }
-  }
-
-  return null
-}
-
-const searchNiconicoByKeyword = async (
-  keyword: string,
-  page: number,
-  options?: {
-    sort?: SearchQuerySort
-    dateRange?: [start: DateTimeDuration | null, end: DateTimeDuration | null]
-    genre?: '未指定' | NiconicoGenre
-    lengthRange?: [start: number | null, end: number | null]
-  }
-): Promise<SearchResult | null> => {
-  const limit = 20
-  const offset = limit * (page - 1)
-
-  const startTime: {
-    gte?: string
-    lte?: string
-  } = {}
-
-  if (options?.dateRange) {
-    const current = now(getLocalTimeZone())
-
-    if (options.dateRange[0]) {
-      startTime.gte = current
-        .add(options.dateRange[0])
-        .toString()
-        .replace(/\[.+\]$/, '')
-    }
-
-    if (options.dateRange[1]) {
-      startTime.lte = current
-        .add(options.dateRange[1])
-        .toString()
-        .replace(/\[.+\]$/, '')
-    }
-  }
-
-  const response = await ncoApi.niconico.search({
-    q: keyword,
-    targets: ['title', 'description'],
-    fields: [
-      'contentId',
-      'title',
-      'userId',
-      'channelId',
-      'viewCounter',
-      'lengthSeconds',
-      'thumbnailUrl',
-      'startTime',
-      'commentCounter',
-      'categoryTags',
-      'tags',
-    ],
-    filters: {
-      'commentCounter': { gt: 0 },
-      startTime,
-      'genre.keyword':
-        options?.genre && options.genre !== '未指定'
-          ? [options.genre]
-          : undefined,
-      'lengthSeconds': options?.lengthRange
-        ? {
-            gte: options.lengthRange[0] ?? undefined,
-            lte: options.lengthRange[1] ?? undefined,
-          }
-        : undefined,
-    },
-    _sort: options?.sort ?? '-startTime',
-    _offset: offset,
-    _limit: limit,
-    _context: EXT_USER_AGENT,
-  })
-
-  if (response) {
-    const total = Math.ceil(response.meta.totalCount / 20)
-    const details: StateSlotDetail[] = response.data.map((value) => {
-      const isDAnime = value.channelId === DANIME_CHANNEL_ID
-      const isOfficialAnime = !!(
-        value.channelId &&
-        value.categoryTags &&
-        /(^|\s)アニメ(\s|$)/.test(value.categoryTags)
-      )
-      const isSzbh = !!(
-        value.userId &&
-        value.tags &&
-        /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i.test(value.tags)
-      )
-
-      return {
-        type:
-          (isDAnime && 'danime') ||
-          (isOfficialAnime && 'official') ||
-          (isSzbh && 'szbh') ||
-          'normal',
-        id: value.contentId,
-        status: 'pending',
-        info: {
-          id: value.contentId,
-          title: value.title,
-          duration: value.lengthSeconds,
-          date: new Date(value.startTime).getTime(),
-          tags: value.tags?.split(' ') ?? [],
-          count: {
-            view: value.viewCounter,
-            comment: value.commentCounter,
-          },
-          thumbnail: value.thumbnailUrl,
-        },
-      }
-    })
-
-    return { total, details }
-  }
-
-  return null
-}
+import {
+  searchSyobocalByIds,
+  searchSyobocalByKeyword,
+} from '@/utils/api/searchSyobocal'
 
 export const Search: React.FC = memo(() => {
-  const [inputValue, setInputValue] = useState('')
+  const inputRef = useRef<SearchInputHandle>(null)
+
+  const [inputSource, setInputSource] = useState<SearchSource>()
+  const [inputValue, setInputValue] = useState<string>()
+
   const [isLoading, setIsLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
-  const [slotDetails, setSlotDetails] = useState<StateSlotDetail[]>([])
+  const [niconicoItems, setNiconicoItems] = useState<StateSlotDetail[]>([])
+  const [syobocalItems, setSyobocalItems] = useState<ScTitleItem[]>([])
+
+  const stateStatus = useNcoState('status')
 
   const [sort] = useSettings('settings:search:sort')
   const [dateRange] = useSettings('settings:search:dateRange')
   const [genre] = useSettings('settings:search:genre')
   const [lengthRange] = useSettings('settings:search:lengthRange')
 
-  const stateStatus = useNcoState('status')
-
   const isReady = useMemo(() => {
     return !(stateStatus === 'searching' || stateStatus === 'loading')
   }, [stateStatus])
 
-  const searchNiconico = useCallback(
-    async (value: string, page: number) => {
-      if (!value) return
+  const niconicoOptions = useMemo<SearchNiconicoOptions>(() => {
+    return {
+      sort,
+      dateRange,
+      genre,
+      lengthRange,
+    }
+  }, [sort, dateRange, genre, lengthRange])
 
+  const isNiconico = inputSource === 'niconico'
+  const isSyobocal = inputSource === 'syobocal'
+
+  const searchNiconico = useCallback(
+    async (value: string, page: number, options: SearchNiconicoOptions) => {
       setIsLoading(true)
 
       setCurrentPage(page)
-      setSlotDetails([])
+      setNiconicoItems([])
 
       const videoId = extractVideoId(value)
 
       const result = videoId
-        ? await searchNiconicoById(videoId)
-        : await searchNiconicoByKeyword(value, page, {
-            sort,
-            dateRange,
-            genre,
-            lengthRange,
-          })
+        ? await searchNiconicoByIds(videoId)
+        : await searchNiconicoByKeyword(value, page, options)
 
       if (result) {
         setTotalCount(result.total)
-        setSlotDetails(result.details)
+        setNiconicoItems(result.details)
       } else {
         setTotalCount(0)
       }
 
       setIsLoading(false)
     },
-    [sort, dateRange, genre, lengthRange]
+    []
   )
 
+  const searchSyobocal = useCallback(async (value: string) => {
+    setIsLoading(true)
+
+    setCurrentPage(1)
+    setSyobocalItems([])
+
+    const syobocalId = extractSyobocalId(value)
+
+    const result = syobocalId
+      ? await searchSyobocalByIds(syobocalId)
+      : await searchSyobocalByKeyword(value)
+
+    if (result) {
+      setTotalCount(result.length)
+      setSyobocalItems(result)
+    } else {
+      setTotalCount(0)
+    }
+
+    setIsLoading(false)
+  }, [])
+
   useEffect(() => {
-    searchNiconico(inputValue, 1)
-  }, [searchNiconico])
+    if (!isNiconico || !inputValue) return
+
+    inputRef.current?.setSource(inputSource)
+    inputRef.current?.setValue(inputValue)
+
+    if (!extractVideoId(inputValue)) {
+      searchNiconico(inputValue, 1, niconicoOptions)
+    }
+  }, [niconicoOptions])
 
   return (
     <div className="flex h-full flex-col">
@@ -254,10 +130,23 @@ export const Search: React.FC = memo(() => {
       >
         <SearchInput
           isDisabled={!isReady || isLoading}
-          onSearch={(value) => {
+          onSearch={({ source, value }) => {
+            setInputSource(source)
             setInputValue(value)
-            searchNiconico(value, 1)
+
+            switch (source) {
+              case 'niconico':
+                searchNiconico(value, 1, niconicoOptions)
+
+                break
+
+              case 'syobocal':
+                searchSyobocal(value)
+
+                break
+            }
           }}
+          ref={inputRef}
         />
       </div>
 
@@ -272,17 +161,33 @@ export const Search: React.FC = memo(() => {
             <Spinner size="lg" color="primary" />
           </div>
         ) : (
-          <Results items={slotDetails} />
+          (isNiconico && <NiconicoResults details={niconicoItems} />) ||
+          (isSyobocal && <SyobocalResults titles={syobocalItems} />)
         )}
       </div>
 
-      <div className="border-t-1 border-foreground-200 bg-content1 p-2">
+      <div
+        className={cn(
+          'border-t-1 border-foreground-200 bg-content1 p-2',
+          isSyobocal && 'hidden'
+        )}
+      >
         <Pagination
           page={currentPage}
           total={totalCount}
           isDisabled={!isReady || isLoading}
           onPageChange={(page) => {
-            searchNiconico(inputValue, page)
+            if (!inputSource || !inputValue) return
+
+            inputRef.current?.setSource(inputSource)
+            inputRef.current?.setValue(inputValue)
+
+            switch (inputSource) {
+              case 'niconico':
+                searchNiconico(inputValue, page, niconicoOptions)
+
+                break
+            }
           }}
         />
       </div>

@@ -104,7 +104,7 @@ export const Options: React.FC<OptionsProps> = ({ isOpen, id, offsetMs }) => {
             variants={transitionVariants}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            <div className="border-t-1 border-divider p-2">
+            <div className="border-t-1 border-foreground-200 p-2">
               <SlotOffsetControl id={id} offsetMs={offsetMs} />
             </div>
           </m.div>
