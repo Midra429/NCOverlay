@@ -191,7 +191,7 @@ export const Settings: React.FC = memo(() => {
         base: cn(
           'overflow-hidden',
           'data-[open=true]:overflow-visible',
-          'border-1 border-foreground-100 !p-0 !shadow-small',
+          'border-1 border-foreground-200 !p-0 !shadow-none',
           '[&>*]:px-3'
         ),
         heading: cn(

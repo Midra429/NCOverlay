@@ -4,6 +4,7 @@ import type {
   StateSlotDetail,
   StateSlotDetailUpdate,
 } from '@/ncoverlay/state'
+import type { PanelItemProps } from '@/components/panel-item'
 
 import { useCallback, useState } from 'react'
 import { cn } from '@nextui-org/react'
@@ -28,12 +29,14 @@ import { TranslucentButton } from './translucent-button'
 import { Options, OptionsButton } from './options'
 
 export type SlotItemProps = {
+  classNames?: PanelItemProps['classNames']
   detail: StateSlotDetail
   isSearch?: boolean
   isDisabled?: boolean
 }
 
 export const SlotItem: React.FC<SlotItemProps> = ({
+  classNames,
   detail,
   isSearch,
   isDisabled,
@@ -130,6 +133,13 @@ export const SlotItem: React.FC<SlotItemProps> = ({
         detail.status === 'error' && 'bg-danger/30',
         isDisabled && 'pointer-events-none opacity-50'
       )}
+      classNames={{
+        ...classNames,
+        wrapper: [
+          isDisabled && 'border-dashed bg-transparent',
+          classNames?.wrapper,
+        ],
+      }}
     >
       <div
         className={cn(
