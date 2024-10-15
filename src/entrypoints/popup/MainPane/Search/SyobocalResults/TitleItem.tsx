@@ -4,7 +4,7 @@ import type {
 } from '@midra/nco-api/types/syobocal/json'
 
 import { useMemo } from 'react'
-import { Button, cn } from '@nextui-org/react'
+import { cn } from '@nextui-org/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { CalendarDaysIcon, ShapesIcon, ChevronRightIcon } from 'lucide-react'
 import { SYOBOCAL_CATEGORIES } from '@midra/nco-api/constants'
@@ -88,34 +88,33 @@ export const TitleItemInner: React.FC<TitleItemInnerProps> = ({
 
 export type TitleItemProps = {
   item: ScTitleItem
-  onPress: () => void
+  onClick: () => void
 }
 
-export const TitleItem: React.FC<TitleItemProps> = ({ item, onPress }) => {
-  if (['8'].includes(item.Cat) || !item.FirstYear || !item.FirstMonth) {
+export const TitleItem: React.FC<TitleItemProps> = ({ item, onClick }) => {
+  if (!item.FirstYear || !item.FirstMonth) {
     return null
   }
 
   return (
-    <Button
+    <div
       className={cn(
-        'flex flex-row items-center justify-between gap-0',
-        'h-fit p-2',
+        'flex flex-row items-center justify-between',
+        'p-2',
         'rounded-medium',
-        'border-1 border-foreground-100 data-[hover]:border-default-400',
-        'bg-content1 text-foreground',
-        'whitespace-normal text-start',
-        'shadow-small'
+        'border-1 border-foreground-200 hover:border-default-400',
+        'bg-content1 hover:bg-content2/90',
+        'text-foreground',
+        'cursor-pointer',
+        'transition-colors'
       )}
-      variant="light"
-      fullWidth
-      onPress={onPress}
+      onClick={onClick}
     >
       <TitleItemInner item={item} />
 
       <div className="shrink-0 px-1 text-foreground-500 dark:text-foreground-600">
         <ChevronRightIcon className="size-4" />
       </div>
-    </Button>
+    </div>
   )
 }

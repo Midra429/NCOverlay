@@ -24,7 +24,7 @@ export const SyobocalResults: React.FC<SyobocalResultsProps> = ({ titles }) => {
           <TitleItem
             key={title.TID}
             item={title}
-            onPress={() => {
+            onClick={() => {
               setSelectedTitle(title)
 
               disclosure.onOpen()

@@ -12,18 +12,15 @@ import {
 } from 'react'
 import { Spinner } from '@nextui-org/react'
 import { ncoApi } from '@midra/nco-api'
-import { CHANNEL_IDS_JIKKYO_SYOBOCAL } from '@midra/nco-api/constants'
 import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
+
+import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
 import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/slot-item'
 
 let controller: AbortController | undefined
-
-const SYOBOCAL_CHANNEL_IDS = CHANNEL_IDS_JIKKYO_SYOBOCAL.map(
-  ([_, scChId]) => scChId
-)
 
 export type SubtitleDetailHandle = {
   initialize: () => void
@@ -39,7 +36,8 @@ export const SubtitleDetail = forwardRef<
   SubtitleDetailProps
 >(({ title, subtitle }, ref) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [slotDetails, setSlotDetails] = useState<StateSlotDetailJikkyo[]>([])
+  const [currentTid, setCurrentTid] = useState('')
+  const [programs, setPrograms] = useState<SyoboCalProgram[]>([])
 
   const stateSlotDetails = useNcoState('slotDetails')
 
@@ -47,10 +45,48 @@ export const SubtitleDetail = forwardRef<
     return stateSlotDetails?.map((v) => v.id)
   }, [stateSlotDetails])
 
+  const programItems = useMemo(() => {
+    const currentTime = Date.now() / 1000
+    const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
+      .join(' ')
+      .trim()
+
+    const details: StateSlotDetailJikkyo[] = programs.flatMap((program) => {
+      const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
+
+      if (currentTime < parseInt(program.EdTime)) {
+        return []
+      }
+
+      const starttime = parseInt(program.StTime) * 1000
+      const endtime = parseInt(program.EdTime) * 1000
+
+      return {
+        type: 'jikkyo',
+        id,
+        status: 'pending',
+        info: {
+          id: program.TID,
+          title: slotTitle,
+          duration: (endtime - starttime) / 1000,
+          date: [starttime, endtime],
+          count: {
+            comment: 0,
+          },
+        },
+      }
+    })
+
+    return details
+  }, [programs])
+
   const initialize = useCallback(() => {
+    if (title.TID === currentTid) return
+
     controller?.abort()
 
-    setSlotDetails([])
+    setCurrentTid(title.TID)
+    setPrograms([])
     setIsLoading(true)
 
     controller = new AbortController()
@@ -77,50 +113,16 @@ export const SubtitleDetail = forwardRef<
         })
         .catch(() => reject())
     })
-      .then((programs) => {
-        const slotTitle = [title.Title, `#${subtitle[0]}`, subtitle[1]]
-          .join(' ')
-          .trim()
-
-        const currentTime = Date.now() / 1000
-
-        const details: StateSlotDetailJikkyo[] = programs.flatMap((program) => {
-          const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
-
-          if (currentTime < parseInt(program.EdTime)) {
-            return []
-          }
-
-          const starttime = parseInt(program.StTime) * 1000
-          const endtime = parseInt(program.EdTime) * 1000
-
-          return {
-            type: 'jikkyo',
-            id,
-            status: 'pending',
-            info: {
-              id: program.TID,
-              title: slotTitle,
-              duration: (endtime - starttime) / 1000,
-              date: [starttime, endtime],
-              count: {
-                comment: 0,
-              },
-            },
-          }
-        })
-
-        setSlotDetails(details)
-      })
-      .catch(() => setSlotDetails([]))
+      .then((value) => setPrograms(value))
+      .catch(() => setPrograms([]))
       .finally(() => setIsLoading(false))
-  }, [title, subtitle])
+  }, [title, subtitle, currentTid])
 
   useImperativeHandle(ref, () => {
     return { initialize }
   }, [initialize])
 
-  return isLoading || !slotDetails.length ? (
+  return isLoading || !programItems.length ? (
     <div className="flex size-full items-center justify-center py-1">
       {isLoading ? (
         <Spinner size="sm" color="primary" />
@@ -131,8 +133,8 @@ export const SubtitleDetail = forwardRef<
       )}
     </div>
   ) : (
-    <div className="flex flex-col gap-2">
-      {slotDetails.map((detail) => (
+    <div className="flex flex-col gap-1.5">
+      {programItems.map((detail) => (
         <SlotItem
           key={detail.id}
           detail={detail}

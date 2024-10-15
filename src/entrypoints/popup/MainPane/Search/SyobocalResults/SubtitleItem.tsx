@@ -5,13 +5,7 @@ import type { SubtitleDetailHandle } from './SubtitleDetail'
 import { useState, useImperativeHandle, forwardRef, useRef } from 'react'
 import { cn } from '@nextui-org/react'
 import { TRANSITION_VARIANTS } from '@nextui-org/framer-utils'
-import {
-  AnimatePresence,
-  LazyMotion,
-  domAnimation,
-  useWillChange,
-  m,
-} from 'framer-motion'
+import { LazyMotion, domAnimation, useWillChange, m } from 'framer-motion'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { ChevronDownIcon } from 'lucide-react'
 
@@ -99,29 +93,25 @@ export const SubtitleItem = forwardRef<SubtitleItemHandle, SubtitleItemProps>(
           </div>
         </div>
 
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <LazyMotion features={domAnimation}>
-              <m.div
-                key="subtitle-detail"
-                style={{ willChange }}
-                initial="exit"
-                animate="enter"
-                exit="exit"
-                variants={transitionVariants}
-                onKeyDown={(e) => e.stopPropagation()}
-              >
-                <div className="border-t-1 border-foreground-200 p-2">
-                  <SubtitleDetail
-                    title={title}
-                    subtitle={subtitle}
-                    ref={detailRef}
-                  />
-                </div>
-              </m.div>
-            </LazyMotion>
-          )}
-        </AnimatePresence>
+        <LazyMotion features={domAnimation}>
+          <m.div
+            key="subtitle-detail"
+            style={{ willChange }}
+            initial="exit"
+            animate={isOpen ? 'enter' : 'exit'}
+            exit="exit"
+            variants={transitionVariants}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <div className="border-t-1 border-foreground-200 p-1.5">
+              <SubtitleDetail
+                title={title}
+                subtitle={subtitle}
+                ref={detailRef}
+              />
+            </div>
+          </m.div>
+        </LazyMotion>
       </PanelItem>
     )
   }
