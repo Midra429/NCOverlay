@@ -18,6 +18,8 @@ import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 import { logger } from '@/utils/logger'
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
 import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
+import { searchDataToSlotDetail } from '@/utils/api/searchDataToSlotDetail'
+import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 
 import { ncoApiProxy } from '@/proxy/nco-api'
 
@@ -106,36 +108,26 @@ export class NCOSearcher {
             }
           }
 
-          loadingSlotDetails.push({
-            type,
-            id: result.contentId,
-            status: 'loading',
-            offsetMs,
-            isAutoLoaded,
-            info: {
-              id: result.contentId,
-              title: result.title,
-              duration: result.lengthSeconds,
-              date: new Date(result.startTime).getTime(),
-              tags: result.tags?.split(' ') ?? [],
-              count: {
-                view: result.viewCounter,
-                comment: result.commentCounter,
-              },
-              thumbnail: result.thumbnailUrl,
-            },
-          })
+          loadingSlotDetails.push(
+            searchDataToSlotDetail(result, {
+              type,
+              status: 'loading',
+              offsetMs,
+              isAutoLoaded,
+            })
+          )
         })
       })
     }
 
     // ニコニコ実況 過去ログ
     if (syobocalPrograms) {
-      const title = [
+      const slotTitle = [
         searchSyobocalResults.title.Title,
         `#${input.episodeNumber}`,
-        searchSyobocalResults.subtitle ?? '',
+        searchSyobocalResults.subtitle,
       ]
+        .filter(Boolean)
         .join(' ')
         .trim()
 
@@ -144,24 +136,12 @@ export class NCOSearcher {
 
         if (loadedIds.includes(id)) return
 
-        const starttime = parseInt(program.StTime) * 1000
-        const endtime = parseInt(program.EdTime) * 1000
-
-        loadingSlotDetails.push({
-          type: 'jikkyo',
-          id,
-          status: 'loading',
-          isAutoLoaded,
-          info: {
-            id: program.TID,
-            title,
-            duration: (endtime - starttime) / 1000,
-            date: [starttime, endtime],
-            count: {
-              comment: 0,
-            },
-          },
-        })
+        loadingSlotDetails.push(
+          programToSlotDetail(slotTitle, program, {
+            status: 'loading',
+            isAutoLoaded,
+          })
+        )
       })
     }
 

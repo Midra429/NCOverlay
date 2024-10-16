@@ -36,9 +36,9 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
 
         let initValue: string | undefined
 
-        if (source === 'niconico') {
+        if (isNiconico) {
           initValue = info.rawText
-        } else if (source === 'syobocal') {
+        } else if (isSyobocal) {
           initValue = info.workTitle ?? info.title ?? info.rawText
         }
 
@@ -106,7 +106,7 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
                 undefined
               }
               value={value}
-              onValueChange={(val) => setValue(val.trim())}
+              onValueChange={setValue}
             />
 
             <Button
@@ -115,9 +115,14 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
               variant="solid"
               color="primary"
               isIconOnly
-              isDisabled={!value || isDisabled}
+              isDisabled={!value.trim() || isDisabled}
               startContent={<SearchIcon className="size-4" />}
-              onPress={() => onSearch({ source, value })}
+              onPress={() => {
+                onSearch({
+                  source,
+                  value: value.trim(),
+                })
+              }}
             />
           </div>
 

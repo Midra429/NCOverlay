@@ -194,13 +194,11 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
                   if (itemHandle.isOpen) {
                     itemHandle.close()
                   } else {
-                    const handles = Object.values(subtitleItemRefs.current)
-
-                    handles.forEach((handle) => {
-                      if (handle.isOpen) {
+                    Object.values(subtitleItemRefs.current).forEach(
+                      (handle) => {
                         handle.close()
                       }
-                    })
+                    )
 
                     itemHandle.open()
                   }

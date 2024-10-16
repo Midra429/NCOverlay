@@ -12,7 +12,10 @@ import {
   searchNiconicoByIds,
   searchNiconicoByKeyword,
 } from '@/utils/api/searchNiconico'
-
+import {
+  searchSyobocalByIds,
+  searchSyobocalByKeyword,
+} from '@/utils/api/searchSyobocal'
 import { useSettings } from '@/hooks/useSettings'
 import { useNcoState } from '@/hooks/useNco'
 
@@ -20,10 +23,6 @@ import { SearchInput } from './Input'
 import { NiconicoResults } from './NiconicoResults'
 import { SyobocalResults } from './SyobocalResults'
 import { Pagination } from './Pagination'
-import {
-  searchSyobocalByIds,
-  searchSyobocalByKeyword,
-} from '@/utils/api/searchSyobocal'
 
 export const Search: React.FC = memo(() => {
   const inputRef = useRef<SearchInputHandle>(null)
@@ -48,6 +47,9 @@ export const Search: React.FC = memo(() => {
     return !(stateStatus === 'searching' || stateStatus === 'loading')
   }, [stateStatus])
 
+  const isNiconico = inputSource === 'niconico'
+  const isSyobocal = inputSource === 'syobocal'
+
   const niconicoOptions = useMemo<SearchNiconicoOptions>(() => {
     return {
       sort,
@@ -57,15 +59,13 @@ export const Search: React.FC = memo(() => {
     }
   }, [sort, dateRange, genre, lengthRange])
 
-  const isNiconico = inputSource === 'niconico'
-  const isSyobocal = inputSource === 'syobocal'
-
   const searchNiconico = useCallback(
     async (value: string, page: number, options: SearchNiconicoOptions) => {
       setIsLoading(true)
 
       setCurrentPage(page)
       setNiconicoItems([])
+      setSyobocalItems([])
 
       const videoId = extractVideoId(value)
 
@@ -89,6 +89,7 @@ export const Search: React.FC = memo(() => {
     setIsLoading(true)
 
     setCurrentPage(1)
+    setNiconicoItems([])
     setSyobocalItems([])
 
     const syobocalId = extractSyobocalId(value)
@@ -134,16 +135,10 @@ export const Search: React.FC = memo(() => {
             setInputSource(source)
             setInputValue(value)
 
-            switch (source) {
-              case 'niconico':
-                searchNiconico(value, 1, niconicoOptions)
-
-                break
-
-              case 'syobocal':
-                searchSyobocal(value)
-
-                break
+            if (source === 'niconico') {
+              searchNiconico(value, 1, niconicoOptions)
+            } else if (source === 'syobocal') {
+              searchSyobocal(value)
             }
           }}
           ref={inputRef}
@@ -182,11 +177,8 @@ export const Search: React.FC = memo(() => {
             inputRef.current?.setSource(inputSource)
             inputRef.current?.setValue(inputValue)
 
-            switch (inputSource) {
-              case 'niconico':
-                searchNiconico(inputValue, page, niconicoOptions)
-
-                break
+            if (isNiconico) {
+              searchNiconico(inputValue, page, niconicoOptions)
             }
           }}
         />

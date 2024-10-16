@@ -47,6 +47,7 @@ export const SubtitleDetail = forwardRef<
   const programItems = useMemo(() => {
     const currentTime = Date.now() / 1000
     const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
+      .filter(Boolean)
       .join(' ')
       .trim()
 

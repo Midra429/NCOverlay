@@ -1,13 +1,13 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
 
 import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
+import { videoDataToSlotDetail } from '@/utils/api/videoDataToSlotDetail'
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
@@ -57,29 +57,13 @@ const main = async () => {
         return null
       }
 
-      await nco.state.add('slotDetails', {
-        type:
-          videoData.channel?.id === `ch${DANIME_CHANNEL_ID}`
-            ? 'danime'
-            : 'official',
-        id,
-        status: 'loading',
-        info: {
+      await nco.state.add(
+        'slotDetails',
+        videoDataToSlotDetail(videoData, {
           id,
-          title: videoData.video.title,
-          duration: videoData.video.duration,
-          date: new Date(videoData.video.registeredAt).getTime(),
-          tags: videoData.tag.items.map((v) => v.name),
-          count: {
-            view: videoData.video.count.view,
-            comment: videoData.video.count.comment,
-          },
-          thumbnail:
-            videoData.video.thumbnail.largeUrl ||
-            videoData.video.thumbnail.middleUrl ||
-            videoData.video.thumbnail.url,
-        },
-      })
+          status: 'loading',
+        })
+      )
 
       const [comment] = await getNiconicoComments([videoData])
 

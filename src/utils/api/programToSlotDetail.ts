@@ -8,7 +8,8 @@ const isInteger = (str: string) => /^\d+$/.test(str)
 
 export const programToSlotDetail = (
   title: string,
-  program: SyoboCalProgram | SyoboCalProgramDb
+  program: SyoboCalProgram | SyoboCalProgramDb,
+  detail?: Partial<StateSlotDetailJikkyo>
 ): StateSlotDetailJikkyo => {
   let starttime: number
   let endtime: number
@@ -36,5 +37,6 @@ export const programToSlotDetail = (
         comment: 0,
       },
     },
+    ...detail,
   }
 }
