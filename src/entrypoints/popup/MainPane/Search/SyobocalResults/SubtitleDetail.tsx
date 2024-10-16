@@ -1,5 +1,4 @@
 import type { SyoboCalProgram } from '@midra/nco-api/types/syobocal/json'
-import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem } from './SubtitleItem'
 
@@ -12,10 +11,10 @@ import {
 } from 'react'
 import { Spinner } from '@nextui-org/react'
 import { ncoApi } from '@midra/nco-api'
-import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
+import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/slot-item'
@@ -51,33 +50,10 @@ export const SubtitleDetail = forwardRef<
       .join(' ')
       .trim()
 
-    const details: StateSlotDetailJikkyo[] = programs.flatMap((program) => {
-      const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
-
-      if (currentTime < parseInt(program.EdTime)) {
-        return []
-      }
-
-      const starttime = parseInt(program.StTime) * 1000
-      const endtime = parseInt(program.EdTime) * 1000
-
-      return {
-        type: 'jikkyo',
-        id,
-        status: 'pending',
-        info: {
-          id: program.TID,
-          title: slotTitle,
-          duration: (endtime - starttime) / 1000,
-          date: [starttime, endtime],
-          count: {
-            comment: 0,
-          },
-        },
-      }
-    })
-
-    return details
+    return programs
+      .filter((program) => parseInt(program.EdTime) <= currentTime)
+      .sort((a, b) => parseInt(a.StTime) - parseInt(b.StTime))
+      .map((program) => programToSlotDetail(slotTitle, program))
   }, [programs])
 
   const initialize = useCallback(() => {

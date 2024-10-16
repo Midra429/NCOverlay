@@ -1,5 +1,4 @@
-import type { SyoboCalProgramJson } from '@midra/nco-api/types/syobocal/db'
-import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
+import type { SyoboCalProgramDb } from '@midra/nco-api/types/syobocal/db'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
 
@@ -13,11 +12,11 @@ import {
 } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
 import { ncoApi } from '@midra/nco-api'
-import { syobocalToJikkyoChId } from '@midra/nco-api/utils/syobocalToJikkyoChId'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
 import { zeroPadding } from '@/utils/zeroPadding'
+import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 import { useNcoState } from '@/hooks/useNco'
 
 import { Modal } from '@/components/modal'
@@ -46,7 +45,7 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
 
     const [isLoading, setIsLoading] = useState(false)
     const [currentTid, setCurrentTid] = useState('')
-    const [programs, setPrograms] = useState<SyoboCalProgramJson[]>([])
+    const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
     const [subtitles, setSubtitles] = useState<ScSubtitleItem[]>([])
 
     const stateSlotDetails = useNcoState('slotDetails')
@@ -56,35 +55,12 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
     }, [stateSlotDetails])
 
     const programItems = useMemo(() => {
-      const currentTime = Date.now()
+      const currentDate = new Date()
 
-      const details: StateSlotDetailJikkyo[] = programs.flatMap((program) => {
-        const starttime = new Date(program.StTime).getTime()
-        const endtime = new Date(program.EdTime).getTime()
-
-        const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime / 1000}-${endtime / 1000}`
-
-        if (currentTime < endtime) {
-          return []
-        }
-
-        return {
-          type: 'jikkyo',
-          id,
-          status: 'pending',
-          info: {
-            id: program.TID,
-            title: title.Title,
-            duration: (endtime - starttime) / 1000,
-            date: [starttime, endtime],
-            count: {
-              comment: 0,
-            },
-          },
-        }
-      })
-
-      return details
+      return programs
+        .filter((program) => new Date(program.EdTime) <= currentDate)
+        .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
+        .map((program) => programToSlotDetail(title.Title, program))
     }, [programs])
 
     const subtitleItems = useMemo(() => {
@@ -123,7 +99,7 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
       const { signal } = controller
 
       if (title.Cat === '8') {
-        new Promise<SyoboCalProgramJson[]>((resolve, reject) => {
+        new Promise<SyoboCalProgramDb[]>((resolve, reject) => {
           signal.addEventListener('abort', reject, { once: true })
 
           ncoApi.syobocal
