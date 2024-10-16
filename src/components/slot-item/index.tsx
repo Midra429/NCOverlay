@@ -205,11 +205,13 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             )}
           >
             {/* 再生数・コメント数 */}
-            <Counts
-              status={detail.status}
-              infoCount={detail.info.count}
-              isSearch={isSearch}
-            />
+            {!(detail.type === 'jikkyo' && isSearch) && (
+              <Counts
+                status={detail.status}
+                infoCount={detail.info.count}
+                isSearch={isSearch}
+              />
+            )}
 
             {/* オフセット */}
             {!isSearch && <Offset offsetMs={detail.offsetMs} />}

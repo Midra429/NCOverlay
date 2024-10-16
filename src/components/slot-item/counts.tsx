@@ -28,23 +28,21 @@ export const Counts: React.FC<CountsProps> = ({
       )}
 
       {/* コメント数 */}
-      {!isSearch && (
-        <div className="flex flex-row items-center gap-1">
-          <MessageSquareTextIcon
-            className={isSearch ? 'size-mini' : 'size-tiny'}
-          />
+      <div className="flex flex-row items-center gap-1">
+        <MessageSquareTextIcon
+          className={isSearch ? 'size-mini' : 'size-tiny'}
+        />
 
-          <Skeleton
-            classNames={{
-              base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-[4px]'],
-              content: 'text-tiny',
-            }}
-            isLoaded={0 < infoCount.comment || status === 'ready'}
-          >
-            {infoCount.comment.toLocaleString('ja-JP')}
-          </Skeleton>
-        </div>
-      )}
+        <Skeleton
+          classNames={{
+            base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-[4px]'],
+            content: 'text-tiny',
+          }}
+          isLoaded={0 < infoCount.comment || status === 'ready'}
+        >
+          {infoCount.comment.toLocaleString('ja-JP')}
+        </Skeleton>
+      </div>
     </div>
   )
 }
