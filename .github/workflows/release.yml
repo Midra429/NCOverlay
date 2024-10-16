@@ -53,6 +53,17 @@ jobs:
           pnpm zip
           pnpm zip:firefox
 
+      - name: Push tag to GitHub
+        run: |
+          git push
+          git push --tags
+
+      - name: Create Release to GitHub
+        run: |
+          gh release create "${VERSION}" dist/*-chrome.zip dist/*-firefox.zip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Submit to Stores
         run: |
           pnpm wxt submit \
@@ -66,14 +77,3 @@ jobs:
           FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
           FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
-
-      - name: Push tag to GitHub
-        run: |
-          git push
-          git push --tags
-
-      - name: Create Release to GitHub
-        run: |
-          gh release create "${VERSION}" dist/*-chrome.zip dist/*-firefox.zip
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
