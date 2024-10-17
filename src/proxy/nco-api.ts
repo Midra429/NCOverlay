@@ -37,6 +37,9 @@ type ProtocolMap = {
   'syobocal.json': (
     args: Parameters<typeof ncoApi.syobocal.json>
   ) => Awaited<ReturnType<typeof ncoApi.syobocal.json>>
+  'syobocal.db': (
+    args: Parameters<typeof ncoApi.syobocal.db>
+  ) => Awaited<ReturnType<typeof ncoApi.syobocal.db>>
 
   'danime.part': (
     args: Parameters<typeof ncoApi.danime.part>
@@ -61,6 +64,10 @@ type ProtocolMap = {
   'unext.title': (
     args: Parameters<typeof ncoApi.unext.title>
   ) => Awaited<ReturnType<typeof ncoApi.unext.title>>
+
+  'tver.v1.callEPGv2': (
+    args: Parameters<typeof ncoApi.tver.v1.callEPGv2>
+  ) => Awaited<ReturnType<typeof ncoApi.tver.v1.callEPGv2>>
 }
 
 export const { onMessage, removeAllListeners, sendMessage } =
@@ -96,6 +103,7 @@ export const ncoApiProxy: Omit<
 
   syobocal: {
     json: (...args) => sendMessage('syobocal.json', args) as any,
+    db: (...args) => sendMessage('syobocal.db', args) as any,
   },
 
   danime: {
@@ -124,5 +132,11 @@ export const ncoApiProxy: Omit<
 
   unext: {
     title: (...args) => sendMessage('unext.title', args) as any,
+  },
+
+  tver: {
+    v1: {
+      callEPGv2: (...args) => sendMessage('tver.v1.callEPGv2', args) as any,
+    },
   },
 }
