@@ -1,6 +1,5 @@
 import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
 
-import { cn } from '@nextui-org/react'
 import { ArrowDownUpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
@@ -61,14 +60,7 @@ export const Sort: React.FC<SortProps> = ({ isDisabled }) => {
       fullWidth
       label="並び替え"
       isDisabled={isDisabled}
-      startContent={
-        <ArrowDownUpIcon
-          className={cn(
-            'size-small shrink-0',
-            'text-foreground-500 dark:text-foreground-600'
-          )}
-        />
-      }
+      startContent={<ArrowDownUpIcon className="size-3.5" />}
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}
     >

@@ -171,7 +171,6 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
           classNames={{
             base: 'justify-between',
             mainWrapper: 'max-w-64',
-            innerWrapper: 'gap-3',
             value: 'justify-start',
             listboxWrapper: 'max-h-80',
           }}

@@ -1,7 +1,6 @@
 import type { NiconicoGenre } from '@midra/nco-api/types/constants'
 import type { SettingItems } from '@/types/storage'
 
-import { cn } from '@nextui-org/react'
 import { ShapesIcon } from 'lucide-react'
 import { NICONICO_GENRES } from '@midra/nco-api/constants'
 
@@ -30,14 +29,7 @@ export const Genre: React.FC<GenreProps> = ({ isDisabled }) => {
       fullWidth
       label="ジャンル"
       isDisabled={isDisabled}
-      startContent={
-        <ShapesIcon
-          className={cn(
-            'size-small shrink-0',
-            'text-foreground-500 dark:text-foreground-600'
-          )}
-        />
-      }
+      startContent={<ShapesIcon className="size-3.5" />}
       selectedKeys={[value]}
       onSelectionChange={([key]) => setValue(key as NiconicoGenre)}
     >

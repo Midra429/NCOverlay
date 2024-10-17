@@ -22,7 +22,12 @@ const select = tv({
     label: '',
     mainWrapper: '',
     trigger: 'border-1 border-divider shadow-none',
-    innerWrapper: '',
+    innerWrapper: [
+      '[&:has(>svg)]:gap-2',
+      '[&>svg]:shrink-0',
+      '[&>svg]:text-foreground-500',
+      '[&>svg]:dark:text-foreground-600',
+    ],
     selectorIcon: '',
     spinner: '',
     value: '',
@@ -49,7 +54,7 @@ const select = tv({
       mini: {
         label: 'hidden',
         trigger: 'h-6 min-h-6 px-1.5',
-        innerWrapper: '!pt-0',
+        innerWrapper: '!pt-0 [&:has(>svg)]:gap-1.5',
         selectorIcon: 'end-1.5',
         value: 'text-mini',
         listbox: 'p-0',

@@ -1,6 +1,5 @@
 import type { SettingItems } from '@/types/storage'
 
-import { cn } from '@nextui-org/react'
 import { CalendarDaysIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
@@ -49,14 +48,7 @@ export const DateRange: React.FC<DateRangeProps> = ({ isDisabled }) => {
       fullWidth
       label="投稿日時"
       isDisabled={isDisabled}
-      startContent={
-        <CalendarDaysIcon
-          className={cn(
-            'size-small shrink-0',
-            'text-foreground-500 dark:text-foreground-600'
-          )}
-        />
-      }
+      startContent={<CalendarDaysIcon className="size-3.5" />}
       selectedKeys={[JSON.stringify(value)]}
       onSelectionChange={([key]) => setValue(key && JSON.parse(key as string))}
     >
