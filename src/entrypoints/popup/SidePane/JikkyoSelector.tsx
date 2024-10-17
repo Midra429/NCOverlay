@@ -152,7 +152,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
       onOk={onAdd}
       header={
         <div className="flex flex-row items-center gap-0.5">
-          <span>コメント追加</span>
+          <span>追加</span>
           <ChevronRightIcon className="size-5 opacity-50" />
           <span>ニコニコ実況 過去ログ</span>
         </div>

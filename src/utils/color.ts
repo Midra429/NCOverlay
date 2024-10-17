@@ -18,6 +18,6 @@ export const getBrightness = (hex: string): number => {
   return r * 0.299 + g * 0.587 + b * 0.114
 }
 
-export const readableColor = (color: string): string => {
-  return 140 <= getBrightness(color) ? 'black' : 'white'
+export const readableColor = (hex: string): string => {
+  return 140 <= getBrightness(hex) ? 'black' : 'white'
 }

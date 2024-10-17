@@ -9,8 +9,11 @@ import {
   ModalBody as NextUIModalBody,
   ModalFooter as NextUIModalFooter,
 } from '@nextui-org/react'
+import { XIcon } from 'lucide-react'
 
 export type ModalProps = {
+  fullWidth?: boolean
+
   isOpen: NextUIModalProps['isOpen']
   onOpenChange: NextUIModalProps['onOpenChange']
   onClose?: NextUIModalProps['onClose']
@@ -36,7 +39,7 @@ export const Modal: React.FC<ModalProps> = (props) => {
     <NextUIModal
       classNames={{
         wrapper: 'justify-end',
-        base: 'max-w-[370px]',
+        base: !props.fullWidth && 'max-w-[370px]',
         header: 'border-b-1 border-foreground-200 p-2 text-medium',
         body: 'p-0',
         footer: 'border-t-1 border-foreground-200 p-2',
@@ -63,7 +66,9 @@ export const Modal: React.FC<ModalProps> = (props) => {
                     {props.header}
                   </div>
 
-                  {props.headerEndContent}
+                  <div className="shrink-0 font-normal">
+                    {props.headerEndContent}
+                  </div>
                 </NextUIModalHeader>
               )}
 
@@ -79,7 +84,9 @@ export const Modal: React.FC<ModalProps> = (props) => {
                         size="sm"
                         variant="flat"
                         color="default"
-                        startContent={props.cancelIcon}
+                        startContent={
+                          props.cancelIcon || <XIcon className="size-4" />
+                        }
                         onPress={onClose}
                       >
                         {props.cancelText || 'キャンセル'}

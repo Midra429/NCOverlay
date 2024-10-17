@@ -7,12 +7,19 @@ import {
   useDisclosure,
   cn,
 } from '@nextui-org/react'
-import { ChevronDownIcon, PlusIcon } from 'lucide-react'
+import {
+  PlusIcon,
+  ChevronDownIcon,
+  CalendarClockIcon,
+  Table2Icon,
+} from 'lucide-react'
 
 import { JikkyoSelector } from './JikkyoSelector'
+import { JikkyoEpgSelector } from './JikkyoEpgSelector'
 
 export const Header: React.FC = () => {
   const jkModalDc = useDisclosure()
+  const jkEpgModalDc = useDisclosure()
 
   return (
     <>
@@ -40,13 +47,14 @@ export const Header: React.FC = () => {
           <DropdownTrigger>
             <Button
               className={cn(
-                '[&>svg]:rotate-0 [&[aria-expanded="true"]>svg]:rotate-180',
-                '[&>svg]:transition-transform'
+                '[&>svg:last-child]:rotate-0 [&[aria-expanded="true"]>svg]:rotate-180',
+                '[&>svg:last-child]:transition-transform'
               )}
               size="sm"
               variant="flat"
               color="primary"
               disableRipple
+              startContent={<PlusIcon className="size-4" />}
               endContent={<ChevronDownIcon className="size-4" />}
             >
               追加
@@ -55,10 +63,17 @@ export const Header: React.FC = () => {
 
           <DropdownMenu variant="flat" color="primary">
             <DropdownItem
-              startContent={<PlusIcon className="size-4" />}
+              startContent={<CalendarClockIcon className="size-4" />}
               onPress={jkModalDc.onOpen}
             >
               ニコニコ実況 過去ログ
+            </DropdownItem>
+
+            <DropdownItem
+              startContent={<Table2Icon className="size-4" />}
+              onPress={jkEpgModalDc.onOpen}
+            >
+              ニコニコ実況 過去ログ (番組表)
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -67,6 +82,11 @@ export const Header: React.FC = () => {
       <JikkyoSelector
         isOpen={jkModalDc.isOpen}
         onOpenChange={jkModalDc.onOpenChange}
+      />
+
+      <JikkyoEpgSelector
+        isOpen={jkEpgModalDc.isOpen}
+        onOpenChange={jkEpgModalDc.onOpenChange}
       />
     </>
   )
