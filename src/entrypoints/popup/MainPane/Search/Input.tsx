@@ -73,14 +73,12 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
             >
               <SelectItem
                 key="niconico"
-                variant="flat"
                 startContent={<SiNiconico className="size-4" />}
               >
                 ニコニコ動画
               </SelectItem>
               <SelectItem
                 key="syobocal"
-                variant="flat"
                 startContent={<Table2Icon className="size-4" />}
               >
                 しょぼいカレンダー

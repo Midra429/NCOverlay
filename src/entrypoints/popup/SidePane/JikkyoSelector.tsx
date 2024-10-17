@@ -196,7 +196,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
                 title={TITLE}
               >
                 {IDS.map((id) => (
-                  <SelectItem key={id} variant="flat">
+                  <SelectItem key={id}>
                     {`${id}: ${JIKKYO_CHANNELS[id]}`}
                   </SelectItem>
                 ))}

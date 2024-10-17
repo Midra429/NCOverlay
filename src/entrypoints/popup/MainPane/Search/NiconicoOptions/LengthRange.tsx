@@ -69,7 +69,6 @@ export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
               title: 'text-tiny',
               selectedIcon: '!size-mini',
             }}
-            variant="flat"
           >
             {label}
           </SelectItem>

@@ -50,7 +50,6 @@ export const Genre: React.FC<GenreProps> = ({ isDisabled }) => {
               title: 'text-tiny',
               selectedIcon: '!size-mini',
             }}
-            variant="flat"
           >
             {value}
           </SelectItem>

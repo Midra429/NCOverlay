@@ -81,6 +81,10 @@ export const Select: React.FC<SelectProps> = (props) => {
       classNames={classNames}
       size={props.size === 'mini' ? 'sm' : props.size}
       variant="faded"
+      listboxProps={{
+        variant: 'flat',
+        ...props.listboxProps,
+      }}
     />
   )
 }

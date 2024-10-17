@@ -81,7 +81,6 @@ export const Sort: React.FC<SortProps> = ({ isDisabled }) => {
               title: 'text-tiny',
               selectedIcon: '!size-mini',
             }}
-            variant="flat"
           >
             {label}
           </SelectItem>

@@ -69,7 +69,6 @@ export const DateRange: React.FC<DateRangeProps> = ({ isDisabled }) => {
               title: 'text-tiny',
               selectedIcon: '!size-mini',
             }}
-            variant="flat"
           >
             {label}
           </SelectItem>
