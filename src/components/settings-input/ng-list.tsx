@@ -74,7 +74,7 @@ const HeaderCell: React.FC<
         'shrink-0 py-1.5',
         'bg-content2 text-content2-foreground',
         'border-b-1 border-divider',
-        'text-tiny font-bold',
+        'text-tiny font-semibold',
         '[&:not(:first-child)]:border-l-1',
         className
       )}

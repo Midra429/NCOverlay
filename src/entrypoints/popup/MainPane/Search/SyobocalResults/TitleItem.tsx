@@ -45,7 +45,7 @@ export const TitleItemInner: React.FC<TitleItemInnerProps> = ({
     <div className="flex flex-col items-start gap-1">
       <span
         className={cn(
-          'font-bold',
+          'font-semibold',
           'line-clamp-2 break-all',
           isHeader ? 'text-medium' : 'text-tiny'
         )}

@@ -33,7 +33,7 @@ export const Title: React.FC<TitleProps> = ({
   const title = (
     <span
       className={cn(
-        'line-clamp-3 whitespace-pre-wrap break-all font-bold',
+        'line-clamp-3 whitespace-pre-wrap break-all font-semibold',
         isSearch ? 'text-mini' : 'text-tiny'
       )}
       title={overflow ? infoTitle : undefined}

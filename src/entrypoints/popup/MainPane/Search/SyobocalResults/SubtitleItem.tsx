@@ -73,7 +73,7 @@ export const SubtitleItem = forwardRef<SubtitleItemHandle, SubtitleItemProps>(
             </span>
 
             <span
-              className="line-clamp-2 break-all font-bold"
+              className="line-clamp-2 break-all font-semibold"
               title={overflow ? subtitle[1] : undefined}
               ref={titleRef}
             >
