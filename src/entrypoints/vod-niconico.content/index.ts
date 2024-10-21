@@ -62,6 +62,7 @@ const main = async () => {
         videoDataToSlotDetail(videoData, {
           id,
           status: 'loading',
+          isAutoLoaded: true,
         })
       )
 
