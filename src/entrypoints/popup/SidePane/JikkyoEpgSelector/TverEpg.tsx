@@ -1,7 +1,7 @@
-import type { EPGData, EPGProgram } from '.'
+import type { EPGData, EPGContent, EPGProgram } from '.'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useMemo, useEffect, useState, useRef, forwardRef } from 'react'
 import {
   Popover,
   PopoverTrigger,
@@ -156,12 +156,6 @@ const ProgramCell: React.FC<{
 const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
   const { date, contents, genre } = data
 
-  const stateSlotDetails = useNcoState('slotDetails')
-
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
-
   return (
     <div
       className="flex shrink-0 flex-row overflow-hidden bg-content3"
@@ -231,7 +225,7 @@ const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
                       '!duration-150 transition-background',
                       'aria-expanded:scale-100',
                       'aria-expanded:opacity-100',
-                      program.disabled && 'pointer-events-none opacity-50'
+                      program.isDisabled && 'pointer-events-none opacity-50'
                     )}
                   >
                     <div className="absolute w-full" style={{ top, height }}>
@@ -269,7 +263,7 @@ const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
                       }}
                       detail={slotDetail}
                       isSearch
-                      isDisabled={ids?.includes(slotDetail.id)}
+                      isDisabled={program.isAdded}
                     />
                   </PopoverContent>
                 </Popover>
@@ -282,33 +276,68 @@ const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
   )
 }
 
-const CurrentBar: React.FC<{ top: number }> = ({ top }) => {
-  return (
-    <div
-      className={cn(
-        'absolute z-20',
-        'h-[1px] w-full',
-        'bg-primary opacity-80',
-        'pointer-events-none'
-      )}
-      style={{ top }}
-    />
-  )
-}
+const CurrentBar = forwardRef<HTMLDivElement, { top: number }>(
+  ({ top }, ref) => {
+    return (
+      <div
+        className={cn(
+          'absolute z-20',
+          'h-[1px] w-full',
+          'bg-primary opacity-80',
+          'pointer-events-none'
+        )}
+        style={{ top }}
+        ref={ref}
+      />
+    )
+  }
+)
 
 export type TverEpgProps = {
   data: EPGData
 }
 
 export const TverEpg: React.FC<TverEpgProps> = ({ data }) => {
-  const { date, contents } = data
+  const currentBarRef = useRef<HTMLDivElement>(null)
 
   const [time, updateTime] = useState(Date.now() / 1000)
+
+  const stateSlotDetails = useNcoState('slotDetails')
+
+  const ids = useMemo(() => {
+    return stateSlotDetails?.map((v) => v.id)
+  }, [stateSlotDetails])
+
+  const contents: EPGContent[] = useMemo(() => {
+    return data.contents.map<EPGContent>((content) => {
+      const { jkChId } = content.channel
+
+      return {
+        ...content,
+        programs: content.programs.map<EPGProgram>((program) => {
+          const id = `${jkChId}:${program.startAt}-${program.endAt}`
+
+          return {
+            ...program,
+            isDisabled: time <= program.endAt,
+            isAdded: ids?.includes(id),
+          }
+        }),
+      }
+    })
+  }, [time, ids])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateTime(Date.now() / 1000)
     }, 30 * 1000)
+
+    setTimeout(() => {
+      currentBarRef.current?.scrollIntoView({
+        behavior: 'instant',
+        block: 'end',
+      })
+    })
 
     return () => clearInterval(intervalId)
   }, [])
@@ -339,11 +368,14 @@ export const TverEpg: React.FC<TverEpgProps> = ({ data }) => {
           <Hours />
 
           {/* 番組 */}
-          <Programs data={data} />
+          <Programs data={{ ...data, contents }} />
 
           {/* 現在時刻 */}
-          {date[0] <= time && time <= date[1] && (
-            <CurrentBar top={((time - date[0]) / 3600) * ROW_HEIGHT} />
+          {data.date[0] <= time && time <= data.date[1] && (
+            <CurrentBar
+              top={((time - data.date[0]) / 3600) * ROW_HEIGHT}
+              ref={currentBarRef}
+            />
           )}
         </div>
       </div>

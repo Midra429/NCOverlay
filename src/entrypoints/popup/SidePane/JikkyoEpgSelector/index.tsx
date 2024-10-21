@@ -36,7 +36,8 @@ export type EPGProgram = {
   startAt: number
   endAt: number
   genre: EPGv2Program['genre']
-  disabled?: boolean
+  isDisabled?: boolean
+  isAdded?: boolean
 }
 
 export type EPGContent = {
@@ -85,8 +86,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
 
     ncoApi.tver.v1.callEPGv2(params).then((result) => {
       if (result) {
-        const currentTime = new Date().getTime()
-        const currentTimeSec = currentTime / 1000
+        const currentTime = Date.now()
 
         const allowViewDate = result.allowViewDate.filter((date) => {
           return new Date(`${date} 05:00:00`).getTime() <= currentTime
@@ -121,7 +121,6 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
                 startAt: program.startAt,
                 endAt: program.endAt,
                 genre: program.genre,
-                disabled: currentTimeSec <= program.endAt,
               })),
             }
           }
