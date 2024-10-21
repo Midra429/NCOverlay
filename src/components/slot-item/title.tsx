@@ -20,14 +20,19 @@ export const Title: React.FC<TitleProps> = ({
   const { ref, overflow } = useOverflowDetector()
 
   const url = useMemo(() => {
-    return infoId
-      ? new URL(
-          infoId,
-          type === 'jikkyo'
-            ? `https://cal.syoboi.jp/tid/`
-            : 'https://www.nicovideo.jp/watch/'
-        )
-      : null
+    if (!infoId) return null
+
+    let baseUrl: string
+
+    if (type !== 'jikkyo') {
+      baseUrl = 'https://www.nicovideo.jp/watch/'
+    } else if (/^\d+$/.test(infoId)) {
+      baseUrl = 'https://cal.syoboi.jp/tid/'
+    } else {
+      baseUrl = 'https://tver.jp/series/'
+    }
+
+    return new URL(infoId, baseUrl)
   }, [type, infoId])
 
   const title = (

@@ -29,12 +29,13 @@ import { Select, SelectItem } from '@/components/select'
 import { TverEpg } from './TverEpg'
 
 export type EPGProgram = {
+  id?: string
   title: string
   description: string
+  prefix: string
   startAt: number
   endAt: number
   genre: EPGv2Program['genre']
-  icon: EPGv2Program['icon']
   disabled?: boolean
 }
 
@@ -107,12 +108,19 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
                 name: JIKKYO_CHANNELS[jkChId],
               },
               programs: programs.flatMap((program) => ({
+                id: program.seriesID,
                 title: program.seriesTitle || program.title,
                 description: program.seriesTitle && program.title,
+                prefix: [
+                  program.icon.new && '🈟',
+                  program.icon.revival && '🈞',
+                  program.icon.last && '🈡',
+                ]
+                  .filter(Boolean)
+                  .join(' '),
                 startAt: program.startAt,
                 endAt: program.endAt,
                 genre: program.genre,
-                icon: program.icon,
                 disabled: currentTimeSec <= program.endAt,
               })),
             }

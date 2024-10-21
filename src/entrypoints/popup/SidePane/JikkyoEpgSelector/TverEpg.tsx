@@ -10,6 +10,7 @@ import {
   cn,
 } from '@nextui-org/react'
 import { darken, saturate, toHex } from 'color2k'
+import { normalize } from '@midra/nco-parser/normalize'
 
 import { zeroPadding } from '@/utils/zeroPadding'
 import { readableColor } from '@/utils/color'
@@ -139,10 +140,7 @@ const ProgramCell: React.FC<{
 
           {/* タイトル */}
           <span className="pr-1 pt-1 font-semibold">
-            {program.icon.new && '🈟 '}
-            {program.icon.revival && '🈞 '}
-            {program.icon.last && '🈡 '}
-            {program.title}
+            {`${program.prefix} ${program.title}`.trim()}
           </span>
         </span>
 
@@ -184,7 +182,8 @@ const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
             style={{ width: COLUMN_WIDTH }}
           >
             {content.programs.map((program, idx) => {
-              const { title, description, startAt, endAt } = program
+              const { title, description, prefix, startAt, endAt } = program
+
               const duration = endAt - startAt
 
               const height = (duration / 3600) * ROW_HEIGHT
@@ -202,8 +201,12 @@ const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
                 id: `${jkChId}:${startAt}-${endAt}`,
                 status: 'pending',
                 info: {
-                  id: null,
-                  title: [title, description].join('\n').trim(),
+                  id: program.id ?? null,
+                  title: `${prefix} ${
+                    normalize(description).includes(normalize(title))
+                      ? description
+                      : `${title}\n${description}`.trim()
+                  }`.trim(),
                   duration,
                   date: [startAt * 1000, endAt * 1000],
                   count: {
@@ -247,7 +250,11 @@ const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
                       'text-tiny'
                     )}
                   >
-                    {title && <span className="font-semibold">{title}</span>}
+                    {title && (
+                      <span className="font-semibold">
+                        {`${prefix} ${title}`.trim()}
+                      </span>
+                    )}
                     {description && (
                       <span className="text-foreground-500 dark:text-foreground-600">
                         {description}
