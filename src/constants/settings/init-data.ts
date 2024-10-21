@@ -187,6 +187,13 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '色付きコメントを非表示',
         description: '色指定コマンドを含むコメントを非表示にします。',
       },
+      {
+        settingsKey: 'settings:ng:useNiconicoAccount',
+        inputType: 'toggle',
+        label: 'ニコニコ側のNG設定を使用',
+        description:
+          'ブラウザでログイン中のニコニコアカウントのNG設定を使用します。',
+      },
     ],
   },
   {

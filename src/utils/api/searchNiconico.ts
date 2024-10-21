@@ -4,11 +4,21 @@ import type { SettingItems } from '@/types/storage'
 import { now, getLocalTimeZone } from '@internationalized/date'
 import { ncoApi } from '@midra/nco-api'
 
+import { settings } from '@/utils/settings/extension'
+
 import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 import { searchDataToSlotDetail } from './searchDataToSlotDetail'
 
 export const searchNiconicoByIds = async (...contentIds: string[]) => {
-  const data = await ncoApi.niconico.multipleVideo(contentIds)
+  const useNiconicoAccount = await settings.get(
+    'settings:ng:useNiconicoAccount'
+  )
+
+  const credentials: RequestInit['credentials'] = useNiconicoAccount
+    ? 'include'
+    : 'omit'
+
+  const data = await ncoApi.niconico.multipleVideo(contentIds, credentials)
   const filtered = data.filter((v) => v !== null)
 
   if (filtered.length) {

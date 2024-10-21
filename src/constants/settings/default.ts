@@ -34,6 +34,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:ng:largeComments': false,
   'settings:ng:fixedComments': false,
   'settings:ng:coloredComments': false,
+  'settings:ng:useNiconicoAccount': false,
 
   // キーボード
   'settings:kbd:increaseGlobalOffset': '',

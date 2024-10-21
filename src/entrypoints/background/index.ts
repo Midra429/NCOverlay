@@ -49,7 +49,7 @@ const main = async () => {
 
       case 'update':
         await clearTemporaryData()
-        await migration()
+        // await migration()
 
         if (
           import.meta.env.PROD &&

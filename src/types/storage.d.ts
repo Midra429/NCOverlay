@@ -142,6 +142,12 @@ export type StorageItems_v3 = {
   'settings:ng:coloredComments': boolean
 
   /**
+   * NG設定:ニコニコ側のNG設定を使用
+   * @default false
+   */
+  'settings:ng:useNiconicoAccount': boolean
+
+  /**
    * キーボード:全体のオフセットを増やす
    * @default ''
    */

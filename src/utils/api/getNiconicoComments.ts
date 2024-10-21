@@ -25,12 +25,19 @@ export const getNiconicoComments = async (
   } | null)[]
 > => {
   const amount = await settings.get('settings:comment:amount')
+  const useNiconicoAccount = await settings.get(
+    'settings:ng:useNiconicoAccount'
+  )
+
+  const credentials: RequestInit['credentials'] = useNiconicoAccount
+    ? 'include'
+    : 'omit'
 
   // 動画情報取得
   const videos = await Promise.all(
     params.map((val) => {
       return 'contentId' in val
-        ? ncoApiProxy.niconico.video(val.contentId)
+        ? ncoApiProxy.niconico.video(val.contentId, credentials)
         : val
     })
   )
@@ -52,8 +59,11 @@ export const getNiconicoComments = async (
         }
 
         const baseThreadsData = await ncoApiProxy.niconico.threads(
-          nvComment,
-          additionals
+          {
+            nvComment,
+            additionals,
+          },
+          credentials
         )
         const baseMainThread = baseThreadsData?.threads
           .filter((v) => v.fork === 'main')
@@ -82,8 +92,11 @@ export const getNiconicoComments = async (
 
         while (0 < count--) {
           const threadsData = await ncoApiProxy.niconico.threads(
-            nvComment,
-            additionals
+            {
+              nvComment,
+              additionals,
+            },
+            credentials
           )
           const mainThread = threadsData?.threads.find((val) => {
             return (
@@ -106,9 +119,15 @@ export const getNiconicoComments = async (
 
         return baseThreadsData
       } else {
-        return ncoApiProxy.niconico.threads(nvComment, {
-          when: 'when' in params[idx] ? params[idx].when : undefined,
-        })
+        return ncoApiProxy.niconico.threads(
+          {
+            nvComment,
+            additionals: {
+              when: 'when' in params[idx] ? params[idx].when : undefined,
+            },
+          },
+          credentials
+        )
       }
     })
   )
