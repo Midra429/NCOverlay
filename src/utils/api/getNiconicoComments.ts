@@ -59,11 +59,8 @@ export const getNiconicoComments = async (
         }
 
         const baseThreadsData = await ncoApiProxy.niconico.threads(
-          {
-            nvComment,
-            additionals,
-          },
-          credentials
+          nvComment,
+          additionals
         )
         const baseMainThread = baseThreadsData?.threads
           .filter((v) => v.fork === 'main')
@@ -92,11 +89,8 @@ export const getNiconicoComments = async (
 
         while (0 < count--) {
           const threadsData = await ncoApiProxy.niconico.threads(
-            {
-              nvComment,
-              additionals,
-            },
-            credentials
+            nvComment,
+            additionals
           )
           const mainThread = threadsData?.threads.find((val) => {
             return (
@@ -119,15 +113,9 @@ export const getNiconicoComments = async (
 
         return baseThreadsData
       } else {
-        return ncoApiProxy.niconico.threads(
-          {
-            nvComment,
-            additionals: {
-              when: 'when' in params[idx] ? params[idx].when : undefined,
-            },
-          },
-          credentials
-        )
+        return ncoApiProxy.niconico.threads(nvComment, {
+          when: 'when' in params[idx] ? params[idx].when : undefined,
+        })
       }
     })
   )

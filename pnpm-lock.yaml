@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@icons-pack/react-simple-icons':
-        specifier: ^10.0.0
-        version: 10.0.0(react@18.3.1)
+        specifier: ^10.1.0
+        version: 10.1.0(react@18.3.1)
       '@internationalized/date':
         specifier: ^3.5.6
         version: 3.5.6
       '@midra/nco-api':
-        specifier: ^1.8.8
-        version: 1.8.8
+        specifier: ^1.8.9
+        version: 1.8.9
       '@midra/nco-parser':
         specifier: ^1.0.27
         version: 1.0.27
@@ -83,7 +83,7 @@ importers:
         version: 18.3.1
       '@wxt-dev/module-react':
         specifier: ^1.1.1
-        version: 1.1.1(vite@5.4.9(@types/node@22.7.7)(sass@1.80.3))(wxt@0.19.12(@types/node@22.7.7)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3))
+        version: 1.1.1(vite@5.4.9(@types/node@22.7.8)(sass@1.80.3))(wxt@0.19.12(@types/node@22.7.8)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
@@ -116,7 +116,7 @@ importers:
         version: 3.11.0
       wxt:
         specifier: ^0.19.12
-        version: 0.19.12(@types/node@22.7.7)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3)
+        version: 0.19.12(@types/node@22.7.8)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3)
 
 packages:
 
@@ -390,8 +390,8 @@ packages:
   '@formatjs/fast-memoize@2.2.1':
     resolution: {integrity: sha512-XS2RcOSyWxmUB7BUjj3mlPH0exsUzlf6QfhhijgI941WaJhVxXQ6mEWkdUFIdnKi3TuTYxRdelsgv3mjieIGIA==}
 
-  '@formatjs/icu-messageformat-parser@2.7.10':
-    resolution: {integrity: sha512-wlQfqCZ7PURkUNL2+8VTEFavPovtADU/isSKLFvDbdFmV7QPZIYqFMkhklaDYgMyLSBJa/h2MVQ2aFvoEJhxgg==}
+  '@formatjs/icu-messageformat-parser@2.8.0':
+    resolution: {integrity: sha512-r2un3fmF9oJv3mOkH+wwQZ037VpqmdfahbcCZ9Lh+p6Sx+sNsonI7Zcr6jNMm1s+Si7ejQORS4Ezlh05mMPAXA==}
 
   '@formatjs/icu-skeleton-parser@1.8.4':
     resolution: {integrity: sha512-LMQ1+Wk1QSzU4zpd5aSu7+w5oeYhupRwZnMQckLPRYhSjf2/8JWQ882BauY9NyHxs5igpuQIXZDgfkaH3PoATg==}
@@ -403,8 +403,8 @@ packages:
     resolution: {integrity: sha512-fOgkPtiewCpdMtQRqbfbR1ebkv4yxNoic0e90GYCdDzScUjrwc3AezpbGuw0sPUJE8HcT2TLZYdp7qpI7TQwHw==}
     engines: {node: '>=14.0.0'}
 
-  '@icons-pack/react-simple-icons@10.0.0':
-    resolution: {integrity: sha512-oU0PVDx9sbNQjRxJN555dsHbRApYN+aBq/O9+wo3JgNkEfvBMgAEtsSGtXWWXQsLAxJcYiFOCzBWege/Xj/JFQ==}
+  '@icons-pack/react-simple-icons@10.1.0':
+    resolution: {integrity: sha512-sZ2oDkYaVAci7GuNL8okERJn4Ej0INbeCwtIDVuwWfO5zILW7j5frvKQbozTB+fLtZqEwAP9KkNp7oR8WeHaIg==}
     peerDependencies:
       react: ^16.13 || ^17 || ^18
 
@@ -446,8 +446,8 @@ packages:
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
 
-  '@midra/nco-api@1.8.8':
-    resolution: {integrity: sha512-XCtH4x+kui+E3AdhmlHzAR/g3dhwXBIsZJj0Lio6f6EQMrER932q9CRAVK/PhzcCsDhI+FHQV5NfUaC6KNFkWg==}
+  '@midra/nco-api@1.8.9':
+    resolution: {integrity: sha512-EiItd5JnwbiKTSmTN50ydkPH3eLBnmGiD89ufdTeXZLNcYSrkcPi2b3RcbLzFNdKosaobE8AU+pThasgOA3hqQ==}
 
   '@midra/nco-parser@1.0.27':
     resolution: {integrity: sha512-OwHHY3zkGXW2SIqaKn640+mTAg8BnRVKxifK9jUlr2oF526SS06kyk5j0pi64aW8g4INV23nBtTcFF2sPNlipw==}
@@ -1743,8 +1743,8 @@ packages:
   '@types/nanoid-dictionary@4.2.3':
     resolution: {integrity: sha512-T98Halw1f2aJ802GtCNMHZgqX2q1LX85eMP+K7N+OXSLagdmAzooAEhB565FQXTiCxdF4wNijOBroAQJat4uig==}
 
-  '@types/node@22.7.7':
-    resolution: {integrity: sha512-SRxCrrg9CL/y54aiMCG3edPKdprgMVGDXjA3gB8UmmBW5TcXzRUYAh8EWzTnSJFAd1rgImPELza+A3bJ+qxz8Q==}
+  '@types/node@22.7.8':
+    resolution: {integrity: sha512-a922jJy31vqR5sk+kAdIENJjHblqcZ4RmERviFsER4WJcEONqxKcjNOlk0q7OUfrF5sddT+vng070cdfMlrPLg==}
 
   '@types/prop-types@15.7.13':
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
@@ -1899,8 +1899,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  browserslist@4.24.0:
-    resolution: {integrity: sha512-Rmb62sR1Zpjql25eSanFGEhAxcFwfA1K0GuQcLoaJBAcENegrQut3hYdhXFF1obQfiDyqIW/cLM5HSJ/9k884A==}
+  browserslist@4.24.2:
+    resolution: {integrity: sha512-ZIc+Q62revdMcqC6aChtW4jz3My3klmCO1fEmINZY/8J3EpBg5/A/D0AKmBveUh6pgoeycoMkVMko84tuYS+Gg==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -2618,8 +2618,8 @@ packages:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
     engines: {node: '>=10'}
 
-  intl-messageformat@10.7.0:
-    resolution: {integrity: sha512-2P06M9jFTqJnEQzE072VGPjbAx6ZG1YysgopAwc8ui0ajSjtwX1MeQ6bXFXIzKcNENJTizKkcJIcZ0zlpl1zSg==}
+  intl-messageformat@10.7.1:
+    resolution: {integrity: sha512-xQuJW2WcyzNJZWUu5xTVPOmNSA1Sowuu/NKFdUid5Fxx/Yl6/s4DefTU/y7zy+irZLDmFGmTLtnM8FqpN05wlA==}
 
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
@@ -4271,7 +4271,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.25.8
       '@babel/helper-validator-option': 7.25.7
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -4460,7 +4460,7 @@ snapshots:
     dependencies:
       tslib: 2.8.0
 
-  '@formatjs/icu-messageformat-parser@2.7.10':
+  '@formatjs/icu-messageformat-parser@2.8.0':
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.0
       '@formatjs/icu-skeleton-parser': 1.8.4
@@ -4477,7 +4477,7 @@ snapshots:
 
   '@geolonia/japanese-numeral@1.0.2': {}
 
-  '@icons-pack/react-simple-icons@10.0.0(react@18.3.1)':
+  '@icons-pack/react-simple-icons@10.1.0(react@18.3.1)':
     dependencies:
       react: 18.3.1
 
@@ -4488,7 +4488,7 @@ snapshots:
   '@internationalized/message@3.1.5':
     dependencies:
       '@swc/helpers': 0.5.13
-      intl-messageformat: 10.7.0
+      intl-messageformat: 10.7.1
 
   '@internationalized/number@3.5.4':
     dependencies:
@@ -4526,7 +4526,7 @@ snapshots:
 
   '@lukeed/csprng@1.1.0': {}
 
-  '@midra/nco-api@1.8.8':
+  '@midra/nco-api@1.8.9':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
       '@midra/nco-parser': 1.0.27
@@ -6651,7 +6651,7 @@ snapshots:
 
   '@types/nanoid-dictionary@4.2.3': {}
 
-  '@types/node@22.7.7':
+  '@types/node@22.7.8':
     dependencies:
       undici-types: 6.19.8
 
@@ -6670,17 +6670,17 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.7.7
+      '@types/node': 22.7.8
     optional: true
 
-  '@vitejs/plugin-react@4.3.3(vite@5.4.9(@types/node@22.7.7)(sass@1.80.3))':
+  '@vitejs/plugin-react@4.3.3(vite@5.4.9(@types/node@22.7.8)(sass@1.80.3))':
     dependencies:
       '@babel/core': 7.25.8
       '@babel/plugin-transform-react-jsx-self': 7.25.7(@babel/core@7.25.8)
       '@babel/plugin-transform-react-jsx-source': 7.25.7(@babel/core@7.25.8)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.9(@types/node@22.7.7)(sass@1.80.3)
+      vite: 5.4.9(@types/node@22.7.8)(sass@1.80.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -6700,10 +6700,10 @@ snapshots:
       uid: 2.0.2
       webextension-polyfill: 0.10.0
 
-  '@wxt-dev/module-react@1.1.1(vite@5.4.9(@types/node@22.7.7)(sass@1.80.3))(wxt@0.19.12(@types/node@22.7.7)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3))':
+  '@wxt-dev/module-react@1.1.1(vite@5.4.9(@types/node@22.7.8)(sass@1.80.3))(wxt@0.19.12(@types/node@22.7.8)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3))':
     dependencies:
-      '@vitejs/plugin-react': 4.3.3(vite@5.4.9(@types/node@22.7.7)(sass@1.80.3))
-      wxt: 0.19.12(@types/node@22.7.7)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3)
+      '@vitejs/plugin-react': 4.3.3(vite@5.4.9(@types/node@22.7.8)(sass@1.80.3))
+      wxt: 0.19.12(@types/node@22.7.8)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3)
     transitivePeerDependencies:
       - supports-color
       - vite
@@ -6759,7 +6759,7 @@ snapshots:
 
   autoprefixer@10.4.20(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       caniuse-lite: 1.0.30001669
       fraction.js: 4.3.7
       normalize-range: 0.1.2
@@ -6813,12 +6813,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  browserslist@4.24.0:
+  browserslist@4.24.2:
     dependencies:
       caniuse-lite: 1.0.30001669
       electron-to-chromium: 1.5.41
       node-releases: 2.0.18
-      update-browserslist-db: 1.1.1(browserslist@4.24.0)
+      update-browserslist-db: 1.1.1(browserslist@4.24.2)
 
   buffer-crc32@0.2.13: {}
 
@@ -6881,7 +6881,7 @@ snapshots:
 
   caniuse-api@3.0.0:
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       caniuse-lite: 1.0.30001669
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
@@ -6921,7 +6921,7 @@ snapshots:
 
   chrome-launcher@1.1.0:
     dependencies:
-      '@types/node': 22.7.7
+      '@types/node': 22.7.8
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 2.0.1
@@ -7088,7 +7088,7 @@ snapshots:
 
   cssnano-preset-default@7.0.6(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       css-declaration-sorter: 7.2.0(postcss@8.4.47)
       cssnano-utils: 5.0.0(postcss@8.4.47)
       postcss: 8.4.47
@@ -7570,11 +7570,11 @@ snapshots:
 
   ini@2.0.0: {}
 
-  intl-messageformat@10.7.0:
+  intl-messageformat@10.7.1:
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.0
       '@formatjs/fast-memoize': 2.2.1
-      '@formatjs/icu-messageformat-parser': 2.7.10
+      '@formatjs/icu-messageformat-parser': 2.8.0
       tslib: 2.8.0
 
   invariant@2.2.4:
@@ -8128,7 +8128,7 @@ snapshots:
 
   postcss-colormin@7.0.2(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       caniuse-api: 3.0.0
       colord: 2.9.3
       postcss: 8.4.47
@@ -8136,7 +8136,7 @@ snapshots:
 
   postcss-convert-values@7.0.4(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       postcss: 8.4.47
       postcss-value-parser: 4.2.0
 
@@ -8184,7 +8184,7 @@ snapshots:
 
   postcss-merge-rules@7.0.4(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       caniuse-api: 3.0.0
       cssnano-utils: 5.0.0(postcss@8.4.47)
       postcss: 8.4.47
@@ -8204,7 +8204,7 @@ snapshots:
 
   postcss-minify-params@7.0.2(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       cssnano-utils: 5.0.0(postcss@8.4.47)
       postcss: 8.4.47
       postcss-value-parser: 4.2.0
@@ -8251,7 +8251,7 @@ snapshots:
 
   postcss-normalize-unicode@7.0.2(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       postcss: 8.4.47
       postcss-value-parser: 4.2.0
 
@@ -8273,7 +8273,7 @@ snapshots:
 
   postcss-reduce-initial@7.0.2(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       caniuse-api: 3.0.0
       postcss: 8.4.47
 
@@ -8693,7 +8693,7 @@ snapshots:
 
   stylehacks@7.0.4(postcss@8.4.47):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       postcss: 8.4.47
       postcss-selector-parser: 6.1.2
 
@@ -8854,9 +8854,9 @@ snapshots:
 
   untildify@4.0.0: {}
 
-  update-browserslist-db@1.1.1(browserslist@4.24.0):
+  update-browserslist-db@1.1.1(browserslist@4.24.2):
     dependencies:
-      browserslist: 4.24.0
+      browserslist: 4.24.2
       escalade: 3.2.0
       picocolors: 1.1.1
 
@@ -8915,12 +8915,12 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  vite-node@2.1.3(@types/node@22.7.7)(sass@1.80.3):
+  vite-node@2.1.3(@types/node@22.7.8)(sass@1.80.3):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.9(@types/node@22.7.7)(sass@1.80.3)
+      vite: 5.4.9(@types/node@22.7.8)(sass@1.80.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -8932,13 +8932,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.4.9(@types/node@22.7.7)(sass@1.80.3):
+  vite@5.4.9(@types/node@22.7.8)(sass@1.80.3):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.24.0
     optionalDependencies:
-      '@types/node': 22.7.7
+      '@types/node': 22.7.8
       fsevents: 2.3.3
       sass: 1.80.3
 
@@ -9037,7 +9037,7 @@ snapshots:
 
   ws@8.18.0: {}
 
-  wxt@0.19.12(@types/node@22.7.7)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3):
+  wxt@0.19.12(@types/node@22.7.8)(rollup@4.24.0)(sass@1.80.3)(webpack-sources@3.2.3):
     dependencies:
       '@aklinker1/rollup-plugin-visualizer': 5.12.0(rollup@4.24.0)
       '@types/chrome': 0.0.269
@@ -9080,8 +9080,8 @@ snapshots:
       publish-browser-extension: 2.2.2
       scule: 1.3.0
       unimport: 3.13.1(rollup@4.24.0)(webpack-sources@3.2.3)
-      vite: 5.4.9(@types/node@22.7.7)(sass@1.80.3)
-      vite-node: 2.1.3(@types/node@22.7.7)(sass@1.80.3)
+      vite: 5.4.9(@types/node@22.7.8)(sass@1.80.3)
+      vite-node: 2.1.3(@types/node@22.7.8)(sass@1.80.3)
       web-ext-run: 0.2.1
       webextension-polyfill: 0.12.0
     transitivePeerDependencies:
