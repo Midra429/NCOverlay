@@ -30,6 +30,14 @@ export type StorageItems_v2 = {
 /** v3.13.1 <= */
 export type StorageItems_v3 = {
   /**
+   * NG設定:ニコニコ側のNG設定を使用
+   * @default false
+   */
+  'settings:ng:useNiconicoAccount': boolean
+}
+
+export type StorageItems_v4 = {
+  /**
    * テーマ
    * @default 'auto'
    */
@@ -100,6 +108,12 @@ export type StorageItems_v3 = {
   )[]
 
   /**
+   * コメント:ニコニコのログイン情報を使用
+   * @default true
+   */
+  'settings:comment:useNiconicoCredentials': boolean
+
+  /**
    * コメント:実況チャンネル
    * @default []
    */
@@ -140,12 +154,6 @@ export type StorageItems_v3 = {
    * @default false
    */
   'settings:ng:coloredComments': boolean
-
-  /**
-   * NG設定:ニコニコ側のNG設定を使用
-   * @default false
-   */
-  'settings:ng:useNiconicoAccount': boolean
 
   /**
    * キーボード:全体のオフセットを増やす
@@ -241,7 +249,7 @@ export type StorageItems_v3 = {
   'settings:search:lengthRange': [start: number | null, end: number | null]
 }
 
-export type StorageItems = StorageItems_v3 & {
+export type StorageItems = StorageItems_v4 & {
   '_migrate_version': number
 
   /**

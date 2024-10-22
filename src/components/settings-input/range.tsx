@@ -26,6 +26,13 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
   )
   const [value, setValue] = useSettings(props.settingsKey)
 
+  const [useNiconicoCredentials] = useSettings(
+    'settings:comment:useNiconicoCredentials'
+  )
+
+  const isDisabled =
+    props.settingsKey === 'settings:comment:amount' && !useNiconicoCredentials
+
   useEffect(() => {
     setState(value)
   }, [value])
@@ -42,7 +49,8 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
         maxValue={props.max}
         step={props.step}
         showSteps={(props.max - props.min) / props.step <= 10}
-        value={state}
+        isDisabled={isDisabled}
+        value={isDisabled ? SETTINGS_DEFAULT[props.settingsKey] : state}
         getValue={
           props.prefix || props.suffix
             ? (val) => `${props.prefix || ''}${val}${props.suffix || ''}`

@@ -10,11 +10,11 @@ import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 import { searchDataToSlotDetail } from './searchDataToSlotDetail'
 
 export const searchNiconicoByIds = async (...contentIds: string[]) => {
-  const useNiconicoAccount = await settings.get(
-    'settings:ng:useNiconicoAccount'
+  const useNiconicoCredentials = await settings.get(
+    'settings:comment:useNiconicoCredentials'
   )
 
-  const credentials: RequestInit['credentials'] = useNiconicoAccount
+  const credentials: RequestInit['credentials'] = useNiconicoCredentials
     ? 'include'
     : 'omit'
 

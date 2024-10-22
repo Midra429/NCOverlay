@@ -138,6 +138,13 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
+        settingsKey: 'settings:comment:useNiconicoCredentials',
+        inputType: 'toggle',
+        label: 'ニコニコのログイン情報を使用',
+        description:
+          'ON: ニコニコのNG設定が反映される\nOFF: ニコニコに視聴履歴を反映させない',
+      },
+      {
         settingsKey: 'settings:comment:jikkyoChannelIds',
         inputType: 'ch-selector',
         label: '実況チャンネル',
@@ -186,13 +193,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'toggle',
         label: '色付きコメントを非表示',
         description: '色指定コマンドを含むコメントを非表示にします。',
-      },
-      {
-        settingsKey: 'settings:ng:useNiconicoAccount',
-        inputType: 'toggle',
-        label: 'ニコニコ側のNG設定を使用',
-        description:
-          'ブラウザでログイン中のニコニコアカウントのNG設定を使用します。',
       },
     ],
   },

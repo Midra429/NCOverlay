@@ -23,6 +23,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:scale': 100,
   'settings:comment:amount': 1,
   'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
+  'settings:comment:useNiconicoCredentials': true,
   'settings:comment:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
@@ -34,7 +35,6 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:ng:largeComments': false,
   'settings:ng:fixedComments': false,
   'settings:ng:coloredComments': false,
-  'settings:ng:useNiconicoAccount': false,
 
   // キーボード
   'settings:kbd:increaseGlobalOffset': '',

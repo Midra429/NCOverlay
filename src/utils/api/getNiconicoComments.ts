@@ -11,25 +11,28 @@ import { ncoApiProxy } from '@/proxy/nco-api'
  * ニコニコ動画のコメント取得
  */
 export const getNiconicoComments = async (
-  params: (
+  params: ((
+    | VideoData
     | {
         contentId: string
-        when?: number
       }
-    | VideoData
-  )[]
+  ) & {
+    when?: number
+  })[]
 ): Promise<
   ({
     data: VideoData
     threads: V1Thread[]
   } | null)[]
 > => {
-  const amount = await settings.get('settings:comment:amount')
-  const useNiconicoAccount = await settings.get(
-    'settings:ng:useNiconicoAccount'
+  const useNiconicoCredentials = await settings.get(
+    'settings:comment:useNiconicoCredentials'
   )
+  const amount = useNiconicoCredentials
+    ? await settings.get('settings:comment:amount')
+    : 1
 
-  const credentials: RequestInit['credentials'] = useNiconicoAccount
+  const credentials: RequestInit['credentials'] = useNiconicoCredentials
     ? 'include'
     : 'omit'
 
@@ -51,10 +54,7 @@ export const getNiconicoComments = async (
 
       if (1 < amount) {
         const additionals = {
-          when:
-            'when' in params[idx]
-              ? params[idx].when
-              : Math.floor(Date.now() / 1000),
+          when: params[idx].when ?? Math.floor(Date.now() / 1000),
           res_from: -1000,
         }
 
@@ -114,7 +114,7 @@ export const getNiconicoComments = async (
         return baseThreadsData
       } else {
         return ncoApiProxy.niconico.threads(nvComment, {
-          when: 'when' in params[idx] ? params[idx].when : undefined,
+          when: params[idx].when,
         })
       }
     })
