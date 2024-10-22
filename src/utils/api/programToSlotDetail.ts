@@ -24,13 +24,32 @@ export const programToSlotDetail = (
 
   const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime / 1000}-${endtime / 1000}`
 
+  const flags: string[] = []
+
+  if ('Flag' in program) {
+    let flag = Number(program.Flag)
+
+    if (8 <= flag) {
+      flag -= 8
+      flags.push('🈞')
+    }
+    if (4 <= flag) {
+      flag -= 4
+      flags.push('🈡')
+    }
+    if (2 <= flag) {
+      flag -= 2
+      flags.push('🈟')
+    }
+  }
+
   return {
     type: 'jikkyo',
     id,
     status: 'pending',
     info: {
       id: program.TID,
-      title,
+      title: `${flags[0] ?? ''} ${title}`.trim(),
       duration: (endtime - starttime) / 1000,
       date: [starttime, endtime],
       count: {

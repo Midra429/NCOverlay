@@ -70,12 +70,12 @@ export class NCOSearcher {
         : null,
     ])
 
-    const currentTime = Date.now() / 1000
+    const currentTime = Date.now()
 
     const syobocalPrograms =
       searchSyobocalResults &&
       searchSyobocalResults.programs.filter(
-        (val) => parseInt(val.EdTime) < currentTime
+        (val) => new Date(val.EdTime).getTime() < currentTime
       )
 
     logger.log('searchResults:', searchResults)
@@ -132,7 +132,10 @@ export class NCOSearcher {
         .trim()
 
       syobocalPrograms.forEach((program) => {
-        const id = `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
+        const starttime = new Date(program.StTime).getTime() / 1000
+        const endtime = new Date(program.EdTime).getTime() / 1000
+
+        const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime}-${endtime}`
 
         if (loadedIds.includes(id)) return
 
@@ -155,9 +158,12 @@ export class NCOSearcher {
       .map((v) => v.id)
 
     const scPrograms = syobocalPrograms?.filter((program) => {
-      return jikkyoIds.includes(
-        `${syobocalToJikkyoChId(program.ChID)}:${program.StTime}-${program.EdTime}`
-      )
+      const starttime = new Date(program.StTime).getTime() / 1000
+      const endtime = new Date(program.EdTime).getTime() / 1000
+
+      const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime}-${endtime}`
+
+      return jikkyoIds.includes(id)
     })
 
     const [
@@ -192,8 +198,8 @@ export class NCOSearcher {
         ? getJikkyoKakologs(
             scPrograms.map((val) => ({
               jkChId: syobocalToJikkyoChId(val.ChID)!,
-              starttime: parseInt(val.StTime),
-              endtime: parseInt(val.EdTime),
+              starttime: new Date(val.StTime).getTime() / 1000,
+              endtime: new Date(val.EdTime).getTime() / 1000,
             }))
           )
         : null,

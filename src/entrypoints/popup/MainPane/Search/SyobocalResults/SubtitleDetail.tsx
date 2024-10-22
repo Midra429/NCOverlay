@@ -1,4 +1,4 @@
-import type { SyoboCalProgram } from '@midra/nco-api/types/syobocal/json'
+import type { SyoboCalProgramDb } from '@midra/nco-api/types/syobocal/db'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem } from './SubtitleItem'
 
@@ -36,7 +36,7 @@ export const SubtitleDetail = forwardRef<
 >(({ title, subtitle }, ref) => {
   const [isLoading, setIsLoading] = useState(false)
   const [currentTid, setCurrentTid] = useState('')
-  const [programs, setPrograms] = useState<SyoboCalProgram[]>([])
+  const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
 
   const stateSlotDetails = useNcoState('slotDetails')
 
@@ -70,18 +70,18 @@ export const SubtitleDetail = forwardRef<
 
     const { signal } = controller
 
-    new Promise<SyoboCalProgram[]>((resolve, reject) => {
+    new Promise<SyoboCalProgramDb[]>((resolve, reject) => {
       signal.addEventListener('abort', reject, { once: true })
 
       ncoApi.syobocal
-        .json(['ProgramByCount'], {
+        .db('ProgLookup', {
           TID: title.TID,
           Count: Number(subtitle[0]),
           ChID: SYOBOCAL_CHANNEL_IDS,
         })
         .then((response) => {
           if (response) {
-            const programs = Object.values(response.Programs)
+            const programs = Object.values(response)
 
             resolve(programs)
           } else {
