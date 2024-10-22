@@ -221,30 +221,37 @@ export class NCOverlay {
 
       // 検索ステータス
       this.state.onChange('status', async (status) => {
-        const size = (await this.state.get('slotDetails'))?.length ?? 0
-        const text = size ? size.toString() : null
+        const slotDetails = (await this.state.get('slotDetails')) ?? []
 
-        switch (status) {
-          case 'loading':
-            sendUtilsMessage('setBadge', {
-              text,
-              color: 'yellow',
-            })
+        const loadingCounts = slotDetails.filter(
+          (detail) => detail.status === 'loading'
+        ).length
+        const successCounts = slotDetails.filter(
+          (detail) => detail.status === 'ready'
+        ).length
+        const errorCounts = slotDetails.filter(
+          (detail) => detail.status === 'error'
+        ).length
 
-            break
+        sendUtilsMessage('setBadge', {
+          text:
+            (loadingCounts && loadingCounts.toString()) ||
+            (successCounts && successCounts.toString()) ||
+            (errorCounts && errorCounts.toString()) ||
+            null,
+          color:
+            (loadingCounts && 'yellow') ||
+            (successCounts && 'green') ||
+            (errorCounts && 'red') ||
+            undefined,
+        })
 
-          case 'ready':
-            sendUtilsMessage('setBadge', {
-              text,
-              color: 'green',
-            })
-
-            if (!this.renderer.video.paused) {
-              this.renderer.stop()
-              this.renderer.start()
-            }
-
-            break
+        if (
+          (status === 'ready' || status === 'error') &&
+          !this.renderer.video.paused
+        ) {
+          this.renderer.stop()
+          this.renderer.start()
         }
       }),
 

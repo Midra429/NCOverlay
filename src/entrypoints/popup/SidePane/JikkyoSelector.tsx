@@ -136,7 +136,10 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
         threads: [thread],
       })
     } else {
-      await ncoState?.remove('slotDetails', { id })
+      await ncoState?.update('slotDetails', ['id'], {
+        id,
+        status: 'error',
+      })
     }
 
     await ncoState?.set('status', 'ready')

@@ -43,6 +43,8 @@ export const SlotItem: React.FC<SlotItemProps> = ({
 }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
+  const isError = detail.status === 'error'
+
   const onPressAdd = useCallback(async () => {
     await ncoState?.add('slotDetails', {
       ...detail,
@@ -110,7 +112,10 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       await ncoState?.update('slotDetails', ['id'], slotDetail)
       await ncoState?.add('slots', slot)
     } else {
-      await ncoState?.remove('slotDetails', { id })
+      await ncoState?.update('slotDetails', ['id'], {
+        id,
+        status: 'error',
+      })
     }
 
     await ncoState?.set('status', 'ready')
@@ -130,12 +135,13 @@ export const SlotItem: React.FC<SlotItemProps> = ({
   return (
     <PanelItem
       className={cn(
-        detail.status === 'error' && 'bg-danger/30',
+        isError && 'bg-danger/15',
         isDisabled && 'pointer-events-none opacity-50'
       )}
       classNames={{
         ...classNames,
         wrapper: [
+          isError && 'border-danger/50',
           isDisabled && 'border-dashed bg-transparent',
           classNames?.wrapper,
         ],
@@ -214,12 +220,12 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             )}
 
             {/* オフセット */}
-            {!isSearch && <Offset offsetMs={detail.offsetMs} />}
+            {!isError && !isSearch && <Offset offsetMs={detail.offsetMs} />}
           </div>
         </div>
 
         {/* サイドボタン */}
-        {!isSearch && (
+        {!isError && !isSearch && (
           <div
             className={cn(
               'flex shrink-0 flex-col justify-between gap-1',
@@ -248,7 +254,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       </div>
 
       {/* 設定 */}
-      {!isSearch && (
+      {!isError && !isSearch && (
         <Options
           isOpen={isOptionsOpen}
           id={detail.id}
