@@ -18,7 +18,7 @@
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.1.0",
     "@internationalized/date": "^3.5.6",
-    "@midra/nco-api": "^1.8.10",
+    "@midra/nco-api": "^1.8.11",
     "@midra/nco-parser": "^1.0.27",
     "@nextui-org/react": "^2.4.8",
     "@webext-core/messaging": "^2.0.2",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@types/nanoid-dictionary": "^4.2.3",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@wxt-dev/module-react": "^1.1.1",
     "autoprefixer": "^10.4.20",
