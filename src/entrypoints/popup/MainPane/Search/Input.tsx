@@ -59,11 +59,14 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
             <Select
               classNames={{
                 base: 'w-9 min-w-9 max-w-9',
+                label: 'hidden',
                 trigger: 'block rounded-r-none px-0 [&>svg]:hidden',
                 innerWrapper: 'w-full',
                 popoverContent: 'w-56',
               }}
               size="sm"
+              label="検索対象"
+              labelPlacement="outside-left"
               selectedKeys={[source]}
               renderValue={([{ props }]) => props?.startContent}
               onSelectionChange={([key]) => {
@@ -87,15 +90,19 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
 
             <Input
               classNames={{
+                label: 'hidden',
+                mainWrapper: 'w-full',
                 inputWrapper: [
-                  'border-1 border-divider shadow-none',
-                  'border-x-0',
+                  'border-1 border-x-0 border-divider',
+                  'shadow-none',
                 ],
                 input: 'pr-5',
                 clearButton: 'end-1 mr-0 p-1',
               }}
               radius="none"
               size="sm"
+              label="検索欄"
+              labelPlacement="outside-left"
               isClearable
               isDisabled={isDisabled}
               placeholder={

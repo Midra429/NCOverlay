@@ -47,9 +47,7 @@ export const SubtitleItem = forwardRef<SubtitleItemHandle, SubtitleItemProps>(
         open: () => {
           setIsOpen(true)
 
-          setTimeout(() => {
-            detailRef.current?.initialize()
-          })
+          detailRef.current?.initialize()
         },
         close: () => {
           setIsOpen(false)

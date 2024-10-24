@@ -3,12 +3,12 @@ import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
 
 import {
-  useMemo,
   useState,
+  useMemo,
+  useRef,
+  useCallback,
   useImperativeHandle,
   forwardRef,
-  useCallback,
-  useRef,
 } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
 import { ncoApi } from '@midra/nco-api'
@@ -24,8 +24,6 @@ import { SlotItem } from '@/components/slot-item'
 
 import { TitleItemInner } from './TitleItem'
 import { SubtitleItem } from './SubtitleItem'
-
-let controller: AbortController | undefined
 
 export type TitleDetailHandle = {
   initialize: () => void
@@ -44,7 +42,6 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
     }>({})
 
     const [isLoading, setIsLoading] = useState(false)
-    const [currentTid, setCurrentTid] = useState('')
     const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
     const [subtitles, setSubtitles] = useState<ScSubtitleItem[]>([])
 
@@ -84,67 +81,34 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
       }))
     }, [subtitles])
 
-    const initialize = useCallback(() => {
-      if (title.TID === currentTid) return
-
-      controller?.abort()
-
-      setCurrentTid(title.TID)
+    const initialize = useCallback(async () => {
+      setIsLoading(true)
       setPrograms([])
       setSubtitles([])
-      setIsLoading(true)
-
-      controller = new AbortController()
-
-      const { signal } = controller
 
       if (title.Cat === '8') {
-        new Promise<SyoboCalProgramDb[]>((resolve, reject) => {
-          signal.addEventListener('abort', reject, { once: true })
-
-          ncoApi.syobocal
-            .db('ProgLookup', {
-              TID: title.TID,
-              ChID: SYOBOCAL_CHANNEL_IDS,
-            })
-            .then((response) => {
-              if (response) {
-                const programs = Object.values(response)
-
-                resolve(programs)
-              } else {
-                reject()
-              }
-            })
-            .catch(() => reject())
+        const response = await ncoApi.syobocal.db('ProgLookup', {
+          TID: title.TID,
+          ChID: SYOBOCAL_CHANNEL_IDS,
         })
-          .then((value) => setPrograms(value))
-          .catch(() => setPrograms([]))
-          .finally(() => setIsLoading(false))
+
+        if (response) {
+          setPrograms(Object.values(response))
+        }
       } else {
-        new Promise<ScSubtitleItem[]>((resolve, reject) => {
-          signal.addEventListener('abort', reject, { once: true })
-
-          ncoApi.syobocal
-            .json(['SubTitles'], {
-              TID: title.TID,
-            })
-            .then((response) => {
-              if (response) {
-                const subtitles = response.SubTitles[title.TID]
-
-                resolve(subtitles ? Object.entries(subtitles) : [])
-              } else {
-                reject()
-              }
-            })
-            .catch(() => reject())
+        const response = await ncoApi.syobocal.json(['SubTitles'], {
+          TID: title.TID,
         })
-          .then((value) => setSubtitles(value))
-          .catch(() => setSubtitles([]))
-          .finally(() => setIsLoading(false))
+
+        const subtitles = response?.SubTitles[title.TID]
+
+        if (subtitles) {
+          setSubtitles(Object.entries(subtitles))
+        }
       }
-    }, [title, currentTid])
+
+      setIsLoading(false)
+    }, [title.TID, title.Cat])
 
     useImperativeHandle(ref, () => {
       return { initialize }
@@ -189,18 +153,16 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
                 title={title}
                 subtitle={subtitle}
                 onClick={() => {
-                  const itemHandle = subtitleItemRefs.current[idx]
+                  const item = subtitleItemRefs.current[idx]
 
-                  if (itemHandle.isOpen) {
-                    itemHandle.close()
+                  if (item.isOpen) {
+                    item.close()
                   } else {
-                    Object.values(subtitleItemRefs.current).forEach(
-                      (handle) => {
-                        handle.close()
-                      }
-                    )
+                    Object.values(subtitleItemRefs.current).forEach((item) => {
+                      item.close()
+                    })
 
-                    itemHandle.open()
+                    item.open()
                   }
                 }}
                 ref={refCallbackFunction}

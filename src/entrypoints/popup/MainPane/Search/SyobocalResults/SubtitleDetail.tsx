@@ -4,10 +4,10 @@ import type { ScSubtitleItem } from './SubtitleItem'
 
 import {
   useMemo,
-  useState,
   useCallback,
-  forwardRef,
+  useState,
   useImperativeHandle,
+  forwardRef,
 } from 'react'
 import { Spinner } from '@nextui-org/react'
 import { ncoApi } from '@midra/nco-api'
@@ -18,8 +18,6 @@ import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/slot-item'
-
-let controller: AbortController | undefined
 
 export type SubtitleDetailHandle = {
   initialize: () => void
@@ -34,8 +32,8 @@ export const SubtitleDetail = forwardRef<
   SubtitleDetailHandle,
   SubtitleDetailProps
 >(({ title, subtitle }, ref) => {
+  const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [currentTid, setCurrentTid] = useState('')
   const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
 
   const stateSlotDetails = useNcoState('slotDetails')
@@ -45,55 +43,37 @@ export const SubtitleDetail = forwardRef<
   }, [stateSlotDetails])
 
   const programItems = useMemo(() => {
-    const currentTime = Date.now() / 1000
+    const currentDate = new Date()
     const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
       .filter(Boolean)
       .join(' ')
       .trim()
 
     return programs
-      .filter((program) => parseInt(program.EdTime) <= currentTime)
-      .sort((a, b) => parseInt(a.StTime) - parseInt(b.StTime))
+      .filter((program) => new Date(program.EdTime) <= currentDate)
+      .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
       .map((program) => programToSlotDetail(slotTitle, program))
   }, [programs])
 
-  const initialize = useCallback(() => {
-    if (title.TID === currentTid) return
+  const initialize = useCallback(async () => {
+    if (isInitialized) return
 
-    controller?.abort()
-
-    setCurrentTid(title.TID)
-    setPrograms([])
+    setIsInitialized(true)
     setIsLoading(true)
+    setPrograms([])
 
-    controller = new AbortController()
-
-    const { signal } = controller
-
-    new Promise<SyoboCalProgramDb[]>((resolve, reject) => {
-      signal.addEventListener('abort', reject, { once: true })
-
-      ncoApi.syobocal
-        .db('ProgLookup', {
-          TID: title.TID,
-          Count: Number(subtitle[0]),
-          ChID: SYOBOCAL_CHANNEL_IDS,
-        })
-        .then((response) => {
-          if (response) {
-            const programs = Object.values(response)
-
-            resolve(programs)
-          } else {
-            reject()
-          }
-        })
-        .catch(() => reject())
+    const response = await ncoApi.syobocal.db('ProgLookup', {
+      TID: title.TID,
+      Count: Number(subtitle[0]),
+      ChID: SYOBOCAL_CHANNEL_IDS,
     })
-      .then((value) => setPrograms(value))
-      .catch(() => setPrograms([]))
-      .finally(() => setIsLoading(false))
-  }, [title, subtitle, currentTid])
+
+    if (response) {
+      setPrograms(Object.values(response))
+    }
+
+    setIsLoading(false)
+  }, [isInitialized, title.TID, subtitle[0]])
 
   useImperativeHandle(ref, () => {
     return { initialize }
@@ -110,7 +90,7 @@ export const SubtitleDetail = forwardRef<
       )}
     </div>
   ) : (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex min-h-7 flex-col gap-1.5">
       {programItems.map((detail) => (
         <SlotItem
           key={detail.id}

@@ -15,7 +15,8 @@ export const SyobocalResults: React.FC<SyobocalResultsProps> = ({ titles }) => {
   const detailRef = useRef<TitleDetailHandle>(null)
 
   const [selectedTitle, setSelectedTitle] = useState<ScTitleItem>()
-  const disclosure = useDisclosure()
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   return (
     <>
@@ -27,7 +28,7 @@ export const SyobocalResults: React.FC<SyobocalResultsProps> = ({ titles }) => {
             onClick={() => {
               setSelectedTitle(title)
 
-              disclosure.onOpen()
+              onOpen()
 
               setTimeout(() => {
                 detailRef.current?.initialize()
@@ -40,8 +41,8 @@ export const SyobocalResults: React.FC<SyobocalResultsProps> = ({ titles }) => {
       {selectedTitle && (
         <TitleDetail
           title={selectedTitle}
-          isOpen={disclosure.isOpen}
-          onOpenChange={disclosure.onOpenChange}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
           ref={detailRef}
         />
       )}
