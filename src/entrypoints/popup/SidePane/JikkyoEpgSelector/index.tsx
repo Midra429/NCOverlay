@@ -1,7 +1,4 @@
-import type {
-  JikkyoChannelId,
-  TVerChannelId,
-} from '@midra/nco-api/types/constants'
+import type { TVerChannelId } from '@midra/nco-api/types/constants'
 import type {
   EPGv2Result,
   Program as EPGv2Program,
@@ -10,7 +7,7 @@ import type {
 import type { CallEPGv2Params } from '@midra/nco-api/tver/v1/callEPGv2'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Button, Divider, Spinner, cn } from '@nextui-org/react'
+import { Button, Divider } from '@nextui-org/react'
 import {
   ChevronRightIcon,
   CalendarDaysIcon,
@@ -19,7 +16,6 @@ import {
 } from 'lucide-react'
 import { ncoApi } from '@midra/nco-api'
 import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
-import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
 import { zeroPadding } from '@/utils/zeroPadding'
 
@@ -37,15 +33,10 @@ export type EPGProgram = {
   endAt: number
   genre: EPGv2Program['genre']
   isDisabled?: boolean
-  isAdded?: boolean
 }
 
 export type EPGContent = {
-  channel: {
-    id: TVerChannelId
-    jkChId: JikkyoChannelId
-    name: string
-  }
+  tverChId: TVerChannelId
   programs: EPGProgram[]
 }
 
@@ -81,76 +72,74 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
   >([])
   const [epgData, setEpgData] = useState<EPGData | null>(null)
 
-  const callEPGv2 = useCallback((params: CallEPGv2Params) => {
+  const callEPGv2 = useCallback(async (params: CallEPGv2Params) => {
     setIsLoading(true)
 
-    ncoApi.tver.v1.callEPGv2(params).then((result) => {
-      if (result) {
-        const currentTime = Date.now()
+    const result = await ncoApi.tver.v1.callEPGv2(params)
 
-        const allowViewDate = result.allowViewDate.filter((date) => {
-          return new Date(`${date} 05:00:00`).getTime() <= currentTime
+    if (result) {
+      const currentTime = Date.now()
+
+      const allowViewDate = result.allowViewDate.filter((date) => {
+        return new Date(`${date} 05:00:00`).getTime() <= currentTime
+      })
+
+      const start = new Date(`${result.date} 05:00:00`).getTime() / 1000
+      const end = start + 86400
+
+      const contents: EPGContent[] = result.contents
+        .filter(({ broadcaster }) => {
+          return tverToJikkyoChId(broadcaster.id)
+        })
+        .map(({ broadcaster, programs }) => {
+          return {
+            tverChId: broadcaster.id,
+            programs: programs.flatMap((program) => ({
+              id: program.seriesID,
+              title: program.seriesTitle || program.title,
+              description: program.seriesTitle && program.title,
+              prefix: [
+                program.icon.new && '🈟',
+                program.icon.revival && '🈞',
+                program.icon.last && '🈡',
+              ]
+                .filter(Boolean)
+                .join(' '),
+              startAt: program.startAt,
+              endAt: program.endAt,
+              genre: program.genre,
+            })),
+          } satisfies EPGContent
         })
 
-        const start = new Date(`${result.date} 05:00:00`).getTime() / 1000
-        const end = start + 86400
+      const genre = Object.fromEntries(
+        result.genreColor.map((val) => {
+          return [
+            val.genre,
+            {
+              name: val.name,
+              color: val.color,
+            },
+          ]
+        })
+      ) as EPGGenre
 
-        const contents: EPGContent[] = result.contents.flatMap(
-          ({ broadcaster, programs }) => {
-            const jkChId = tverToJikkyoChId(broadcaster.id)
+      setDate(result.date)
+      setType(result.type)
+      setAllowViewDate(allowViewDate)
+      setEpgData({
+        date: [start, end],
+        contents,
+        genre,
+      })
+    } else {
+      setDate(undefined)
+      setType('ota')
+      setAllowViewDate([])
+      setEpgData(null)
+    }
 
-            if (!jkChId) return []
-
-            return {
-              channel: {
-                id: broadcaster.id,
-                jkChId,
-                name: JIKKYO_CHANNELS[jkChId],
-              },
-              programs: programs.flatMap((program) => ({
-                id: program.seriesID,
-                title: program.seriesTitle || program.title,
-                description: program.seriesTitle && program.title,
-                prefix: [
-                  program.icon.new && '🈟',
-                  program.icon.revival && '🈞',
-                  program.icon.last && '🈡',
-                ]
-                  .filter(Boolean)
-                  .join(' '),
-                startAt: program.startAt,
-                endAt: program.endAt,
-                genre: program.genre,
-              })),
-            }
-          }
-        )
-
-        const genre = Object.fromEntries(
-          result.genreColor.map((val) => {
-            return [
-              val.genre,
-              {
-                name: val.name,
-                color: val.color,
-              },
-            ]
-          })
-        ) as EPGGenre
-
-        setDate(result.date)
-        setType(result.type)
-        setAllowViewDate(allowViewDate)
-        setEpgData({ date: [start, end], contents, genre })
-      } else {
-        setDate(undefined)
-        setType('ota')
-        setAllowViewDate([])
-        setEpgData(null)
-      }
-
-      setIsLoading(false)
-    })
+    setIsLoading(false)
   }, [])
 
   useEffect(() => {
@@ -248,24 +237,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
       }
       footer={false}
     >
-      {isLoading || !epgData ? (
-        <div
-          className={cn(
-            'absolute inset-0 z-20',
-            'flex size-full items-center justify-center'
-          )}
-        >
-          {isLoading ? (
-            <Spinner size="lg" color="primary" />
-          ) : (
-            <span className="text-small text-foreground-500">
-              番組表データがありません
-            </span>
-          )}
-        </div>
-      ) : (
-        <TverEpg data={epgData} />
-      )}
+      <TverEpg data={epgData} isLoading={isLoading} />
     </Modal>
   )
 }

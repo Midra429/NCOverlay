@@ -1,367 +1,77 @@
 import type { EPGData, EPGContent, EPGProgram } from '.'
-import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
-import { memo, useMemo, useEffect, useState, useRef, forwardRef } from 'react'
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Divider,
-  cn,
-} from '@nextui-org/react'
-import { darken, saturate, toHex } from 'color2k'
-import { normalize } from '@midra/nco-parser/normalize'
+import { useEffect, useMemo, useState } from 'react'
+import { Spinner, cn } from '@nextui-org/react'
 
-import { zeroPadding } from '@/utils/zeroPadding'
-import { readableColor } from '@/utils/color'
-import { useNcoState } from '@/hooks/useNco'
+import { Channels } from './Channel'
+import { Hours } from './Hour'
+import { Programs } from './Program'
 
-import { SlotItem } from '@/components/slot-item'
+export const COLUMN_WIDTH = 140
+export const ROW_HEIGHT = 150
 
-const COLUMN_WIDTH = 140
-const ROW_HEIGHT = 150
-
-const ChannelCell: React.FC<{ name: string }> = ({ name }) => {
+const CurrentBar: React.FC<{ top: number }> = ({ top }) => {
   return (
     <div
       className={cn(
-        'flex items-center justify-center',
-        'shrink-0',
-        'border-r-1 border-divider',
-        'bg-content2 text-content2-foreground',
-        'text-mini font-semibold',
-        'line-clamp-1'
+        'absolute z-20',
+        'h-[1px] w-full',
+        'bg-primary opacity-80',
+        'pointer-events-none'
       )}
-      style={{
-        width: COLUMN_WIDTH,
-        height: 20,
-      }}
-    >
-      <span>{name}</span>
-    </div>
+      style={{ top }}
+    />
   )
 }
-
-const HourCell: React.FC<{ hour: number }> = ({ hour }) => {
-  return (
-    <div
-      className={cn(
-        'flex flex-col items-center',
-        'shrink-0',
-        'bg-content1',
-        'border-b-1 border-divider',
-        'text-mini font-semibold'
-      )}
-      style={{
-        height: ROW_HEIGHT,
-      }}
-    >
-      <span className={cn('sticky top-[21px]', 'py-1')}>{hour}</span>
-    </div>
-  )
-}
-
-const Hours: React.FC = memo(() => (
-  <div
-    className={cn(
-      'sticky left-0 z-20',
-      'flex flex-col',
-      'shrink-0',
-      'border-r-1 border-divider'
-    )}
-    style={{
-      width: 20,
-    }}
-  >
-    {Array(24)
-      .fill(0)
-      .map((_, i) => (i + 5) % 24)
-      .map((hour) => (
-        <HourCell key={hour} hour={hour} />
-      ))}
-  </div>
-))
-
-const ProgramCell: React.FC<{
-  program: EPGProgram
-  bgColor: [light: string, dark: string]
-  fgColor: [light: string, dark: string]
-}> = ({ program, bgColor, fgColor }) => {
-  const startMinutes = useMemo(() => {
-    return zeroPadding(new Date(program.startAt * 1000).getMinutes(), 2)
-  }, [program.startAt])
-
-  return (
-    <div
-      className={cn(
-        'size-full',
-        'border-b-1 border-divider',
-        'overflow-hidden',
-        'cursor-pointer'
-      )}
-    >
-      <div
-        className={cn('flex flex-col gap-1', 'break-all text-mini')}
-        title={program.description}
-      >
-        <span className="flex items-start gap-1">
-          {/* 分 */}
-          <span className="flex shrink-0 font-semibold">
-            <span
-              className={cn(
-                'text-center',
-                'w-6 py-1',
-                'border-b-1 border-r-1 border-divider',
-                'dark:hidden'
-              )}
-              style={{
-                backgroundColor: bgColor[0],
-                color: fgColor[0],
-              }}
-            >
-              {startMinutes}
-            </span>
-
-            <span
-              className={cn(
-                'text-center',
-                'w-6 py-1',
-                'border-b-1 border-r-1 border-divider',
-                'hidden dark:inline'
-              )}
-              style={{
-                backgroundColor: bgColor[1],
-                color: fgColor[1],
-              }}
-            >
-              {startMinutes}
-            </span>
-          </span>
-
-          {/* タイトル */}
-          <span className="pr-1 pt-1 font-semibold">
-            {`${program.prefix} ${program.title}`.trim()}
-          </span>
-        </span>
-
-        {/* 概要 */}
-        <span className="px-1 text-foreground-500 dark:text-foreground-600">
-          {program.description}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-const Programs: React.FC<{ data: EPGData }> = ({ data }) => {
-  const { date, contents, genre } = data
-
-  return (
-    <div
-      className="flex shrink-0 flex-row overflow-hidden bg-content3"
-      style={{ maxHeight: ROW_HEIGHT * 24 }}
-    >
-      {contents.map((content, idx) => {
-        const { jkChId } = content.channel
-
-        return (
-          <div
-            key={idx}
-            className={cn(
-              'relative',
-              'flex flex-col',
-              'shrink-0',
-              'border-r-1 border-divider'
-            )}
-            style={{ width: COLUMN_WIDTH }}
-          >
-            {content.programs.map((program, idx) => {
-              const { title, description, prefix, startAt, endAt } = program
-
-              const duration = endAt - startAt
-
-              const height = (duration / 3600) * ROW_HEIGHT
-              const top = ((startAt - date[0]) / 3600) * ROW_HEIGHT
-
-              const color = genre[program.genre]?.color ?? '#D3D3D3'
-
-              const bgColorLight = saturate(color, 0.2)
-              const bgColorDark = saturate(darken(bgColorLight, 0.2), -0.4)
-              const fgColorLight = readableColor(toHex(bgColorLight))
-              const fgColorDark = readableColor(toHex(bgColorDark))
-
-              const slotDetail: StateSlotDetailJikkyo = {
-                type: 'jikkyo',
-                id: `${jkChId}:${startAt}-${endAt}`,
-                status: 'pending',
-                info: {
-                  id: program.id ?? null,
-                  title: `${prefix} ${
-                    normalize(description).includes(normalize(title))
-                      ? description
-                      : `${title}\n${description}`.trim()
-                  }`.trim(),
-                  duration,
-                  date: [startAt * 1000, endAt * 1000],
-                  count: {
-                    comment: 0,
-                  },
-                },
-              }
-
-              return (
-                <Popover
-                  key={idx}
-                  classNames={{
-                    backdrop: 'bg-transparent',
-                    content: 'border-1 border-foreground-100',
-                  }}
-                  backdrop="opaque"
-                  placement="right-start"
-                >
-                  <PopoverTrigger
-                    className={cn(
-                      'bg-content1 hover:bg-content2/90 aria-expanded:bg-content2/90',
-                      '!duration-150 transition-background',
-                      'aria-expanded:scale-100',
-                      'aria-expanded:opacity-100',
-                      program.isDisabled && 'pointer-events-none opacity-50'
-                    )}
-                  >
-                    <div className="absolute w-full" style={{ top, height }}>
-                      <ProgramCell
-                        program={program}
-                        bgColor={[bgColorLight, bgColorDark]}
-                        fgColor={[fgColorLight, fgColorDark]}
-                      />
-                    </div>
-                  </PopoverTrigger>
-
-                  <PopoverContent
-                    className={cn(
-                      'flex flex-col items-start gap-1',
-                      'w-80 p-2',
-                      'text-tiny'
-                    )}
-                  >
-                    {title && (
-                      <span className="font-semibold">
-                        {`${prefix} ${title}`.trim()}
-                      </span>
-                    )}
-                    {description && (
-                      <span className="text-foreground-500 dark:text-foreground-600">
-                        {description}
-                      </span>
-                    )}
-
-                    <Divider className="my-1" />
-
-                    <SlotItem
-                      classNames={{
-                        wrapper: 'w-full',
-                      }}
-                      detail={slotDetail}
-                      isSearch
-                      isDisabled={program.isAdded}
-                    />
-                  </PopoverContent>
-                </Popover>
-              )
-            })}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-const CurrentBar = forwardRef<HTMLDivElement, { top: number }>(
-  ({ top }, ref) => {
-    return (
-      <div
-        className={cn(
-          'absolute z-20',
-          'h-[1px] w-full',
-          'bg-primary opacity-80',
-          'pointer-events-none'
-        )}
-        style={{ top }}
-        ref={ref}
-      />
-    )
-  }
-)
 
 export type TverEpgProps = {
-  data: EPGData
+  data: EPGData | null
+  isLoading?: boolean
 }
 
-export const TverEpg: React.FC<TverEpgProps> = ({ data }) => {
-  const currentBarRef = useRef<HTMLDivElement>(null)
-
+export const TverEpg: React.FC<TverEpgProps> = ({ data, isLoading }) => {
   const [time, updateTime] = useState(Date.now() / 1000)
 
-  const stateSlotDetails = useNcoState('slotDetails')
-
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
-
   const contents: EPGContent[] = useMemo(() => {
-    return data.contents.map<EPGContent>((content) => {
-      const { jkChId } = content.channel
+    if (!data) return []
 
-      return {
-        ...content,
-        programs: content.programs.map<EPGProgram>((program) => {
-          const id = `${jkChId}:${program.startAt}-${program.endAt}`
-
-          return {
-            ...program,
-            isDisabled: time <= program.endAt,
-            isAdded: ids?.includes(id),
-          }
-        }),
-      }
-    })
-  }, [time, ids])
+    return data.contents.map<EPGContent>((content) => ({
+      ...content,
+      programs: content.programs.map<EPGProgram>((program) => ({
+        ...program,
+        isDisabled: time <= program.endAt,
+      })),
+    }))
+  }, [data, time])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateTime(Date.now() / 1000)
     }, 30 * 1000)
 
-    setTimeout(() => {
-      currentBarRef.current?.scrollIntoView({
-        behavior: 'instant',
-        block: 'end',
-      })
-    })
-
     return () => clearInterval(intervalId)
   }, [])
 
-  return (
+  return isLoading || !data ? (
+    <div
+      className={cn(
+        'absolute inset-0 z-20',
+        'flex size-full items-center justify-center'
+      )}
+    >
+      {isLoading ? (
+        <Spinner size="lg" color="primary" />
+      ) : (
+        <span className="text-small text-foreground-500">
+          番組表データがありません
+        </span>
+      )}
+    </div>
+  ) : (
     <div className="size-full overflow-auto">
       <div className="flex size-fit flex-col">
         {/* チャンネル */}
-        <div
-          className={cn(
-            'sticky top-0 z-30',
-            'flex flex-row',
-            'border-b-1 border-divider'
-          )}
-        >
-          <div
-            className={cn('shrink-0 bg-content2', 'border-r-1 border-divider')}
-            style={{ width: 20 }}
-          />
-
-          {contents.map(({ channel }) => (
-            <ChannelCell key={channel.id} name={channel.name} />
-          ))}
-        </div>
+        <Channels tverChIds={contents.map((v) => v.tverChId)} />
 
         <div className="relative flex flex-row">
           {/* 時間 */}
@@ -372,10 +82,7 @@ export const TverEpg: React.FC<TverEpgProps> = ({ data }) => {
 
           {/* 現在時刻 */}
           {data.date[0] <= time && time <= data.date[1] && (
-            <CurrentBar
-              top={((time - data.date[0]) / 3600) * ROW_HEIGHT}
-              ref={currentBarRef}
-            />
+            <CurrentBar top={((time - data.date[0]) / 3600) * ROW_HEIGHT} />
           )}
         </div>
       </div>
