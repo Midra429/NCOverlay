@@ -138,21 +138,20 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
+        settingsKey: 'settings:comment:jikkyoChannelIds',
+        inputType: 'ch-selector',
+        label: '自動検索: 実況チャンネル',
+        options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
+          label: `${id}: ${val}`,
+          value: id as JikkyoChannelId,
+        })),
+      },
+      {
         settingsKey: 'settings:comment:useNiconicoCredentials',
         inputType: 'toggle',
         label: 'ニコニコのログイン情報を使用',
         description:
           'ON: ニコニコのNG設定が反映される\nOFF: ニコニコに視聴履歴を反映させない',
-      },
-      {
-        settingsKey: 'settings:comment:jikkyoChannelIds',
-        inputType: 'ch-selector',
-        label: '実況チャンネル',
-        description: '自動検索の対象チャンネル。',
-        options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
-          label: `${id}: ${val}`,
-          value: id as JikkyoChannelId,
-        })),
       },
     ],
   },

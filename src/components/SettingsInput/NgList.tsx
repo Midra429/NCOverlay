@@ -25,6 +25,7 @@ import { useSettings } from '@/hooks/useSettings'
 
 import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
+import { Tooltip } from '@/components/Tooltip'
 
 type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
 
@@ -226,15 +227,17 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           </div>
         }
         headerEndContent={
-          <Button
-            size="sm"
-            variant="flat"
-            color="primary"
-            startContent={<PlusIcon className="size-4" />}
-            onPress={onAdd}
-          >
-            追加
-          </Button>
+          <Tooltip content="追加" placement="left">
+            <Button
+              size="sm"
+              variant="flat"
+              color="primary"
+              isIconOnly
+              onPress={onAdd}
+            >
+              <PlusIcon className="size-4" />
+            </Button>
+          </Tooltip>
         }
       >
         <Header />

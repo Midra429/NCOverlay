@@ -225,10 +225,10 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
             className="shrink-0"
             size="sm"
             variant="flat"
-            startContent={<XIcon className="size-4" />}
+            isIconOnly
             onPress={onOpenChange}
           >
-            閉じる
+            <XIcon className="size-4" />
           </Button>
         </div>
       }

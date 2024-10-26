@@ -28,6 +28,7 @@ import { useSettings } from '@/hooks/useSettings'
 
 import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
+import { Tooltip } from '@/components/Tooltip'
 
 export type Key = 'settings:comment:jikkyoChannelIds'
 
@@ -164,15 +165,17 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           </div>
         }
         headerEndContent={
-          <Button
-            size="sm"
-            variant="flat"
-            color="danger"
-            startContent={<RotateCcwIcon className="size-4" />}
-            onPress={onReset}
-          >
-            リセット
-          </Button>
+          <Tooltip content="リセット" placement="left">
+            <Button
+              size="sm"
+              variant="flat"
+              color="danger"
+              isIconOnly
+              onPress={onReset}
+            >
+              <RotateCcwIcon className="size-4" />
+            </Button>
+          </Tooltip>
         }
       >
         <Tabs
