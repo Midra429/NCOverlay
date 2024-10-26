@@ -34,29 +34,29 @@ const programIcon = tv({
   ],
   variants: {
     icon: {
-      new: 'bg-orange-500 dark:bg-orange-300',
       revival: 'bg-blue-500 dark:bg-blue-300',
+      new: 'bg-orange-500 dark:bg-orange-300',
       last: 'bg-red-500 dark:bg-red-300',
     },
   },
 })
 
-type ProgramIconsProps = {
+export type ProgramIconsProps = {
   icon: Partial<EPGv2Program['icon']>
 }
 
-const ProgramIcons: React.FC<ProgramIconsProps> = ({ icon }) => {
+export const ProgramIcons: React.FC<ProgramIconsProps> = ({ icon }) => {
   return (
     <>
-      {icon.new && (
-        <span className={programIcon({ icon: 'new' })} title="新番組">
-          新
-        </span>
-      )}
-
       {icon.revival && (
         <span className={programIcon({ icon: 'revival' })} title="再放送">
           再
+        </span>
+      )}
+
+      {icon.new && (
+        <span className={programIcon({ icon: 'new' })} title="新番組">
+          新
         </span>
       )}
 
@@ -69,12 +69,12 @@ const ProgramIcons: React.FC<ProgramIconsProps> = ({ icon }) => {
   )
 }
 
-type ProgramContentProps = {
+export type ProgramContentProps = {
   program: EPGProgram
   bgColor: [light: string, dark: string]
 }
 
-const ProgramContent: React.FC<ProgramContentProps> = ({
+export const ProgramContent: React.FC<ProgramContentProps> = ({
   program,
   bgColor,
 }) => {
@@ -150,12 +150,12 @@ const ProgramContent: React.FC<ProgramContentProps> = ({
   )
 }
 
-type ProgramPopoverProps = {
+export type ProgramPopoverProps = {
   tverChId: EPGContent['tverChId']
   program: EPGProgram
 }
 
-const ProgramPopover: React.FC<ProgramPopoverProps> = ({
+export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
   tverChId,
   program,
 }) => {
@@ -170,8 +170,8 @@ const ProgramPopover: React.FC<ProgramPopoverProps> = ({
   const id = `${tverToJikkyoChId(tverChId)}:${startAt}-${endAt}`
 
   const slotTitle = [
-    icon.new && '🈟',
     icon.revival && '🈞',
+    icon.new && '🈟',
     icon.last && '🈡',
 
     normalize(description).includes(normalize(title))

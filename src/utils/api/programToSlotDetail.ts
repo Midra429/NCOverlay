@@ -49,7 +49,7 @@ export const programToSlotDetail = (
     status: 'pending',
     info: {
       id: program.TID,
-      title: `${flags[0] ?? ''} ${title}`.trim(),
+      title: [...flags, title].join(' ').trim(),
       duration: (endtime - starttime) / 1000,
       date: [starttime, endtime],
       count: {

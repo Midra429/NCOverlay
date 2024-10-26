@@ -4,6 +4,10 @@ import { useMemo } from 'react'
 import { Link, cn } from '@nextui-org/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 
+import { ProgramIcons } from '@/entrypoints/popup/SidePane/JikkyoEpgSelector/Program'
+
+const programIconsRegExp = /^(?:(?:🈞|🈟|🈡)\s?)+/
+
 export type TitleProps = {
   type: StateSlotDetail['type']
   infoId: StateSlotDetail['info']['id']
@@ -35,6 +39,16 @@ export const Title: React.FC<TitleProps> = ({
     return new URL(infoId, baseUrl)
   }, [type, infoId])
 
+  const icon = useMemo(() => {
+    const prefix = infoTitle.match(programIconsRegExp)?.[0]
+
+    return {
+      revival: prefix?.includes('🈞'),
+      new: prefix?.includes('🈟'),
+      last: prefix?.includes('🈡'),
+    }
+  }, [infoTitle])
+
   const title = (
     <span
       className={cn(
@@ -44,7 +58,9 @@ export const Title: React.FC<TitleProps> = ({
       title={overflow ? infoTitle : undefined}
       ref={ref}
     >
-      {infoTitle}
+      <ProgramIcons icon={icon} />
+
+      <span>{infoTitle.replace(programIconsRegExp, '')}</span>
     </span>
   )
 
