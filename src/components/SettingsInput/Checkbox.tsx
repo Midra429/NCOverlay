@@ -6,7 +6,7 @@ import { CircleHelpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Tooltip } from '@/components/tooltip'
+import { Tooltip } from '@/components/Tooltip'
 
 export type Key = {
   [key in SettingsKey]: StorageItems[key] extends (string | number)[]

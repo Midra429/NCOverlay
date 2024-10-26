@@ -6,8 +6,8 @@ import { Divider } from '@nextui-org/react'
 
 import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
-import { SettingsInput } from '@/components/settings-input'
-import { PanelItem } from '@/components/panel-item'
+import { SettingsInput } from '@/components/SettingsInput'
+import { PanelItem } from '@/components/PanelItem'
 
 import { ShowHideToggle } from './ShowHideToggle'
 import { ReloadButton } from './ReloadButton'

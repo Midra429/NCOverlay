@@ -1,7 +1,7 @@
 import type { ButtonProps } from '@nextui-org/react'
 
 import { Button, cn } from '@nextui-org/react'
-import { Tooltip } from './tooltip'
+import { Tooltip } from './Tooltip'
 
 export type PanelButtonProps = ButtonProps & {
   label?: string

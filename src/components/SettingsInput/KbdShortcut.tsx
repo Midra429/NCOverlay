@@ -12,8 +12,8 @@ import { webext } from '@/utils/webext'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { ItemLabel } from '@/components/label'
-import { Tooltip } from '@/components/tooltip'
+import { ItemLabel } from '@/components/ItemLabel'
+import { Tooltip } from '@/components/Tooltip'
 
 const NEXTUI_KBD_KEYS: Partial<
   Record<'common' | Runtime.PlatformOs, string[]>

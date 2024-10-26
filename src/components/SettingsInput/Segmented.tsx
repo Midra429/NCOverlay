@@ -3,7 +3,7 @@ import type { SettingsInputBaseProps } from '.'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Segmented } from '@/components/segmented'
+import { Segmented } from '@/components/Segmented'
 
 export type Key = {
   [key in SettingsKey]: StorageItems[key] extends string | number | boolean

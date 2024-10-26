@@ -19,7 +19,7 @@ import { zeroPadding } from '@/utils/zeroPadding'
 import { readableColor } from '@/utils/color'
 import { useNcoState } from '@/hooks/useNco'
 
-import { SlotItem } from '@/components/slot-item'
+import { SlotItem } from '@/components/SlotItem'
 
 import { COLUMN_WIDTH, ROW_HEIGHT } from './TverEpg'
 
@@ -28,7 +28,7 @@ const programIcon = tv({
     'relative -top-[0.5px]',
     'inline-flex items-center justify-center',
     'mr-0.5 size-[calc(1em+3px)]',
-    'rounded-sm',
+    'select-none rounded-sm',
     'text-[calc(1em-1px)] font-normal',
     'text-white dark:text-black',
   ],

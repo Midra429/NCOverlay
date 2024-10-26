@@ -2,7 +2,7 @@ import { memo } from 'react'
 
 import { useNcoState } from '@/hooks/useNco'
 
-import { PositionControl } from '@/components/position-control'
+import { PositionControl } from '@/components/PositionControl'
 
 import { Header } from './Header'
 import { SlotItems } from './SlotItems'

@@ -19,8 +19,8 @@ import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
 
 import { zeroPadding } from '@/utils/zeroPadding'
 
-import { Modal } from '@/components/modal'
-import { Select, SelectItem } from '@/components/select'
+import { Modal } from '@/components/Modal'
+import { Select, SelectItem } from '@/components/Select'
 
 import { TverEpg } from './TverEpg'
 

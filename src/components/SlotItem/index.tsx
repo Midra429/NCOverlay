@@ -4,7 +4,7 @@ import type {
   StateSlotDetail,
   StateSlotDetailUpdate,
 } from '@/ncoverlay/state'
-import type { PanelItemProps } from '@/components/panel-item'
+import type { PanelItemProps } from '@/components/PanelItem'
 
 import { useCallback, useState } from 'react'
 import { cn } from '@nextui-org/react'
@@ -14,19 +14,19 @@ import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
 
 import { ncoState } from '@/hooks/useNco'
 
-import { PanelItem } from '@/components/panel-item'
+import { PanelItem } from '@/components/PanelItem'
 
-import { StatusOverlay } from './status-overlay'
-import { ButtonsOverlay } from './buttons-overlay'
-import { AddButton } from './add-button'
-import { Thumbnail } from './thumbnail'
-import { DateTime } from './date-time'
-import { Title } from './title'
-import { Counts } from './counts'
-import { Offset } from './offset'
-import { HideButton } from './hide-button'
-import { TranslucentButton } from './translucent-button'
-import { Options, OptionsButton } from './options'
+import { StatusOverlay } from './StatusOverlay'
+import { ButtonsOverlay } from './ButtonsOverlay'
+import { AddButton } from './AddButton'
+import { Thumbnail } from './Thumbnail'
+import { DateTime } from './DateTime'
+import { Title } from './Title'
+import { Counts } from './Counts'
+import { Offset } from './Offset'
+import { HideButton } from './HideButton'
+import { TranslucentButton } from './TranslucentButton'
+import { Options, OptionsButton } from './Options'
 
 export type SlotItemProps = {
   classNames?: PanelItemProps['classNames']

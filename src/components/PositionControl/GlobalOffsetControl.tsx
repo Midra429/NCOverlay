@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
-import { OffsetControl } from '@/components/offset-control'
+import { OffsetControl } from '@/components/OffsetControl'
 
 export type GlobalOffsetControlProps = {
   compact?: boolean

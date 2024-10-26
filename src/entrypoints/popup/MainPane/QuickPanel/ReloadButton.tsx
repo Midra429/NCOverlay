@@ -4,7 +4,7 @@ import { RefreshCwIcon } from 'lucide-react'
 import { useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
-import { PanelButton } from '@/components/panel-button'
+import { PanelButton } from '@/components/PanelButton'
 
 export const ReloadButton: React.FC = () => {
   const stateStatus = useNcoState('status')

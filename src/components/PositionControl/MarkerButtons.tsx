@@ -7,7 +7,7 @@ import { MARKERS } from '@/constants/markers'
 import { useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
-import { Tooltip } from '@/components/tooltip'
+import { Tooltip } from '@/components/Tooltip'
 
 export type MarkerButtonProps = {
   markerIdx: number | null

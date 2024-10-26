@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { SlotItem } from '@/components/slot-item'
+import { SlotItem } from '@/components/SlotItem'
 
 export type SlotItemsProps = {
   details: StateSlotDetail[]

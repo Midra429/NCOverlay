@@ -4,7 +4,7 @@ import { Switch } from '@nextui-org/react'
 import { useStorage } from '@/hooks/useStorage'
 import { useSettings } from '@/hooks/useSettings'
 
-import { PanelItem } from '@/components/panel-item'
+import { PanelItem } from '@/components/PanelItem'
 
 /**
  * 表示 / 非表示

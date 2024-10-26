@@ -3,7 +3,7 @@ import { CameraIcon, CheckIcon, XIcon } from 'lucide-react'
 
 import { capture } from '@/utils/extension/capture'
 
-import { PanelButton } from '@/components/panel-button'
+import { PanelButton } from '@/components/PanelButton'
 
 export const CaptureButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)

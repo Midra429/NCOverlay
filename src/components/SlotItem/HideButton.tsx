@@ -6,7 +6,7 @@ import { EyeOffIcon } from 'lucide-react'
 
 import { ncoState } from '@/hooks/useNco'
 
-import { Tooltip } from '@/components/tooltip'
+import { Tooltip } from '@/components/Tooltip'
 
 export type HideButtonProps = {
   id: StateSlotDetail['id']

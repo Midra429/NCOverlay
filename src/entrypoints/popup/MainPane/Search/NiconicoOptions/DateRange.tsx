@@ -4,7 +4,7 @@ import { CalendarDaysIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectSection, SelectItem } from '@/components/select'
+import { Select, SelectSection, SelectItem } from '@/components/Select'
 
 const DATE_RANGE_OPTIONS: {
   label: string

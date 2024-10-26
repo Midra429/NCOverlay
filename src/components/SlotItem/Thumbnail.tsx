@@ -5,9 +5,9 @@ import { Image, cn } from '@nextui-org/react'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
-import { SourceBadge } from './source-badge'
-import { AutoLoadedBadge } from './auto-loaded-badge'
-import { Duration } from './duration'
+import { SourceBadge } from './SourceBadge'
+import { AutoLoadedBadge } from './AutoLoadedBadge'
+import { Duration } from './Duration'
 
 export type ThumbnailProps = {
   id: StateSlotDetail['id']

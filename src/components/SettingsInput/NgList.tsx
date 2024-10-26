@@ -23,8 +23,8 @@ import {
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { ItemButton } from '@/components/item-button'
-import { Modal } from '@/components/modal'
+import { ItemButton } from '@/components/ItemButton'
+import { Modal } from '@/components/Modal'
 
 type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
 

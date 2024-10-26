@@ -3,7 +3,7 @@ import { PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 
-import { PanelButton } from '@/components/panel-button'
+import { PanelButton } from '@/components/PanelButton'
 
 export const SidePanelButton: React.FC = () => {
   const [tabId, setTabId] = useState<number>()

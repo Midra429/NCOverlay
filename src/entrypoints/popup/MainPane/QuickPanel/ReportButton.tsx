@@ -6,7 +6,7 @@ import { webext } from '@/utils/webext'
 
 import { useNcoState } from '@/hooks/useNco'
 
-import { PanelButton } from '@/components/panel-button'
+import { PanelButton } from '@/components/PanelButton'
 
 export const ReportButton: React.FC = () => {
   const stateVod = useNcoState('vod')

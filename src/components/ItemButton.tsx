@@ -1,10 +1,10 @@
 import type { ButtonProps } from '@nextui-org/react'
-import type { PopconfirmProps } from '@/components/popconfirm'
+import type { PopconfirmProps } from '@/components/Popconfirm'
 
 import { Button, cn } from '@nextui-org/react'
 
-import { ItemLabel } from '@/components/label'
-import { Popconfirm } from '@/components/popconfirm'
+import { ItemLabel } from '@/components/ItemLabel'
+import { Popconfirm } from '@/components/Popconfirm'
 
 export const ItemButton: React.FC<{
   title: React.ReactNode

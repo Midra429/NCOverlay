@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { useNcoState } from '@/hooks/useNco'
 
-import { SlotItem } from '@/components/slot-item'
+import { SlotItem } from '@/components/SlotItem'
 
 export type NiconicoResultsProps = {
   details: StateSlotDetail[]

@@ -26,8 +26,8 @@ import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { ItemButton } from '@/components/item-button'
-import { Modal } from '@/components/modal'
+import { ItemButton } from '@/components/ItemButton'
+import { Modal } from '@/components/Modal'
 
 export type Key = 'settings:comment:jikkyoChannelIds'
 

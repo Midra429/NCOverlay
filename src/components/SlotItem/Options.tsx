@@ -15,7 +15,7 @@ import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 
 import { ncoState } from '@/hooks/useNco'
 
-import { OffsetControl } from '@/components/offset-control'
+import { OffsetControl } from '@/components/OffsetControl'
 
 const transitionVariants: Variants = {
   exit: { ...TRANSITION_VARIANTS.collapse.exit, overflowY: 'hidden' },

@@ -1,6 +1,6 @@
 import type { VOD_KEYS } from '@/constants/vods'
 import type { PLUGINS } from '@/constants/plugins'
-import type { SettingsInputProps } from '@/components/settings-input'
+import type { SettingsInputProps } from '@/components/SettingsInput'
 
 export type VodKey = (typeof VOD_KEYS)[number]
 

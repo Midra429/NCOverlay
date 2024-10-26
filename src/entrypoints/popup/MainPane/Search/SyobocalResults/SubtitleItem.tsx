@@ -9,7 +9,7 @@ import { LazyMotion, domAnimation, useWillChange, m } from 'framer-motion'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { ChevronDownIcon } from 'lucide-react'
 
-import { PanelItem } from '@/components/panel-item'
+import { PanelItem } from '@/components/PanelItem'
 
 import { SubtitleDetail } from './SubtitleDetail'
 

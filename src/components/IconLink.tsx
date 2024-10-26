@@ -2,7 +2,7 @@ import { Button } from '@nextui-org/react'
 
 import { webext } from '@/utils/webext'
 
-import { Tooltip } from '@/components/tooltip'
+import { Tooltip } from '@/components/Tooltip'
 
 export type IconLinkProps =
   | {

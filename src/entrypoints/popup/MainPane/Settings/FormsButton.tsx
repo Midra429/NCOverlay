@@ -6,7 +6,7 @@ import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 
 import { useNcoState } from '@/hooks/useNco'
 
-import { IconLink } from '@/components/icon-link'
+import { IconLink } from '@/components/IconLink'
 
 export const FormsButton: React.FC = () => {
   const stateVod = useNcoState('vod')

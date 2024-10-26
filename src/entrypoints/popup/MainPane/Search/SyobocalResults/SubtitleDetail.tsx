@@ -17,7 +17,7 @@ import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 import { useNcoState } from '@/hooks/useNco'
 
-import { SlotItem } from '@/components/slot-item'
+import { SlotItem } from '@/components/SlotItem'
 
 export type SubtitleDetailHandle = {
   initialize: () => void

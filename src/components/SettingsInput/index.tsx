@@ -1,15 +1,15 @@
 import type { SettingsKey } from '@/types/storage'
 
-import * as Segmented from './segmented'
-import * as Select from './select'
-import * as Toggle from './toggle'
-import * as Text from './text'
-import * as Range from './range'
-import * as Checkbox from './checkbox'
-import * as Checkcard from './checkcard'
-import * as KbdShortcut from './kbd-shortcut'
-import * as NgList from './ng-list'
-import * as ChSelector from './ch-selector'
+import * as Segmented from './Segmented'
+import * as Select from './Select'
+import * as Toggle from './Toggle'
+import * as Text from './Text'
+import * as Range from './Range'
+import * as Checkbox from './Checkbox'
+import * as Checkcard from './Checkcard'
+import * as KbdShortcut from './KbdShortcut'
+import * as NgList from './NgList'
+import * as ChSelector from './ChSelector'
 
 export type SettingsInputBaseProps<
   K extends SettingsKey,

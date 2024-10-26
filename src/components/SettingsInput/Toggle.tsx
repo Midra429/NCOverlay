@@ -5,7 +5,7 @@ import { Switch } from '@nextui-org/react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { ItemLabel } from '@/components/label'
+import { ItemLabel } from '@/components/ItemLabel'
 
 export type Key = {
   [key in SettingsKey]: StorageItems[key] extends boolean ? key : never

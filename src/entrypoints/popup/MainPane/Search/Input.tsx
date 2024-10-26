@@ -5,7 +5,7 @@ import { SiNiconico } from '@icons-pack/react-simple-icons'
 
 import { ncoState } from '@/hooks/useNco'
 
-import { Select, SelectItem } from '@/components/select'
+import { Select, SelectItem } from '@/components/Select'
 
 import { NiconicoOptions } from './NiconicoOptions'
 

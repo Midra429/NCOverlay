@@ -1,6 +1,6 @@
 import { ncoState } from '@/hooks/useNco'
 
-import { Layout } from '@/components/layout'
+import { Layout } from '@/components/Layout'
 
 import { MainPane } from './MainPane'
 import { SidePane } from './SidePane'

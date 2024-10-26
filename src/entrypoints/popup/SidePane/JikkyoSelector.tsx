@@ -19,10 +19,10 @@ import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
 
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
-import { Modal } from '@/components/modal'
-import { Select, SelectSection, SelectItem } from '@/components/select'
-import { DatePicker } from '@/components/date-picker'
-import { SlotItem } from '@/components/slot-item'
+import { Modal } from '@/components/Modal'
+import { Select, SelectSection, SelectItem } from '@/components/Select'
+import { DatePicker } from '@/components/DatePicker'
+import { SlotItem } from '@/components/SlotItem'
 
 const MAX_DURATION = 6 * 60 * 60 * 1000
 

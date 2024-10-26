@@ -6,7 +6,7 @@ import { NICONICO_GENRES } from '@midra/nco-api/constants'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectSection, SelectItem } from '@/components/select'
+import { Select, SelectSection, SelectItem } from '@/components/Select'
 
 const GENRES: SettingItems['settings:search:genre'][] = [
   '未指定',

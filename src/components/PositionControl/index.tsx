@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import { cn } from '@nextui-org/react'
 
-import { MarkerButtons } from './marker-buttons'
-import { GlobalOffsetControl } from './global-offset-control'
+import { MarkerButtons } from './MarkerButtons'
+import { GlobalOffsetControl } from './GlobalOffsetControl'
 
 export type PositionControlProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,

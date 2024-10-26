@@ -19,8 +19,8 @@ import { zeroPadding } from '@/utils/zeroPadding'
 import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 import { useNcoState } from '@/hooks/useNco'
 
-import { Modal } from '@/components/modal'
-import { SlotItem } from '@/components/slot-item'
+import { Modal } from '@/components/Modal'
+import { SlotItem } from '@/components/SlotItem'
 
 import { TitleItemInner } from './TitleItem'
 import { SubtitleItem } from './SubtitleItem'

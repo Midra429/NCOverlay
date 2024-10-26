@@ -3,7 +3,7 @@ import type { SettingsInputBaseProps } from '.'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectItem } from '@/components/select'
+import { Select, SelectItem } from '@/components/Select'
 
 export type Key = {
   [key in SettingsKey]: StorageItems[key] extends string | number | boolean
