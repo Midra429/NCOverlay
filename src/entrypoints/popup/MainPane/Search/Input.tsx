@@ -121,14 +121,15 @@ export const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(
               color="primary"
               isIconOnly
               isDisabled={!value.trim() || isDisabled}
-              startContent={<SearchIcon className="size-4" />}
               onPress={() => {
                 onSearch({
                   source,
                   value: value.trim(),
                 })
               }}
-            />
+            >
+              <SearchIcon className="size-4" />
+            </Button>
           </div>
 
           {isNiconico && (

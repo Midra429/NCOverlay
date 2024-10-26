@@ -198,15 +198,14 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
             variant="light"
             radius="full"
             isIconOnly
-            startContent={
-              isRecording ? (
-                <CheckIcon className="size-4" />
-              ) : (
-                <PencilIcon className="size-4" />
-              )
-            }
             onClick={onClick}
-          />
+          >
+            {isRecording ? (
+              <CheckIcon className="size-4" />
+            ) : (
+              <PencilIcon className="size-4" />
+            )}
+          </Button>
         </Tooltip>
       </div>
     </div>

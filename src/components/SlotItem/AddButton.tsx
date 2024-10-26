@@ -24,9 +24,10 @@ export const AddButton: React.FC<AddButtonProps> = ({ onPress }) => {
         radius="full"
         color="primary"
         isIconOnly
-        startContent={<PlusIcon className="size-4" />}
         onPress={onPress}
-      />
+      >
+        <PlusIcon className="size-4" />
+      </Button>
     </div>
   )
 }

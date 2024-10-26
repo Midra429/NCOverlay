@@ -33,15 +33,14 @@ export const OptionsButton: React.FC<{
       radius="full"
       variant="flat"
       isIconOnly
-      startContent={
-        isOpen ? (
-          <XIcon className="size-3.5" />
-        ) : (
-          <SlidersHorizontalIcon className="size-3.5" />
-        )
-      }
       onPress={onPress}
-    />
+    >
+      {isOpen ? (
+        <XIcon className="size-3.5" />
+      ) : (
+        <SlidersHorizontalIcon className="size-3.5" />
+      )}
+    </Button>
   )
 }
 

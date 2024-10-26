@@ -34,9 +34,10 @@ export const ButtonsOverlay: React.FC<ButtonsOverlayProps> = ({
         variant="solid"
         color="danger"
         isIconOnly
-        startContent={<Trash2Icon className="size-3.5" />}
         onPress={onRemove}
-      />
+      >
+        <Trash2Icon className="size-3.5" />
+      </Button>
     </div>
   )
 }

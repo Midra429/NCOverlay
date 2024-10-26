@@ -244,9 +244,10 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
             variant="flat"
             isIconOnly
             isDisabled={!isReady}
-            startContent={<ChevronsDownIcon className="size-4" />}
             onPress={() => setEndDateTime(startDateTime)}
-          />
+          >
+            <ChevronsDownIcon className="size-4" />
+          </Button>
 
           <ButtonGroup size="sm" variant="flat" isDisabled={!isReady}>
             {[5, 30].map((min) => (

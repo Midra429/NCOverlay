@@ -21,9 +21,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         variant="flat"
         isIconOnly
         isDisabled={page <= 1 || isDisabled}
-        startContent={<ChevronLeftIcon className="size-4" />}
         onPress={() => onPageChange(1 < page ? page - 1 : page)}
-      />
+      >
+        <ChevronLeftIcon className="size-4" />
+      </Button>
 
       <NextUIPagination
         classNames={{
@@ -48,9 +49,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         variant="flat"
         isIconOnly
         isDisabled={total <= page || isDisabled}
-        startContent={<ChevronRightIcon className="size-4" />}
         onPress={() => onPageChange(page < total ? page + 1 : page)}
-      />
+      >
+        <ChevronRightIcon className="size-4" />
+      </Button>
     </div>
   )
 }

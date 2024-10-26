@@ -41,9 +41,10 @@ export const HideButton: React.FC<HideButtonProps> = ({ id, hidden }) => {
         variant={tmpHidden ? 'solid' : 'light'}
         color={tmpHidden ? 'primary' : 'default'}
         isIconOnly
-        startContent={<EyeOffIcon className="size-3.5" />}
         onPress={onPress}
-      />
+      >
+        <EyeOffIcon className="size-3.5" />
+      </Button>
     </Tooltip>
   )
 }

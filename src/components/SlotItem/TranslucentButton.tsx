@@ -50,9 +50,10 @@ export const TranslucentButton: React.FC<TranslucentButton> = ({
         color={tmpTranslucent ? 'primary' : 'default'}
         isIconOnly
         isDisabled={hidden}
-        startContent={<BlendIcon className="size-3.5" />}
         onPress={onPress}
-      />
+      >
+        <BlendIcon className="size-3.5" />
+      </Button>
     </Tooltip>
   )
 }

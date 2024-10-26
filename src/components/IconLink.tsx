@@ -32,7 +32,8 @@ export const IconLink: React.FC<IconLinkProps> = (props) => (
           ? props.onPress
           : () => webext.tabs.create({ url: props.href })
       }
-      startContent={<props.icon className="size-5 text-foreground-700" />}
-    />
+    >
+      <props.icon className="size-5 text-foreground-700" />
+    </Button>
   </Tooltip>
 )
