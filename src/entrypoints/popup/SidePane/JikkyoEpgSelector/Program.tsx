@@ -97,7 +97,7 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
     >
       <div
         className={cn('flex flex-col gap-1', 'break-all text-mini')}
-        title={program.description}
+        title={program.description || program.title}
       >
         <span className="flex items-start gap-1">
           {/* 分 */}
@@ -174,7 +174,7 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
     icon.new && '🈟',
     icon.last && '🈡',
 
-    normalize(description).includes(normalize(title))
+    description && normalize(description).includes(normalize(title))
       ? description
       : `${title}\n${description}`,
   ]
@@ -199,7 +199,11 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
 
   return (
     <div
-      className={cn('flex flex-col items-start gap-1', 'w-80 p-2', 'text-tiny')}
+      className={cn(
+        'flex flex-col items-start gap-0.5',
+        'w-80 p-2',
+        'text-tiny'
+      )}
     >
       {title && (
         <span className="font-semibold">
@@ -208,13 +212,14 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
           <span>{title}</span>
         </span>
       )}
+
       {description && (
         <span className="text-foreground-500 dark:text-foreground-600">
           {description}
         </span>
       )}
 
-      <Divider className="my-1" />
+      <Divider className="my-1.5" />
 
       <SlotItem
         classNames={{

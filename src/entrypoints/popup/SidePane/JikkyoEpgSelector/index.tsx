@@ -14,6 +14,7 @@ import {
   Tv2Icon,
   XIcon,
 } from 'lucide-react'
+import { charWidth as adjustCharWidth } from '@midra/nco-parser/normalize/lib/adjust/charWidth'
 import { ncoApi } from '@midra/nco-api'
 import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
 
@@ -27,7 +28,7 @@ import { TverEpg } from './TverEpg'
 export type EPGProgram = {
   id?: string
   title: string
-  description: string
+  description?: string
   startAt: number
   endAt: number
   icon: EPGv2Program['icon']
@@ -94,18 +95,22 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
         .map(({ broadcaster, programs }) => {
           return {
             tverChId: broadcaster.id,
-            programs: programs.flatMap(
-              (program) =>
-                ({
-                  id: program.seriesID,
-                  title: program.seriesTitle || program.title,
-                  description: program.seriesTitle && program.title,
-                  startAt: program.startAt,
-                  endAt: program.endAt,
-                  icon: program.icon,
-                  genre: program.genre,
-                }) satisfies EPGProgram
-            ),
+            programs: programs.flatMap((program) => {
+              const title =
+                program.seriesTitle || adjustCharWidth(program.title)
+              const description =
+                program.seriesTitle && adjustCharWidth(program.title)
+
+              return {
+                id: program.seriesID,
+                title,
+                description,
+                startAt: program.startAt,
+                endAt: program.endAt,
+                icon: program.icon,
+                genre: program.genre,
+              } satisfies EPGProgram
+            }),
           } satisfies EPGContent
         })
 
