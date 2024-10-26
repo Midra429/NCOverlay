@@ -84,6 +84,7 @@ export type StateSlotDetailDefault = StateSlotDetailBase & {
     count: {
       view: number
       comment: number
+      kawaii?: number
     }
     thumbnail?: string
   }
@@ -98,6 +99,7 @@ export type StateSlotDetailJikkyo = StateSlotDetailBase & {
     date: [start: number, end: number]
     count: {
       comment: number
+      kawaii?: number
     }
   }
 }

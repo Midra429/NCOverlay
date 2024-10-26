@@ -3,6 +3,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 import { cn } from '@nextui-org/react'
 
 export type SourceTagProps = {
+  className?: string
   type: StateSlotDetail['type']
 }
 
@@ -26,19 +27,19 @@ const SOURCE_BADGE_NAME: {
   jikkyo: '実況',
 }
 
-export const SourceBadge: React.FC<SourceTagProps> = ({ type }) => {
+export const SourceBadge: React.FC<SourceTagProps> = ({ className, type }) => {
   if (type === 'normal') return
 
   return (
     <div
       className={cn(
-        'absolute left-[3px] top-[3px] z-10',
         'px-1 py-[1px]',
         'border-1 border-white/80',
         'rounded-md',
         'text-mini',
         'select-none',
-        SOURCE_BADGE_CLASSES[type]
+        SOURCE_BADGE_CLASSES[type],
+        className
       )}
     >
       {SOURCE_BADGE_NAME[type]}

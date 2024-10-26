@@ -7,11 +7,13 @@ import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 
 import { SourceBadge } from './SourceBadge'
 import { AutoLoadedBadge } from './AutoLoadedBadge'
+import { Offset } from './Offset'
 import { Duration } from './Duration'
 
 export type ThumbnailProps = {
   id: StateSlotDetail['id']
   type: StateSlotDetail['type']
+  offsetMs: StateSlotDetail['offsetMs']
   isAutoLoaded: StateSlotDetail['isAutoLoaded']
   info: StateSlotDetail['info']
   isSearch?: boolean
@@ -20,6 +22,7 @@ export type ThumbnailProps = {
 export const Thumbnail: React.FC<ThumbnailProps> = ({
   id,
   type,
+  offsetMs,
   isAutoLoaded,
   info,
   isSearch,
@@ -45,6 +48,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
           <span className={cn('absolute top-[4px]', 'text-mini text-white/80')}>
             {jkChId}
           </span>
+
           <span
             className={cn(
               'line-clamp-1',
@@ -74,14 +78,30 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
     <>
       {thumbnail}
 
-      {/* ソース */}
-      <SourceBadge type={type} />
+      <div
+        className={cn(
+          'absolute left-[2px] top-[2px] z-10',
+          'flex flex-col items-start gap-[1px]'
+        )}
+      >
+        {/* ソース */}
+        <SourceBadge type={type} />
 
-      {/* 自動 / 手動 */}
-      {!isSearch && <AutoLoadedBadge isAutoLoaded={isAutoLoaded} />}
+        {/* 自動 / 手動 */}
+        {!isSearch && <AutoLoadedBadge isAutoLoaded={isAutoLoaded} />}
+      </div>
+
+      {/* オフセット */}
+      <Offset
+        className="absolute bottom-[2px] left-[2px] z-10"
+        offsetMs={offsetMs}
+      />
 
       {/* 長さ */}
-      <Duration infoDuration={info.duration} />
+      <Duration
+        className="absolute bottom-[2px] right-[2px] z-10"
+        duration={info.duration}
+      />
     </>
   )
 }

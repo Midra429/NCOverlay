@@ -72,3 +72,14 @@ export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
 export const COLOR_CODE = '^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$'
 
 export const COLOR_CODE_REGEXP = new RegExp(COLOR_CODE)
+
+export const KAWAII_REGEXP = new RegExp(
+  [
+    '(可愛|かわい)(い|すぎ|過ぎ)',
+    'かわ(ぃぃ|E)',
+    '(カワ|ｶﾜ)(イイ|ｲｲ|ィィ|ｨｨ)',
+    'kawaii',
+    'かーいー',
+  ].join('|'),
+  'i'
+)

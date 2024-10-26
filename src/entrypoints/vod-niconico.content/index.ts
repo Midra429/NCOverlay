@@ -69,11 +69,16 @@ const main = async () => {
       const [comment] = await getNiconicoComments([videoData])
 
       if (comment) {
-        const { data, threads } = comment
+        const { data, threads, kawaiiCount } = comment
 
         await nco.state.update('slotDetails', ['id'], {
           id,
           status: 'ready',
+          info: {
+            count: {
+              kawaii: kawaiiCount,
+            },
+          },
         })
 
         await nco.state.add('slots', { id, threads })

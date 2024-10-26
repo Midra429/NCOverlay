@@ -79,6 +79,13 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '更新内容を表示',
         description: 'アップデート後に更新内容を新しいタブで開きます。',
       },
+      {
+        settingsKey: 'settings:showKawaiiPct',
+        inputType: 'toggle',
+        label: 'かわいい率を表示',
+        description:
+          'コメント数の右側にかわいい率（かわいいコメの出現率）を表示します。',
+      },
     ],
   },
   {

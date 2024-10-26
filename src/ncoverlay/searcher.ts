@@ -231,7 +231,7 @@ export class NCOSearcher {
           if (!cmt) return
 
           const id = results[idx].contentId
-          const { data, threads } = cmt
+          const { data, threads, kawaiiCount } = cmt
 
           updateSlotDetails.push({
             id,
@@ -240,6 +240,7 @@ export class NCOSearcher {
               count: {
                 view: data.video.count.view,
                 comment: data.video.count.comment,
+                kawaii: kawaiiCount,
               },
               thumbnail:
                 data.video.thumbnail.largeUrl ||
@@ -270,10 +271,11 @@ export class NCOSearcher {
       let totalDuration = 0
       let totalCountView = 0
       let totalCountComment = 0
+      let totalCountKawaii = 0
       let mergedThreads: V1Thread[] = []
 
       for (const comment of commentsChapter) {
-        const { data, threads } = comment!
+        const { data, threads, kawaiiCount } = comment!
 
         if (tmpOffset) {
           for (const thread of threads) {
@@ -287,6 +289,7 @@ export class NCOSearcher {
         totalDuration += data.video.duration
         totalCountView += data.video.count.view
         totalCountComment += data.video.count.comment
+        totalCountKawaii += kawaiiCount
         mergedThreads.push(...threads)
       }
 
@@ -299,6 +302,7 @@ export class NCOSearcher {
           count: {
             view: totalCountView,
             comment: totalCountComment,
+            kawaii: totalCountKawaii,
           },
           thumbnail:
             data.video.thumbnail.largeUrl ||
@@ -318,7 +322,7 @@ export class NCOSearcher {
     commentsJikkyo?.forEach((cmt) => {
       if (!cmt) return
 
-      const { thread, markers } = cmt
+      const { thread, markers, kawaiiCount } = cmt
 
       updateSlotDetails.push({
         id: thread.id as string,
@@ -327,6 +331,7 @@ export class NCOSearcher {
         info: {
           count: {
             comment: thread.commentCount,
+            kawaii: kawaiiCount,
           },
         },
       })

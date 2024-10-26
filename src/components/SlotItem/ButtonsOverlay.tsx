@@ -25,7 +25,7 @@ export const ButtonsOverlay: React.FC<ButtonsOverlayProps> = ({
       {/* 削除 */}
       <Button
         className={cn(
-          'absolute right-[2px] top-[2px]',
+          'absolute right-[1px] top-[1px]',
           '!size-6 min-h-0 min-w-0',
           'border-1 border-white/80'
         )}

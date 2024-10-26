@@ -1,6 +1,8 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 
+import { KAWAII_REGEXP } from '@/constants'
+
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 import { findMarkers } from './findMarkers'
@@ -18,6 +20,7 @@ export const getJikkyoKakologs = async (
   ({
     thread: V1Thread
     markers: (number | null)[]
+    kawaiiCount: number
   } | null)[]
 > => {
   // 過去ログ取得
@@ -42,7 +45,11 @@ export const getJikkyoKakologs = async (
     if (thread) {
       const markers = findMarkers([thread])
 
-      return { thread, markers }
+      const kawaiiCount = thread.comments.filter((cmt) => {
+        return KAWAII_REGEXP.test(cmt.body)
+      }).length
+
+      return { thread, markers, kawaiiCount }
     } else {
       return null
     }

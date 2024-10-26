@@ -8,14 +8,11 @@ import { VOD_KEYS } from '../vods'
 export const SETTINGS_DEFAULT: SettingItems = {
   // 全般
   'settings:theme': 'auto',
-  'settings:showChangelog': true,
-
-  // 動画配信サービス
   'settings:vods': [...VOD_KEYS.filter((v) => v !== 'niconico')],
-
-  // キャプチャー
   'settings:capture:format': 'jpeg',
   'settings:capture:method': 'window',
+  'settings:showChangelog': true,
+  'settings:showKawaiiPct': false,
 
   // コメント
   'settings:comment:fps': 60,

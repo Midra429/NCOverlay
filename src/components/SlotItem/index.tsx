@@ -23,7 +23,6 @@ import { Thumbnail } from './Thumbnail'
 import { DateTime } from './DateTime'
 import { Title } from './Title'
 import { Counts } from './Counts'
-import { Offset } from './Offset'
 import { HideButton } from './HideButton'
 import { TranslucentButton } from './TranslucentButton'
 import { Options, OptionsButton } from './Options'
@@ -68,7 +67,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       ])
 
       if (comment) {
-        const { thread, markers } = comment
+        const { thread, markers, kawaiiCount } = comment
 
         slotDetail = {
           id,
@@ -77,6 +76,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           info: {
             count: {
               comment: thread.commentCount,
+              kawaii: kawaiiCount,
             },
           },
         }
@@ -87,7 +87,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
       const [comment] = await getNiconicoComments([{ contentId: id }])
 
       if (comment) {
-        const { data, threads } = comment
+        const { data, threads, kawaiiCount } = comment
 
         slotDetail = {
           id,
@@ -96,6 +96,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             count: {
               view: data.video.count.view,
               comment: data.video.count.comment,
+              kawaii: kawaiiCount,
             },
             thumbnail:
               data.video.thumbnail.largeUrl ||
@@ -168,6 +169,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           <Thumbnail
             id={detail.id}
             type={detail.type}
+            offsetMs={detail.offsetMs}
             isAutoLoaded={detail.isAutoLoaded}
             info={detail.info}
             isSearch={isSearch}
@@ -204,24 +206,14 @@ export const SlotItem: React.FC<SlotItemProps> = ({
             isSearch={isSearch}
           />
 
-          <div
-            className={cn(
-              'flex shrink-0 flex-row items-center justify-between',
-              'text-foreground-500 dark:text-foreground-600'
-            )}
-          >
-            {/* 再生数・コメント数 */}
-            {!(detail.type === 'jikkyo' && isSearch) && (
-              <Counts
-                status={detail.status}
-                infoCount={detail.info.count}
-                isSearch={isSearch}
-              />
-            )}
-
-            {/* オフセット */}
-            {!isError && !isSearch && <Offset offsetMs={detail.offsetMs} />}
-          </div>
+          {/* 再生数 / コメント数 / かわいい率 */}
+          {!(detail.type === 'jikkyo' && isSearch) && (
+            <Counts
+              status={detail.status}
+              infoCount={detail.info.count}
+              isSearch={isSearch}
+            />
+          )}
         </div>
 
         {/* サイドボタン */}

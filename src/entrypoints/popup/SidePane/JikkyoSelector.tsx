@@ -118,7 +118,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
     ])
 
     if (comment) {
-      const { thread, markers } = comment
+      const { thread, markers, kawaiiCount } = comment
 
       await ncoState?.update('slotDetails', ['id'], {
         id,
@@ -127,6 +127,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
         info: {
           count: {
             comment: thread.commentCount,
+            kawaii: kawaiiCount,
           },
         },
       })

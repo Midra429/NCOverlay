@@ -37,17 +37,12 @@ export type StorageItems_v3 = {
 }
 
 export type StorageItems_v4 = {
+  // 全般 //////////////////////////////////////////////////
   /**
    * テーマ
    * @default 'auto'
    */
   'settings:theme': 'auto' | 'light' | 'dark'
-
-  /**
-   * アップデート後に更新内容を表示
-   * @default true
-   */
-  'settings:showChangelog': boolean
 
   /**
    * 動画配信サービス
@@ -56,17 +51,30 @@ export type StorageItems_v4 = {
   'settings:vods': VodKey[]
 
   /**
-   * キャプチャー:形式
+   * キャプチャー: 形式
    * @default 'jpeg'
    */
   'settings:capture:format': 'jpeg' | 'png'
 
   /**
-   * キャプチャー:方式
+   * キャプチャー: 方式
    * @default 'jpeg'
    */
   'settings:capture:method': 'window' | 'copy'
 
+  /**
+   * アップデート後に更新内容を表示
+   * @default true
+   */
+  'settings:showChangelog': boolean
+
+  /**
+   * かわいい率
+   * @default false
+   */
+  'settings:showKawaiiPct': boolean
+
+  // コメント //////////////////////////////////////////////////
   /**
    * コメント:フレームレート
    * @description 30, 60, 0 (無制限)
@@ -119,6 +127,7 @@ export type StorageItems_v4 = {
    */
   'settings:comment:jikkyoChannelIds': JikkyoChannelId[]
 
+  // NG設定 //////////////////////////////////////////////////
   /**
    * NG設定:コメント
    * @default []
@@ -155,6 +164,7 @@ export type StorageItems_v4 = {
    */
   'settings:ng:coloredComments': boolean
 
+  // キーボード //////////////////////////////////////////////////
   /**
    * キーボード:全体のオフセットを増やす
    * @default ''
@@ -215,12 +225,14 @@ export type StorageItems_v4 = {
    */
   'settings:kbd:resetMarker': string
 
+  // プラグイン //////////////////////////////////////////////////
   /**
    * プラグイン
    * @default []
    */
   'settings:plugins': PluginKey[]
 
+  // 検索 //////////////////////////////////////////////////
   /**
    * 検索:ソート順
    * @default '-startTime'
@@ -262,17 +274,13 @@ export type StorageItems = StorageItems_v4 & {
 export type StorageKey = keyof StorageItems
 
 export type InternalKey = Extract<StorageKey, `_${string}`>
-
 export type InternalItems = { [k in InternalKey]: StorageItems[k] }
 
 export type TemporaryKey = Extract<StorageKey, `tmp:${string}`>
-
 export type TemporaryItems = { [k in TemporaryKey]: StorageItems[k] }
 
 export type SettingsKey = Extract<StorageKey, `settings:${string}`>
-
 export type SettingItems = { [k in SettingsKey]: StorageItems[k] }
 
 export type StateKey = Extract<StorageKey, `state:${string}`>
-
 export type StateItems = { [k in StateKey]: StorageItems[k] }
