@@ -1,3 +1,4 @@
+import type { Program as EPGv2Program } from '@midra/nco-api/types/tver/v1/callEPGv2'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import type { EPGProgram, EPGContent, EPGData } from '.'
 
@@ -8,6 +9,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   cn,
+  tv,
 } from '@nextui-org/react'
 import { darken, saturate, toHex } from 'color2k'
 import { normalize } from '@midra/nco-parser/normalize'
@@ -21,12 +23,58 @@ import { SlotItem } from '@/components/slot-item'
 
 import { COLUMN_WIDTH, ROW_HEIGHT } from './TverEpg'
 
-export type ProgramContentProps = {
+const programIcon = tv({
+  base: [
+    'relative -top-[0.5px]',
+    'inline-flex items-center justify-center',
+    'mr-0.5 size-[calc(1em+3px)]',
+    'rounded-sm',
+    'text-[calc(1em-1px)] font-normal',
+    'text-white dark:text-black',
+  ],
+  variants: {
+    icon: {
+      new: 'bg-orange-500 dark:bg-orange-300',
+      revival: 'bg-blue-500 dark:bg-blue-300',
+      last: 'bg-red-500 dark:bg-red-300',
+    },
+  },
+})
+
+type ProgramIconsProps = {
+  icon: Partial<EPGv2Program['icon']>
+}
+
+const ProgramIcons: React.FC<ProgramIconsProps> = ({ icon }) => {
+  return (
+    <>
+      {icon.new && (
+        <span className={programIcon({ icon: 'new' })} title="新番組">
+          新
+        </span>
+      )}
+
+      {icon.revival && (
+        <span className={programIcon({ icon: 'revival' })} title="再放送">
+          再
+        </span>
+      )}
+
+      {icon.last && (
+        <span className={programIcon({ icon: 'last' })} title="最終回">
+          終
+        </span>
+      )}
+    </>
+  )
+}
+
+type ProgramContentProps = {
   program: EPGProgram
   bgColor: [light: string, dark: string]
 }
 
-export const ProgramContent: React.FC<ProgramContentProps> = ({
+const ProgramContent: React.FC<ProgramContentProps> = ({
   program,
   bgColor,
 }) => {
@@ -87,7 +135,9 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
 
           {/* タイトル */}
           <span className="pr-1 pt-1 font-semibold">
-            {`${program.prefix} ${program.title}`.trim()}
+            <ProgramIcons icon={program.icon} />
+
+            <span>{program.title}</span>
           </span>
         </span>
 
@@ -100,12 +150,12 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
   )
 }
 
-export type ProgramPopoverProps = {
+type ProgramPopoverProps = {
   tverChId: EPGContent['tverChId']
   program: EPGProgram
 }
 
-export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
+const ProgramPopover: React.FC<ProgramPopoverProps> = ({
   tverChId,
   program,
 }) => {
@@ -115,9 +165,22 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
     return stateSlotDetails?.map((v) => v.id)
   }, [stateSlotDetails])
 
-  const { title, description, prefix, startAt, endAt } = program
+  const { title, description, startAt, endAt, icon } = program
 
   const id = `${tverToJikkyoChId(tverChId)}:${startAt}-${endAt}`
+
+  const slotTitle = [
+    icon.new && '🈟',
+    icon.revival && '🈞',
+    icon.last && '🈡',
+
+    normalize(description).includes(normalize(title))
+      ? description
+      : `${title}\n${description}`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
 
   const slotDetail: StateSlotDetailJikkyo = {
     type: 'jikkyo',
@@ -125,11 +188,7 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
     status: 'pending',
     info: {
       id: program.id ?? null,
-      title: `${prefix} ${
-        normalize(description).includes(normalize(title))
-          ? description
-          : `${title}\n${description}`.trim()
-      }`.trim(),
+      title: slotTitle,
       duration: endAt - startAt,
       date: [startAt * 1000, endAt * 1000],
       count: {
@@ -143,7 +202,11 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
       className={cn('flex flex-col items-start gap-1', 'w-80 p-2', 'text-tiny')}
     >
       {title && (
-        <span className="font-semibold">{`${prefix} ${title}`.trim()}</span>
+        <span className="font-semibold">
+          <ProgramIcons icon={program.icon} />
+
+          <span>{title}</span>
+        </span>
       )}
       {description && (
         <span className="text-foreground-500 dark:text-foreground-600">

@@ -28,9 +28,9 @@ export type EPGProgram = {
   id?: string
   title: string
   description: string
-  prefix: string
   startAt: number
   endAt: number
+  icon: EPGv2Program['icon']
   genre: EPGv2Program['genre']
   isDisabled?: boolean
 }
@@ -94,21 +94,18 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
         .map(({ broadcaster, programs }) => {
           return {
             tverChId: broadcaster.id,
-            programs: programs.flatMap((program) => ({
-              id: program.seriesID,
-              title: program.seriesTitle || program.title,
-              description: program.seriesTitle && program.title,
-              prefix: [
-                program.icon.new && '🈟',
-                program.icon.revival && '🈞',
-                program.icon.last && '🈡',
-              ]
-                .filter(Boolean)
-                .join(' '),
-              startAt: program.startAt,
-              endAt: program.endAt,
-              genre: program.genre,
-            })),
+            programs: programs.flatMap(
+              (program) =>
+                ({
+                  id: program.seriesID,
+                  title: program.seriesTitle || program.title,
+                  description: program.seriesTitle && program.title,
+                  startAt: program.startAt,
+                  endAt: program.endAt,
+                  icon: program.icon,
+                  genre: program.genre,
+                }) satisfies EPGProgram
+            ),
           } satisfies EPGContent
         })
 
