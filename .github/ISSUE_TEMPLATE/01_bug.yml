@@ -44,6 +44,7 @@ body:
         - label: FOD
         - label: Prime Video
         - label: Hulu
+        - label: ニコニコ動画
         - label: TVer
 
   - type: textarea
