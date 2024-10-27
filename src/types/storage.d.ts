@@ -284,3 +284,6 @@ export type SettingItems = { [k in SettingsKey]: StorageItems[k] }
 
 export type StateKey = Extract<StorageKey, `state:${string}`>
 export type StateItems = { [k in StateKey]: StorageItems[k] }
+
+export type SettingsExportKey = InternalKey | SettingsKey
+export type SettingsExportItems = Partial<InternalItems & SettingItems>

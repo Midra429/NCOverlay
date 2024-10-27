@@ -26,6 +26,7 @@ import { ItemButton } from '@/components/ItemButton'
 
 import { FormsButton } from './FormsButton'
 import { StorageSizes } from './StorageSizes'
+import { ImportExport } from './ImportExport'
 
 const { name, version } = webext.runtime.getManifest()
 
@@ -112,6 +113,10 @@ const accordionItemStorage = (
     startContent={<DatabaseIcon />}
   >
     <StorageSizes />
+
+    <Divider />
+
+    <ImportExport />
 
     <Divider />
 

@@ -200,7 +200,6 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
     <>
       <div className="py-2">
         <ItemButton
-          key={props.settingsKey}
           title={props.label}
           description={`${value.length}件`}
           button={{

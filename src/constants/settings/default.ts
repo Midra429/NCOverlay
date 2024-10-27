@@ -1,5 +1,5 @@
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
-import type { SettingItems } from '@/types/storage'
+import type { SettingsKey, SettingItems } from '@/types/storage'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 import { VOD_KEYS } from '../vods'
@@ -54,3 +54,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:search:genre': 'アニメ',
   'settings:search:lengthRange': [null, null],
 }
+
+export const SETTINGS_DEFAULT_KEYS = Object.keys(
+  SETTINGS_DEFAULT
+) as SettingsKey[]

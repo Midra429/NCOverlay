@@ -26,7 +26,7 @@ export const ItemButton: React.FC<{
   const button = (
     <Button
       className={cn(
-        'min-w-24 shrink-0',
+        'min-w-32 shrink-0',
         props.button.variant === 'flat' &&
           props.button.color === 'default' &&
           'text-foreground',
@@ -44,7 +44,7 @@ export const ItemButton: React.FC<{
   )
 
   return (
-    <div className="flex flex-row items-center justify-between gap-2">
+    <div className="flex flex-row items-center justify-between gap-1">
       <ItemLabel title={props.title} description={props.description} />
 
       {props.confirm ? (
