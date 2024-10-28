@@ -1,6 +1,5 @@
 import type { ModalProps as NextUIModalProps } from '@nextui-org/react'
 
-import { useCallback } from 'react'
 import {
   Button,
   Modal as NextUIModal,
@@ -21,7 +20,7 @@ export type ModalProps = {
   okText?: string
   okIcon?: React.ReactNode
   isOkDisabled?: boolean
-  onOk?: () => void
+  onOk?: () => void | Promise<void>
 
   cancelText?: string
   cancelIcon?: React.ReactNode
@@ -30,6 +29,7 @@ export type ModalProps = {
   headerEndContent?: React.ReactNode
 
   footer?: React.ReactNode
+  footerStartContent?: React.ReactNode
 
   children: React.ReactNode
 }
@@ -52,32 +52,31 @@ export const Modal: React.FC<ModalProps> = (props) => {
       onClose={props.onClose}
     >
       <NextUIModalContent>
-        {(onClose) => {
-          const onPressOk = useCallback(() => {
-            props.onOk?.()
-            onClose()
-          }, [props.onOk])
+        {(onClose) => (
+          <>
+            {props.header && (
+              <NextUIModalHeader className="flex flex-row justify-between">
+                <div className="flex min-h-8 flex-row items-center">
+                  {props.header}
+                </div>
 
-          return (
-            <>
-              {props.header && (
-                <NextUIModalHeader className="flex flex-row justify-between">
-                  <div className="flex min-h-8 flex-row items-center">
-                    {props.header}
-                  </div>
+                <div className="flex h-full shrink-0 flex-row gap-2 font-normal">
+                  {props.headerEndContent}
+                </div>
+              </NextUIModalHeader>
+            )}
 
-                  <div className="shrink-0 font-normal">
-                    {props.headerEndContent}
-                  </div>
-                </NextUIModalHeader>
-              )}
+            <NextUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
+              {props.children}
+            </NextUIModalBody>
 
-              <NextUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
-                {props.children}
-              </NextUIModalBody>
+            {props.footer !== false && (
+              <NextUIModalFooter className="justify-between">
+                <div className="flex flex-row gap-2">
+                  {props.footerStartContent}
+                </div>
 
-              {props.footer !== false && (
-                <NextUIModalFooter>
+                <div className="flex flex-row gap-2">
                   {props.footer ?? (
                     <>
                       <Button
@@ -98,18 +97,22 @@ export const Modal: React.FC<ModalProps> = (props) => {
                           color="primary"
                           isDisabled={props.isOkDisabled}
                           startContent={props.okIcon}
-                          onPress={onPressOk}
+                          onPress={async () => {
+                            await props.onOk?.()
+
+                            onClose()
+                          }}
                         >
                           {props.okText || 'OK'}
                         </Button>
                       )}
                     </>
                   )}
-                </NextUIModalFooter>
-              )}
-            </>
-          )
-        }}
+                </div>
+              </NextUIModalFooter>
+            )}
+          </>
+        )}
       </NextUIModalContent>
     </NextUIModal>
   )

@@ -18,6 +18,8 @@ export default defineConfig({
       'tabs',
       'contextMenus',
       'clipboardWrite',
+      'clipboardRead',
+      'downloads',
     ]
 
     let browser_specific_settings: UserManifest['browser_specific_settings']

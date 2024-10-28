@@ -1,18 +1,23 @@
 import type { SettingsExportItems } from '@/types/storage'
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import { Textarea, useDisclosure } from '@nextui-org/react'
+import { Button, Textarea, useDisclosure } from '@nextui-org/react'
 import {
   DownloadIcon,
   UploadIcon,
   ChevronRightIcon,
+  ClipboardPasteIcon,
   ClipboardCopyIcon,
+  FileInputIcon,
+  FileOutputIcon,
 } from 'lucide-react'
 
 import { settings } from '@/utils/settings/extension'
+import { webext } from '@/utils/webext'
 
 import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
+import { Tooltip } from '@/components/Tooltip'
 
 const ImportSettings: React.FC = () => {
   const [value, setValue] = useState('')
@@ -26,6 +31,32 @@ const ImportSettings: React.FC = () => {
       return false
     }
   }, [value])
+
+  const onPaste = useCallback(async () => {
+    setValue(await navigator.clipboard.readText())
+  }, [])
+
+  const onSelectFile = useCallback(() => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'application/json'
+
+    input.onchange = () => {
+      const file = input.files?.[0]
+
+      if (file) {
+        const fileReader = new FileReader()
+
+        fileReader.onload = () => {
+          setValue(fileReader.result?.toString() ?? '')
+        }
+
+        fileReader.readAsText(file)
+      }
+    }
+
+    input.click()
+  }, [])
 
   const onImport = useCallback(async () => {
     await settings.import(value)
@@ -41,7 +72,6 @@ const ImportSettings: React.FC = () => {
         title="設定をインポート"
         button={{
           variant: 'flat',
-          color: 'default',
           startContent: <DownloadIcon />,
           text: 'インポート',
           onPress: onOpen,
@@ -61,6 +91,24 @@ const ImportSettings: React.FC = () => {
             <ChevronRightIcon className="size-5 opacity-50" />
             <span>設定をインポート</span>
           </div>
+        }
+        headerEndContent={
+          <Tooltip content="貼り付け" placement="left">
+            <Button size="sm" variant="flat" isIconOnly onPress={onPaste}>
+              <ClipboardPasteIcon className="size-4" />
+            </Button>
+          </Tooltip>
+        }
+        footerStartContent={
+          <Button
+            size="sm"
+            variant="flat"
+            color="primary"
+            startContent={<FileInputIcon className="size-4" />}
+            onPress={onSelectFile}
+          >
+            選択
+          </Button>
         }
       >
         <div className="size-full bg-content1 p-2">
@@ -87,20 +135,34 @@ const ImportSettings: React.FC = () => {
 }
 
 const ExportSettings: React.FC = () => {
-  const [values, setValues] = useState<SettingsExportItems | null>(null)
+  const [value, setValue] = useState('')
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onCopy = useCallback(async () => {
-    await navigator.clipboard.writeText(JSON.stringify(values))
-  }, [values])
+    await navigator.clipboard.writeText(value)
+  }, [value])
+
+  const onSaveFile = useCallback(async () => {
+    const blob = new Blob([value], {
+      type: 'application/json',
+    })
+
+    await webext.downloads.download({
+      url: URL.createObjectURL(blob),
+      filename: 'nco_settings.json',
+      saveAs: true,
+    })
+  }, [value])
 
   useEffect(() => {
     if (isOpen) {
-      settings.export().then(setValues)
+      settings.export().then((values) => {
+        setValue(JSON.stringify(values, null, 2))
+      })
     }
 
-    return () => setValues(null)
+    return () => setValue('')
   }, [isOpen])
 
   return (
@@ -109,7 +171,6 @@ const ExportSettings: React.FC = () => {
         title="設定をエクスポート"
         button={{
           variant: 'flat',
-          color: 'default',
           startContent: <UploadIcon />,
           text: 'エクスポート',
           onPress: onOpen,
@@ -119,15 +180,22 @@ const ExportSettings: React.FC = () => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        okText="コピー"
-        okIcon={<ClipboardCopyIcon className="size-4" />}
-        onOk={onCopy}
+        okText="保存"
+        okIcon={<FileOutputIcon className="size-4" />}
+        onOk={onSaveFile}
         header={
           <div className="flex flex-row items-center gap-0.5">
             <span>ストレージ</span>
             <ChevronRightIcon className="size-5 opacity-50" />
             <span>設定をエクスポート</span>
           </div>
+        }
+        headerEndContent={
+          <Tooltip content="コピー" placement="left">
+            <Button size="sm" variant="flat" isIconOnly onPress={onCopy}>
+              <ClipboardCopyIcon className="size-4" />
+            </Button>
+          </Tooltip>
         }
       >
         <div className="size-full bg-content1 p-2">
@@ -145,7 +213,7 @@ const ExportSettings: React.FC = () => {
             isReadOnly
             label="出力"
             labelPlacement="outside"
-            value={JSON.stringify(values, null, 2)}
+            value={value}
           />
         </div>
       </Modal>

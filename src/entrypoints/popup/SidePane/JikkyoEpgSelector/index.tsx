@@ -170,7 +170,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
         </div>
       }
       headerEndContent={
-        <div className="flex h-full flex-row gap-2">
+        <>
           <Divider orientation="vertical" />
 
           <Select
@@ -235,7 +235,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
           >
             <XIcon className="size-4" />
           </Button>
-        </div>
+        </>
       }
       footer={false}
     >

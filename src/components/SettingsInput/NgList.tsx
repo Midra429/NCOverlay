@@ -204,7 +204,6 @@ export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
           description={`${value.length}件`}
           button={{
             variant: 'flat',
-            color: 'default',
             startContent: <PencilIcon />,
             text: '編集',
             onPress: onOpen,
