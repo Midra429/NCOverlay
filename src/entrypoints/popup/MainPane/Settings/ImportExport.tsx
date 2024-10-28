@@ -1,5 +1,3 @@
-import type { SettingsExportItems } from '@/types/storage'
-
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { Button, Textarea, useDisclosure } from '@nextui-org/react'
 import {
@@ -38,11 +36,12 @@ const ImportSettings: React.FC = () => {
 
   const onSelectFile = useCallback(() => {
     const input = document.createElement('input')
+
     input.type = 'file'
     input.accept = 'application/json'
 
     input.onchange = () => {
-      const file = input.files?.[0]
+      const file = input.files?.item(0)
 
       if (file) {
         const fileReader = new FileReader()
@@ -144,15 +143,23 @@ const ExportSettings: React.FC = () => {
   }, [value])
 
   const onSaveFile = useCallback(async () => {
-    const blob = new Blob([value], {
-      type: 'application/json',
-    })
+    const url = URL.createObjectURL(
+      new Blob([value], {
+        type: 'application/json',
+      })
+    )
+
+    const { name, version } = webext.runtime.getManifest()
+
+    const filename = `${name}_settings_${version}.json`.toLowerCase()
 
     await webext.downloads.download({
-      url: URL.createObjectURL(blob),
-      filename: 'nco_settings.json',
+      url,
+      filename,
       saveAs: true,
     })
+
+    URL.revokeObjectURL(url)
   }, [value])
 
   useEffect(() => {
