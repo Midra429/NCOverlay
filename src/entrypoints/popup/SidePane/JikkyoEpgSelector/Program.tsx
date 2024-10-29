@@ -188,6 +188,7 @@ export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
     status: 'pending',
     info: {
       id: program.id ?? null,
+      source: 'tver',
       title: slotTitle,
       duration: endAt - startAt,
       date: [startAt * 1000, endAt * 1000],

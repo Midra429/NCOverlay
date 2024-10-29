@@ -1,0 +1,10 @@
+.NCOverlay-Canvas {
+  z-index: 1;
+}
+
+.NCOverlay-Capture {
+  .NCOverlay-Canvas ~ *,
+  .player--overlay {
+    display: none !important;
+  }
+}

@@ -1,4 +1,4 @@
-import type { StateSlotDetail } from '@/ncoverlay/state'
+import type { StateSlotDetail, StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { useMemo } from 'react'
 import { Link, cn } from '@nextui-org/react'
@@ -9,68 +9,70 @@ import { ProgramIcons } from '@/entrypoints/popup/SidePane/JikkyoEpgSelector/Pro
 const programIconsRegExp = /^(?:(?:🈞|🈟|🈡)\s?)+/
 
 export type TitleProps = {
-  type: StateSlotDetail['type']
-  infoId: StateSlotDetail['info']['id']
-  infoTitle: StateSlotDetail['info']['title']
+  id: StateSlotDetail['info']['id']
+  source: StateSlotDetailJikkyo['info']['source']
+  title: StateSlotDetail['info']['title']
   isSearch?: boolean
 }
 
 export const Title: React.FC<TitleProps> = ({
-  type,
-  infoId,
-  infoTitle,
+  id,
+  source,
+  title,
   isSearch,
 }) => {
   const { ref, overflow } = useOverflowDetector()
 
   const url = useMemo(() => {
-    if (!infoId) return null
+    if (!id) return null
 
     let baseUrl: string
 
-    if (type !== 'jikkyo') {
-      baseUrl = 'https://www.nicovideo.jp/watch/'
-    } else if (/^\d+$/.test(infoId)) {
+    if (source === 'syobocal') {
       baseUrl = 'https://cal.syoboi.jp/tid/'
-    } else {
+    } else if (source === 'tver') {
       baseUrl = 'https://tver.jp/series/'
+    } else if (source === 'nhkPlus') {
+      baseUrl = 'https://plus.nhk.jp/watch/st/'
+    } else {
+      baseUrl = 'https://www.nicovideo.jp/watch/'
     }
 
-    return new URL(infoId, baseUrl)
-  }, [type, infoId])
+    return new URL(id, baseUrl)
+  }, [id, source])
 
   const icon = useMemo(() => {
-    const prefix = infoTitle.match(programIconsRegExp)?.[0]
+    const prefix = title.match(programIconsRegExp)?.[0]
 
     return {
       revival: prefix?.includes('🈞'),
       new: prefix?.includes('🈟'),
       last: prefix?.includes('🈡'),
     }
-  }, [infoTitle])
+  }, [title])
 
-  const title = (
+  const element = (
     <span
       className={cn(
         'line-clamp-3 whitespace-pre-wrap break-all font-semibold',
         isSearch ? 'text-mini' : 'text-tiny'
       )}
-      title={overflow ? infoTitle : undefined}
+      title={overflow ? title : undefined}
       ref={ref}
     >
       <ProgramIcons icon={icon} />
 
-      <span>{infoTitle.replace(programIconsRegExp, '')}</span>
+      <span>{title.replace(programIconsRegExp, '')}</span>
     </span>
   )
 
   return (
     <div className="flex h-full flex-col justify-start">
       {isSearch || !url ? (
-        title
+        element
       ) : (
         <Link color="foreground" href={url.href} isExternal>
-          {title}
+          {element}
         </Link>
       )}
     </div>

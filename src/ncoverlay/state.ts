@@ -94,6 +94,7 @@ export type StateSlotDetailJikkyo = StateSlotDetailBase & {
   type: 'jikkyo'
   info: {
     id: string | null
+    source: 'syobocal' | 'tver' | 'nhkPlus' | null
     title: string
     duration: number
     date: [start: number, end: number]

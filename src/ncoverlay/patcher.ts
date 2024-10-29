@@ -1,5 +1,6 @@
 import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
 import type { VodKey } from '@/types/constants'
+import type { NCOSearcherAutoLoadOptions } from './searcher'
 
 import { ncoParser } from '@midra/nco-parser'
 
@@ -13,6 +14,7 @@ export type PlayingInfo =
   | {
       rawText: string
       duration: number
+      disableExtract?: boolean
     }
   | {
       /** <作品名> */
@@ -26,6 +28,7 @@ export class NCOPatcher {
   readonly #vod
   readonly #getInfo
   readonly #appendCanvas
+  readonly #autoLoad
 
   #video: HTMLVideoElement | null = null
   #nco: NCOverlay | null = null
@@ -38,10 +41,16 @@ export class NCOPatcher {
     vod: VodKey
     getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
+    autoLoad?: (
+      nco: NCOverlay,
+      input: BuildSearchQueryInput,
+      options: NCOSearcherAutoLoadOptions
+    ) => Promise<void>
   }) {
     this.#vod = init.vod
     this.#getInfo = init.getInfo
     this.#appendCanvas = init.appendCanvas
+    this.#autoLoad = init.autoLoad
   }
 
   dispose() {
@@ -91,16 +100,20 @@ export class NCOPatcher {
           if ('rawText' in info) {
             rawText = info.rawText
 
-            extracted = ncoParser.extract(
-              ncoParser.normalizeAll(info.rawText, {
-                adjust: {
-                  letterCase: false,
-                },
-                remove: {
-                  space: false,
-                },
-              })
-            )
+            if (!info.disableExtract) {
+              extracted = ncoParser.extract(
+                ncoParser.normalizeAll(info.rawText, {
+                  adjust: {
+                    letterCase: false,
+                  },
+                  remove: {
+                    space: false,
+                  },
+                })
+              )
+            } else {
+              delete info.disableExtract
+            }
           } else {
             const { title, season } = ncoParser.extract(`${info.workTitle} #01`)
 
@@ -130,12 +143,12 @@ export class NCOPatcher {
 
           input = {
             rawText,
-            title: extracted.title,
+            title: extracted.title ?? undefined,
             seasonText: extracted.season?.text,
             seasonNumber: extracted.season?.number,
             episodeText: extracted.episode?.text,
             episodeNumber: extracted.episode?.number,
-            subtitle: extracted.subtitle,
+            subtitle: extracted.subtitle ?? undefined,
             duration: info.duration,
           }
         }
@@ -156,14 +169,20 @@ export class NCOPatcher {
             'settings:comment:jikkyoChannelIds'
           )
 
-          await this.#nco.searcher.autoLoad(input, {
+          const options: NCOSearcherAutoLoadOptions = {
             official: autoLoads.includes('official'),
             danime: autoLoads.includes('danime'),
             chapter: autoLoads.includes('chapter'),
             szbh: autoLoads.includes('szbh'),
             jikkyo: autoLoads.includes('jikkyo'),
             jikkyoChannelIds,
-          })
+          }
+
+          if (this.#autoLoad) {
+            await this.#autoLoad(this.#nco, input, options)
+          } else {
+            await this.#nco.searcher.autoLoad(input, options)
+          }
         }
       } catch (err) {
         logger.error('patcher:load', err)

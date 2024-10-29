@@ -49,6 +49,7 @@ export const programToSlotDetail = (
     status: 'pending',
     info: {
       id: program.TID,
+      source: 'syobocal',
       title: [...flags, title].join(' ').trim(),
       duration: (endtime - starttime) / 1000,
       date: [starttime, endtime],

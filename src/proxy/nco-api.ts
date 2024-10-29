@@ -68,6 +68,10 @@ type ProtocolMap = {
   'tver.v1.callEPGv2': (
     args: Parameters<typeof ncoApi.tver.v1.callEPGv2>
   ) => Awaited<ReturnType<typeof ncoApi.tver.v1.callEPGv2>>
+
+  'nhkPlus.streams': (
+    args: Parameters<typeof ncoApi.nhkPlus.streams>
+  ) => Awaited<ReturnType<typeof ncoApi.nhkPlus.streams>>
 }
 
 export const { onMessage, removeAllListeners, sendMessage } =
@@ -138,5 +142,9 @@ export const ncoApiProxy: Omit<
     v1: {
       callEPGv2: (...args) => sendMessage('tver.v1.callEPGv2', args) as any,
     },
+  },
+
+  nhkPlus: {
+    streams: (...args) => sendMessage('nhkPlus.streams', args) as any,
   },
 }

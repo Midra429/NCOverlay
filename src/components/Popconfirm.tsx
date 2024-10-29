@@ -55,7 +55,9 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
 
       if (response instanceof Promise) {
         setIsCancelLoading(true)
+
         await response
+
         setIsCancelLoading(false)
       }
     }
@@ -68,7 +70,9 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
 
     if (response instanceof Promise) {
       setIsOkLoading(true)
+
       await response
+
       setIsOkLoading(false)
     }
 
@@ -117,8 +121,8 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
             <Button
               className="h-7"
               size="sm"
-              color={props.cancelColor || 'default'}
               variant="flat"
+              color={props.cancelColor || 'default'}
               isLoading={isCancelLoading}
               onPress={onPressCancel}
             >
@@ -128,8 +132,8 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
             <Button
               className="h-7"
               size="sm"
-              color={props.okColor || 'primary'}
               variant="solid"
+              color={props.okColor || 'primary'}
               isLoading={isOkLoading}
               onPress={onPressOk}
             >

@@ -84,6 +84,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
       status: 'pending',
       info: {
         id: null,
+        source: null,
         title: [
           `${jkChId}: ${JIKKYO_CHANNELS[jkChId]}`,
           `${formatDate(starttime, 'YYYY/MM/DD hh:mm')} 〜 ${formatDate(endtime, 'hh:mm')}`,

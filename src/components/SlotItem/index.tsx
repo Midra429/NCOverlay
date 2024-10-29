@@ -200,9 +200,9 @@ export const SlotItem: React.FC<SlotItemProps> = ({
 
           {/* タイトル */}
           <Title
-            type={detail.type}
-            infoId={detail.info.id}
-            infoTitle={detail.info.title}
+            id={detail.info.id}
+            source={detail.type === 'jikkyo' ? detail.info.source : null}
+            title={detail.info.title}
             isSearch={isSearch}
           />
 

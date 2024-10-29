@@ -23,6 +23,14 @@ import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
 
 import { ncoApiProxy } from '@/proxy/nco-api'
 
+export type NCOSearcherAutoLoadOptions = Omit<
+  BuildSearchQueryOptions,
+  'userAgent'
+> & {
+  jikkyo?: boolean
+  jikkyoChannelIds?: JikkyoChannelId[]
+}
+
 /**
  * NCOverlayの検索担当
  */
@@ -35,10 +43,7 @@ export class NCOSearcher {
 
   async autoLoad(
     input: BuildSearchQueryInput,
-    options: Omit<BuildSearchQueryOptions, 'userAgent'> & {
-      jikkyo?: boolean
-      jikkyoChannelIds?: JikkyoChannelId[]
-    } = {}
+    options: NCOSearcherAutoLoadOptions
   ) {
     const isAutoLoaded = true
     const { jikkyo, jikkyoChannelIds, ...searchOptions } = options

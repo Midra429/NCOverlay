@@ -65,4 +65,12 @@ export default () => {
   onMessage('unext.title', ({ data }) => {
     return ncoApi.unext.title(...data)
   })
+
+  onMessage('tver.v1.callEPGv2', ({ data }) => {
+    return ncoApi.tver.v1.callEPGv2(...data)
+  })
+
+  onMessage('nhkPlus.streams', ({ data }) => {
+    return ncoApi.nhkPlus.streams(...data)
+  })
 }

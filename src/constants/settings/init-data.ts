@@ -136,6 +136,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:comment:autoLoads',
         inputType: 'checkbox',
         label: '自動検索',
+        description: `${VODS.nhkPlus}は\n「実況(過去ログ)」のみ`,
         options: [
           { label: '公式', value: 'official' },
           { label: 'dアニメ', value: 'danime' },
