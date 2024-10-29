@@ -19,10 +19,8 @@
 - [Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
 - [Hulu](https://www.hulu.jp/)
 - [ニコニコ動画](https://www.nicovideo.jp/)
+- [NHKプラス](https://plus.nhk.jp/)
 - [TVer](https://tver.jp/)
-<!-- - [Lemino](https://lemino.docomo.ne.jp/) -->
-<!-- - [Disney+](https://www.disneyplus.com/ja-jp/home) -->
-<!-- - [NHKプラス](https://plus.nhk.jp/) -->
 
 ※ 増減する可能性あり
 
