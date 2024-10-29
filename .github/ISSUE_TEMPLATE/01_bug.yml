@@ -45,6 +45,7 @@ body:
         - label: Prime Video
         - label: Hulu
         - label: ニコニコ動画
+        - label: NHKプラス
         - label: TVer
 
   - type: textarea
