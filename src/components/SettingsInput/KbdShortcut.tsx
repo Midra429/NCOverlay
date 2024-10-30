@@ -118,10 +118,11 @@ export type Key = Extract<SettingsKey, `settings:kbd:${string}`>
 
 export type Props<K extends Key = Key> = SettingsInputBaseProps<
   K,
-  'kbd-shortcut'
-> & {}
+  'kbd-shortcut',
+  {}
+>
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [os, setOs] = useState<Runtime.PlatformOs>()
   const [value, setValue] = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()

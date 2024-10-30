@@ -35,8 +35,9 @@ export type Key = {
 
 export type Props<K extends Key = Key> = SettingsInputBaseProps<
   K,
-  'ng-list'
-> & {}
+  'ng-list',
+  {}
+>
 
 const validateRegExp = (pattern: string) => {
   try {
@@ -177,7 +178,7 @@ const Item: React.FC<{
   )
 }
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])

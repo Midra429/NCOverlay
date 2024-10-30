@@ -16,15 +16,16 @@ export type Key = {
 
 export type Props<K extends Key = Key> = SettingsInputBaseProps<
   K,
-  'checkbox'
-> & {
-  options: {
-    label: string
-    value: StorageItems[K][number]
-  }[]
-}
+  'checkbox',
+  {
+    options: {
+      label: string
+      value: StorageItems[K][number]
+    }[]
+  }
+>
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (

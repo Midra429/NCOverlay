@@ -12,15 +12,19 @@ export type Key = {
   [key in SettingsKey]: StorageItems[key] extends number ? key : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<K, 'range'> & {
-  min: number
-  max: number
-  step: number
-  prefix?: string
-  suffix?: string
-}
+export type Props<K extends Key = Key> = SettingsInputBaseProps<
+  K,
+  'range',
+  {
+    min: number
+    max: number
+    step: number
+    prefix?: string
+    suffix?: string
+  }
+>
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [state, setState] = useState<number>(
     SETTINGS_DEFAULT[props.settingsKey]
   )

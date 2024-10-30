@@ -11,12 +11,9 @@ export type Key = {
   [key in SettingsKey]: StorageItems[key] extends boolean ? key : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'toggle'
-> & {}
+export type Props<K extends Key = Key> = SettingsInputBaseProps<K, 'toggle', {}>
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (

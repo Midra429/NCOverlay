@@ -1,4 +1,3 @@
-import type { SettingsInitItem } from '@/types/constants'
 import type { SettingsKey } from '@/types/storage'
 
 import { memo } from 'react'
@@ -19,9 +18,7 @@ const SETTINGS_INIT_ITEMS = Object.fromEntries(
   SETTINGS_INIT_DATA.flatMap(({ items }) => {
     return items.map((item) => [item.settingsKey, item])
   })
-) as {
-  [key in SettingsKey]: SettingsInitItem
-}
+)
 
 const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:opacity',
@@ -56,7 +53,7 @@ export const QuickPanel: React.FC = memo(() => {
         <ShowHideToggle />
 
         {QUICKPANEL_ITEM_KEYS.map((key) => {
-          const item = { ...SETTINGS_INIT_ITEMS[key as SettingsKey] }
+          const item = { ...SETTINGS_INIT_ITEMS[key] }
           const Input = SettingsInput[item.inputType]
 
           delete item.description

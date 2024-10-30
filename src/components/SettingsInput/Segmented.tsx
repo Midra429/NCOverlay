@@ -13,16 +13,17 @@ export type Key = {
 
 export type Props<K extends SettingsKey = Key> = SettingsInputBaseProps<
   K,
-  'segmented'
-> & {
-  options: {
-    label: string
-    value: StorageItems[K]
-    icon?: React.FC<React.ComponentProps<'svg'>>
-  }[]
-}
+  'segmented',
+  {
+    options: {
+      label: string
+      value: StorageItems[K]
+      icon?: React.FC<React.ComponentProps<'svg'>>
+    }[]
+  }
+>
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (

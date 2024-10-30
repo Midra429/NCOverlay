@@ -34,13 +34,14 @@ export type Key = 'settings:comment:jikkyoChannelIds'
 
 export type Props<K extends Key = Key> = SettingsInputBaseProps<
   K,
-  'ch-selector'
-> & {
-  options: {
-    label: string
-    value: JikkyoChannelId
-  }[]
-}
+  'ch-selector',
+  {
+    options: {
+      label: string
+      value: JikkyoChannelId
+    }[]
+  }
+>
 
 type ChSelectorProps = {
   type: keyof typeof JIKKYO_CHANNEL_GROUPS
@@ -100,7 +101,7 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
   )
 }
 
-export const Input: React.FC<Omit<Props, 'type'>> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [dtvChIds, setDtvChIds] = useState<JikkyoDtvChannelId[]>([])
