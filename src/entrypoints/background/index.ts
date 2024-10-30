@@ -12,8 +12,9 @@ import { setBadge } from '@/utils/extension/setBadge'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
+import { registerNcoApiProxy } from '@/proxy/nco-api-service'
+
 import migration from './migration'
-import registerNcoApiProxy from './registerNcoApiProxy'
 import registerUtilsMessage from './registerUtilsMessage'
 import clearTemporaryData from './clearTemporaryData'
 import requestPermissions from './requestPermissions'

@@ -20,7 +20,6 @@ import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
 import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
 import { searchDataToSlotDetail } from '@/utils/api/searchDataToSlotDetail'
 import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
-
 import { ncoApiProxy } from '@/proxy/nco-api'
 
 export type NCOSearcherAutoLoadOptions = Omit<

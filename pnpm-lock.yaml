@@ -26,6 +26,9 @@ importers:
       '@webext-core/messaging':
         specifier: ^2.0.2
         version: 2.0.2
+      '@webext-core/proxy-service':
+        specifier: ^1.2.0
+        version: 1.2.0(@webext-core/messaging@2.0.2)(webextension-polyfill@0.12.0)
       '@xpadev-net/niconicomments':
         specifier: ^0.2.72
         version: 0.2.72
@@ -1781,6 +1784,12 @@ packages:
   '@webext-core/messaging@2.0.2':
     resolution: {integrity: sha512-915LXfDSB6Gx/ahTVB3ajCGPb4G3xz0rJmGiM6zDR9ULdHoCYmW2Xi+kmAD2WaQ65alit1uYEiGzzEuZiSqpvA==}
 
+  '@webext-core/proxy-service@1.2.0':
+    resolution: {integrity: sha512-MCUadVakeb7L47AvdtlbJfBUDjFdejr5t4E2WrwZagnev3a5I/xh2wHCkE+G0ihO/VUt/m0R1MPX+y4YVFRyPA==}
+    peerDependencies:
+      '@webext-core/messaging': '>=1.3.1'
+      webextension-polyfill: ^0.10.0
+
   '@wxt-dev/module-react@1.1.1':
     resolution: {integrity: sha512-bRTHMogtT0AeyKkrHCHhfuPc8hZnbHMPAi9ynm9eRN+uH4IxSZ3rETI7qPz4dbJQua+2ci84/XyQXzw14X/1iA==}
     peerDependencies:
@@ -2473,6 +2482,10 @@ packages:
   get-stream@8.0.1:
     resolution: {integrity: sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==}
     engines: {node: '>=16'}
+
+  get-value@3.0.1:
+    resolution: {integrity: sha512-mKZj9JLQrwMBtj5wxi6MH8Z5eSKaERpAwjg43dPtlGI1ZVEgH/qC7T8/6R2OBSUA+zzHBZgICsVJaEIV2tKTDA==}
+    engines: {node: '>=6.0'}
 
   giget@1.2.3:
     resolution: {integrity: sha512-8EHPljDvs7qKykr6uw8b+lqLiUc/vUg+KVTI0uND4s63TdsZM2Xus3mflvF0DDG9SiM4RlCkFGL+7aAjRmV7KA==}
@@ -6668,6 +6681,12 @@ snapshots:
       uid: 2.0.2
       webextension-polyfill: 0.10.0
 
+  '@webext-core/proxy-service@1.2.0(@webext-core/messaging@2.0.2)(webextension-polyfill@0.12.0)':
+    dependencies:
+      '@webext-core/messaging': 2.0.2
+      get-value: 3.0.1
+      webextension-polyfill: 0.12.0
+
   '@wxt-dev/module-react@1.1.1(vite@5.4.10(@types/node@22.8.2)(sass@1.80.4))(wxt@0.19.13(@types/node@22.8.2)(rollup@4.24.2)(sass@1.80.4)(webpack-sources@3.2.3))':
     dependencies:
       '@vitejs/plugin-react': 4.3.3(vite@5.4.10(@types/node@22.8.2)(sass@1.80.4))
@@ -7392,6 +7411,10 @@ snapshots:
   get-stream@6.0.1: {}
 
   get-stream@8.0.1: {}
+
+  get-value@3.0.1:
+    dependencies:
+      isobject: 3.0.1
 
   giget@1.2.3:
     dependencies:

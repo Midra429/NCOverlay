@@ -22,6 +22,7 @@
     "@midra/nco-parser": "^1.0.29",
     "@nextui-org/react": "^2.4.8",
     "@webext-core/messaging": "^2.0.2",
+    "@webext-core/proxy-service": "^1.2.0",
     "@xpadev-net/niconicomments": "^0.2.72",
     "color2k": "^2.0.3",
     "deepmerge": "^4.3.1",

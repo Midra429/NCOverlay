@@ -63,7 +63,7 @@ export default defineConfig({
       chunkSizeWarningLimit: 1024,
     },
     ssr: {
-      noExternal: ['@webext-core/messaging'],
+      noExternal: ['@webext-core/messaging', '@webext-core/proxy-service'],
     },
   }),
   modules: ['@wxt-dev/module-react'],
