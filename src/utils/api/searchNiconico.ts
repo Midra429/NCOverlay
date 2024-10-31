@@ -2,9 +2,9 @@ import type { SearchQueryFilters } from '@midra/nco-api/types/niconico/search'
 import type { SettingItems } from '@/types/storage'
 
 import { now, getLocalTimeZone } from '@internationalized/date'
-import { ncoApi } from '@midra/nco-api'
 
 import { settings } from '@/utils/settings/extension'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 import { searchDataToSlotDetail } from './searchDataToSlotDetail'
@@ -18,7 +18,7 @@ export const searchNiconicoByIds = async (...contentIds: string[]) => {
     ? 'include'
     : 'omit'
 
-  const data = await ncoApi.niconico.multipleVideo(contentIds, credentials)
+  const data = await ncoApiProxy.niconico.multipleVideo(contentIds, credentials)
   const filtered = data.filter((v) => v !== null)
 
   if (filtered.length) {
@@ -78,7 +78,7 @@ export const searchNiconicoByKeyword = async (
       : undefined,
   }
 
-  const response = await ncoApi.niconico.search({
+  const response = await ncoApiProxy.niconico.search({
     q: keyword,
     targets: ['title', 'description'],
     fields: [

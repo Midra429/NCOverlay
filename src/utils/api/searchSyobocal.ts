@@ -1,7 +1,7 @@
-import { ncoApi } from '@midra/nco-api'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 export const searchSyobocalByIds = async (...tids: string[]) => {
-  const response = await ncoApi.syobocal.json(['TitleMedium'], {
+  const response = await ncoApiProxy.syobocal.json(['TitleMedium'], {
     TID: tids,
   })
 
@@ -15,7 +15,7 @@ export const searchSyobocalByIds = async (...tids: string[]) => {
 export const searchSyobocalByKeyword = async (keyword: string) => {
   const limit = 20
 
-  const response = await ncoApi.syobocal.json(['TitleSearch'], {
+  const response = await ncoApiProxy.syobocal.json(['TitleSearch'], {
     Search: keyword,
     Limit: limit,
   })

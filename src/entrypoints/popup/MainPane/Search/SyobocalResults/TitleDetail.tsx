@@ -11,12 +11,12 @@ import {
   forwardRef,
 } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
-import { ncoApi } from '@midra/nco-api'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
 import { zeroPadding } from '@/utils/zeroPadding'
 import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 import { useNcoState } from '@/hooks/useNco'
 
 import { Modal } from '@/components/Modal'
@@ -87,7 +87,7 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
       setSubtitles([])
 
       if (title.Cat === '8') {
-        const response = await ncoApi.syobocal.db('ProgLookup', {
+        const response = await ncoApiProxy.syobocal.db('ProgLookup', {
           TID: title.TID,
           ChID: SYOBOCAL_CHANNEL_IDS,
         })
@@ -96,7 +96,7 @@ export const TitleDetail = forwardRef<TitleDetailHandle, TitleDetailProps>(
           setPrograms(Object.values(response))
         }
       } else {
-        const response = await ncoApi.syobocal.json(['SubTitles'], {
+        const response = await ncoApiProxy.syobocal.json(['SubTitles'], {
           TID: title.TID,
         })
 

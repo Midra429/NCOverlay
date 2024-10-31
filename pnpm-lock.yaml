@@ -26,9 +26,6 @@ importers:
       '@webext-core/messaging':
         specifier: ^2.0.2
         version: 2.0.2
-      '@webext-core/proxy-service':
-        specifier: ^1.2.0
-        version: 1.2.0(@webext-core/messaging@2.0.2)(webextension-polyfill@0.12.0)
       '@xpadev-net/niconicomments':
         specifier: ^0.2.72
         version: 0.2.72
@@ -84,6 +81,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.1
         version: 18.3.1
+      '@webext-core/proxy-service':
+        specifier: ^1.2.0
+        version: 1.2.0(@webext-core/messaging@2.0.2)(webextension-polyfill@0.12.0)
       '@wxt-dev/module-react':
         specifier: ^1.1.1
         version: 1.1.1(vite@5.4.10(@types/node@22.8.2)(sass@1.80.4))(wxt@0.19.13(@types/node@22.8.2)(rollup@4.24.2)(sass@1.80.4)(webpack-sources@3.2.3))

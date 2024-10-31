@@ -2,13 +2,13 @@ import type { VodKey } from '@/types/constants'
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
-import * as nhkPlusApi from '@midra/nco-api/nhkPlus'
 
 import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -46,7 +46,7 @@ const main = async () => {
         return null
       }
 
-      const stream = await nhkPlusApi.streams(streamId)
+      const stream = await ncoApiProxy.nhkPlus.streams(streamId)
 
       logger.log('nhkPlus.streams:', stream)
 

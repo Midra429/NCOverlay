@@ -7,7 +7,7 @@ import { settings } from '@/utils/settings/extension'
 import { filterNvComment } from '@/utils/api/filterNvComment'
 import { extractNgSettings } from '@/utils/api/extractNgSettings'
 import { applyNgSettings } from '@/utils/api/applyNgSetting'
-import { ncoApiProxy } from '@/proxy/nco-api'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 /**
  * ニコニコ動画のコメント取得

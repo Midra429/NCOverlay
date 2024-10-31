@@ -14,7 +14,7 @@ import * as ChSelector from './ChSelector'
 export type SettingsInputBaseProps<
   K extends SettingsKey,
   T extends SettingsInputType,
-  P extends any = {},
+  P extends object = {},
 > = {
   settingsKey: K
   inputType: T
@@ -24,17 +24,17 @@ export type SettingsInputBaseProps<
 
 export type SettingsInputType = keyof typeof SettingsInput
 
-export type SettingsInputProps<Key extends SettingsKey> =
-  | (Key extends Segmented.Key ? Segmented.Props<Key> : never)
-  | (Key extends Select.Key ? Select.Props<Key> : never)
-  | (Key extends Toggle.Key ? Toggle.Props<Key> : never)
-  | (Key extends Text.Key ? Text.Props<Key> : never)
-  | (Key extends Range.Key ? Range.Props<Key> : never)
-  | (Key extends Checkbox.Key ? Checkbox.Props<Key> : never)
-  | (Key extends Checkcard.Key ? Checkcard.Props<Key> : never)
-  | (Key extends KbdShortcut.Key ? KbdShortcut.Props<Key> : never)
-  | (Key extends NgList.Key ? NgList.Props<Key> : never)
-  | (Key extends ChSelector.Key ? ChSelector.Props<Key> : never)
+export type SettingsInputProps<K extends SettingsKey> =
+  | (K extends Segmented.Key ? Segmented.Props<K> : never)
+  | (K extends Select.Key ? Select.Props<K> : never)
+  | (K extends Toggle.Key ? Toggle.Props<K> : never)
+  | (K extends Text.Key ? Text.Props<K> : never)
+  | (K extends Range.Key ? Range.Props<K> : never)
+  | (K extends Checkbox.Key ? Checkbox.Props<K> : never)
+  | (K extends Checkcard.Key ? Checkcard.Props<K> : never)
+  | (K extends KbdShortcut.Key ? KbdShortcut.Props<K> : never)
+  | (K extends NgList.Key ? NgList.Props<K> : never)
+  | (K extends ChSelector.Key ? ChSelector.Props<K> : never)
 
 export const SettingsInput = {
   'segmented': Segmented.Input,

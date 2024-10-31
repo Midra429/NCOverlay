@@ -10,11 +10,11 @@ import {
   forwardRef,
 } from 'react'
 import { Spinner } from '@nextui-org/react'
-import { ncoApi } from '@midra/nco-api'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
 import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/SlotItem'
@@ -62,7 +62,7 @@ export const SubtitleDetail = forwardRef<
     setIsLoading(true)
     setPrograms([])
 
-    const response = await ncoApi.syobocal.db('ProgLookup', {
+    const response = await ncoApiProxy.syobocal.db('ProgLookup', {
       TID: title.TID,
       Count: Number(subtitle[0]),
       ChID: SYOBOCAL_CHANNEL_IDS,

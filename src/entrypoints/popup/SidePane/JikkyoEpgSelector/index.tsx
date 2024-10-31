@@ -15,10 +15,10 @@ import {
   XIcon,
 } from 'lucide-react'
 import { charWidth as adjustCharWidth } from '@midra/nco-parser/normalize/lib/adjust/charWidth'
-import { ncoApi } from '@midra/nco-api'
 import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
 
 import { zeroPadding } from '@/utils/zeroPadding'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 import { Modal } from '@/components/Modal'
 import { Select, SelectItem } from '@/components/Select'
@@ -76,7 +76,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
   const callEPGv2 = useCallback(async (params: CallEPGv2Params) => {
     setIsLoading(true)
 
-    const result = await ncoApi.tver.v1.callEPGv2(params)
+    const result = await ncoApiProxy.tver.v1.callEPGv2(params)
 
     if (result) {
       const currentTime = Date.now()
@@ -145,6 +145,8 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
   }, [])
 
   useEffect(() => {
+    if (!isOpen || isLoading || epgData) return
+
     // 5時スタートなので、5時間分マイナス
     const currentDate = new Date(Date.now() - 5 * 60 * 60 * 1000)
 
@@ -155,7 +157,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
     ].join('/')
 
     callEPGv2({ date, type })
-  }, [])
+  }, [isOpen])
 
   return (
     <Modal

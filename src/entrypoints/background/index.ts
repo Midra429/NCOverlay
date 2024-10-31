@@ -1,6 +1,7 @@
 import type { StateKey } from '@/types/storage'
 
 import { defineBackground } from 'wxt/sandbox'
+import { ncoApi } from '@midra/nco-api'
 
 import { GITHUB_URL } from '@/constants'
 
@@ -10,9 +11,9 @@ import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { setBadge } from '@/utils/extension/setBadge'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
+import { registerProxy } from '@/utils/proxy-service/register'
+import { onMessage } from '@/utils/proxy-service/messaging/extension'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
-
-import { registerNcoApiProxy } from '@/proxy/nco-api-service'
 
 import migration from './migration'
 import registerUtilsMessage from './registerUtilsMessage'
@@ -27,7 +28,8 @@ export default defineBackground({
 const main = async () => {
   logger.log('background.js')
 
-  registerNcoApiProxy()
+  registerProxy('ncoApi', ncoApi, onMessage)
+
   registerUtilsMessage()
 
   // インストール・アップデート時

@@ -8,7 +8,7 @@ import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { getCookie } from '@/utils/dom/getCookie'
-import { ncoApiProxy } from '@/proxy/nco-api'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 

@@ -2,12 +2,12 @@ import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from 'wxt/sandbox'
 import { normalizeAll } from '@midra/nco-parser/normalize'
-import * as abemaApi from '@midra/nco-api/abema'
 
 import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
+import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -38,7 +38,7 @@ const main = async () => {
       const token = localStorage.getItem('abm_token')
 
       if (id && token) {
-        const slot = await abemaApi.v1.media.slots(id, token)
+        const slot = await ncoApiProxy.abema.v1.media.slots(id, token)
 
         logger.log('abema.v1.media.slots:', slot)
 
@@ -59,7 +59,10 @@ const main = async () => {
         return null
       }
 
-      const program = await abemaApi.v1.video.programs(programId, token)
+      const program = await ncoApiProxy.abema.v1.video.programs(
+        programId,
+        token
+      )
 
       logger.log('abema.v1.video.programs:', program)
 
