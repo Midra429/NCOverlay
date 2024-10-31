@@ -29,7 +29,6 @@ const main = async () => {
   logger.log('background.js')
 
   registerProxy('ncoApi', ncoApi, onMessage)
-
   registerUtilsMessage()
 
   // インストール・アップデート時

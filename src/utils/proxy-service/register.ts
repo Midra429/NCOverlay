@@ -18,7 +18,8 @@ export const registerProxy = <TService extends Service>(
     const target = get(service, data.path)
 
     if (target) {
-      const method = target instanceof Function ? target.bind(service) : target
+      // @ts-expect-error
+      const method = service.__proxy ? target : target.bind(service)
 
       return Promise.resolve(method(...data.args))
     }

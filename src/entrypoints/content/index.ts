@@ -1,8 +1,8 @@
 import { defineContentScript } from 'wxt/sandbox'
-// import { ncoApi } from '@midra/nco-api'
 
 // import { registerProxy } from '@/utils/proxy-service/register'
 // import { onMessage } from '@/utils/proxy-service/messaging/page'
+// import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 import registerStorageMessage from './registerStorageMessage'
 
@@ -13,7 +13,6 @@ export default defineContentScript({
 })
 
 const main = () => {
-  // registerProxy('ncoApi', ncoApi, onMessage)
-
+  // registerProxy('ncoApi', ncoApiProxy, onMessage)
   registerStorageMessage()
 }
