@@ -1,8 +1,12 @@
-export default (target: any, path?: string) => {
-  if (path) {
-    for (const name of path.split('.')) {
+export default (target: any, paths?: string | string[]) => {
+  if (paths) {
+    if (typeof paths === 'string') {
+      paths = paths.split('.')
+    }
+
+    for (const p of paths) {
       try {
-        target = target[name]
+        target = target[p]
       } catch {
         break
       }

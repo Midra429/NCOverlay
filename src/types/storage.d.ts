@@ -63,13 +63,13 @@ export type StorageItems_v4 = {
   'settings:capture:method': 'window' | 'copy'
 
   /**
-   * アップデート後に更新内容を表示
+   * 更新内容を表示
    * @default true
    */
   'settings:showChangelog': boolean
 
   /**
-   * かわいい率
+   * かわいい率を表示
    * @default false
    */
   'settings:showKawaiiPct': boolean

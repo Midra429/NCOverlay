@@ -1,7 +1,14 @@
 import type { AccordionItemProps } from '@nextui-org/react'
 
 import { memo } from 'react'
-import { Accordion, AccordionItem, Divider, Link, cn } from '@nextui-org/react'
+import {
+  Accordion,
+  AccordionItem,
+  Divider,
+  Link,
+  Code,
+  cn,
+} from '@nextui-org/react'
 import {
   InfoIcon,
   DatabaseIcon,
@@ -175,13 +182,25 @@ const accordionItemOthers = (
       {LINKS.map(({ title, label, url }, idx) => (
         <div
           key={idx}
-          className="flex flex-row items-center justify-between gap-2 py-1"
+          className="flex flex-row items-center justify-between py-1"
         >
           <ItemLabel title={title} />
 
-          <Link size="sm" color="primary" showAnchorIcon href={url} isExternal>
-            {label}
-          </Link>
+          {url ? (
+            <Link
+              size="sm"
+              color="primary"
+              showAnchorIcon
+              href={url}
+              isExternal
+            >
+              {label}
+            </Link>
+          ) : (
+            <Code className="rounded-md py-0" size="sm" color="primary">
+              {label}
+            </Code>
+          )}
         </div>
       ))}
     </div>

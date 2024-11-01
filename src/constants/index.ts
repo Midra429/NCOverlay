@@ -5,7 +5,7 @@ export const GITHUB_URL = 'https://github.com/Midra429/NCOverlay'
 export const LINKS: {
   title: string
   label: string
-  url: string
+  url?: string
 }[] = [
   {
     title: 'X (Twitter)',
@@ -18,9 +18,8 @@ export const LINKS: {
     url: 'https://u.midra.me/wishlist',
   },
   {
-    title: 'giftee',
-    label: 'ほしいものリスト',
-    url: 'https://u.midra.me/giftee',
+    title: 'Kyash ID',
+    label: 'midra',
   },
 ]
 

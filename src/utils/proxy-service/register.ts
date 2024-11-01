@@ -15,7 +15,7 @@ export const registerProxy = <TService extends Service>(
   const messageKey = `proxy-service:${name}`
 
   return onMessage(messageKey, ({ data }) => {
-    const target = get(service, data.path)
+    const target = get(service, data.paths)
 
     if (target) {
       // @ts-expect-error

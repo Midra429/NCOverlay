@@ -17,6 +17,8 @@ import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
 import { Tooltip } from '@/components/Tooltip'
 
+import { name } from '@@/package.json'
+
 const ImportSettings: React.FC = () => {
   const [value, setValue] = useState('')
 
@@ -149,9 +151,9 @@ const ExportSettings: React.FC = () => {
       })
     )
 
-    const { name, version } = webext.runtime.getManifest()
+    const { version } = webext.runtime.getManifest()
 
-    const filename = `${name}_settings_${version}.json`.toLowerCase()
+    const filename = `${name}_settings_${version}.json`
 
     await webext.downloads.download({
       url,

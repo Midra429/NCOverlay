@@ -3,5 +3,5 @@ export type Service =
   | { [key: string]: any | Service }
 
 export type ProtocolMap = {
-  [key: string]: (data: { path?: string; args: any[] }) => any
+  [key: string]: (data: { paths: string[]; args: any[] }) => any
 }

@@ -12,20 +12,20 @@ export const createProxy = <TService extends Service>(
 ) => {
   const messageKey = `proxy-service:${name}`
 
-  const create = (path?: string): ProxyService<TService> => {
+  const create = (paths: string[] = []): ProxyService<TService> => {
     const wrapped = (() => {}) as ProxyService<TService>
 
     const proxy = new Proxy(wrapped, {
-      get(target, property, receiver) {
-        if (property === '__proxy' || typeof property === 'symbol') {
-          return Reflect.get(target, property, receiver)
+      get(target, p, receiver) {
+        if (p === '__proxy' || typeof p === 'symbol') {
+          return Reflect.get(target, p, receiver)
         }
 
-        return create(!path ? property : `${path}.${property}`)
+        return create([...paths, p])
       },
 
       apply(_target, _thisArg, args) {
-        return sendMessage(messageKey, { path, args }, ...([] as any))
+        return sendMessage(messageKey, { paths, args }, ...([] as any))
       },
     })
 
