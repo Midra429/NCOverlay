@@ -15,8 +15,8 @@ importers:
         specifier: ^3.5.6
         version: 3.5.6
       '@midra/nco-api':
-        specifier: ^1.10.2
-        version: 1.10.2
+        specifier: ^1.10.3
+        version: 1.10.3
       '@midra/nco-parser':
         specifier: ^1.0.29
         version: 1.0.29
@@ -441,8 +441,8 @@ packages:
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
 
-  '@midra/nco-api@1.10.2':
-    resolution: {integrity: sha512-PpIPuypJPBNP6LdSXwv/WwgPvGVgmzbzPS1C4iAxjKewYhTmcRhQgZQINxp4X5HPWPUUF5PIkKdb8Q8UmipFmA==}
+  '@midra/nco-api@1.10.3':
+    resolution: {integrity: sha512-osmGReA8HFWpARSeCgsqlN/I0mAIiUgCrX7N2N478iw3CGdNVT8pF7ZkK7KTgR1FXScAMfJwhvqcQWOHywlnlw==}
 
   '@midra/nco-parser@1.0.29':
     resolution: {integrity: sha512-T2SL6E8EkZrjCNgVgisGPI6/TvPpaVc9Zbjy4NFPyy65x6VanUoQoLRMPI5t2bU6Sb/+1zFzdXOSuLUlNKDvSA==}
@@ -2617,8 +2617,8 @@ packages:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
     engines: {node: '>=10'}
 
-  intl-messageformat@10.7.5:
-    resolution: {integrity: sha512-CflbRvJiahVmnfxq/lO+DCM1/8ji4vC4rTnz6ZJEKKodViB+EWgY9M4EqXVRQ+3K0Ng5qwSyqybPP+KSfS4KZw==}
+  intl-messageformat@10.7.6:
+    resolution: {integrity: sha512-IsMU/hqyy3FJwNJ0hxDfY2heJ7MteSuFvcnCebxRp67di4Fhx1gKKE+qS0bBwUF8yXkX9SsPUhLeX/B6h5SKUA==}
 
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
@@ -4469,7 +4469,7 @@ snapshots:
   '@internationalized/message@3.1.5':
     dependencies:
       '@swc/helpers': 0.5.13
-      intl-messageformat: 10.7.5
+      intl-messageformat: 10.7.6
 
   '@internationalized/number@3.5.4':
     dependencies:
@@ -4507,7 +4507,7 @@ snapshots:
 
   '@lukeed/csprng@1.1.0': {}
 
-  '@midra/nco-api@1.10.2':
+  '@midra/nco-api@1.10.3':
     dependencies:
       '@geolonia/japanese-numeral': 1.0.2
       '@midra/nco-parser': 1.0.29
@@ -7553,7 +7553,7 @@ snapshots:
 
   ini@2.0.0: {}
 
-  intl-messageformat@10.7.5:
+  intl-messageformat@10.7.6:
     dependencies:
       '@formatjs/ecma402-abstract': 2.2.3
       '@formatjs/fast-memoize': 2.2.3
