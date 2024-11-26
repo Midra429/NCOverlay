@@ -33,8 +33,6 @@ const main = async () => {
 
   // インストール・アップデート時
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
-    const { version } = webext.runtime.getManifest()
-
     // 権限をリクエスト
     requestPermissions()
 
@@ -43,7 +41,7 @@ const main = async () => {
         if (import.meta.env.PROD) {
           // README
           webext.tabs.create({
-            url: `${GITHUB_URL}/blob/v${version}/README.md`,
+            url: `${GITHUB_URL}/blob/main/README.md`,
           })
         }
 
@@ -57,6 +55,8 @@ const main = async () => {
           import.meta.env.PROD &&
           (await settings.get('settings:showChangelog'))
         ) {
+          const { version } = webext.runtime.getManifest()
+
           // リリースノート
           webext.tabs.create({
             url: `${GITHUB_URL}/releases/tag/v${version}`,

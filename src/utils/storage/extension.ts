@@ -12,7 +12,7 @@ export const storage = new WebExtStorage({
   get: async (...keys: StorageKey[]) => {
     if (keys.length === 1) {
       const key = keys[0]
-      const { [key]: value } = await extensionStorage.get(key)
+      const value: any = (await extensionStorage.get(key))[key]
 
       return value ?? null
     }
@@ -57,8 +57,8 @@ export const storage = new WebExtStorage({
     }: WxtStorage.StorageAreaOnChangedChangesType) => {
       if (!change) return
 
-      const current = change.newValue ?? null
-      const prev = change.oldValue ?? null
+      const current: any = change.newValue ?? null
+      const prev: any = change.oldValue ?? null
 
       if (!equal(current, prev)) {
         callback(current, prev)
