@@ -1,7 +1,7 @@
 import type { VirtuosoProps, VirtuosoHandle } from 'react-virtuoso'
 import type { V1ThreadCommentWithType } from '@/ncoverlay/state'
 
-import { memo, useMemo, useEffect, useState, useRef, forwardRef } from 'react'
+import { memo, useMemo, useEffect, useState, useRef } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
 import { useNcoState, useNcoTime } from '@/hooks/useNco'
@@ -19,7 +19,7 @@ const components: VirtuosoProps<V1ThreadCommentWithType, any>['components'] = {
     </div>
   ),
 
-  Scroller: forwardRef(({ children, ...props }, ref) => {
+  Scroller: ({ children, ref, ...props }) => {
     return (
       <div {...props} className="flex flex-col" ref={ref}>
         <Header />
@@ -27,7 +27,7 @@ const components: VirtuosoProps<V1ThreadCommentWithType, any>['components'] = {
         <div className="relative size-full">{children}</div>
       </div>
     )
-  }),
+  },
 }
 
 export const CommentList: React.FC = memo(() => {

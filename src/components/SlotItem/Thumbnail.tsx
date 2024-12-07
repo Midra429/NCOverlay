@@ -27,7 +27,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
   info,
   isSearch,
 }) => {
-  let thumbnail: JSX.Element | undefined
+  let thumbnail: React.JSX.Element | undefined
 
   if (type === 'jikkyo') {
     const jkChId = id.split(':')[0] as JikkyoChannelId

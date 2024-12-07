@@ -218,7 +218,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
           selectorIcon={<CalendarDaysIcon />}
           isDisabled={!isReady}
           maxValue={currentDateTime}
-          value={startDateTime}
+          value={startDateTime as any}
           onChange={setStartDateTime as any}
         />
 
@@ -278,7 +278,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
           selectorIcon={<CalendarDaysIcon />}
           isDisabled={!isReady}
           maxValue={currentDateTime}
-          value={endDateTime}
+          value={endDateTime as any}
           onChange={setEndDateTime as any}
         />
       </div>

@@ -1,5 +1,3 @@
-import type { Writable } from 'utility-types'
-
 import { useEffect } from 'react'
 import { NextUIProvider, twMergeConfig, cn } from '@nextui-org/react'
 
@@ -7,12 +5,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 import '@/assets/style.css'
 
-const classGroups = twMergeConfig.classGroups as Record<
-  string,
-  Writable<NonNullable<(typeof twMergeConfig)['classGroups']>[string]>
->
-
-classGroups!['font-size'].push({ text: ['mini'] })
+twMergeConfig.classGroups['font-size'].push({ text: ['mini'] })
 
 export type LayoutProps = {
   children: React.ReactNode

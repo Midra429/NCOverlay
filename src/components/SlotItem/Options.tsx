@@ -101,7 +101,6 @@ export const Options: React.FC<OptionsProps> = ({ isOpen, id, offsetMs }) => {
             animate="enter"
             exit="exit"
             variants={transitionVariants}
-            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className="border-t-1 border-foreground-200 p-2">
               <SlotOffsetControl id={id} offsetMs={offsetMs} />

@@ -41,7 +41,6 @@ export const NiconicoOptions: React.FC<NiconicoOptionsProps> = ({
             animate="enter"
             exit="exit"
             variants={transitionVariants}
-            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className="flex size-full flex-col gap-2 pt-2">
               <div className="flex flex-row gap-2">

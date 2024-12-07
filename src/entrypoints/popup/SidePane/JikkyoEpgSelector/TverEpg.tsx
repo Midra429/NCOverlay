@@ -1,6 +1,6 @@
 import type { EPGData, EPGContent, EPGProgram } from '.'
 
-import { useEffect, useMemo, useState, useRef, forwardRef } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { Spinner, cn } from '@nextui-org/react'
 
 import { Channels } from './Channel'
@@ -10,22 +10,23 @@ import { Programs } from './Program'
 export const COLUMN_WIDTH = 140
 export const ROW_HEIGHT = 150
 
-const CurrentBar = forwardRef<HTMLDivElement, { top: number }>(
-  ({ top }, ref) => {
-    return (
-      <div
-        className={cn(
-          'absolute z-20',
-          'h-[1px] w-full',
-          'bg-primary opacity-80',
-          'pointer-events-none'
-        )}
-        style={{ top }}
-        ref={ref}
-      />
-    )
-  }
-)
+const CurrentBar: React.FC<{
+  top: number
+  ref: React.Ref<HTMLDivElement>
+}> = ({ top, ref }) => {
+  return (
+    <div
+      className={cn(
+        'absolute z-20',
+        'h-[1px] w-full',
+        'bg-primary opacity-80',
+        'pointer-events-none'
+      )}
+      style={{ top }}
+      ref={ref}
+    />
+  )
+}
 
 export type TverEpgProps = {
   data: EPGData | null

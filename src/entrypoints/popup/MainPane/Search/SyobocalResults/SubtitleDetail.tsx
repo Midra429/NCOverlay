@@ -2,13 +2,7 @@ import type { SyoboCalProgramDb } from '@midra/nco-api/types/syobocal/db'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem } from './SubtitleItem'
 
-import {
-  useMemo,
-  useCallback,
-  useState,
-  useImperativeHandle,
-  forwardRef,
-} from 'react'
+import { useMemo, useCallback, useState, useImperativeHandle } from 'react'
 import { Spinner } from '@nextui-org/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
@@ -26,12 +20,14 @@ export type SubtitleDetailHandle = {
 export type SubtitleDetailProps = {
   title: ScTitleItem
   subtitle: ScSubtitleItem
+  ref: React.Ref<SubtitleDetailHandle>
 }
 
-export const SubtitleDetail = forwardRef<
-  SubtitleDetailHandle,
-  SubtitleDetailProps
->(({ title, subtitle }, ref) => {
+export const SubtitleDetail: React.FC<SubtitleDetailProps> = ({
+  title,
+  subtitle,
+  ref,
+}) => {
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
@@ -101,4 +97,4 @@ export const SubtitleDetail = forwardRef<
       ))}
     </div>
   )
-})
+}
