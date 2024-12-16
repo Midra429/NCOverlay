@@ -7,6 +7,7 @@ import {
   Divider,
   Link,
   Code,
+  Image,
   cn,
 } from '@nextui-org/react'
 import {
@@ -36,6 +37,7 @@ import { StorageSizes } from './StorageSizes'
 import { ImportExport } from './ImportExport'
 
 const { name, version } = webext.runtime.getManifest()
+const iconUrl = webext.runtime.getURL('/icon-128.png')
 
 const accordionItemClassNames: AccordionItemProps['classNames'] = {
   indicator: cn('-rotate-90 data-[open=true]:rotate-90'),
@@ -53,8 +55,18 @@ const accordionItemInfo = (
   >
     <div className="flex flex-col gap-1 py-2">
       <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row gap-2 text-medium">
+        <div className="flex flex-row items-center gap-2 text-medium">
+          <Image
+            className="select-none"
+            radius="none"
+            width={24}
+            height={24}
+            src={iconUrl}
+            draggable={false}
+          />
+
           <span className="font-bold">{name}</span>
+
           <Link
             className="text-[length:inherit] text-foreground-500 dark:text-foreground-600"
             href={`${GITHUB_URL}/releases/tag/v${version}`}
