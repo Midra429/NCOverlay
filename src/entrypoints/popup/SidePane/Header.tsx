@@ -63,6 +63,7 @@ export const Header: React.FC = () => {
 
           <DropdownMenu variant="flat" color="primary">
             <DropdownItem
+              key="jikkyo-kakolog"
               startContent={<CalendarClockIcon className="size-4" />}
               onPress={jkModalDc.onOpen}
             >
@@ -70,6 +71,7 @@ export const Header: React.FC = () => {
             </DropdownItem>
 
             <DropdownItem
+              key="jikkyo-kakolog-epg"
               startContent={<Table2Icon className="size-4" />}
               onPress={jkEpgModalDc.onOpen}
             >

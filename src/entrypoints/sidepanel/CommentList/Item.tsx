@@ -203,6 +203,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
       <DropdownMenu variant="flat">
         <DropdownSection aria-label="アクション" showDivider>
           <DropdownItem
+            key="copy-comment"
             startContent={<CopyIcon className="size-4 shrink-0" />}
             onPress={copyComment}
           >
@@ -210,6 +211,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
           </DropdownItem>
 
           <DropdownItem
+            key="copy-user-id"
             startContent={<CopyIcon className="size-4 shrink-0" />}
             onPress={copyId}
           >
@@ -219,6 +221,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
 
         <DropdownSection title="NG設定" className="mb-0">
           <DropdownItem
+            key="add-comment"
             startContent={<PlusIcon className="size-4 shrink-0" />}
             onPress={addNgComment}
           >
@@ -226,6 +229,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
           </DropdownItem>
 
           <DropdownItem
+            key="add-user-id"
             startContent={<PlusIcon className="size-4 shrink-0" />}
             onPress={addNgId}
           >
