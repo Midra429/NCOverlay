@@ -25,6 +25,7 @@ export const Input: React.FC<Props> = (props) => {
           'overflow-hidden',
         ],
         wrapper: 'm-0',
+        label: 'm-0',
       }}
       size="sm"
       isSelected={value}
