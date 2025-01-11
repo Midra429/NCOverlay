@@ -64,7 +64,7 @@ export const Counts: React.FC<CountsProps> = ({
       </div>
 
       {/* かわいい率 */}
-      {kawaiiPct && (
+      {!!kawaiiPct && (
         <div className="flex flex-row items-center gap-1">
           <HeartIcon className={isSearch ? 'size-mini' : 'size-tiny'} />
 
