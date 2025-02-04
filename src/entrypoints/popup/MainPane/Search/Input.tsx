@@ -1,4 +1,10 @@
-import { useEffect, useState, useImperativeHandle } from 'react'
+import {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  useImperativeHandle,
+} from 'react'
 import { Button, Input, cn } from '@heroui/react'
 import { Table2Icon, SearchIcon, ChevronDownIcon } from 'lucide-react'
 import { SiNiconico } from '@icons-pack/react-simple-icons'
@@ -29,10 +35,22 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const [source, setSource] = useState<SearchSource>('niconico')
   const [value, setValue] = useState('')
+  const [isComposing, setIsComposing] = useState(false)
   const [isNiconicoOptionsOpen, setIsNiconicoOptionsOpen] = useState(false)
 
   const isNiconico = source === 'niconico'
   const isSyobocal = source === 'syobocal'
+
+  const isSearchable = useMemo(() => {
+    return value.trim() && !isDisabled
+  }, [value, isDisabled])
+
+  const search = useCallback(() => {
+    onSearch({
+      source,
+      value: value.trim(),
+    })
+  }, [onSearch, source, value])
 
   useEffect(() => {
     ncoState?.get('info').then((info) => {
@@ -116,6 +134,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             }
             value={value}
             onValueChange={setValue}
+            onKeyDown={(evt) => {
+              if (evt.key === 'Enter' && !isComposing && isSearchable) {
+                search()
+              }
+            }}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
           />
 
           <Button
@@ -124,13 +149,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             variant="solid"
             color="primary"
             isIconOnly
-            isDisabled={!value.trim() || isDisabled}
-            onPress={() => {
-              onSearch({
-                source,
-                value: value.trim(),
-              })
-            }}
+            isDisabled={!isSearchable}
+            onPress={search}
           >
             <SearchIcon className="size-4" />
           </Button>
