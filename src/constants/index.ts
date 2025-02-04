@@ -8,18 +8,14 @@ export const LINKS: {
   url?: string
 }[] = [
   {
-    title: 'X (Twitter)',
+    title: 'X /Twitter',
     label: '@Midra429',
-    url: 'https://u.midra.me/x',
+    url: 'https://x.com/Midra429',
   },
   {
     title: 'Amazon',
     label: 'ほしい物リスト',
     url: 'https://u.midra.me/wishlist',
-  },
-  {
-    title: 'Kyash ID',
-    label: 'midra',
   },
 ]
 
