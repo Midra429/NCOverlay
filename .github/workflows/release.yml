@@ -12,6 +12,14 @@ on:
           - major
           - minor
           - patch
+      submit_chrome:
+        description: 'Chrome Web Store'
+        type: boolean
+        default: true
+      submit_firefox:
+        description: 'Firefox Add-ons'
+        type: boolean
+        default: true
 
 jobs:
   submit:
@@ -46,7 +54,7 @@ jobs:
       - name: Update Version
         run: |
           pnpm version ${{ github.event.inputs.bump_type }}
-          echo VERSION="v$(cat package.json | jq -r '.version')" >> "${GITHUB_ENV}"
+          echo VERSION="v$(cat ./package.json | jq -r '.version')" >> "${GITHUB_ENV}"
 
       - name: Zip Extensions
         run: |
@@ -60,20 +68,31 @@ jobs:
 
       - name: Create Release to GitHub
         run: |
-          gh release create "${VERSION}" dist/*-chrome.zip dist/*-firefox.zip
+          gh release create "${VERSION}" \
+            ./dist/*-chrome.zip \
+            ./dist/*-firefox.zip \
+            -t "$(cat ./package.json | jq -r '.displayName') ${VERSION}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Submit to Stores
+      - name: Submit to Chrome Web Store
+        if: ${{ github.event.inputs.submit_chrome == 'true' }}
         run: |
           pnpm wxt submit \
-            --chrome-zip dist/*-chrome.zip \
-            --firefox-zip dist/*-firefox.zip --firefox-sources-zip dist/*-sources.zip
+            --chrome-zip ./dist/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+      - name: Submit to Firefox Add-ons
+        if: ${{ github.event.inputs.submit_firefox == 'true' }}
+        run: |
+          pnpm wxt submit \
+            --firefox-zip ./dist/*-firefox.zip \
+            --firefox-sources-zip ./dist/*-sources.zip
+        env:
           FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
           FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
