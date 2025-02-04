@@ -7,7 +7,7 @@ import type {
 import type { CallEPGv2Params } from '@midra/nco-api/tver/v1/callEPGv2'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Button, Divider } from "@heroui/react"
+import { Button, Divider } from '@heroui/react'
 import {
   ChevronRightIcon,
   CalendarDaysIcon,

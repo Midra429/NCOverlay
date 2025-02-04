@@ -1,7 +1,7 @@
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { Image, cn } from "@heroui/react"
+import { Image, cn } from '@heroui/react'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
 

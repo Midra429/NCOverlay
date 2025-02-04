@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { cn } from "@heroui/react"
+import { cn } from '@heroui/react'
 
 import { ROW_HEIGHT } from './TverEpg'
 

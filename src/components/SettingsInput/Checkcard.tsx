@@ -1,7 +1,7 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { CheckboxGroup, Checkbox, cn } from "@heroui/react"
+import { CheckboxGroup, Checkbox, cn } from '@heroui/react'
 
 import { useSettings } from '@/hooks/useSettings'
 

@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { cn } from "@heroui/react"
+import { cn } from '@heroui/react'
 
 export type SourceTagProps = {
   className?: string

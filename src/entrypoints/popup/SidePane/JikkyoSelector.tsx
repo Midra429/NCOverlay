@@ -2,7 +2,7 @@ import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { useCallback, useMemo, useState } from 'react'
-import { Button, ButtonGroup, cn } from "@heroui/react"
+import { Button, ButtonGroup, cn } from '@heroui/react'
 import {
   ChevronRightIcon,
   CalendarDaysIcon,

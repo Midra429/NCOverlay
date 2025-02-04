@@ -3,7 +3,7 @@ import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem } from './SubtitleItem'
 
 import { useMemo, useCallback, useState, useImperativeHandle } from 'react'
-import { Spinner } from "@heroui/react"
+import { Spinner } from '@heroui/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 

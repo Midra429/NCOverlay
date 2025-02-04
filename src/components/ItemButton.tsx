@@ -1,7 +1,7 @@
-import type { ButtonProps } from "@heroui/react"
+import type { ButtonProps } from '@heroui/react'
 import type { PopconfirmProps } from '@/components/Popconfirm'
 
-import { Button, cn } from "@heroui/react"
+import { Button, cn } from '@heroui/react'
 
 import { ItemLabel } from '@/components/ItemLabel'
 import { Popconfirm } from '@/components/Popconfirm'

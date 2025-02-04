@@ -4,7 +4,7 @@ import type {
 } from '@midra/nco-api/types/syobocal/json'
 
 import { useMemo } from 'react'
-import { cn } from "@heroui/react"
+import { cn } from '@heroui/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { CalendarDaysIcon, ShapesIcon, ChevronRightIcon } from 'lucide-react'
 import { SYOBOCAL_CATEGORIES } from '@midra/nco-api/constants'

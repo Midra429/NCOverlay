@@ -9,7 +9,7 @@ import {
   useCallback,
   useImperativeHandle,
 } from 'react'
-import { Spinner, cn } from "@heroui/react"
+import { Spinner, cn } from '@heroui/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 

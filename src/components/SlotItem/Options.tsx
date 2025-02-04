@@ -2,8 +2,8 @@ import type { Variants } from 'framer-motion'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useEffect, useState, useCallback } from 'react'
-import { Button } from "@heroui/react"
-import { TRANSITION_VARIANTS } from "@heroui/framer-utils"
+import { Button } from '@heroui/react'
+import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import {
   AnimatePresence,
   LazyMotion,

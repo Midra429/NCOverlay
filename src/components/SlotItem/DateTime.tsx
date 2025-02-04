@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { cn } from "@heroui/react"
+import { cn } from '@heroui/react'
 import { CalendarDaysIcon } from 'lucide-react'
 
 import { formatDate } from '@/utils/format'

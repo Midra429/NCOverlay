@@ -1,7 +1,7 @@
 import type { SettingsKey } from '@/types/storage'
 
 import { memo } from 'react'
-import { Divider } from "@heroui/react"
+import { Divider } from '@heroui/react'
 
 import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 

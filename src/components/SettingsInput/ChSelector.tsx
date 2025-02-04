@@ -13,7 +13,7 @@ import {
   CheckboxGroup,
   Checkbox,
   useDisclosure,
-} from "@heroui/react"
+} from '@heroui/react'
 import {
   PencilIcon,
   ChevronRightIcon,

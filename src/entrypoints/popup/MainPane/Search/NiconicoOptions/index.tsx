@@ -1,6 +1,6 @@
 import type { Variants } from 'framer-motion'
 
-import { TRANSITION_VARIANTS } from "@heroui/framer-utils"
+import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import {
   AnimatePresence,
   LazyMotion,

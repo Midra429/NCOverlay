@@ -3,8 +3,8 @@ import type { ScTitleItem } from './TitleItem'
 import type { SubtitleDetailHandle } from './SubtitleDetail'
 
 import { useState, useImperativeHandle, useRef } from 'react'
-import { cn } from "@heroui/react"
-import { TRANSITION_VARIANTS } from "@heroui/framer-utils"
+import { cn } from '@heroui/react'
+import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import { LazyMotion, domAnimation, useWillChange, m } from 'framer-motion'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { ChevronDownIcon } from 'lucide-react'

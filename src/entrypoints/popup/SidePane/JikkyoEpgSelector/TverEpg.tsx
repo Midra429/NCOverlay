@@ -1,7 +1,7 @@
 import type { EPGData, EPGContent, EPGProgram } from '.'
 
 import { useEffect, useMemo, useState, useRef } from 'react'
-import { Spinner, cn } from "@heroui/react"
+import { Spinner, cn } from '@heroui/react'
 
 import { Channels } from './Channel'
 import { Hours } from './Hour'
