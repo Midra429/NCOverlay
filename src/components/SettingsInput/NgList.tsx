@@ -9,10 +9,10 @@ import { useEffect, useState, useCallback } from 'react'
 import {
   Button,
   Switch,
-  Input as NextUIInput,
+  Input as HeroUIInput,
   useDisclosure,
   cn,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import {
   PencilIcon,
   ChevronRightIcon,
@@ -131,7 +131,7 @@ const Item: React.FC<{
   return (
     <div className="flex w-full flex-row">
       <ItemCell className="w-[calc(100%-7rem)] p-0">
-        <NextUIInput
+        <HeroUIInput
           classNames={{
             inputWrapper: [
               'h-full shadow-none',

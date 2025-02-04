@@ -1,4 +1,4 @@
-import type { SlotsToClasses } from '@nextui-org/react'
+import type { SlotsToClasses } from "@heroui/react"
 import type {
   StateSlotDetail,
   V1ThreadCommentWithType,
@@ -12,7 +12,7 @@ import {
   DropdownSection,
   DropdownItem,
   cn,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { CopyIcon, PlusIcon, ClockIcon } from 'lucide-react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 

@@ -1,21 +1,21 @@
-import type { ModalProps as NextUIModalProps } from '@nextui-org/react'
+import type { ModalProps as HeroUIModalProps } from '@heroui/react'
 
 import {
   Button,
-  Modal as NextUIModal,
-  ModalContent as NextUIModalContent,
-  ModalHeader as NextUIModalHeader,
-  ModalBody as NextUIModalBody,
-  ModalFooter as NextUIModalFooter,
-} from '@nextui-org/react'
+  Modal as HeroUIModal,
+  ModalContent as HeroUIModalContent,
+  ModalHeader as HeroUIModalHeader,
+  ModalBody as HeroUIModalBody,
+  ModalFooter as HeroUIModalFooter,
+} from '@heroui/react'
 import { XIcon } from 'lucide-react'
 
 export type ModalProps = {
   fullWidth?: boolean
 
-  isOpen: NextUIModalProps['isOpen']
-  onOpenChange: NextUIModalProps['onOpenChange']
-  onClose?: NextUIModalProps['onClose']
+  isOpen: HeroUIModalProps['isOpen']
+  onOpenChange: HeroUIModalProps['onOpenChange']
+  onClose?: HeroUIModalProps['onClose']
 
   okText?: string
   okIcon?: React.ReactNode
@@ -36,7 +36,7 @@ export type ModalProps = {
 
 export const Modal: React.FC<ModalProps> = (props) => {
   return (
-    <NextUIModal
+    <HeroUIModal
       classNames={{
         wrapper: 'justify-end',
         base: !props.fullWidth && 'max-w-[370px]',
@@ -51,11 +51,11 @@ export const Modal: React.FC<ModalProps> = (props) => {
       onOpenChange={props.onOpenChange}
       onClose={props.onClose}
     >
-      <NextUIModalContent>
+      <HeroUIModalContent>
         {(onClose) => (
           <>
             {props.header && (
-              <NextUIModalHeader className="flex flex-row justify-between">
+              <HeroUIModalHeader className="flex flex-row justify-between">
                 <div className="flex min-h-8 flex-row items-center">
                   {props.header}
                 </div>
@@ -63,15 +63,15 @@ export const Modal: React.FC<ModalProps> = (props) => {
                 <div className="flex h-full shrink-0 flex-row gap-2 font-normal">
                   {props.headerEndContent}
                 </div>
-              </NextUIModalHeader>
+              </HeroUIModalHeader>
             )}
 
-            <NextUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
+            <HeroUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
               {props.children}
-            </NextUIModalBody>
+            </HeroUIModalBody>
 
             {props.footer !== false && (
-              <NextUIModalFooter className="justify-between">
+              <HeroUIModalFooter className="justify-between">
                 <div className="flex flex-row gap-2">
                   {props.footerStartContent}
                 </div>
@@ -109,11 +109,11 @@ export const Modal: React.FC<ModalProps> = (props) => {
                     </>
                   )}
                 </div>
-              </NextUIModalFooter>
+              </HeroUIModalFooter>
             )}
           </>
         )}
-      </NextUIModalContent>
-    </NextUIModal>
+      </HeroUIModalContent>
+    </HeroUIModal>
   )
 }

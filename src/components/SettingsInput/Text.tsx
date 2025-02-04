@@ -1,7 +1,7 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { Input as NextUIInput } from '@nextui-org/react'
+import { Input as HeroUIInput } from '@heroui/react'
 
 import { useSettings } from '@/hooks/useSettings'
 
@@ -15,7 +15,7 @@ export const Input: React.FC<Props> = (props) => {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (
-    <NextUIInput
+    <HeroUIInput
       classNames={{
         base: 'py-2',
         inputWrapper: 'border-1 border-divider shadow-none',

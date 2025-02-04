@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { cn } from '@nextui-org/react'
+import { cn } from "@heroui/react"
 import { ClockIcon } from 'lucide-react'
 
 export type OffsetProps = {

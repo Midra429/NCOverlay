@@ -1,6 +1,6 @@
-import type { TabsProps } from '@nextui-org/react'
+import type { TabsProps } from "@heroui/react"
 
-import { Tabs, Tab, cn, tv } from '@nextui-org/react'
+import { Tabs, Tab, cn, tv } from "@heroui/react"
 
 export type SegmentedProps = {
   className?: TabsProps['className']

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Button, ButtonGroup, Divider, Input, cn } from '@nextui-org/react'
+import { Button, ButtonGroup, Divider, Input, cn } from "@heroui/react"
 import { RotateCcwIcon, CheckIcon } from 'lucide-react'
 
 export type OffsetControlProps = {

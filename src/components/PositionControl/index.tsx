@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { cn } from '@nextui-org/react'
+import { cn } from "@heroui/react"
 
 import { MarkerButtons } from './MarkerButtons'
 import { GlobalOffsetControl } from './GlobalOffsetControl'

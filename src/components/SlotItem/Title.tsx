@@ -1,7 +1,7 @@
 import type { StateSlotDetail, StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { useMemo } from 'react'
-import { Link, cn } from '@nextui-org/react'
+import { Link, cn } from "@heroui/react"
 import { useOverflowDetector } from 'react-detectable-overflow'
 
 import { ProgramIcons } from '@/entrypoints/popup/SidePane/JikkyoEpgSelector/Program'

@@ -1,15 +1,11 @@
-import type {
-  SemanticBaseColors,
-  ThemeColors,
-  ColorScale,
-} from '@nextui-org/react'
+import type { SemanticBaseColors, ThemeColors, ColorScale } from '@heroui/react'
 
-import { semanticColors } from '@nextui-org/theme/colors'
+import { semanticColors } from '@heroui/theme/colors'
 import { readableColor } from 'color2k'
 
 /**
  * これを短くした ↓
- * @see https://github.com/nextui-org/nextui/blob/canary/packages/core/theme/src/utils/object.ts#L3
+ * @see https://github.com/heroui-inc/heroui/blob/canary/packages/core/theme/src/utils/object.ts#L3
  */
 const swapColorValues = <T extends Object>(colors: T): T => {
   const keys = Object.keys(colors)

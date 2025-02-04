@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Divider } from '@nextui-org/react'
+import { Divider } from "@heroui/react"
 
 import { webext } from '@/utils/webext'
 import { filesize } from '@/utils/filesize'

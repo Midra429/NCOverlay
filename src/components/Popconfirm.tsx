@@ -1,4 +1,4 @@
-import type { PopoverProps, ButtonProps } from '@nextui-org/react'
+import type { PopoverProps, ButtonProps } from "@heroui/react"
 
 import { useState, useCallback } from 'react'
 import {
@@ -8,7 +8,7 @@ import {
   Button,
   cn,
   tv,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { InfoIcon } from 'lucide-react'
 
 export type PopconfirmProps = {

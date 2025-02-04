@@ -6,7 +6,7 @@ import {
   DropdownItem,
   useDisclosure,
   cn,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import {
   PlusIcon,
   ChevronDownIcon,

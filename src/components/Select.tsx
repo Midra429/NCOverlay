@@ -1,19 +1,19 @@
 import type {
   SlotsToClasses,
-  SelectProps as NextUISelectProps,
+  SelectProps as HeroUISelectProps,
   SelectSlots,
-} from '@nextui-org/react'
+} from '@heroui/react'
 
 import { useMemo } from 'react'
 import {
-  Select as NextUISelect,
-  SelectItem as NextUISelectItem,
-  SelectSection as NextUISelectSection,
+  Select as HeroUISelect,
+  SelectItem as HeroUISelectItem,
+  SelectSection as HeroUISelectSection,
   tv,
-} from '@nextui-org/react'
+} from '@heroui/react'
 
-export type SelectProps = Omit<NextUISelectProps, 'size'> & {
-  size?: NextUISelectProps['size'] | 'mini'
+export type SelectProps = Omit<HeroUISelectProps, 'size'> & {
+  size?: HeroUISelectProps['size'] | 'mini'
 }
 
 const select = tv({
@@ -77,11 +77,11 @@ export const Select: React.FC<SelectProps> = (props) => {
         key,
         slots[key]({ class: props.classNames?.[key] }),
       ])
-    ) as NextUISelectProps['classNames']
+    ) as HeroUISelectProps['classNames']
   }, [props.size])
 
   return (
-    <NextUISelect
+    <HeroUISelect
       {...props}
       classNames={classNames}
       size={props.size === 'mini' ? 'sm' : props.size}
@@ -94,6 +94,6 @@ export const Select: React.FC<SelectProps> = (props) => {
   )
 }
 
-export const SelectSection = NextUISelectSection
+export const SelectSection = HeroUISelectSection
 
-export const SelectItem = NextUISelectItem
+export const SelectItem = HeroUISelectItem

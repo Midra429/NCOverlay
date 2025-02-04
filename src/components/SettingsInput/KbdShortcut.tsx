@@ -1,10 +1,10 @@
-import type { KbdKey } from '@nextui-org/react'
+import type { KbdKey } from '@heroui/react'
 import type { Runtime } from 'wxt/browser'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { Fragment, useEffect, useState, useCallback } from 'react'
-import { ScrollShadow, Button, Kbd, cn } from '@nextui-org/react'
+import { ScrollShadow, Button, Kbd, cn } from '@heroui/react'
 import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
 
@@ -15,7 +15,7 @@ import { useSettings } from '@/hooks/useSettings'
 import { ItemLabel } from '@/components/ItemLabel'
 import { Tooltip } from '@/components/Tooltip'
 
-const NEXTUI_KBD_KEYS: Partial<
+const HEROUI_KBD_KEYS: Partial<
   Record<'common' | Runtime.PlatformOs, string[]>
 > = {
   common: [
@@ -77,13 +77,13 @@ const OS_KEYS: Partial<
   },
 }
 
-const isNextUiKbdKey = (
+const isHeroUiKbdKey = (
   key: string,
   os?: Runtime.PlatformOs
 ): key is KbdKey => {
   return !!(
-    NEXTUI_KBD_KEYS['common']?.includes(key) ||
-    (os && NEXTUI_KBD_KEYS[os]?.includes(key))
+    HEROUI_KBD_KEYS['common']?.includes(key) ||
+    (os && HEROUI_KBD_KEYS[os]?.includes(key))
   )
 }
 
@@ -96,7 +96,7 @@ const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
   const key =
     OS_KEYS['common']?.[kbdKey] || (os && OS_KEYS[os]?.[kbdKey]) || kbdKey
 
-  const isKey = isNextUiKbdKey(key, os)
+  const isKey = isHeroUiKbdKey(key, os)
 
   return (
     <Kbd

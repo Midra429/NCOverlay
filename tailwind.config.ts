@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss'
 import type { CustomThemeConfig } from 'tailwindcss/types/config'
 
-import { nextui } from '@nextui-org/react'
+import { heroui } from "@heroui/react"
 
 import { themeColorsLight, themeColorsDark, brandColors } from './theme-colors'
 
@@ -19,7 +19,7 @@ const size: CustomThemeConfig['width' | 'height'] = {
 
 export default {
   content: [
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: 'class',
@@ -35,7 +35,7 @@ export default {
     },
   },
   plugins: [
-    nextui({
+    heroui({
       themes: {
         light: {
           colors: themeColorsLight,

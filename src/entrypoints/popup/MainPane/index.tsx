@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Tabs, Tab } from '@nextui-org/react'
+import { Tabs, Tab } from "@heroui/react"
 import { SearchIcon, LayoutGridIcon, SettingsIcon } from 'lucide-react'
 
 import { Search } from './Search'

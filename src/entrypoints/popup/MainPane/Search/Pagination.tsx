@@ -1,4 +1,4 @@
-import { Button, Pagination as NextUIPagination } from '@nextui-org/react'
+import { Button, Pagination as HeroUIPagination } from '@heroui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
 export type PaginationProps = {
@@ -26,7 +26,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <ChevronLeftIcon className="size-4" />
       </Button>
 
-      <NextUIPagination
+      <HeroUIPagination
         classNames={{
           base: '-m-2 p-2',
           wrapper: 'shadow-none',

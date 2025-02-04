@@ -10,7 +10,7 @@ import {
   PopoverContent,
   cn,
   tv,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { darken, saturate, toHex } from 'color2k'
 import { normalize } from '@midra/nco-parser/normalize'
 import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'

@@ -1,12 +1,12 @@
-import type { DatePickerProps as NextUIDatePickerProps } from '@nextui-org/react'
+import type { DatePickerProps as HeroUIDatePickerProps } from '@heroui/react'
 
-import { DatePicker as NextUIDatePicker, cn } from '@nextui-org/react'
+import { DatePicker as HeroUIDatePicker, cn } from '@heroui/react'
 
-export type DatePickerProps = NextUIDatePickerProps
+export type DatePickerProps = HeroUIDatePickerProps
 
 export const DatePicker: React.FC<DatePickerProps> = (props) => {
   return (
-    <NextUIDatePicker
+    <HeroUIDatePicker
       size="sm"
       variant="faded"
       // granularity="second"

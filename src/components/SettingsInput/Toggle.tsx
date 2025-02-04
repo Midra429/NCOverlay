@@ -1,7 +1,7 @@
 import type { StorageItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { Switch } from '@nextui-org/react'
+import { Switch } from "@heroui/react"
 
 import { useSettings } from '@/hooks/useSettings'
 

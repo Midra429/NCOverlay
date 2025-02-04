@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { Spinner, cn } from '@nextui-org/react'
+import { Spinner, cn } from "@heroui/react"
 
 export type StatusOverlayProps = {
   status: StateSlotDetail['status']

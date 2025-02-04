@@ -1,4 +1,4 @@
-import { Spinner, cn } from '@nextui-org/react'
+import { Spinner, cn } from "@heroui/react"
 
 import { useNcoState } from '@/hooks/useNco'
 

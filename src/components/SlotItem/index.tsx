@@ -7,7 +7,7 @@ import type {
 import type { PanelItemProps } from '@/components/PanelItem'
 
 import { useCallback, useState } from 'react'
-import { cn } from '@nextui-org/react'
+import { cn } from "@heroui/react"
 
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
 import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
@@ -134,7 +134,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
   }, [detail.id])
 
   return (
-    <PanelItem
+    (<PanelItem
       className={cn(
         isError && 'bg-danger/15',
         isDisabled && 'pointer-events-none opacity-50'
@@ -177,7 +177,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
 
           {isSearch ? (
             // 追加
-            <AddButton onPress={onPressAdd} />
+            (<AddButton onPress={onPressAdd} />)
           ) : (
             <>
               <ButtonsOverlay status={detail.status} onRemove={onPressRemove} />
@@ -244,7 +244,6 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           </div>
         )}
       </div>
-
       {/* 設定 */}
       {!isError && !isSearch && (
         <Options
@@ -253,6 +252,6 @@ export const SlotItem: React.FC<SlotItemProps> = ({
           offsetMs={detail.offsetMs}
         />
       )}
-    </PanelItem>
-  )
+    </PanelItem>)
+  );
 }

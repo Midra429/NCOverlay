@@ -1,7 +1,7 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useEffect, useState, useCallback } from 'react'
-import { Button, cn } from '@nextui-org/react'
+import { Button, cn } from "@heroui/react"
 import { BlendIcon } from 'lucide-react'
 
 import { ncoState } from '@/hooks/useNco'
