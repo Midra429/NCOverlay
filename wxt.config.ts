@@ -53,6 +53,11 @@ export default defineConfig({
 
   srcDir: 'src',
   outDir: 'dist',
+  autoIcons: {
+    baseIconPath: '../assets/icon.png',
+    sizes: [512],
+    grayscaleOnDevelopment: false,
+  },
   imports: false,
   vite: () => ({
     define: {
@@ -66,5 +71,5 @@ export default defineConfig({
       noExternal: ['@webext-core/messaging'],
     },
   }),
-  modules: ['@wxt-dev/module-react'],
+  modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-react'],
 })
