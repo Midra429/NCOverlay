@@ -44,6 +44,7 @@ export default defineConfig({
     return {
       name: displayName,
       description,
+      default_locale: 'ja',
       homepage_url: GITHUB_URL,
       permissions,
       host_permissions: ['<all_urls>'],
