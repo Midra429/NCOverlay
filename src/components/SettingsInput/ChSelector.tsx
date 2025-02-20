@@ -182,7 +182,7 @@ export const Input: React.FC<Props> = (props) => {
             base: 'border-b-1 border-foreground-200 bg-content1',
             tabList: 'p-0',
             tab: 'h-10 p-0',
-            panel: 'overflow-auto bg-content1 p-0',
+            panel: 'overflow-y-auto bg-content1 p-0 overflow-x-hidden',
           }}
           variant="underlined"
           color="primary"

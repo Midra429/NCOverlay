@@ -22,7 +22,7 @@ export const ChannelCell: React.FC<ChannelCellProps> = ({ tverChId }) => {
         'border-r-1 border-divider',
         'bg-content2 text-content2-foreground',
         'text-mini font-semibold',
-        'line-clamp-1'
+        'truncate'
       )}
       style={{
         width: COLUMN_WIDTH,
