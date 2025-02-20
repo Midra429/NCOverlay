@@ -86,7 +86,7 @@ const main = async () => {
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/episodes/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          'div[class^="vod-player_videoContainer"] .video-js > video.vjs-tech'
+          'div[class*="_videoContainer_"] .video-js > video.vjs-tech'
         )
 
         if (video) {
