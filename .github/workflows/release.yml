@@ -16,6 +16,10 @@ on:
         description: 'Chrome Web Store'
         type: boolean
         default: true
+      submit_edge:
+        description: 'Edge Add-ons'
+        type: boolean
+        default: true
       submit_firefox:
         description: 'Firefox Add-ons'
         type: boolean
@@ -85,6 +89,16 @@ jobs:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+      - name: Submit to Edge Add-ons
+        if: ${{ github.event.inputs.submit_edge == 'true' }}
+        run: |
+          pnpm wxt submit \
+            --edge-zip ./dist/*-chrome.zip
+        env:
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
+          EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
 
       - name: Submit to Firefox Add-ons
         if: ${{ github.event.inputs.submit_firefox == 'true' }}

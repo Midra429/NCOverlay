@@ -4,6 +4,7 @@
 [![Firefox Add-ons](https://img.shields.io/amo/v/ncoverlay?label=Firefox%20Add-ons)](https://addons.mozilla.org/ja/firefox/addon/ncoverlay/)
 
 [<img src="assets/badges/chrome.png" height="60px">](https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe)
+[<img src="assets/badges/edge.png" height="60px">](https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl)
 [<img src="assets/badges/firefox.png" height="60px">](https://addons.mozilla.org/ja/firefox/addon/ncoverlay/)
 
 ## 概要
@@ -30,6 +31,9 @@
 ## インストール
 ### Chrome Web Store
 https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
+
+### Edge Add-ons
+https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl
 
 ### Firefox Add-ons
 https://addons.mozilla.org/ja/firefox/addon/ncoverlay/

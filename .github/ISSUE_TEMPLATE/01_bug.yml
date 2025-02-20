@@ -29,6 +29,7 @@ body:
       label: ブラウザ
       options:
         - Chrome
+        - Edge
         - Firefox
 
   - type: checkboxes
