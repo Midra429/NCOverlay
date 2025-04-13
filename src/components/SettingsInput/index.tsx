@@ -1,6 +1,5 @@
 import type { SettingsKey } from '@/types/storage'
 
-import * as Segmented from './Segmented'
 import * as Select from './Select'
 import * as Toggle from './Toggle'
 import * as Text from './Text'
@@ -25,7 +24,6 @@ export type SettingsInputBaseProps<
 export type SettingsInputType = keyof typeof SettingsInput
 
 export type SettingsInputProps<K extends SettingsKey> =
-  | (K extends Segmented.Key ? Segmented.Props<K> : never)
   | (K extends Select.Key ? Select.Props<K> : never)
   | (K extends Toggle.Key ? Toggle.Props<K> : never)
   | (K extends Text.Key ? Text.Props<K> : never)
@@ -37,7 +35,6 @@ export type SettingsInputProps<K extends SettingsKey> =
   | (K extends ChSelector.Key ? ChSelector.Props<K> : never)
 
 export const SettingsInput = {
-  'segmented': Segmented.Input,
   'select': Select.Input,
   'toggle': Toggle.Input,
   'text': Text.Input,

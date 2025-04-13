@@ -1,4 +1,4 @@
-import type { Runtime } from 'wxt/browser'
+import type { Runtime } from 'webextension-polyfill'
 
 import equal from 'fast-deep-equal'
 

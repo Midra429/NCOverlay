@@ -1,6 +1,6 @@
 import type { VodKey } from '@/types/constants'
 
-import { defineContentScript } from 'wxt/sandbox'
+import { defineContentScript } from '#imports'
 import { normalizeAll } from '@midra/nco-parser/normalize'
 
 import { MATCHES } from '@/constants/matches'

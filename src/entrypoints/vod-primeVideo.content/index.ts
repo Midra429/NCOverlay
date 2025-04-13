@@ -1,6 +1,6 @@
 import type { VodKey } from '@/types/constants'
 
-import { defineContentScript } from 'wxt/sandbox'
+import { defineContentScript } from '#imports'
 import { normalize, normalizeAll } from '@midra/nco-parser/normalize'
 import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'

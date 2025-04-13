@@ -1,4 +1,4 @@
-import type { Permissions } from 'wxt/browser'
+import type { Permissions } from 'webextension-polyfill'
 
 import { webext } from '@/utils/webext'
 

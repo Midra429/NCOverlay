@@ -1,4 +1,4 @@
-import type { Runtime } from 'wxt/browser'
+import type { Runtime } from 'webextension-polyfill'
 import type { StateVod, StateInfo } from '@/ncoverlay/state'
 
 import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS } from '@/constants'

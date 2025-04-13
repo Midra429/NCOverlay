@@ -1,4 +1,4 @@
-import type { Storage as WxtStorage } from 'wxt/browser'
+import type { Storage as WxtStorage } from 'webextension-polyfill'
 import type { StorageKey } from '@/types/storage'
 
 import equal from 'fast-deep-equal'

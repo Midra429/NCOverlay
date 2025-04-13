@@ -83,7 +83,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               base: 'w-9 min-w-9 max-w-9',
               label: 'hidden',
               trigger: 'block rounded-r-none px-0 [&>svg]:hidden',
-              innerWrapper: 'w-full',
+              innerWrapper: 'size-full',
               popoverContent: 'w-56',
             }}
             size="sm"

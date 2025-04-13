@@ -1,6 +1,6 @@
-import type { Tabs } from 'wxt/browser'
+import {} from 'webextension-polyfill'
 
-declare module 'wxt/browser' {
+declare module 'webextension-polyfill' {
   namespace Manifest {
     interface WebExtensionManifest extends ManifestBase {
       side_panel?: WebExtensionManifestSidePanelType
@@ -67,7 +67,7 @@ declare module 'wxt/browser' {
     }
   }
 
-  type WebExtBrowser = AugmentedBrowser & {
+  type WebExtBrowser = Browser & {
     sidePanel: SidePanel.Static
 
     isChrome: boolean

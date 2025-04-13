@@ -1,4 +1,4 @@
-import { defineContentScript } from 'wxt/sandbox'
+import { defineContentScript } from '#imports'
 
 // import { registerProxy } from '@/utils/proxy-service/register'
 // import { onMessage } from '@/utils/proxy-service/messaging/page'

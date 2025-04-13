@@ -1,6 +1,6 @@
-import type { WebExtBrowser, SidePanel } from 'wxt/browser'
+import type { WebExtBrowser, SidePanel } from 'webextension-polyfill'
 
-import { browser } from 'wxt/browser'
+import { browser } from '@wxt-dev/webextension-polyfill/browser'
 
 const webext = browser as WebExtBrowser
 

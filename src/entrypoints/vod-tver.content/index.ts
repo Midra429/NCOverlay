@@ -1,6 +1,6 @@
 import type { VodKey } from '@/types/constants'
 
-import { defineContentScript } from 'wxt/sandbox'
+import { defineContentScript } from '#imports'
 import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
 
 import { MATCHES } from '@/constants/matches'

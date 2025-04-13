@@ -72,5 +72,9 @@ export default defineConfig({
       noExternal: ['@webext-core/messaging'],
     },
   }),
-  modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-react'],
+  modules: [
+    '@wxt-dev/webextension-polyfill',
+    '@wxt-dev/auto-icons',
+    '@wxt-dev/module-react',
+  ],
 })

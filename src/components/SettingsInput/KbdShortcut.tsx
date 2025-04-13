@@ -1,5 +1,5 @@
 import type { KbdKey } from '@heroui/react'
-import type { Runtime } from 'wxt/browser'
+import type { Runtime } from 'webextension-polyfill'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
@@ -87,10 +87,10 @@ const isHeroUiKbdKey = (
   )
 }
 
-const KeyboardKey: React.FC<{ kbdKey: string; os?: Runtime.PlatformOs }> = ({
-  kbdKey,
-  os,
-}) => {
+const KeyboardKey: React.FC<{
+  kbdKey: string
+  os?: Runtime.PlatformOs
+}> = ({ kbdKey, os }) => {
   if (!kbdKey) return
 
   const key =

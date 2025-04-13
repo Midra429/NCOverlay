@@ -1,7 +1,7 @@
 import type { VodKey } from '@/types/constants'
 import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
 
-import { defineContentScript } from 'wxt/sandbox'
+import { defineContentScript } from '#imports'
 
 import { MATCHES } from '@/constants/matches'
 
