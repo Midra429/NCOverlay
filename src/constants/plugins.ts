@@ -29,13 +29,6 @@ export const PLUGINS = {
     },
   ],
 
-  niconico: [
-    {
-      id: 'windowSizeFullscreen',
-      title: 'フルスクリーン (ブラウザサイズ)',
-    },
-  ],
-
   tver: [
     {
       id: 'windowSizeFullscreen',
