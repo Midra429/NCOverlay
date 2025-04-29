@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+:after,
+:before {
+  outline: none !important;
+}
