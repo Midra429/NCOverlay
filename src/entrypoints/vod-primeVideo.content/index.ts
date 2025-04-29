@@ -185,9 +185,11 @@ const main = async () => {
     ) {
       patcher.dispose()
     } else if (!patcher.nco) {
-      const video = document.body.querySelector<HTMLVideoElement>(
-        '.webPlayerSDKContainer video[src]'
-      )
+      const video = [
+        ...document.body.querySelectorAll<HTMLVideoElement>(
+          '.webPlayerSDKContainer video[src]'
+        ),
+      ].filter((v) => document.body.contains(v) && v.offsetParent)[0]
 
       if (video?.offsetParent) {
         patcher.setVideo(video)
