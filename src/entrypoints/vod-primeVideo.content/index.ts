@@ -25,16 +25,16 @@ export default defineContentScript({
 })
 
 const getDetail = (): { title: string } | null => {
+  const titleId1 =
+    document.querySelector<HTMLInputElement>(
+      '.dv-dp-node-watchlist input[name="titleID"]'
+    )?.value ?? ''
+  const titleId2 =
+    location.href?.match(/(?<=\/dp\/)[0-9A-Z]+(?=\/|$)/)?.[0] ?? ''
   const canonicalUrl = document.querySelector<HTMLLinkElement>(
     'link[rel="canonical"]'
   )?.href
   const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.[0] ?? ''
-  const titleId1 =
-    location.href?.match(/(?<=\/dp\/)[0-9A-Z]+(?=\/|$)/)?.[0] ?? ''
-  const titleId2 =
-    document.querySelector<HTMLInputElement>(
-      '.dv-dp-node-watchlist input[name="titleID"]'
-    )?.value ?? ''
 
   const data = JSON.parse(
     document.querySelector('#a-page > script[type="text/template"]')
@@ -47,7 +47,7 @@ const getDetail = (): { title: string } | null => {
     if ('atf' in props) {
       const { headerDetail } = props.atf.state.detail
       const detail =
-        headerDetail[asin] || headerDetail[titleId1] || headerDetail[titleId2]
+        headerDetail[titleId1] || headerDetail[titleId2] || headerDetail[asin]
 
       if (detail?.title) {
         return detail
@@ -85,7 +85,7 @@ const main = async () => {
     vod,
     getInfo: async (nco) => {
       const player = nco.renderer.video.closest<HTMLElement>(
-        '.webPlayerSDKContainer'
+        'div[id^="dv-web-player"]'
       )
 
       if (!player) {
@@ -107,7 +107,7 @@ const main = async () => {
 
       logger.log('detail:', detail)
 
-      const title = detail?.title || titleElem?.textContent
+      const title = titleElem?.textContent || detail?.title
       const season_episode = subtitleElem?.firstChild?.textContent
       const subtitle = subtitleElem?.lastChild?.textContent
 
@@ -147,11 +147,13 @@ const main = async () => {
       const episodeTitle =
         [episodeText, subtitle].filter(Boolean).join(' ').trim() || null
 
-      const duration =
+      const videoDuration = nco.renderer.video.duration
+      const displayDuration =
         timeindicatorElem?.textContent
           ?.split('/')
           .map(formatedToSeconds)
           .reduce((a, b) => a + b) ?? 0
+      const duration = Math.max(videoDuration, displayDuration)
 
       logger.log('workTitle:', workTitle)
       logger.log('episodeTitle:', episodeTitle)
@@ -161,8 +163,8 @@ const main = async () => {
     },
     appendCanvas: (video, canvas) => {
       video
-        .closest('.webPlayerSDKContainer')
-        ?.querySelector('.webPlayerUIContainer')
+        .closest('div[id^="dv-web-player"]')
+        ?.querySelector('.atvwebplayersdk-player-container')
         ?.insertAdjacentElement('afterbegin', canvas)
     },
   })
@@ -187,7 +189,7 @@ const main = async () => {
     } else if (!patcher.nco) {
       const video = [
         ...document.body.querySelectorAll<HTMLVideoElement>(
-          '.webPlayerSDKContainer video[src]'
+          '.atvwebplayersdk-video-surface video[src]'
         ),
       ].filter((v) => document.body.contains(v) && v.offsetParent)[0]
 
