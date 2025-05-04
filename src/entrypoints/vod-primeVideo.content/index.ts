@@ -85,7 +85,7 @@ const main = async () => {
     vod,
     getInfo: async (nco) => {
       const player = nco.renderer.video.closest<HTMLElement>(
-        'div[id^="dv-web-player"]'
+        '.webPlayerSDKContainer, div[id^="dv-web-player"]'
       )
 
       if (!player) {
@@ -163,8 +163,10 @@ const main = async () => {
     },
     appendCanvas: (video, canvas) => {
       video
-        .closest('div[id^="dv-web-player"]')
-        ?.querySelector('.atvwebplayersdk-player-container')
+        .closest('.webPlayerSDKContainer, div[id^="dv-web-player"]')
+        ?.querySelector(
+          '.webPlayerUIContainer, .atvwebplayersdk-player-container'
+        )
         ?.insertAdjacentElement('afterbegin', canvas)
     },
   })
@@ -189,7 +191,7 @@ const main = async () => {
     } else if (!patcher.nco) {
       const video = [
         ...document.body.querySelectorAll<HTMLVideoElement>(
-          '.atvwebplayersdk-video-surface video[src]'
+          ':is(.webPlayerSDKContainer, .atvwebplayersdk-video-surface) video[src]'
         ),
       ].filter((v) => document.body.contains(v) && v.offsetParent)[0]
 
