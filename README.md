@@ -18,6 +18,7 @@
 - [U-NEXT](https://video.unext.jp/)
 - [FOD](https://fod.fujitv.co.jp/)
 - [Prime Video](https://www.amazon.co.jp/gp/video/storefront/)
+- [Netflix](https://www.netflix.com/)
 - [Hulu](https://www.hulu.jp/)
 - [ニコニコ動画](https://www.nicovideo.jp/)
 - [NHKプラス](https://plus.nhk.jp/)

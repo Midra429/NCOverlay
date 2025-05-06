@@ -44,6 +44,7 @@ body:
         - label: U-NEXT
         - label: FOD
         - label: Prime Video
+        - label: Netflix
         - label: Hulu
         - label: ニコニコ動画
         - label: NHKプラス
