@@ -199,6 +199,7 @@ export const Input: React.FC<Props> = (props) => {
             variant="light"
             radius="full"
             isIconOnly
+            // @ts-ignore
             onClick={onClick}
           >
             {isRecording ? (
