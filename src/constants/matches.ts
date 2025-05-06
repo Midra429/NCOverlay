@@ -8,6 +8,7 @@ export const MATCHES: Record<VodKey, string[]> = {
   unext: ['https://video.unext.jp/*'],
   fod: ['https://fod.fujitv.co.jp/*'],
   primeVideo: ['https://www.amazon.co.jp/*'],
+  netflix: ['https://www.netflix.com/*'],
   hulu: ['https://www.hulu.jp/*'],
   niconico: ['https://www.nicovideo.jp/watch/*'],
   nhkPlus: ['https://plus.nhk.jp/watch/st/*'],
