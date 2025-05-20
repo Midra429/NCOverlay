@@ -147,13 +147,12 @@ const main = async () => {
       const episodeTitle =
         [episodeText, subtitle].filter(Boolean).join(' ').trim() || null
 
+      const displayDuration = timeindicatorElem?.textContent
+        ?.split('/')
+        .map(formatedToSeconds)
+        .reduce((a, b) => a + b)
       const videoDuration = nco.renderer.video.duration
-      const displayDuration =
-        timeindicatorElem?.textContent
-          ?.split('/')
-          .map(formatedToSeconds)
-          .reduce((a, b) => a + b) ?? 0
-      const duration = Math.max(videoDuration, displayDuration)
+      const duration = displayDuration ?? videoDuration
 
       logger.log('workTitle:', workTitle)
       logger.log('episodeTitle:', episodeTitle)
@@ -180,13 +179,7 @@ const main = async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (
-      patcher.nco &&
-      !(
-        document.body.contains(patcher.nco.renderer.video) &&
-        patcher.nco.renderer.video.offsetParent
-      )
-    ) {
+    if (patcher.nco && !patcher.nco.renderer.video.checkVisibility()) {
       patcher.dispose()
     } else if (!patcher.nco) {
       const video = [
