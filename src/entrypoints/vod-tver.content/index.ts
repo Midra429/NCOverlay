@@ -81,7 +81,7 @@ const main = async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !document.body.contains(patcher.nco.renderer.video)) {
+    if (patcher.nco && !patcher.nco.renderer.video.checkVisibility()) {
       patcher.dispose()
     } else if (!patcher.nco) {
       if (location.pathname.startsWith('/episodes/')) {
