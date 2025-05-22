@@ -148,7 +148,7 @@ export const filterDisplayThreads = async (
 
           // 半透明
           const commands = detail.translucent
-            ? [...new Set([...cmt.commands, '_live'])]
+            ? [...new Set([...cmt.commands, 'nico:opacity:0.5'])]
             : cmt.commands
 
           return { ...cmt, vposMs, commands }

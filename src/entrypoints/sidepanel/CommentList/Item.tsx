@@ -45,13 +45,14 @@ const COMMENT_CELL_COMMAND_CLASSES: Record<string, string> = {
 
 const COMMENT_COMMAND_CLASSES: Record<string, string> = {
   // サイズ: 大
-  big: cn('text-[110%] font-bold'),
+  'big': cn('text-[110%] font-bold'),
   // サイズ: 小
-  small: cn('text-[75%]'),
+  'small': cn('text-[75%]'),
   // 明朝体
-  mincho: cn('font-serif'),
+  'mincho': cn('font-serif'),
   // 半透明
-  _live: cn('opacity-50'),
+  '_live': cn('opacity-50'),
+  'nico:opacity:0.5': cn('opacity-50'),
 }
 
 const NICORU_COLORS: Record<number, string> = {
@@ -161,6 +162,10 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
 
       return { cmtCellCmdClass, cmtCmdClass, cmtBgColor, cmtFgColor }
     }, [comment.commands])
+
+  const displayCommands = useMemo(() => {
+    return comment.commands.filter((cmd) => !cmd.startsWith('nico:'))
+  }, [comment.commands])
 
   const formattedDuration = useMemo(() => {
     return formatDuration((comment.vposMs + offsetMs) / 1000)
@@ -333,7 +338,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
         className="w-full font-mono"
         style={{ backgroundColor: nicoruColor }}
       >
-        <span className="line-clamp-1">{comment.commands.join(' ')}</span>
+        <span className="line-clamp-1">{displayCommands.join(' ')}</span>
       </ItemCell>
     </div>
   )
