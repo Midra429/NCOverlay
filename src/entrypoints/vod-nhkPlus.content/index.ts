@@ -140,14 +140,16 @@ const main = async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !patcher.nco.renderer.video.checkVisibility()) {
-      patcher.dispose()
+    if (patcher.nco) {
+      if (!patcher.nco.renderer.video.checkVisibility()) {
+        patcher.dispose()
 
-      streamId = null
-      jkChId = null
-      starttime = null
-      endtime = null
-    } else if (!patcher.nco) {
+        streamId = null
+        jkChId = null
+        starttime = null
+        endtime = null
+      }
+    } else {
       const video = document.body.querySelector<HTMLVideoElement>(
         'video.hls-player_video[src]'
       )

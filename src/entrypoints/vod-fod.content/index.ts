@@ -68,9 +68,11 @@ const main = async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !patcher.nco.renderer.video.checkVisibility()) {
-      patcher.dispose()
-    } else if (!patcher.nco) {
+    if (patcher.nco) {
+      if (!patcher.nco.renderer.video.checkVisibility()) {
+        patcher.dispose()
+      }
+    } else {
       if (location.pathname.startsWith('/title/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
           '#video_container > video[fpkey="videoPlayer"][src]'

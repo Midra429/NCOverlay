@@ -81,9 +81,11 @@ const main = async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !patcher.nco.renderer.video.checkVisibility()) {
-      patcher.dispose()
-    } else if (!patcher.nco) {
+    if (patcher.nco) {
+      if (!patcher.nco.renderer.video.checkVisibility()) {
+        patcher.dispose()
+      }
+    } else {
       if (location.pathname.startsWith('/episodes/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
           'div[class*="_videoContainer_"] .video-js > video.vjs-tech'

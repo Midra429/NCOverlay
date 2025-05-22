@@ -179,9 +179,11 @@ const main = async () => {
   const obs = new MutationObserver(() => {
     obs.disconnect()
 
-    if (patcher.nco && !patcher.nco.renderer.video.checkVisibility()) {
-      patcher.dispose()
-    } else if (!patcher.nco) {
+    if (patcher.nco) {
+      if (!patcher.nco.renderer.video.checkVisibility()) {
+        patcher.dispose()
+      }
+    } else {
       const video = [
         ...document.body.querySelectorAll<HTMLVideoElement>(
           ':is(.webPlayerSDKContainer, .atvwebplayersdk-video-surface) video[src]'
