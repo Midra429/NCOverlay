@@ -10,9 +10,9 @@ import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
+import { formatedToSeconds } from '@/utils/format'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
-import { formatedToSeconds } from '@/utils/format'
 
 import './style.scss'
 
@@ -24,58 +24,6 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const getDetail = (): { title: string } | null => {
-  const titleId1 =
-    document.querySelector<HTMLInputElement>(
-      '.dv-dp-node-watchlist input[name="titleID"]'
-    )?.value ?? ''
-  const titleId2 =
-    location.href?.match(/(?<=\/dp\/)[0-9A-Z]+(?=\/|$)/)?.[0] ?? ''
-  const canonicalUrl = document.querySelector<HTMLLinkElement>(
-    'link[rel="canonical"]'
-  )?.href
-  const asin = canonicalUrl?.match(/(?<=\/dp\/)[0-9A-Z]+$/)?.[0] ?? ''
-
-  const data = JSON.parse(
-    document.querySelector('#a-page > script[type="text/template"]')
-      ?.textContent || '{}'
-  )
-
-  try {
-    const { props } = data.props.body[0]
-
-    if ('atf' in props) {
-      const { headerDetail } = props.atf.state.detail
-      const detail =
-        headerDetail[titleId1] || headerDetail[titleId2] || headerDetail[asin]
-
-      if (detail?.title) {
-        return detail
-      }
-    }
-
-    if ('landingPage' in props) {
-      const detail = props.landingPage.containers
-        // @ts-ignore
-        .flatMap((v) => v.entities)
-        // @ts-ignore
-        .find((v) => {
-          return (
-            v.titleID === asin ||
-            v.titleID === titleId1 ||
-            v.titleID === titleId2
-          )
-        })
-
-      if (detail?.title) {
-        return detail
-      }
-    }
-  } catch {}
-
-  return null
-}
-
 const main = async () => {
   if (!(await checkVodEnable(vod))) return
 
@@ -85,7 +33,7 @@ const main = async () => {
     vod,
     getInfo: async (nco) => {
       const player = nco.renderer.video.closest<HTMLElement>(
-        '.webPlayerSDKContainer, div[id^="dv-web-player"]'
+        'div[id^=dv-web-player]'
       )
 
       if (!player) {
@@ -98,16 +46,12 @@ const main = async () => {
       const subtitleElem = player.querySelector<HTMLElement>(
         '.atvwebplayersdk-subtitle-text'
       )
-      const timeindicatorElem = await querySelectorAsync(
+      const timeindicatorElem = await querySelectorAsync<HTMLElement>(
         player,
         '.atvwebplayersdk-timeindicator-text:has(span)'
       )
 
-      const detail = getDetail()
-
-      logger.log('detail:', detail)
-
-      const title = titleElem?.textContent || detail?.title
+      const title = titleElem?.textContent
       const season_episode = subtitleElem?.firstChild?.textContent
       const subtitle = subtitleElem?.lastChild?.textContent
 
@@ -137,13 +81,11 @@ const main = async () => {
         !titleSeason && 2 <= seasonNum && seasonNum !== seasonNumVague
           ? `${seasonNum}期`
           : null
-
-      const episodeText =
-        !subtitleEpisode && 0 <= episodeNum ? `${episodeNum}話` : null
-
       const workTitle =
         [title, seasonText].filter(Boolean).join(' ').trim() || null
 
+      const episodeText =
+        !subtitleEpisode && 0 <= episodeNum ? `${episodeNum}話` : null
       const episodeTitle =
         [episodeText, subtitle].filter(Boolean).join(' ').trim() || null
 
@@ -162,7 +104,7 @@ const main = async () => {
     },
     appendCanvas: (video, canvas) => {
       video
-        .closest('.webPlayerSDKContainer, div[id^="dv-web-player"]')
+        .closest('div[id^=dv-web-player]')
         ?.querySelector(
           '.webPlayerUIContainer, .atvwebplayersdk-player-container'
         )
@@ -184,13 +126,11 @@ const main = async () => {
         patcher.dispose()
       }
     } else {
-      const video = [
-        ...document.body.querySelectorAll<HTMLVideoElement>(
-          ':is(.webPlayerSDKContainer, .atvwebplayersdk-video-surface) video[src]'
-        ),
-      ].filter((v) => document.body.contains(v) && v.offsetParent)[0]
+      const video = document.body.querySelector<HTMLVideoElement>(
+        'div[id^=dv-web-player].dv-player-fullscreen video[src]'
+      )
 
-      if (video?.offsetParent) {
+      if (video) {
         patcher.setVideo(video)
       }
     }

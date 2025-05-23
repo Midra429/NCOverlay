@@ -1,4 +1,4 @@
-export const querySelectorAsync = async <T extends HTMLElement>(
+export const querySelectorAsync = async <T extends Element>(
   parent: T,
   selectors: string,
   intervalMs: number = 1000
