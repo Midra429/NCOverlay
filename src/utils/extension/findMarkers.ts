@@ -8,7 +8,7 @@ import { MARKERS } from '@/constants/markers'
 export const findMarkers = (threads: V1Thread[]): (number | null)[] => {
   const comments = threads
     .flatMap((thread) => thread.comments)
-    .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
+    .sort((a, b) => a.vposMs - b.vposMs)
 
   return MARKERS.map(({ regexp, range }) => {
     let tmpCount = 0

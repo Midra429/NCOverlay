@@ -24,6 +24,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
+  'settings:comment:hideAssistedComments': false,
 
   // NG設定
   'settings:ng:words': [],

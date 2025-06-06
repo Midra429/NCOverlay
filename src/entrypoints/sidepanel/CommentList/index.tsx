@@ -1,5 +1,5 @@
 import type { VirtuosoProps, VirtuosoHandle } from 'react-virtuoso'
-import type { V1ThreadCommentWithType } from '@/ncoverlay/state'
+import type { NcoV1ThreadComment } from '@/ncoverlay/state'
 
 import { memo, useMemo, useEffect, useState, useRef } from 'react'
 import { Virtuoso } from 'react-virtuoso'
@@ -10,7 +10,7 @@ import { filterDisplayThreads } from '@/ncoverlay/state'
 import { Header } from './Header'
 import { Item } from './Item'
 
-const components: VirtuosoProps<V1ThreadCommentWithType, any>['components'] = {
+const components: VirtuosoProps<NcoV1ThreadComment, any>['components'] = {
   EmptyPlaceholder: () => (
     <div className="flex size-full items-center justify-center">
       <span className="text-small text-foreground-500">
@@ -32,7 +32,7 @@ const components: VirtuosoProps<V1ThreadCommentWithType, any>['components'] = {
 
 export const CommentList: React.FC = memo(() => {
   const [isHover, setIsHover] = useState(false)
-  const [comments, setComments] = useState<V1ThreadCommentWithType[]>([])
+  const [comments, setComments] = useState<NcoV1ThreadComment[]>([])
 
   const stateOffset = useNcoState('offset')
   const stateSlots = useNcoState('slots')
@@ -47,14 +47,9 @@ export const CommentList: React.FC = memo(() => {
 
   useEffect(() => {
     filterDisplayThreads(stateSlots, stateSlotDetails).then((threads) => {
-      const comments: V1ThreadCommentWithType[] | undefined = threads
-        ?.flatMap((thread) => {
-          return thread.comments.map((comment) => ({
-            ...comment,
-            type: thread.type,
-          }))
-        })
-        .sort((cmtA, cmtB) => cmtA.vposMs - cmtB.vposMs)
+      const comments: NcoV1ThreadComment[] | undefined = threads
+        ?.flatMap((thread) => thread.comments)
+        .sort((a, b) => a.vposMs - b.vposMs)
 
       setComments(comments ?? [])
     })

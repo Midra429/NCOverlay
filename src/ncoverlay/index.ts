@@ -211,6 +211,12 @@ export class NCOverlay {
         this.renderer.setFps(fps)
       }),
 
+      // 設定（コメント:コメントアシストの表示を抑制）
+      settings.onChange(
+        'settings:comment:hideAssistedComments',
+        updateRenderer
+      ),
+
       // 設定 (NG設定)
       settings.onChange('settings:ng:words', updateRenderer),
       settings.onChange('settings:ng:commands', updateRenderer),

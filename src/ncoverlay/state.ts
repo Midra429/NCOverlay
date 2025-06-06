@@ -8,9 +8,11 @@ import type { PlayingInfo } from '@/ncoverlay/patcher'
 import equal from 'fast-deep-equal'
 
 import { storage } from '@/utils/storage/extension'
+import { settings } from '@/utils/settings/extension'
 import { deepmerge } from '@/utils/deepmerge'
 import { getNgSettings } from '@/utils/extension/getNgSettings'
-import { isNgComment } from '@/utils/api/applyNgSetting'
+import { isNgComment } from '@/utils/extension/applyNgSetting'
+import { findAssistedComments } from '@/utils/extension/findAssistedComments'
 
 export type NCOStateItems = {
   [key: `state:${string}:status`]: StateStatus | null
@@ -110,21 +112,30 @@ export type StateSlotDetail = StateSlotDetailDefault | StateSlotDetailJikkyo
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
 
-export type V1ThreadWithType = Pick<StateSlotDetail, 'type'> & V1Thread
+export type NcoV1ThreadComment = V1Thread['comments'][number] & {
+  _nco: {
+    slotType: StateSlotDetail['type']
+  }
+}
 
-export type V1ThreadCommentWithType = Pick<StateSlotDetail, 'type'> &
-  V1Thread['comments'][number]
+export type NcoV1Thread = Omit<V1Thread, 'comments'> & {
+  comments: NcoV1ThreadComment[]
+  _nco: {}
+}
 
 export const filterDisplayThreads = async (
   slots: StateSlot[] | null,
   details: StateSlotDetail[] | null
-): Promise<V1ThreadWithType[] | null> => {
+): Promise<NcoV1Thread[] | null> => {
   if (!slots?.length || !details?.length) {
     return null
   }
 
-  const threadMap = new Map<string, V1ThreadWithType>()
+  const threadMap = new Map<string, NcoV1Thread>()
   const ngSettings = await getNgSettings()
+  const hideAssistedComments = await settings.get(
+    'settings:comment:hideAssistedComments'
+  )
 
   details.forEach((detail) => {
     if (detail.hidden || detail.status !== 'ready') {
@@ -140,9 +151,19 @@ export const filterDisplayThreads = async (
 
       if (threadMap.has(key)) return
 
+      // コメントアシストと予想されるコメント
+      const assistedCommentIds = hideAssistedComments
+        ? findAssistedComments(thread.comments).map((v) => v.id)
+        : null
+
       const comments = thread.comments
-        .filter((cmt) => !isNgComment(cmt, ngSettings))
-        .map((cmt) => {
+        .filter((cmt) => {
+          const isNg = isNgComment(cmt, ngSettings)
+          const isAssisted = assistedCommentIds?.includes(cmt.id)
+
+          return !(isNg || isAssisted)
+        })
+        .map<NcoV1ThreadComment>((cmt) => {
           // オフセット
           const vposMs = cmt.vposMs + (detail.offsetMs ?? 0)
 
@@ -151,7 +172,14 @@ export const filterDisplayThreads = async (
             ? [...new Set([...cmt.commands, 'nico:opacity:0.5'])]
             : cmt.commands
 
-          return { ...cmt, vposMs, commands }
+          return {
+            ...cmt,
+            vposMs,
+            commands,
+            _nco: {
+              slotType: detail.type,
+            },
+          }
         })
 
       const commentCount = comments.length
@@ -159,9 +187,9 @@ export const filterDisplayThreads = async (
       if (thread.commentCount) {
         threadMap.set(key, {
           ...thread,
-          type: detail.type,
           comments,
           commentCount,
+          _nco: {},
         })
       }
     })

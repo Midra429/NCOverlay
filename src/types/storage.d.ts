@@ -127,6 +127,12 @@ export type StorageItems_v4 = {
    */
   'settings:comment:jikkyoChannelIds': JikkyoChannelId[]
 
+  /**
+   * コメント:コメントアシストを非表示
+   * @default false
+   */
+  'settings:comment:hideAssistedComments': boolean
+
   // NG設定 //////////////////////////////////////////////////
   /**
    * NG設定:コメント

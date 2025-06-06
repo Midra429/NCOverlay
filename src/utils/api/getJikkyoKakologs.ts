@@ -5,7 +5,7 @@ import { KAWAII_REGEXP } from '@/constants'
 
 import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
-import { findMarkers } from './findMarkers'
+import { findMarkers } from '@/utils/extension/findMarkers'
 
 /**
  * ニコニコ実況 過去ログを取得

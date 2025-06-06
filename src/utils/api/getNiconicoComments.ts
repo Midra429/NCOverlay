@@ -4,9 +4,9 @@ import type { VideoData } from '@midra/nco-api/types/niconico/video'
 import { KAWAII_REGEXP } from '@/constants'
 
 import { settings } from '@/utils/settings/extension'
+import { extractNgSettings } from '@/utils/extension/extractNgSettings'
+import { applyNgSettings } from '@/utils/extension/applyNgSetting'
 import { filterNvComment } from '@/utils/api/filterNvComment'
-import { extractNgSettings } from '@/utils/api/extractNgSettings'
-import { applyNgSettings } from '@/utils/api/applyNgSetting'
 import { ncoApiProxy } from '@/proxy/nco-api/extension'
 
 /**
@@ -126,9 +126,15 @@ export const getNiconicoComments = async (
   return threadsData.map((val, idx) => {
     if (!val) return null
 
-    const videoData = videos[idx]!
+    const data = videos[idx]!
 
-    const kawaiiCount = val.threads
+    // コメントのNG設定を適用
+    const threads = applyNgSettings(
+      val.threads,
+      extractNgSettings(data.comment.ng)
+    )
+
+    const kawaiiCount = threads
       .map((thread) => {
         return thread.comments.filter((cmt) => {
           return KAWAII_REGEXP.test(cmt.body)
@@ -136,13 +142,6 @@ export const getNiconicoComments = async (
       })
       .reduce((prev, current) => prev + current, 0)
 
-    return {
-      data: videoData,
-      threads: applyNgSettings(
-        val.threads,
-        extractNgSettings(videoData.comment.ng)
-      ),
-      kawaiiCount,
-    }
+    return { data, threads, kawaiiCount }
   })
 }

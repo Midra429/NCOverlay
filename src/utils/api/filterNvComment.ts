@@ -1,11 +1,21 @@
 import type { VideoData, NvComment } from '@midra/nco-api/types/niconico/video'
 
 export const filterNvComment = (comment: VideoData['comment']): NvComment => {
-  // かんたんコメント, 引用コメントを除外
+  // 除外
   const ignoreThreadIds = comment.threads.flatMap((val) => {
-    return /easy|extra/.test(val.label)
-      ? (`${val.forkLabel}:${val.id.toString()}` as const)
-      : []
+    const threadId = `${val.forkLabel}:${val.id.toString()}` as const
+
+    // かんたんコメント
+    if (val.label.includes('easy')) {
+      return threadId
+    }
+
+    // 引用コメント
+    if (val.label.includes('extra')) {
+      return threadId
+    }
+
+    return []
   })
 
   return {

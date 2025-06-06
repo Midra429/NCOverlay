@@ -6,8 +6,8 @@ import type { ScTitleItem } from './SyobocalResults/TitleItem'
 import { memo, useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
-import { extractVideoId } from '@/utils/api/extractVideoId'
-import { extractSyobocalId } from '@/utils/api/extractSyobocalId'
+import { extractVideoId } from '@/utils/extension/extractVideoId'
+import { extractSyobocalId } from '@/utils/extension/extractSyobocalId'
 import {
   searchNiconicoByIds,
   searchNiconicoByKeyword,

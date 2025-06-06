@@ -1,8 +1,5 @@
 import type { SlotsToClasses } from '@heroui/react'
-import type {
-  StateSlotDetail,
-  V1ThreadCommentWithType,
-} from '@/ncoverlay/state'
+import type { StateSlotDetail, NcoV1ThreadComment } from '@/ncoverlay/state'
 
 import { useMemo } from 'react'
 import {
@@ -126,7 +123,7 @@ const ItemCellWithMenu: React.FC<ItemCellWithMenuProps> = ({
 }
 
 export type ItemProps = {
-  comment: V1ThreadCommentWithType
+  comment: NcoV1ThreadComment
   offsetMs: number
 }
 
@@ -281,7 +278,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
             'before:block',
             'before:h-full before:w-1',
             'before:border-b-1 before:border-content1',
-            COMMENT_WRAPPER_TYPE_CLASSES[comment.type],
+            COMMENT_WRAPPER_TYPE_CLASSES[comment._nco.slotType],
           ],
           cell: [
             'ml-1 w-[calc(100%-0.25rem)]',

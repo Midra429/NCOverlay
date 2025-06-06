@@ -161,6 +161,13 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         description:
           'ON: ニコニコのNG設定が反映される\nOFF: ニコニコに視聴履歴を反映させない',
       },
+      {
+        settingsKey: 'settings:comment:hideAssistedComments',
+        inputType: 'toggle',
+        label: 'コメントアシストの表示を抑制（β）',
+        description:
+          'コメントアシストと予想されるコメントの表示を抑制します。\n※テンプレコメントも対象になる可能性があります',
+      },
     ],
   },
   {

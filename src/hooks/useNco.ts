@@ -72,6 +72,10 @@ export const useNcoState = <Key extends NCOStateItemKey>(
       }
 
       ngOnChangeRemoveListeners = [
+        settings.onChange(
+          'settings:comment:hideAssistedComments',
+          ngChangedCallback
+        ),
         settings.onChange('settings:ng:words', ngChangedCallback),
         settings.onChange('settings:ng:commands', ngChangedCallback),
         settings.onChange('settings:ng:ids', ngChangedCallback),
