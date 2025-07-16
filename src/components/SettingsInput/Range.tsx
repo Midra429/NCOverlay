@@ -67,7 +67,7 @@ export const Input: React.FC<Props> = (props) => {
       {props.description && (
         <span
           className={cn(
-            'mb-2 whitespace-pre-wrap text-tiny',
+            'text-tiny mb-2 whitespace-pre-wrap',
             'text-foreground-500 dark:text-foreground-600'
           )}
         >

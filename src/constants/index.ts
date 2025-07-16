@@ -8,7 +8,7 @@ export const LINKS: {
   url?: string
 }[] = [
   {
-    title: 'X / Twitter',
+    title: 'X (Twitter)',
     label: '@Midra429',
     url: 'https://x.com/Midra429',
   },

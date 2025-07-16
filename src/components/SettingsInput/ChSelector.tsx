@@ -57,7 +57,7 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
   return (
     <CheckboxGroup
       classNames={{
-        label: 'hidden text-small text-foreground',
+        label: 'text-small text-foreground hidden',
         wrapper: 'gap-1.5 p-1.5',
       }}
       size="sm"
@@ -76,14 +76,14 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
               'bg-default-100 hover:bg-default-200',
               'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-medium',
-              'border-1 border-divider hover:border-default-400',
+              'border-divider hover:border-default-400 border-1',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
               'cursor-pointer',
             ],
             wrapper: [
               'rounded-full',
-              'before:rounded-full before:border-1 before:!bg-default-50',
+              'before:!bg-default-50 before:rounded-full before:border-1',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-col',
@@ -94,7 +94,7 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
             {id}
           </span>
 
-          <span className="line-clamp-1 text-small">{JIKKYO_CHANNELS[id]}</span>
+          <span className="text-small line-clamp-1">{JIKKYO_CHANNELS[id]}</span>
         </Checkbox>
       ))}
     </CheckboxGroup>
@@ -179,10 +179,10 @@ export const Input: React.FC<Props> = (props) => {
       >
         <Tabs
           classNames={{
-            base: 'border-b-1 border-foreground-200 bg-content1',
+            base: 'border-foreground-200 bg-content1 border-b-1',
             tabList: 'p-0',
             tab: 'h-10 p-0',
-            panel: 'overflow-y-auto bg-content1 p-0 overflow-x-hidden',
+            panel: 'bg-content1 overflow-x-hidden overflow-y-auto p-0',
           }}
           variant="underlined"
           color="primary"

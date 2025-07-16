@@ -14,7 +14,7 @@ const App: React.FC = () => {
     <Layout className="h-screen w-screen overflow-hidden">
       {ready && (
         <div
-          className={cn('flex flex-col', 'size-full text-small', 'bg-content1')}
+          className={cn('flex flex-col', 'text-small size-full', 'bg-content1')}
         >
           <CommentList />
 

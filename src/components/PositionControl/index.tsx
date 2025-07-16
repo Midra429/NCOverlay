@@ -16,7 +16,7 @@ export const PositionControl: React.FC<PositionControlProps> = memo(
     return (
       <div
         {...props}
-        className={cn('flex flex-col bg-content1', props.className)}
+        className={cn('bg-content1 flex flex-col', props.className)}
       >
         <MarkerButtons />
 

@@ -16,8 +16,8 @@ export const PanelItem: React.FC<PanelItemProps> = (props) => {
     <div
       className={cn(
         'shrink-0',
-        'overflow-hidden rounded-medium',
-        'border-1 border-foreground-200',
+        'rounded-medium overflow-hidden',
+        'border-foreground-200 border-1',
         'bg-content1 text-foreground',
         // @ts-ignore
         props.classNames?.wrapper

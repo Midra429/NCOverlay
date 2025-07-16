@@ -25,6 +25,7 @@ export const createProxy = <TService extends Service>(
       },
 
       apply(_target, _thisArg, args) {
+        // @ts-ignore
         return sendMessage(messageKey, { paths, args }, ...([] as any))
       },
     })

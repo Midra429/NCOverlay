@@ -11,7 +11,7 @@ export const AddButton: React.FC<AddButtonProps> = ({ onPress }) => {
       className={cn(
         'absolute inset-[1px] z-10',
         'flex items-center justify-center',
-        'bg-background/50 backdrop-blur-sm',
+        'bg-background/50 backdrop-blur-xs',
         'rounded-lg',
         'cursor-pointer',
         'opacity-0 hover:opacity-100',

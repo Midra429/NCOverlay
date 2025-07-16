@@ -102,7 +102,7 @@ export const Options: React.FC<OptionsProps> = ({ isOpen, id, offsetMs }) => {
             exit="exit"
             variants={transitionVariants}
           >
-            <div className="border-t-1 border-foreground-200 p-2">
+            <div className="border-foreground-200 border-t-1 p-2">
               <SlotOffsetControl id={id} offsetMs={offsetMs} />
             </div>
           </m.div>

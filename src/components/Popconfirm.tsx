@@ -84,7 +84,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
       classNames={{
         content: [
           'flex flex-row items-start gap-1.5 p-2.5',
-          'border-1 border-foreground-100',
+          'border-foreground-100 border-1',
         ],
       }}
       placement={props.placement}
@@ -117,7 +117,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
             {props.description}
           </span>
 
-          <div className="ml-auto mt-1.5 flex flex-row gap-2">
+          <div className="mt-1.5 ml-auto flex flex-row gap-2">
             <Button
               className="h-7"
               size="sm"

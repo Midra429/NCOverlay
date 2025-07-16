@@ -75,7 +75,7 @@ const HeaderCell: React.FC<
         'flex items-center justify-center',
         'shrink-0 py-1.5',
         'bg-content2 text-content2-foreground',
-        'border-b-1 border-divider',
+        'border-divider border-b-1',
         'text-tiny font-semibold',
         '[&:not(:first-child)]:border-l-1',
         className
@@ -93,7 +93,7 @@ const ItemCell: React.FC<
       className={cn(
         'flex',
         'shrink-0 p-1.5',
-        'border-b-1 border-divider',
+        'border-divider border-b-1',
         'text-small',
         '[&:not(:first-child)]:border-l-1',
         className
@@ -241,7 +241,7 @@ export const Input: React.FC<Props> = (props) => {
       >
         <Header />
 
-        <div className="flex flex-col bg-content1">
+        <div className="bg-content1 flex flex-col">
           {tmpValue.map((val, idx, ary) => {
             if (!val) return
 

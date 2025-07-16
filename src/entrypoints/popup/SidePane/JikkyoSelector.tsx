@@ -167,7 +167,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
         className={cn(
           'flex flex-col gap-2',
           'p-2',
-          'border-b-1 border-foreground-200',
+          'border-foreground-200 border-b-1',
           'bg-content1'
         )}
       >

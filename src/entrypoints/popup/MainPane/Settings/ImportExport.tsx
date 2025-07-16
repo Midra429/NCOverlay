@@ -112,16 +112,16 @@ const ImportSettings: React.FC = () => {
           </Button>
         }
       >
-        <div className="size-full bg-content1 p-2">
+        <div className="bg-content1 size-full p-2">
           <Textarea
             classNames={{
               base: 'size-full',
               label: 'hidden',
               inputWrapper: [
                 '!h-full !w-full',
-                'border-1 border-divider shadow-none',
+                'border-divider border-1 shadow-none',
               ],
-              input: 'size-full font-mono text-tiny',
+              input: 'text-tiny size-full font-mono',
             }}
             disableAutosize
             label="入力"
@@ -207,16 +207,16 @@ const ExportSettings: React.FC = () => {
           </Tooltip>
         }
       >
-        <div className="size-full bg-content1 p-2">
+        <div className="bg-content1 size-full p-2">
           <Textarea
             classNames={{
               base: 'size-full',
               label: 'hidden',
               inputWrapper: [
                 '!h-full !w-full',
-                'border-1 border-divider shadow-none',
+                'border-divider border-1 shadow-none',
               ],
-              input: 'size-full font-mono text-tiny',
+              input: 'text-tiny size-full font-mono',
             }}
             disableAutosize
             isReadOnly

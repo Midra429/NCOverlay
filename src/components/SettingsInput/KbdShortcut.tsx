@@ -104,7 +104,7 @@ const KeyboardKey: React.FC<{
         'justify-center',
         'min-w-8 shrink-0 px-2 py-0.5',
         'bg-content1 text-content1-foreground/80',
-        'border-1 border-content1-foreground/25',
+        'border-content1-foreground/25 border-1',
         'shadow-none'
       )}
       keys={isKey ? key : undefined}
@@ -154,7 +154,7 @@ export const Input: React.FC<Props> = (props) => {
           className={cn(
             'h-8 w-full',
             'rounded-small',
-            'border-1 border-divider',
+            'border-divider border-1',
             'data-[recording=true]:border-primary',
             'bg-default-100',
             'data-[recording=true]:bg-primary/15 dark:data-[recording=true]:bg-primary/20',
@@ -184,7 +184,7 @@ export const Input: React.FC<Props> = (props) => {
                     </Fragment>
                   ))
               ) : (
-                <span className="select-none pl-1 text-small text-foreground-500">
+                <span className="text-small text-foreground-500 pl-1 select-none">
                   未設定
                 </span>
               )}

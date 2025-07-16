@@ -18,7 +18,7 @@ export const Input: React.FC<Props> = (props) => {
     <HeroUIInput
       classNames={{
         base: 'py-2',
-        inputWrapper: 'border-1 border-divider shadow-none',
+        inputWrapper: 'border-divider border-1 shadow-none',
       }}
       labelPlacement="outside"
       label={props.label}

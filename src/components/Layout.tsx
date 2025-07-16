@@ -26,7 +26,7 @@ export const Layout: React.FC<LayoutProps> = (props) => {
   return (
     <HeroUIProvider locale="ja-JP">
       <main
-        className={cn('overflow-y-auto overflow-x-hidden', props.className)}
+        className={cn('overflow-x-hidden overflow-y-auto', props.className)}
         style={props.style}
       >
         {props.children}

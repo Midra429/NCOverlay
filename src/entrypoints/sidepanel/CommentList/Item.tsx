@@ -35,9 +35,9 @@ const COMMENT_WRAPPER_TYPE_CLASSES: {
 
 const COMMENT_CELL_COMMAND_CLASSES: Record<string, string> = {
   // 位置: 上
-  ue: cn('justify-center pb-5 pt-0.5'),
+  ue: cn('justify-center pt-0.5 pb-5'),
   // 位置: 下
-  shita: cn('justify-center pb-0.5 pt-5'),
+  shita: cn('justify-center pt-5 pb-0.5'),
 }
 
 const COMMENT_COMMAND_CLASSES: Record<string, string> = {
@@ -68,7 +68,7 @@ const ItemCell: React.FC<
       className={cn(
         'flex',
         'shrink-0 p-1.5',
-        'border-b-1 border-l-1 border-divider',
+        'border-divider border-b-1 border-l-1',
         'text-small',
         className
       )}
@@ -94,7 +94,7 @@ const ItemCellWithMenu: React.FC<ItemCellWithMenuProps> = ({
       classNames={{
         backdrop: 'bg-transparent',
         base: 'max-w-[90vw]',
-        content: 'overflow-hidden border-1 border-foreground-100',
+        content: 'border-foreground-100 overflow-hidden border-1',
       }}
       backdrop="opaque"
     >
@@ -152,7 +152,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
           cmtFgColor = readableColor(cmtBgColor)
 
           cmtCmdClass.push(
-            cn('m-[-1px] rounded-[5px] border-1 border-foreground-300 px-1')
+            cn('border-foreground-300 m-[-1px] rounded-[5px] border-1 px-1')
           )
         }
       })
@@ -277,7 +277,7 @@ export const Item: React.FC<ItemProps> = ({ comment, offsetMs }) => {
             'before:absolute before:left-0',
             'before:block',
             'before:h-full before:w-1',
-            'before:border-b-1 before:border-content1',
+            'before:border-content1 before:border-b-1',
             COMMENT_WRAPPER_TYPE_CLASSES[comment._nco.slotType],
           ],
           cell: [

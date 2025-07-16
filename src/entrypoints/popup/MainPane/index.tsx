@@ -43,7 +43,7 @@ export const MainPane: React.FC<{
       {quickpanel ? (
         <Tabs
           classNames={{
-            base: 'border-b-1 border-foreground-200 bg-content1 p-2',
+            base: 'border-foreground-200 bg-content1 border-b-1 p-2',
             tabList: 'bg-content1 p-0',
             cursor: 'rounded-full',
             panel: 'h-full overflow-hidden p-0',

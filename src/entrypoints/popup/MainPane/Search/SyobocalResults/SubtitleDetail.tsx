@@ -80,7 +80,7 @@ export const SubtitleDetail: React.FC<SubtitleDetailProps> = ({
       {isLoading ? (
         <Spinner size="sm" color="primary" />
       ) : (
-        <span className="my-0.5 text-tiny text-foreground-500">
+        <span className="text-tiny text-foreground-500 my-0.5">
           放送時間がありません
         </span>
       )}

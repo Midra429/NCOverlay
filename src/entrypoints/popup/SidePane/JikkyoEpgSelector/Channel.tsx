@@ -19,7 +19,7 @@ export const ChannelCell: React.FC<ChannelCellProps> = ({ tverChId }) => {
       className={cn(
         'flex items-center justify-center',
         'shrink-0',
-        'border-r-1 border-divider',
+        'border-divider border-r-1',
         'bg-content2 text-content2-foreground',
         'text-mini font-semibold',
         'truncate'
@@ -44,11 +44,11 @@ export const Channels: React.FC<ChannelsProps> = ({ tverChIds }) => {
       className={cn(
         'sticky top-0 z-30',
         'flex flex-row',
-        'border-b-1 border-divider'
+        'border-divider border-b-1'
       )}
     >
       <div
-        className={cn('shrink-0 bg-content2', 'border-r-1 border-divider')}
+        className={cn('bg-content2 shrink-0', 'border-divider border-r-1')}
         style={{ width: 20 }}
       />
 

@@ -11,10 +11,10 @@ const SOURCE_BADGE_CLASSES: {
   [k in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   official: cn('bg-[#ffe248] text-black dark:bg-[#ffd700]'),
-  danime: cn('bg-danime-400 text-white dark:bg-danime-500'),
-  chapter: cn('bg-danime-400 text-white dark:bg-danime-500'),
+  danime: cn('bg-danime-400 dark:bg-danime-500 text-white'),
+  chapter: cn('bg-danime-400 dark:bg-danime-500 text-white'),
   szbh: cn('bg-gray-500 text-white dark:bg-gray-600'),
-  jikkyo: cn('bg-jikkyo-600 text-white dark:bg-jikkyo-700'),
+  jikkyo: cn('bg-jikkyo-600 dark:bg-jikkyo-700 text-white'),
 }
 
 const SOURCE_BADGE_NAME: {

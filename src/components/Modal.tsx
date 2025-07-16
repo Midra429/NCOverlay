@@ -40,9 +40,9 @@ export const Modal: React.FC<ModalProps> = (props) => {
       classNames={{
         wrapper: 'justify-end',
         base: !props.fullWidth && 'max-w-[370px]',
-        header: 'border-b-1 border-foreground-200 p-2 text-medium',
+        header: 'border-foreground-200 text-medium border-b-1 p-2',
         body: 'p-0',
-        footer: 'border-t-1 border-foreground-200 p-2',
+        footer: 'border-foreground-200 border-t-1 p-2',
       }}
       size="full"
       hideCloseButton
@@ -66,7 +66,7 @@ export const Modal: React.FC<ModalProps> = (props) => {
               </HeroUIModalHeader>
             )}
 
-            <HeroUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
+            <HeroUIModalBody className="bg-background max-h-full gap-0 overflow-auto">
               {props.children}
             </HeroUIModalBody>
 

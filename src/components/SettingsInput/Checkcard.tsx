@@ -50,25 +50,25 @@ export const Input: React.FC<Props> = (props) => {
               'bg-default-100 hover:bg-default-200',
               'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-medium',
-              'border-1 border-divider hover:border-default-400',
+              'border-divider hover:border-default-400 border-1',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
               'cursor-pointer',
             ],
             wrapper: [
               'rounded-full',
-              'before:rounded-full before:border-1 before:!bg-default-50',
+              'before:!bg-default-50 before:rounded-full before:border-1',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-col gap-0.5',
           }}
           value={value}
         >
-          <span className="line-clamp-2 text-small">{label}</span>
+          <span className="text-small line-clamp-2">{label}</span>
           {description && (
             <span
               className={cn(
-                'line-clamp-2 text-tiny',
+                'text-tiny line-clamp-2',
                 'text-foreground-500 dark:text-foreground-600'
               )}
             >

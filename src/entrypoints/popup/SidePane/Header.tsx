@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
         className={cn(
           'flex flex-row items-center justify-between',
           'p-2',
-          'border-b-1 border-foreground-200',
+          'border-foreground-200 border-b-1',
           'bg-content1',
           'text-medium font-semibold'
         )}
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
         <Dropdown
           classNames={{
             backdrop: 'bg-transparent',
-            content: 'min-w-32 border-1 border-foreground-100',
+            content: 'border-foreground-100 min-w-32 border-1',
           }}
           backdrop="opaque"
           placement="bottom-end"

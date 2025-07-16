@@ -13,7 +13,7 @@ export const HourCell: React.FC<HourCellProps> = ({ hour }) => {
       className={cn(
         'flex flex-col items-center',
         'shrink-0',
-        'border-b-1 border-divider',
+        'border-divider border-b-1',
         'bg-content2 text-content2-foreground',
         'text-mini font-semibold'
       )}
@@ -32,7 +32,7 @@ export const Hours: React.FC = memo(() => (
       'sticky left-0 z-20',
       'flex flex-col',
       'shrink-0',
-      'border-r-1 border-divider'
+      'border-divider border-r-1'
     )}
     style={{
       width: 20,

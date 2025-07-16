@@ -60,19 +60,19 @@ export const Input: React.FC<Props> = (props) => {
           classNames={{
             base: [
               'flex-1',
-              'min-w-fit max-w-none',
+              'max-w-none min-w-fit',
               'm-0 px-1.5 py-1',
               'bg-default-100 hover:bg-default-200',
               'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-full',
-              'border-1 border-divider hover:border-default-400',
+              'border-divider hover:border-default-400 border-1',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
               'cursor-pointer',
             ],
             wrapper: [
               'm-0 rounded-full',
-              'before:rounded-full before:border-1 before:!bg-default-50',
+              'before:!bg-default-50 before:rounded-full before:border-1',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-row',

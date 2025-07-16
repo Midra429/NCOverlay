@@ -28,7 +28,7 @@ const programIcon = tv({
     'relative -top-[0.5px]',
     'inline-flex items-center justify-center',
     'mr-0.5 size-[calc(1em+3px)]',
-    'select-none rounded-sm',
+    'rounded-xs select-none',
     'text-[calc(1em-1px)] font-normal',
     'text-white dark:text-black',
   ],
@@ -90,13 +90,13 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
     <div
       className={cn(
         'size-full',
-        'border-b-1 border-divider',
+        'border-divider border-b-1',
         'overflow-hidden',
         'cursor-pointer'
       )}
     >
       <div
-        className={cn('flex flex-col gap-1', 'break-all text-mini')}
+        className={cn('flex flex-col gap-1', 'text-mini break-all')}
         title={program.description || program.title}
       >
         <span className="flex items-start gap-1">
@@ -106,7 +106,7 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
               className={cn(
                 'text-center',
                 'w-6 py-1',
-                'border-b-1 border-r-1 border-divider',
+                'border-divider border-r-1 border-b-1',
                 'dark:hidden'
               )}
               style={{
@@ -121,7 +121,7 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
               className={cn(
                 'text-center',
                 'w-6 py-1',
-                'border-b-1 border-r-1 border-divider',
+                'border-divider border-r-1 border-b-1',
                 'hidden dark:inline'
               )}
               style={{
@@ -134,7 +134,7 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
           </span>
 
           {/* タイトル */}
-          <span className="pr-1 pt-1 font-semibold">
+          <span className="pt-1 pr-1 font-semibold">
             <ProgramIcons icon={program.icon} />
 
             <span>{program.title}</span>
@@ -142,7 +142,7 @@ export const ProgramContent: React.FC<ProgramContentProps> = ({
         </span>
 
         {/* 概要 */}
-        <span className="px-1 text-foreground-500 dark:text-foreground-600">
+        <span className="text-foreground-500 dark:text-foreground-600 px-1">
           {program.description}
         </span>
       </div>
@@ -261,7 +261,7 @@ export const ProgramCell: React.FC<ProgramCellProps> = ({
     <Popover
       classNames={{
         backdrop: 'bg-transparent',
-        content: 'border-1 border-foreground-100',
+        content: 'border-foreground-100 border-1',
       }}
       backdrop="opaque"
       placement="right-start"
@@ -269,7 +269,7 @@ export const ProgramCell: React.FC<ProgramCellProps> = ({
       <PopoverTrigger
         className={cn(
           'bg-content1 hover:bg-content2/90 aria-expanded:bg-content2/90',
-          '!duration-150 transition-background',
+          'transition-background !duration-150',
           'aria-expanded:scale-100',
           'aria-expanded:opacity-100',
           program.isDisabled && 'pointer-events-none opacity-50'
@@ -299,7 +299,7 @@ export const Programs: React.FC<ProgramsProps> = ({ data }) => {
 
   return (
     <div
-      className="flex shrink-0 flex-row overflow-hidden bg-content3"
+      className="bg-content3 flex shrink-0 flex-row overflow-hidden"
       style={{ maxHeight: ROW_HEIGHT * 24 }}
     >
       {contents.map((content, idx) => (
@@ -309,7 +309,7 @@ export const Programs: React.FC<ProgramsProps> = ({ data }) => {
             'relative',
             'flex flex-col',
             'shrink-0',
-            'border-r-1 border-divider'
+            'border-divider border-r-1'
           )}
           style={{ width: COLUMN_WIDTH }}
         >

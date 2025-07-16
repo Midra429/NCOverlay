@@ -1,7 +1,7 @@
-import type { FileSizeOptions } from 'filesize'
+import type { FilesizeOptions } from 'filesize'
 
 import { partial } from 'filesize'
 
 export const filesize = partial({
   round: 0,
-} satisfies FileSizeOptions)
+} satisfies FilesizeOptions)

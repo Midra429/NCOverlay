@@ -14,7 +14,7 @@ const App: React.FC = () => {
       <div className="flex size-fit flex-row">
         {isActive && (
           <div
-            className="border-r-1 border-foreground-200"
+            className="border-foreground-200 border-r-1"
             style={{
               width: 430,
               height,

@@ -29,7 +29,7 @@ export const MarkerButton: React.FC<MarkerButtonProps> = ({
   return (
     <Tooltip content={label}>
       <Button
-        className="min-w-0 text-small"
+        className="text-small min-w-0"
         variant="flat"
         size="sm"
         fullWidth
@@ -73,7 +73,7 @@ export const MarkerButtons: React.FC = () => {
         className={cn(
           'flex flex-row gap-2',
           'p-2',
-          'border-b-1 border-foreground-200'
+          'border-foreground-200 border-b-1'
         )}
       >
         <MarkerButton

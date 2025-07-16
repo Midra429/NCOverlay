@@ -35,9 +35,9 @@ export const DatePicker: React.FC<DatePickerProps> = (props) => {
         '[&_[data-slot="inner-wrapper"]]:dark:text-foreground-600',
 
         // segment
-        '[&_[data-slot="segment"]]:mx-[-0.5px]',
-        '[&_[data-slot="segment"]]:px-0',
-        '[&_[data-slot="segment"][data-type="hour"]]:ml-0.5',
+        // '[&_[data-slot="segment"]]:mx-[-0.5px]',
+        // '[&_[data-slot="segment"]]:px-0',
+        // '[&_[data-slot="segment"][data-type="hour"]]:ml-0.5',
 
         // selectorIcon
         '[&_[data-slot="selector-icon"]]:size-4',
@@ -48,7 +48,7 @@ export const DatePicker: React.FC<DatePickerProps> = (props) => {
       )}
       popoverProps={{
         classNames: {
-          content: cn('border-1 border-divider'),
+          content: cn('border-divider border-1'),
         },
         ...props.popoverProps,
       }}
