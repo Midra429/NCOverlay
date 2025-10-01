@@ -32,45 +32,38 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
-
-      - name: Setup Node
+      - name: Node.jsをインストール
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'pnpm'
+          node-version: 22
 
-      - name: Install Dependencies
-        run: pnpm install
+      - name: Bunをインストール
+        uses: oven-sh/setup-bun@v2
 
-      - name: Setup Git
+      - name: Gitのユーザーを設定
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Update Version
+      - name: バージョンを更新
         run: |
-          pnpm version ${{ github.event.inputs.bump_type }}
+          npm version ${{ github.event.inputs.bump_type }}
           echo VERSION="v$(cat ./package.json | jq -r '.version')" >> "${GITHUB_ENV}"
 
-      - name: Zip Extensions
+      - name: 拡張機能をビルド
         run: |
-          pnpm zip
-          pnpm zip:firefox
+          bun install
+          bun run zip
+          bun run zip:firefox
 
-      - name: Push tag to GitHub
+      - name: リポジトリへプッシュ
         run: |
           git push
           git push --tags
 
-      - name: Create Release to GitHub
+      - name: GitHubへリリース
         run: |
           gh release create "${VERSION}" \
             ./dist/*-chrome.zip \
@@ -79,10 +72,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Submit to Chrome Web Store
+      - name: Chrome Web Storeへ提出
         if: ${{ github.event.inputs.submit_chrome == 'true' }}
         run: |
-          pnpm wxt submit \
+          bun wxt submit \
             --chrome-zip ./dist/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
@@ -91,10 +84,10 @@ jobs:
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
         continue-on-error: true
 
-      - name: Submit to Edge Add-ons
+      - name: Edge Add-onsへ提出
         if: ${{ github.event.inputs.submit_edge == 'true' }}
         run: |
-          pnpm wxt submit \
+          bun wxt submit \
             --edge-zip ./dist/*-chrome.zip
         env:
           EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
@@ -102,10 +95,10 @@ jobs:
           EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
         continue-on-error: true
 
-      - name: Submit to Firefox Add-ons
+      - name: Firefox Add-onsへ提出
         if: ${{ github.event.inputs.submit_firefox == 'true' }}
         run: |
-          pnpm wxt submit \
+          bun wxt submit \
             --firefox-zip ./dist/*-firefox.zip \
             --firefox-sources-zip ./dist/*-sources.zip
         env:
