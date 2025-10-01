@@ -1,4 +1,4 @@
-import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
+import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search'
 
 import { ArrowDownUpIcon } from 'lucide-react'
 

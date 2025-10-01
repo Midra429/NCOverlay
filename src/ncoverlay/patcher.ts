@@ -1,8 +1,8 @@
-import type { BuildSearchQueryInput } from '@midra/nco-api/search/lib/buildSearchQuery'
+import type { ExtractedResult } from '@midra/nco-utils/parse/libs/extract'
 import type { VodKey } from '@/types/constants'
-import type { NCOSearcherAutoLoadOptions } from './searcher'
+import type { NCOSearcherAutoLoadArgs } from './searcher'
 
-import { ncoParser } from '@midra/nco-parser'
+import { parse } from '@midra/nco-utils/parse'
 
 import { logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/extension'
@@ -10,19 +10,11 @@ import { settings } from '@/utils/settings/extension'
 import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
 
-export type PlayingInfo =
-  | {
-      rawText: string
-      duration: number
-      disableExtract?: boolean
-    }
-  | {
-      /** <作品名> */
-      workTitle: string
-      /** <話数> <サブタイトル> */
-      episodeTitle?: string | null
-      duration: number
-    }
+export type PlayingInfo = {
+  input: string
+  duration: number
+  disableExtract?: boolean
+}
 
 export class NCOPatcher {
   readonly #vod
@@ -41,11 +33,7 @@ export class NCOPatcher {
     vod: VodKey
     getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
     appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
-    autoLoad?: (
-      nco: NCOverlay,
-      input: BuildSearchQueryInput,
-      options: NCOSearcherAutoLoadOptions
-    ) => Promise<void>
+    autoLoad?: (nco: NCOverlay, args: NCOSearcherAutoLoadArgs) => Promise<void>
   }) {
     this.#vod = init.vod
     this.#getInfo = init.getInfo
@@ -82,106 +70,56 @@ export class NCOPatcher {
       try {
         const info = await this.#getInfo(this.#nco)
 
-        let input: BuildSearchQueryInput | undefined
+        let parsed: ExtractedResult | undefined
+        let duration: NCOSearcherAutoLoadArgs['duration'] | undefined
 
         if (info) {
-          info.duration = Math.floor(info.duration)
+          duration = Math.floor(info.duration)
 
-          let rawText: string
-
-          let extracted: ReturnType<typeof ncoParser.extract> = {
-            normalized: '',
-            title: null,
-            season: null,
-            episode: null,
-            subtitle: null,
-          }
-
-          if ('rawText' in info) {
-            rawText = info.rawText
-
-            if (!info.disableExtract) {
-              extracted = ncoParser.extract(
-                ncoParser.normalizeAll(info.rawText, {
-                  adjust: {
-                    letterCase: false,
-                  },
-                  remove: {
-                    space: false,
-                  },
-                })
-              )
-            } else {
-              delete info.disableExtract
+          if (info.disableExtract) {
+            parsed = {
+              ...parse(''),
+              input: info.input,
+              title: info.input,
+              titleStripped: info.input,
             }
           } else {
-            const { title, season } = ncoParser.extract(`${info.workTitle} #01`)
-
-            rawText = [info.workTitle, info.episodeTitle]
-              .filter(Boolean)
-              .join(' ')
-
-            extracted.title = title
-            extracted.season = season
-
-            if (info.episodeTitle) {
-              const { episode, subtitle } = ncoParser.extract(
-                ncoParser.normalizeAll(`タイトル ${info.episodeTitle}`, {
-                  adjust: {
-                    letterCase: false,
-                  },
-                  remove: {
-                    space: false,
-                  },
-                })
-              )
-
-              extracted.episode = episode
-              extracted.subtitle = subtitle
-            }
-          }
-
-          input = {
-            rawText,
-            title: extracted.title ?? undefined,
-            seasonText: extracted.season?.text,
-            seasonNumber: extracted.season?.number,
-            episodeText: extracted.episode?.text,
-            episodeNumber: extracted.episode?.number,
-            subtitle: extracted.subtitle ?? undefined,
-            duration: info.duration,
+            parsed = parse(info.input)
           }
         }
 
-        const parsed = { ...info, ...input }
-
-        await this.#nco.state.set('vod', this.#vod)
-        await this.#nco.state.set('info', parsed)
-
-        logger.log('state.vod:', this.#vod)
-        logger.log('state.info:', parsed)
-
         const autoLoads = await settings.get('settings:comment:autoLoads')
 
-        // 自動検索
-        if (autoLoads.length && input) {
-          const jikkyoChannelIds = await settings.get(
-            'settings:comment:jikkyoChannelIds'
-          )
-
-          const options: NCOSearcherAutoLoadOptions = {
+        const args: NCOSearcherAutoLoadArgs = {
+          input: parsed ?? '',
+          duration: duration ?? 0,
+          targets: {
             official: autoLoads.includes('official'),
             danime: autoLoads.includes('danime'),
             chapter: autoLoads.includes('chapter'),
             szbh: autoLoads.includes('szbh'),
-            jikkyo: autoLoads.includes('jikkyo'),
-            jikkyoChannelIds,
-          }
+          },
+        }
+
+        const stateInfo = { ...args }
+
+        await this.#nco.state.set('vod', this.#vod)
+        await this.#nco.state.set('info', stateInfo)
+
+        logger.log('state.vod', this.#vod)
+        logger.log('state.info', stateInfo)
+
+        // 自動検索
+        if (autoLoads.length && args.input && args.duration) {
+          args.jikkyo = autoLoads.includes('jikkyo')
+          args.jikkyoChannelIds = await settings.get(
+            'settings:comment:jikkyoChannelIds'
+          )
 
           if (this.#autoLoad) {
-            await this.#autoLoad(this.#nco, input, options)
+            await this.#autoLoad(this.#nco, args)
           } else {
-            await this.#nco.searcher.autoLoad(input, options)
+            await this.#nco.searcher.autoLoad(args)
           }
         }
       } catch (err) {

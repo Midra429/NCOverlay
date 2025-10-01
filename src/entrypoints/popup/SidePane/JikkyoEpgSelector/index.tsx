@@ -1,10 +1,10 @@
-import type { TVerChannelId } from '@midra/nco-api/types/constants'
+import type { TVerChannelId } from '@midra/nco-utils/types/api/constants'
 import type {
   EPGv2Result,
   Program as EPGv2Program,
   GenreColor as EPGv2GenreColor,
-} from '@midra/nco-api/types/tver/v1/callEPGv2'
-import type { CallEPGv2Params } from '@midra/nco-api/tver/v1/callEPGv2'
+} from '@midra/nco-utils/types/api/tver/callEPGv2'
+import type { CallEPGv2Params } from '@midra/nco-utils/api/services/tver/callEPGv2'
 
 import { useCallback, useEffect, useState } from 'react'
 import { Button, Divider } from '@heroui/react'
@@ -14,11 +14,11 @@ import {
   Tv2Icon,
   XIcon,
 } from 'lucide-react'
-import { charWidth as adjustCharWidth } from '@midra/nco-parser/normalize/lib/adjust/charWidth'
-import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
+import { normalize } from '@midra/nco-utils/parse/libs/normalize'
+import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
 
 import { zeroPadding } from '@/utils/zeroPadding'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { Modal } from '@/components/Modal'
 import { Select, SelectItem } from '@/components/Select'
@@ -76,7 +76,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
   const callEPGv2 = useCallback(async (params: CallEPGv2Params) => {
     setIsLoading(true)
 
-    const result = await ncoApiProxy.tver.v1.callEPGv2(params)
+    const result = await ncoApiProxy.tver.callEPGv2(params)
 
     if (result) {
       const currentTime = Date.now()
@@ -96,10 +96,9 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
           return {
             tverChId: broadcaster.id,
             programs: programs.flatMap((program) => {
-              const title =
-                program.seriesTitle || adjustCharWidth(program.title)
+              const title = program.seriesTitle || normalize(program.title)
               const description =
-                program.seriesTitle && adjustCharWidth(program.title)
+                program.seriesTitle && normalize(program.title)
 
               return {
                 id: program.seriesID,

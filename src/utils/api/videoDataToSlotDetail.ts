@@ -1,7 +1,7 @@
-import type { VideoData } from '@midra/nco-api/types/niconico/video'
+import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
-import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
+import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 
 export const videoDataToSlotDetail = (
   data: VideoData,

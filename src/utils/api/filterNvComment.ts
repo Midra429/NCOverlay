@@ -1,4 +1,7 @@
-import type { VideoData, NvComment } from '@midra/nco-api/types/niconico/video'
+import type {
+  VideoData,
+  NvComment,
+} from '@midra/nco-utils/types/api/niconico/video'
 
 export const filterNvComment = (comment: VideoData['comment']): NvComment => {
   // 除外

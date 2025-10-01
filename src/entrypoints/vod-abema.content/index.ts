@@ -1,13 +1,13 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
-import { normalizeAll } from '@midra/nco-parser/normalize'
+import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -38,9 +38,9 @@ const main = async () => {
       const token = localStorage.getItem('abm_token')
 
       if (id && token) {
-        const slot = await ncoApiProxy.abema.v1.media.slots(id, token)
+        const slot = await ncoApiProxy.abema.slots(id, token)
 
-        logger.log('abema.v1.media.slots:', slot)
+        logger.log('abema.slots', slot)
 
         programId = slot?.displayProgramId
       }
@@ -59,12 +59,9 @@ const main = async () => {
         return null
       }
 
-      const program = await ncoApiProxy.abema.v1.video.programs(
-        programId,
-        token
-      )
+      const program = await ncoApiProxy.abema.programs(programId, token)
 
-      logger.log('abema.v1.video.programs:', program)
+      logger.log('abema.programs', program)
 
       if (program?.genre.id !== 'animation') {
         return null
@@ -96,11 +93,16 @@ const main = async () => {
 
       const duration = program.info.duration
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video

@@ -57,7 +57,6 @@ export default defineConfig({
   autoIcons: {
     baseIconPath: '../assets/icon.png',
     sizes: [512],
-    grayscaleOnDevelopment: false,
   },
   imports: false,
   vite: () => ({

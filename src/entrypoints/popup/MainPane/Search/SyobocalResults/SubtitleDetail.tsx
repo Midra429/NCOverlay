@@ -1,4 +1,4 @@
-import type { SyoboCalProgramDb } from '@midra/nco-api/types/syobocal/db'
+import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem } from './SubtitleItem'
 
@@ -8,7 +8,7 @@ import { Spinner } from '@heroui/react'
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
 import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/SlotItem'

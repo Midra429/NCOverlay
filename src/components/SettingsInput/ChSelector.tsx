@@ -2,7 +2,7 @@ import type {
   JikkyoDtvChannelId,
   JikkyoBsCsChannelId,
   JikkyoChannelId,
-} from '@midra/nco-api/types/constants'
+} from '@midra/nco-utils/types/api/constants'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState, useCallback } from 'react'
@@ -20,7 +20,7 @@ import {
   RotateCcwIcon,
   SaveIcon,
 } from 'lucide-react'
-import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
+import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
 

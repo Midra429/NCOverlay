@@ -1,4 +1,4 @@
-import type { Program as EPGv2Program } from '@midra/nco-api/types/tver/v1/callEPGv2'
+import type { Program as EPGv2Program } from '@midra/nco-utils/types/api/tver/callEPGv2'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import type { EPGProgram, EPGContent, EPGData } from '.'
 
@@ -12,8 +12,8 @@ import {
   tv,
 } from '@heroui/react'
 import { darken, saturate, toHex } from 'color2k'
-import { normalize } from '@midra/nco-parser/normalize'
-import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
+import { normalize } from '@midra/nco-utils/parse/libs/normalize'
+import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
 
 import { zeroPadding } from '@/utils/zeroPadding'
 import { readableColor } from '@/utils/color'

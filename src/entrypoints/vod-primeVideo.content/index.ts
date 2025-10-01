@@ -1,9 +1,8 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
-import { normalize, normalizeAll } from '@midra/nco-parser/normalize'
-import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
-import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
+import { parse } from '@midra/nco-utils/parse'
+import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
 
@@ -66,16 +65,10 @@ const main = async () => {
         normalize(title ?? '').match(/(?<=[^\d]+)[2-9]$/)?.[0] ?? -1
       )
 
-      const titleSeason = title && extractSeason(title)[0]
+      const parsedSubtitle = parse(`タイトル ${subtitle}`)
+      const titleSeason = title && parse(`${title} #0`).season
       const subtitleEpisode =
-        subtitle &&
-        extractEpisode(
-          normalizeAll(`タイトル ${subtitle}`, {
-            remove: {
-              space: false,
-            },
-          })
-        )[0]
+        subtitle && parsedSubtitle.isSingleEpisode && parsedSubtitle.episode
 
       const seasonText =
         !titleSeason && 2 <= seasonNum && seasonNum !== seasonNumVague
@@ -96,11 +89,16 @@ const main = async () => {
       const videoDuration = nco.renderer.video.duration
       const duration = displayDuration ?? videoDuration
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video

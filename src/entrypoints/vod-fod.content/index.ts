@@ -8,7 +8,7 @@ import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { getCookie } from '@/utils/dom/getCookie'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -39,7 +39,7 @@ const main = async () => {
 
       const episode = await ncoApiProxy.fod.episode(id, token)
 
-      logger.log('fod.episode:', episode)
+      logger.log('fod.episode', episode)
 
       if (!episode) {
         return null
@@ -50,11 +50,16 @@ const main = async () => {
 
       const duration = nco.renderer.video.duration ?? 0
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

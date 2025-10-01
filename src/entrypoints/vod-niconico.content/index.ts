@@ -8,7 +8,7 @@ import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
 import { videoDataToSlotDetail } from '@/utils/api/videoDataToSlotDetail'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -51,7 +51,7 @@ const main = async () => {
       const id = location.pathname.split('/').at(-1)!
       const videoData = await ncoApiProxy.niconico.video(id)
 
-      logger.log('niconico.video:', videoData)
+      logger.log('niconico.video', videoData)
 
       if (!videoData?.channel?.isOfficialAnime) {
         return null
@@ -83,13 +83,13 @@ const main = async () => {
 
         await nco.state.add('slots', { id, threads })
 
-        const rawText = data.video.title
+        const input = data.video.title
         const duration = data.video.duration
 
-        logger.log('rawText:', rawText)
-        logger.log('duration:', duration)
+        logger.log('input', input)
+        logger.log('duration', duration)
 
-        return { rawText, duration }
+        return { input, duration }
       } else {
         await nco.state.remove('slotDetails', { id })
       }

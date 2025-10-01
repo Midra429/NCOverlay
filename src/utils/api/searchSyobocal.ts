@@ -1,4 +1,4 @@
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export const searchSyobocalByIds = async (...tids: string[]) => {
   const response = await ncoApiProxy.syobocal.json(['TitleMedium'], {

@@ -1,13 +1,13 @@
 import type {
   SyoboCalTitleMedium,
   SyoboCalTitleSearch,
-} from '@midra/nco-api/types/syobocal/json'
+} from '@midra/nco-utils/types/api/syobocal/json'
 
 import { useMemo } from 'react'
 import { cn } from '@heroui/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { CalendarDaysIcon, ShapesIcon, ChevronRightIcon } from 'lucide-react'
-import { SYOBOCAL_CATEGORIES } from '@midra/nco-api/constants'
+import { SYOBOCAL_CATEGORIES } from '@midra/nco-utils/api/constants'
 
 export type ScTitleItem = SyoboCalTitleMedium | SyoboCalTitleSearch
 

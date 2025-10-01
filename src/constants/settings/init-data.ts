@@ -1,5 +1,5 @@
 import type { VodKey, PluginKey, SettingsInitData } from '@/types/constants'
-import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
+import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 
 import {
   SunMoonIcon,
@@ -11,7 +11,7 @@ import {
   BlocksIcon,
   KeyboardIcon,
 } from 'lucide-react'
-import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
+import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { VODS } from '@/constants/vods'
 import { PLUGINS } from '@/constants/plugins'

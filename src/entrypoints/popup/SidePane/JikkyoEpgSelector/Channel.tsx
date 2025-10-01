@@ -1,8 +1,8 @@
-import type { TVerChannelId } from '@midra/nco-api/types/constants'
+import type { TVerChannelId } from '@midra/nco-utils/types/api/constants'
 
 import { cn } from '@heroui/react'
-import { tverToJikkyoChId } from '@midra/nco-api/utils/tverToJikkyoChId'
-import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
+import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
+import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { COLUMN_WIDTH } from './TverEpg'
 

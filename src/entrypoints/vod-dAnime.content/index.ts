@@ -1,13 +1,13 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
-import { episode as extractEpisode } from '@midra/nco-parser/extract/lib/episode'
+import { parse } from '@midra/nco-utils/parse'
 
 import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -36,7 +36,7 @@ const main = async () => {
       const partId = new URL(location.href).searchParams.get('partId')
       const partData = partId ? await ncoApiProxy.danime.part(partId) : null
 
-      logger.log('danime.part:', partData)
+      logger.log('danime.part', partData)
 
       if (!partData) {
         return null
@@ -51,24 +51,30 @@ const main = async () => {
         /最終(?:回|話)/.test(partData.partDispNumber) &&
         partData.prevTitle
       ) {
-        const [episode] = extractEpisode(partData.prevTitle)
+        const parsed = parse(partData.prevTitle)
 
-        if (episode) {
-          episodeText = `${episode.number + 1}話`
+        if (parsed.isSingleEpisode && parsed.episode) {
+          episodeText = `${parsed.episode.number + 1}話`
         }
       }
 
-      const episodeTitle =
-        [episodeText, partData.partTitle].filter(Boolean).join(' ').trim() ||
-        null
+      const episodeTitle = [episodeText, partData.partTitle]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
 
       const duration = partData.partMeasureSecond
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

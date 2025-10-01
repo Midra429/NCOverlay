@@ -1,7 +1,7 @@
-import type { SearchData } from '@midra/nco-api/types/niconico/search'
+import type { SearchData } from '@midra/nco-utils/types/api/niconico/search'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
-import { DANIME_CHANNEL_ID } from '@midra/nco-api/constants'
+import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 
 export const searchDataToSlotDetail = (
   data: SearchData<

@@ -1,4 +1,4 @@
-import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
+import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type {
   StateSlot,
   StateSlotDetail,

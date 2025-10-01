@@ -1,7 +1,8 @@
 import type { StateKey } from '@/types/storage'
 
 import { defineBackground } from '#imports'
-import { ncoApi } from '@midra/nco-api'
+import { ncoApi } from '@midra/nco-utils/api'
+import { ncoSearch } from '@midra/nco-utils/search'
 
 import { GITHUB_URL } from '@/constants'
 
@@ -29,6 +30,7 @@ const main = async () => {
   logger.log('background.js')
 
   registerProxy('ncoApi', ncoApi, onMessage)
+  registerProxy('ncoSearch', ncoSearch, onMessage)
   registerUtilsMessage()
 
   // インストール・アップデート時
@@ -68,10 +70,11 @@ const main = async () => {
   })
 
   webext.runtime.onConnect.addListener((port) => {
+    const tabId = port.sender?.tab?.id
+
     switch (port.name) {
       // NCOverlayインスタンス作成時
       case 'instance':
-        const tabId = port.sender?.tab?.id
         let ncoId: string | undefined
 
         let intervalId: NodeJS.Timeout
@@ -131,11 +134,9 @@ const main = async () => {
       // サイドパネル
       case 'sidepanel':
         port.onDisconnect.addListener(async () => {
-          const tab = await webext.getCurrentActiveTab()
-
           webext.sidePanel.setOptions({
             enabled: false,
-            tabId: tab?.id,
+            tabId,
           })
         })
 
@@ -179,5 +180,5 @@ const main = async () => {
   // サイドパネル
   webext.sidePanel.setOptions({ enabled: false })
 
-  logger.log('settings:', await settings.get())
+  logger.log('settings', await settings.get())
 }

@@ -2,8 +2,8 @@ import type { DateTimeDuration } from '@internationalized/date'
 import type {
   NiconicoGenre,
   JikkyoChannelId,
-} from '@midra/nco-api/types/constants'
-import type { SearchQuerySort } from '@midra/nco-api/types/niconico/search'
+} from '@midra/nco-utils/types/api/constants'
+import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search'
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems } from '@/ncoverlay/state'
 

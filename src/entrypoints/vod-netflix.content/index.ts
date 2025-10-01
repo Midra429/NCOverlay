@@ -1,5 +1,8 @@
 import type { VodKey } from '@/types/constants'
-import type { Season, Episode } from '@midra/nco-api/types/netflix/metadata'
+import type {
+  Season,
+  Episode,
+} from '@midra/nco-utils/types/api/netflix/metadata'
 
 import { defineContentScript } from '#imports'
 
@@ -7,7 +10,7 @@ import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -37,7 +40,7 @@ const main = async () => {
 
       const videoData = await ncoApiProxy.netflix.metadata(id)
 
-      logger.log('netflix.metadata:', videoData)
+      logger.log('netflix.metadata', videoData)
 
       if (!videoData) {
         return null
@@ -79,11 +82,16 @@ const main = async () => {
         (episode?.runtime ?? videoData.runtime ?? nco.renderer.video.duration) -
         10
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

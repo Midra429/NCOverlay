@@ -1,7 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
-import { season as extractSeason } from '@midra/nco-parser/extract/lib/season'
+import { parse } from '@midra/nco-utils/parse'
 
 import { MATCHES } from '@/constants/matches'
 
@@ -50,7 +50,7 @@ const main = async () => {
         )?.textContent
 
       const seriesTitleSeason =
-        seriesTitleText && extractSeason(seriesTitleText)[0]
+        seriesTitleText && parse(`${seriesTitleText} #0`).season
 
       const workTitle =
         [
@@ -63,11 +63,16 @@ const main = async () => {
 
       const duration = nco.renderer.video.duration ?? 0
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

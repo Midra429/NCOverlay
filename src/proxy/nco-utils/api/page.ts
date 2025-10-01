@@ -1,4 +1,4 @@
-import type { ncoApi } from '@midra/nco-api'
+import type { ncoApi } from '@midra/nco-utils/api'
 
 import { createProxy } from '@/utils/proxy-service/create'
 import { sendMessage } from '@/utils/proxy-service/messaging/page'

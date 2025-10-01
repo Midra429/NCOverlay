@@ -6,7 +6,7 @@ import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
@@ -37,7 +37,7 @@ const main = async () => {
           ? await ncoApiProxy.dmmTv.video({ seasonId, contentId })
           : null
 
-      logger.log('dmmTv.video:', dataVideo)
+      logger.log('dmmTv.video', dataVideo)
 
       if (!dataVideo?.categories.some((v) => v.id === '15' || v.id === '17')) {
         return null
@@ -59,11 +59,16 @@ const main = async () => {
       const duration =
         dataVideo.episode?.playInfo.duration ?? nco.renderer.video.duration ?? 0
 
-      logger.log('workTitle:', workTitle)
-      logger.log('episodeTitle:', episodeTitle)
-      logger.log('duration:', duration)
+      logger.log('workTitle', workTitle)
+      logger.log('episodeTitle', episodeTitle)
+      logger.log('duration', duration)
 
-      return workTitle ? { workTitle, episodeTitle, duration } : null
+      return workTitle
+        ? {
+            input: `${workTitle} ${episodeTitle}`,
+            duration,
+          }
+        : null
     },
     appendCanvas: (video, canvas) => {
       video.insertAdjacentElement('afterend', canvas)

@@ -1,5 +1,5 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
-import type { VideoData } from '@midra/nco-api/types/niconico/video'
+import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
 
 import { KAWAII_REGEXP } from '@/constants'
 
@@ -7,7 +7,7 @@ import { settings } from '@/utils/settings/extension'
 import { extractNgSettings } from '@/utils/extension/extractNgSettings'
 import { applyNgSettings } from '@/utils/extension/applyNgSetting'
 import { filterNvComment } from '@/utils/api/filterNvComment'
-import { ncoApiProxy } from '@/proxy/nco-api/extension'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 /**
  * ニコニコ動画のコメント取得

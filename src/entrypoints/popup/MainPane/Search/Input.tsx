@@ -56,12 +56,26 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     ncoState?.get('info').then((info) => {
       if (!info) return
 
+      const { input } = info
+
       let initValue: string | undefined
 
-      if (isNiconico) {
-        initValue = info.rawText
+      if (typeof input === 'string') {
+        initValue = input
+      } else if (isNiconico) {
+        initValue =
+          [
+            input?.titleStripped,
+            input?.season?.text,
+            input?.isSingleEpisode
+              ? input.episode?.text
+              : input?.episodes?.map((v) => v.text).join(input.episodesDivider),
+            input?.subtitleStripped,
+          ]
+            .filter(Boolean)
+            .join(' ') || input?.input
       } else if (isSyobocal) {
-        initValue = info.workTitle ?? info.title ?? info.rawText
+        initValue = input?.titleStripped || input?.input
       }
 
       if (initValue) {

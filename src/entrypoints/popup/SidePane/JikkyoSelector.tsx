@@ -1,4 +1,4 @@
-import type { JikkyoChannelId } from '@midra/nco-api/types/constants'
+import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { useCallback, useMemo, useState } from 'react'
@@ -10,7 +10,7 @@ import {
   PlusIcon,
 } from 'lucide-react'
 import { now, getLocalTimeZone } from '@internationalized/date'
-import { JIKKYO_CHANNELS } from '@midra/nco-api/constants'
+import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
 
