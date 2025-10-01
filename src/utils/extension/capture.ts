@@ -5,9 +5,9 @@ import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
-export const capture = async (): Promise<
+export async function capture(): Promise<
   StorageItems['settings:capture:method'] | false
-> => {
+> {
   const {
     'settings:capture:format': captureFormat,
     'settings:capture:method': captureMethod,

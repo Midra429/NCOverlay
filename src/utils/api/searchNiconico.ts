@@ -9,7 +9,7 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 import { searchDataToSlotDetail } from './searchDataToSlotDetail'
 
-export const searchNiconicoByIds = async (...contentIds: string[]) => {
+export async function searchNiconicoByIds(...contentIds: string[]) {
   const useNiconicoCredentials = await settings.get(
     'settings:comment:useNiconicoCredentials'
   )
@@ -38,11 +38,11 @@ export type SearchNiconicoOptions = {
   lengthRange?: SettingItems['settings:search:lengthRange']
 }
 
-export const searchNiconicoByKeyword = async (
+export async function searchNiconicoByKeyword(
   keyword: string,
   page: number,
   options?: SearchNiconicoOptions
-) => {
+) {
   const limit = 20
   const offset = limit * (page - 1)
 

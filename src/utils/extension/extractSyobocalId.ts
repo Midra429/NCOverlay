@@ -1,8 +1,8 @@
-export const isSyobocalId = (value: string) => {
+export function isSyobocalId(value: string) {
   return /^\d+$/.test(value)
 }
 
-export const extractSyobocalId = (value: string): string | null => {
+export function extractSyobocalId(value: string): string | null {
   if (isSyobocalId(value)) {
     return value
   }

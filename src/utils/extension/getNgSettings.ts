@@ -10,10 +10,10 @@ export type NgSettingsConverted = {
   ids: (string | RegExp)[]
 }
 
-export const convertNgSettingsContent = ({
+export function convertNgSettingsContent({
   content,
   isRegExp,
-}: NgSettingsContent): string | RegExp | undefined => {
+}: NgSettingsContent): string | RegExp | undefined {
   if (isRegExp) {
     try {
       return new RegExp(content)
@@ -23,7 +23,7 @@ export const convertNgSettingsContent = ({
   }
 }
 
-export const getNgSettings = async (): Promise<NgSettingsConverted> => {
+export async function getNgSettings(): Promise<NgSettingsConverted> {
   const values = await settings.get(
     'settings:ng:largeComments',
     'settings:ng:fixedComments',

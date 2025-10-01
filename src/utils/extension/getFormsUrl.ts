@@ -19,12 +19,12 @@ const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
   android: 'Android',
 }
 
-export const getFormsUrl = async (inputs?: {
+export async function getFormsUrl(inputs?: {
   content?: keyof typeof CONTENTS
   vod?: StateVod | null
   info?: StateInfo | null
   url?: string | null
-}) => {
+}) {
   const { version } = webext.runtime.getManifest()
   const { os } = await webext.runtime.getPlatformInfo()
 

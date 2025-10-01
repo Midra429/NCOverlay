@@ -12,7 +12,7 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const main = () => {
+function main() {
   // registerProxy('ncoApi', ncoApiProxy, onMessage)
   registerStorageMessage()
 }

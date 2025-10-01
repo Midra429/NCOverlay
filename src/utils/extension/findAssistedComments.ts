@@ -8,10 +8,10 @@ const TEMPLATE_COMMENT_REGEXPS = [
   /^[wｗ]{3,}$/,
 ]
 
-export const isAssistedComment = (
+export function isAssistedComment(
   base: V1ThreadComment,
   target: V1ThreadComment
-): boolean => {
+): boolean {
   return (
     // コマンドなし or 匿名コマンドのみ
     (target.commands.length === 0 ||
@@ -40,9 +40,9 @@ export type AssistedCommentResult = {
 /**
  * アシストコメントを探す
  */
-export const findAssistedComments = (
+export function findAssistedComments(
   comments: V1ThreadComment[]
-): AssistedCommentResult[] => {
+): AssistedCommentResult[] {
   if (comments.length <= 1) {
     return []
   }

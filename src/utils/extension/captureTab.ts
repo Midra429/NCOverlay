@@ -2,7 +2,7 @@ import type { StorageItems } from '@/types/storage'
 
 import { webext } from '@/utils/webext'
 
-export const captureTab = async ({
+export async function captureTab({
   rect,
   scale,
   format,
@@ -17,7 +17,7 @@ export const captureTab = async ({
   scale: number
   format?: StorageItems['settings:capture:format']
   windowId?: number
-}): Promise<number[]> => {
+}): Promise<number[]> {
   format ??= 'jpeg'
 
   const url = await webext.tabs.captureVisibleTab(windowId, {

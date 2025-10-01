@@ -120,10 +120,10 @@ export type NcoV1Thread = Omit<V1Thread, 'comments'> & {
   _nco: {}
 }
 
-export const filterDisplayThreads = async (
+export async function filterDisplayThreads(
   slots: StateSlot[] | null,
   details: StateSlotDetail[] | null
-): Promise<NcoV1Thread[] | null> => {
+): Promise<NcoV1Thread[] | null> {
   if (!slots?.length || !details?.length) {
     return null
   }

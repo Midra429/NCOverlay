@@ -2,7 +2,7 @@ import type { Permissions } from 'webextension-polyfill'
 
 import { webext } from '@/utils/webext'
 
-export default async () => {
+export default async function () {
   // 権限を要求 (Firefoxのみ)
   if (webext.isFirefox) {
     const manifest = webext.runtime.getManifest()
@@ -13,7 +13,7 @@ export default async () => {
     const permitted = await webext.permissions.contains(permissions)
 
     if (!permitted) {
-      const requestPermissions = async () => {
+      async function requestPermissions() {
         const permitted = await webext.permissions.request(permissions)
 
         if (permitted) {

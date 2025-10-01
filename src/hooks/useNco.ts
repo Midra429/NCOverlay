@@ -27,7 +27,7 @@ ncoMessenger.onMessage('timeupdate', ({ data }) => {
   })
 })
 
-export const initializeNcoState = async (tabId?: number) => {
+export async function initializeNcoState(tabId?: number) {
   const id = await sendNcoMessage('getId', null, tabId)
 
   if (id) {
@@ -36,7 +36,7 @@ export const initializeNcoState = async (tabId?: number) => {
   }
 }
 
-export const useNcoStateReady = (tabId?: number) => {
+export function useNcoStateReady(tabId?: number) {
   const [state, setState] = useState(false)
 
   useEffect(() => {
@@ -52,9 +52,9 @@ export const useNcoStateReady = (tabId?: number) => {
   return state
 }
 
-export const useNcoState = <Key extends NCOStateItemKey>(
+export function useNcoState<Key extends NCOStateItemKey>(
   key: Key
-): NCOStateItem<Key> | null => {
+): NCOStateItem<Key> | null {
   const [state, setState] = useState<NCOStateItem<Key> | null>(null)
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export const useNcoState = <Key extends NCOStateItemKey>(
     let ngOnChangeRemoveListeners: (() => void)[] | undefined
 
     if (key === 'slots') {
-      const ngChangedCallback = async () => {
+      async function ngChangedCallback() {
         setState(await ncoState!.get(key))
       }
 
@@ -101,7 +101,7 @@ export const useNcoState = <Key extends NCOStateItemKey>(
   return state
 }
 
-export const useNcoTime = (): number => {
+export function useNcoTime(): number {
   const [time, setTime] = useState<number>(0)
 
   useEffect(() => {

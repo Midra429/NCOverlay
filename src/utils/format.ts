@@ -1,6 +1,6 @@
 import { zeroPadding } from './zeroPadding'
 
-export const formatDuration = (seconds: number) => {
+export function formatDuration(seconds: number) {
   const sign = seconds < 0 ? '-' : ''
 
   let secAbs = Math.abs(Math.floor(seconds))
@@ -22,10 +22,10 @@ export const formatDuration = (seconds: number) => {
   return `${sign}${formatted}`
 }
 
-export const formatDate = (
+export function formatDate(
   date: string | number | Date,
   format: string = 'YYYY/MM/DD(d) hh:mm'
-) => {
+) {
   if (!(date instanceof Date)) {
     date = new Date(date)
   }
@@ -64,7 +64,7 @@ export const formatDate = (
   )
 }
 
-export const formatedToSeconds = (formated: string) => {
+export function formatedToSeconds(formated: string) {
   const parts = formated.split(':').map(Number).reverse()
 
   let seconds = 0

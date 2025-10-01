@@ -12,7 +12,7 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 /**
  * ニコニコ動画のコメント取得
  */
-export const getNiconicoComments = async (
+export async function getNiconicoComments(
   params: ((
     | VideoData
     | {
@@ -27,7 +27,7 @@ export const getNiconicoComments = async (
     threads: V1Thread[]
     kawaiiCount: number
   } | null)[]
-> => {
+> {
   const useNiconicoCredentials = await settings.get(
     'settings:comment:useNiconicoCredentials'
   )

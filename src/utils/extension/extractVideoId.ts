@@ -1,8 +1,8 @@
-export const isVideoId = (value: string) => {
+export function isVideoId(value: string) {
   return /^[a-z]{2}\d+$/.test(value)
 }
 
-export const extractVideoId = (value: string): string | null => {
+export function extractVideoId(value: string): string | null {
   if (isVideoId(value)) {
     return value
   }

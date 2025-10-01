@@ -1,6 +1,6 @@
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
-export const searchSyobocalByIds = async (...tids: string[]) => {
+export async function searchSyobocalByIds(...tids: string[]) {
   const response = await ncoApiProxy.syobocal.json(['TitleMedium'], {
     TID: tids,
   })
@@ -12,7 +12,7 @@ export const searchSyobocalByIds = async (...tids: string[]) => {
   return null
 }
 
-export const searchSyobocalByKeyword = async (keyword: string) => {
+export async function searchSyobocalByKeyword(keyword: string) {
   const limit = 20
 
   const response = await ncoApiProxy.syobocal.json(['TitleSearch'], {

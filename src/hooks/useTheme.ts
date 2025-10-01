@@ -1,7 +1,7 @@
 import { useSettings } from './useSettings'
 import { useSystemTheme } from './useSystemTheme'
 
-export const useTheme = () => {
+export function useTheme() {
   const [theme, _, { loading }] = useSettings('settings:theme')
   const systemTheme = useSystemTheme()
 

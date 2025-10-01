@@ -22,7 +22,7 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const main = async () => {
+async function main() {
   if (!(await checkVodEnable(vod))) return
 
   logger.log(`vod-${vod}.js`)

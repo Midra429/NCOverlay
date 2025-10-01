@@ -11,7 +11,7 @@ export function StorageSizes() {
   const [settingsBytes, setSettingsBytes] = useState<number>(0)
 
   useEffect(() => {
-    const updateStorageSizes = () => {
+    function updateStorageSizes() {
       storage.getBytesInUse().then(setStorageBytes)
       settings.getBytesInUse().then(setSettingsBytes)
     }

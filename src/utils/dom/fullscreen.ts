@@ -1,4 +1,4 @@
-export const requestFullscreen = (element: Element) => {
+export function requestFullscreen(element: Element) {
   if (element.hasAttribute('nco-fullscreen')) {
     return false
   }
@@ -8,7 +8,7 @@ export const requestFullscreen = (element: Element) => {
   return true
 }
 
-export const exitFullscreen = () => {
+export function exitFullscreen() {
   const fullscreenElement = document.querySelector('[nco-fullscreen]')
 
   if (!fullscreenElement) {
@@ -20,7 +20,7 @@ export const exitFullscreen = () => {
   return true
 }
 
-export const toggleFullscreen = (element: Element) => {
+export function toggleFullscreen(element: Element) {
   if (!requestFullscreen(element)) {
     exitFullscreen()
   }

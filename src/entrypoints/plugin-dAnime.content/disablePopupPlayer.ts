@@ -3,7 +3,7 @@ import type { PluginFunction } from '@/types/constants'
 /**
  * ポップアップ無効化
  */
-export const disablePopupPlayer: PluginFunction = () => {
+export function disablePopupPlayer(): ReturnType<PluginFunction> {
   const _open = window.open
 
   window.open = new Proxy(_open, {

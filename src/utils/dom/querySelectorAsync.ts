@@ -1,8 +1,8 @@
-export const querySelectorAsync = async <T extends Element>(
+export async function querySelectorAsync<T extends Element>(
   parent: T,
   selectors: string,
   intervalMs: number = 1000
-): Promise<T | null> => {
+): Promise<T | null> {
   let cnt = 0
 
   return new Promise((resolve) => {

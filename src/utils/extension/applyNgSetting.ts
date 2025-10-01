@@ -1,10 +1,10 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { NgSettingsConverted } from '@/utils/extension/getNgSettings'
 
-export const isNgComment = (
+export function isNgComment(
   { body, commands, userId }: V1Thread['comments'][number],
   ngSettings: NgSettingsConverted
-): boolean => {
+): boolean {
   // 単語
   const isNgWord = ngSettings.words.some((val) => {
     if (typeof val === 'string') {
@@ -43,10 +43,10 @@ export const isNgComment = (
   return false
 }
 
-export const applyNgSettings = (
+export function applyNgSettings(
   threads: V1Thread[],
   ngSettings: NgSettingsConverted
-): V1Thread[] => {
+): V1Thread[] {
   if (!Object.values(ngSettings).flat().length) {
     return threads
   }

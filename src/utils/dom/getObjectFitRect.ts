@@ -1,9 +1,9 @@
-export const getObjectFitRect = (
+export function getObjectFitRect(
   contains: boolean,
   container: HTMLElement,
   width: number,
   height: number
-) => {
+) {
   const {
     x: cx,
     y: cy,

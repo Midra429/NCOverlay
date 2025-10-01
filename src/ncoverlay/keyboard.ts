@@ -11,10 +11,10 @@ type NCOKeyboardFunctions = Readonly<{
   jumpMarker: NCOverlay['jumpMarker']
 }>
 
-const register = (
+function register(
   key: Extract<StorageKey, `settings:kbd:${string}`>,
   method: (...args: Parameters<KeyHandler>) => void
-) => {
+) {
   let tmpShortcutKey: string | null = null
 
   return storage.watch(key, (shortcutKey) => {

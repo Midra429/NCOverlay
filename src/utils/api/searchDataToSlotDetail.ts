@@ -3,7 +3,7 @@ import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
 import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 
-export const searchDataToSlotDetail = (
+export function searchDataToSlotDetail(
   data: SearchData<
     | 'contentId'
     | 'title'
@@ -18,7 +18,7 @@ export const searchDataToSlotDetail = (
     | 'tags'
   >,
   detail?: Partial<StateSlotDetailDefault>
-): StateSlotDetailDefault => {
+): StateSlotDetailDefault {
   const isDAnime = data.channelId === DANIME_CHANNEL_ID
   const isOfficialAnime = !!(
     data.channelId &&

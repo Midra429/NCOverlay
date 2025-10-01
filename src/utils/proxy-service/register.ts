@@ -4,14 +4,14 @@ import type { Service, ProtocolMap } from '.'
 
 import get from '@/utils/get-value'
 
-export const registerProxy = <TService extends Service>(
+export function registerProxy<TService extends Service>(
   name: string,
   service: TService,
   onMessage: (
     | ExtensionMessenger<ProtocolMap>
     | WindowMessenger<ProtocolMap>
   )['onMessage']
-) => {
+) {
   const messageKey = `proxy-service:${name}`
 
   return onMessage(messageKey, ({ data }) => {

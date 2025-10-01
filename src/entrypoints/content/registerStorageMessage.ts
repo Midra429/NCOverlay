@@ -6,7 +6,7 @@ const removeListeners: {
   [id: string]: (() => void) | undefined
 } = {}
 
-export default () => {
+export default function () {
   storageMessenger.onMessage('get', ({ data }) => {
     return storage.get(...data)
   })

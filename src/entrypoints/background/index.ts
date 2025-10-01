@@ -26,7 +26,7 @@ export default defineBackground({
   main: () => void main(),
 })
 
-const main = async () => {
+async function main() {
   logger.log('background.js')
 
   registerProxy('ncoApi', ncoApi, onMessage)
@@ -80,7 +80,7 @@ const main = async () => {
         let intervalId: NodeJS.Timeout
         let timeoutId: NodeJS.Timeout
 
-        const dispose = () => {
+        function dispose() {
           logger.log('dispose()')
 
           // バッジリセット
