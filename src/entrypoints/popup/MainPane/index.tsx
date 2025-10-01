@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { Tabs, Tab } from '@heroui/react'
 import { SearchIcon, LayoutGridIcon, SettingsIcon } from 'lucide-react'
 
@@ -8,36 +7,38 @@ import { Settings } from './Settings'
 
 const tabItems: {
   key: string
-  icon: React.FC<React.ComponentProps<'svg'>>
+  Icon: (props: React.ComponentProps<'svg'>) => React.ReactNode
   title: string
   children: React.ReactNode
 }[] = [
   {
     key: 'search',
     title: '検索',
-    icon: SearchIcon,
+    Icon: SearchIcon,
     children: <Search />,
   },
   {
     key: 'quickpanel',
     title: 'クイックパネル',
-    icon: LayoutGridIcon,
+    Icon: LayoutGridIcon,
     children: <QuickPanel />,
   },
   {
     key: 'settings',
     title: '設定',
-    icon: SettingsIcon,
+    Icon: SettingsIcon,
     children: <Settings />,
   },
 ]
 
+export type MainPaneProps = {
+  quickpanel?: boolean
+}
+
 /**
  * メイン
  */
-export const MainPane: React.FC<{
-  quickpanel?: boolean
-}> = memo(({ quickpanel }) => {
+export function MainPane({ quickpanel }: MainPaneProps) {
   return (
     <div className="flex size-full flex-col">
       {quickpanel ? (
@@ -55,7 +56,7 @@ export const MainPane: React.FC<{
           defaultSelectedKey="quickpanel"
           items={tabItems}
         >
-          {({ key, title, icon: Icon, children }) => (
+          {({ key, title, Icon, children }) => (
             <Tab
               key={key}
               title={
@@ -76,4 +77,4 @@ export const MainPane: React.FC<{
       )}
     </div>
   )
-})
+}

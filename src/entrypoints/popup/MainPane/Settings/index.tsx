@@ -1,6 +1,5 @@
 import type { AccordionItemProps } from '@heroui/react'
 
-import { memo } from 'react'
 import {
   Accordion,
   AccordionItem,
@@ -84,7 +83,7 @@ const accordionItemInfo = (
             href="https://docs.google.com/forms/d/e/1FAIpQLSfVL8ub7t1qMGLI7BH0ypdV7Ctib6Sns-_VbKhiaRMGLloczw/viewform"
           /> */}
           <FormsButton />
-          <IconLink icon={SiGithub} href={GITHUB_URL} />
+          <IconLink Icon={SiGithub} href={GITHUB_URL} />
         </div>
       </div>
     </div>
@@ -95,7 +94,7 @@ const accordionItemInfo = (
  * 各設定
  */
 const accordionItemSettings = SETTINGS_INIT_DATA.map(
-  ({ id, title, items, icon: Icon }) => (
+  ({ id, title, items, Icon }) => (
     <AccordionItem
       key={id}
       classNames={accordionItemClassNames}
@@ -221,7 +220,7 @@ const accordionItemOthers = (
   </AccordionItem>
 )
 
-export const Settings: React.FC = memo(() => {
+export function Settings() {
   return (
     <Accordion
       className="p-2"
@@ -253,4 +252,4 @@ export const Settings: React.FC = memo(() => {
       {accordionItemOthers}
     </Accordion>
   )
-})
+}

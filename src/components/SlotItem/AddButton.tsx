@@ -5,7 +5,7 @@ export type AddButtonProps = {
   onPress: () => void
 }
 
-export const AddButton: React.FC<AddButtonProps> = ({ onPress }) => {
+export function AddButton({ onPress }: AddButtonProps) {
   return (
     <div
       className={cn(

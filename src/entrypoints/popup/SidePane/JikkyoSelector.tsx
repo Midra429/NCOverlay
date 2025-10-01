@@ -1,7 +1,7 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Button, ButtonGroup, cn } from '@heroui/react'
 import {
   ChevronRightIcon,
@@ -9,7 +9,7 @@ import {
   ChevronsDownIcon,
   PlusIcon,
 } from 'lucide-react'
-import { now, getLocalTimeZone } from '@internationalized/date'
+import { now, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
@@ -26,16 +26,61 @@ import { SlotItem } from '@/components/SlotItem'
 
 const MAX_DURATION = 6 * 60 * 60 * 1000
 
+function createSlotDetailJikkyo({
+  jkChId,
+  currentDateTime,
+  startDateTime,
+  endDateTime,
+}: {
+  jkChId: JikkyoChannelId
+  currentDateTime: ZonedDateTime
+  startDateTime: ZonedDateTime
+  endDateTime: ZonedDateTime
+}): StateSlotDetailJikkyo | null {
+  const dateTimeDiff = endDateTime.compare(startDateTime)
+
+  if (
+    !jkChId ||
+    // まだ終わってない
+    0 < endDateTime.compare(currentDateTime) ||
+    // 終了日時 <= 開始日時
+    dateTimeDiff <= 0 ||
+    // 6時間以上
+    MAX_DURATION < dateTimeDiff
+  ) {
+    return null
+  }
+
+  const starttime = startDateTime.toDate().getTime()
+  const endtime = endDateTime.toDate().getTime()
+
+  return {
+    type: 'jikkyo',
+    id: `${jkChId}:${starttime / 1000}-${endtime / 1000}`,
+    status: 'pending',
+    info: {
+      id: null,
+      source: null,
+      title: [
+        `${jkChId}: ${JIKKYO_CHANNELS[jkChId]}`,
+        `${formatDate(starttime, 'YYYY/MM/DD hh:mm')} 〜 ${formatDate(endtime, 'hh:mm')}`,
+      ].join('\n'),
+      duration: (endtime - starttime) / 1000,
+      date: [starttime, endtime],
+      count: {
+        comment: 0,
+      },
+    },
+  }
+}
+
 export type JikkyoSelectorProps = {
   isOpen: boolean
   onOpenChange: () => void
 }
 
-export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
-  isOpen,
-  onOpenChange,
-}) => {
-  const currentDateTime = useMemo(() => now(getLocalTimeZone()), [])
+export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
+  const currentDateTime = now(getLocalTimeZone())
 
   const [jkChId, setJkChId] = useState<JikkyoChannelId>()
   const [endDateTime, setEndDateTime] = useState(
@@ -52,53 +97,20 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
   const stateStatus = useNcoState('status')
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const isReady = useMemo(() => {
-    return !(stateStatus === 'searching' || stateStatus === 'loading')
-  }, [stateStatus])
+  const isReady = !(stateStatus === 'searching' || stateStatus === 'loading')
 
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
+  const ids = stateSlotDetails?.map((v) => v.id)
 
-  const slotDetail = useMemo<StateSlotDetailJikkyo | null>(() => {
-    const dateTimeDiff = endDateTime.compare(startDateTime)
+  const slotDetail =
+    jkChId &&
+    createSlotDetailJikkyo({
+      jkChId,
+      currentDateTime,
+      startDateTime,
+      endDateTime,
+    })
 
-    if (
-      !jkChId ||
-      // まだ終わってない
-      0 < endDateTime.compare(currentDateTime) ||
-      // 終了日時 <= 開始日時
-      dateTimeDiff <= 0 ||
-      // 6時間以上
-      MAX_DURATION < dateTimeDiff
-    ) {
-      return null
-    }
-
-    const starttime = startDateTime.toDate().getTime()
-    const endtime = endDateTime.toDate().getTime()
-
-    return {
-      type: 'jikkyo',
-      id: `${jkChId}:${starttime / 1000}-${endtime / 1000}`,
-      status: 'pending',
-      info: {
-        id: null,
-        source: null,
-        title: [
-          `${jkChId}: ${JIKKYO_CHANNELS[jkChId]}`,
-          `${formatDate(starttime, 'YYYY/MM/DD hh:mm')} 〜 ${formatDate(endtime, 'hh:mm')}`,
-        ].join('\n'),
-        duration: (endtime - starttime) / 1000,
-        date: [starttime, endtime],
-        count: {
-          comment: 0,
-        },
-      },
-    }
-  }, [jkChId, startDateTime, endDateTime])
-
-  const onAdd = useCallback(async () => {
+  async function onAdd() {
     if (!slotDetail) return
 
     await ncoState?.add('slotDetails', {
@@ -145,7 +157,7 @@ export const JikkyoSelector: React.FC<JikkyoSelectorProps> = ({
     }
 
     await ncoState?.set('status', 'ready')
-  }, [slotDetail])
+  }
 
   return (
     <Modal

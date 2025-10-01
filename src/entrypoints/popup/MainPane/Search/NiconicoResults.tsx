@@ -1,7 +1,5 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { useMemo } from 'react'
-
 import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/SlotItem'
@@ -10,14 +8,10 @@ export type NiconicoResultsProps = {
   details: StateSlotDetail[]
 }
 
-export const NiconicoResults: React.FC<NiconicoResultsProps> = ({
-  details,
-}) => {
+export function NiconicoResults({ details }: NiconicoResultsProps) {
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
+  const ids = stateSlotDetails?.map((v) => v.id)
 
   return (
     <div className="flex flex-col gap-2">

@@ -34,7 +34,7 @@ export type ModalProps = {
   children: React.ReactNode
 }
 
-export const Modal: React.FC<ModalProps> = (props) => {
+export function Modal(props: ModalProps) {
   return (
     <HeroUIModal
       classNames={{

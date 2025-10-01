@@ -4,7 +4,6 @@ import type {
   SelectSlots,
 } from '@heroui/react'
 
-import { useMemo } from 'react'
 import {
   Select as HeroUISelect,
   SelectItem as HeroUISelectItem,
@@ -67,18 +66,12 @@ const select = tv({
   },
 })
 
-export const Select: React.FC<SelectProps> = (props) => {
-  const classNames = useMemo(() => {
-    const slots = select({ size: props.size })
-    const slotKeys = Object.keys(slots) as (keyof typeof slots)[]
-
-    return Object.fromEntries(
-      slotKeys.map((key) => [
-        key,
-        slots[key]({ class: props.classNames?.[key] }),
-      ])
-    ) as HeroUISelectProps['classNames']
-  }, [props.size])
+export function Select(props: SelectProps) {
+  const slots = select({ size: props.size })
+  const slotKeys = Object.keys(slots) as (keyof typeof slots)[]
+  const classNames = Object.fromEntries(
+    slotKeys.map((key) => [key, slots[key]({ class: props.classNames?.[key] })])
+  ) as HeroUISelectProps['classNames']
 
   return (
     <HeroUISelect

@@ -7,7 +7,7 @@ import { PositionControl } from '@/components/PositionControl'
 
 import { CommentList } from './CommentList'
 
-const App: React.FC = () => {
+function App() {
   const ready = useNcoStateReady()
 
   return (

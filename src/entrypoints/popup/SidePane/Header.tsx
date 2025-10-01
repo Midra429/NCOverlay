@@ -17,7 +17,7 @@ import {
 import { JikkyoSelector } from './JikkyoSelector'
 import { JikkyoEpgSelector } from './JikkyoEpgSelector'
 
-export const Header: React.FC = () => {
+export function Header() {
   const jkModalDc = useDisclosure()
   const jkEpgModalDc = useDisclosure()
 

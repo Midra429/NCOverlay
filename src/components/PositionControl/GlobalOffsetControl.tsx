@@ -8,9 +8,7 @@ export type GlobalOffsetControlProps = {
   compact?: boolean
 }
 
-export const GlobalOffsetControl: React.FC<GlobalOffsetControlProps> = ({
-  compact,
-}) => {
+export function GlobalOffsetControl({ compact }: GlobalOffsetControlProps) {
   const stateOffset = useNcoState('offset')
 
   const [currentOffset, setCurrentOffset] = useState(0)

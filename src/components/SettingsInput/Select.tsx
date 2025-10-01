@@ -18,12 +18,12 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
     options: {
       label: string
       value: StorageItems[K]
-      icon?: React.FC<React.ComponentProps<'svg'>>
+      Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
     }[]
   }
 >
 
-export const Input: React.FC<Props> = (props) => {
+export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (
@@ -45,7 +45,7 @@ export const Input: React.FC<Props> = (props) => {
         </>
       )}
     >
-      {props.options.map(({ label, value, icon: Icon }) => (
+      {props.options.map(({ label, value, Icon }) => (
         <SelectItem
           key={JSON.stringify(value)}
           startContent={Icon && <Icon className="size-4" />}

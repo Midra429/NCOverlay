@@ -9,7 +9,7 @@ import { PanelItem } from '@/components/PanelItem'
 /**
  * 表示 / 非表示
  */
-export const ShowHideToggle: React.FC = () => {
+export function ShowHideToggle() {
   const [show, setShow] = useState(true)
 
   const [tmpOpacity, setTmpOpacity] = useStorage('tmp:comment:opacity')

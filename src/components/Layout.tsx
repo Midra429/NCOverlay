@@ -13,7 +13,7 @@ export type LayoutProps = {
   style?: React.CSSProperties
 }
 
-export const Layout: React.FC<LayoutProps> = (props) => {
+export function Layout(props: LayoutProps) {
   const theme = useTheme()
 
   useEffect(() => {

@@ -23,7 +23,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
   }
 >
 
-export const Input: React.FC<Props> = (props) => {
+export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (

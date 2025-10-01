@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Button, ButtonGroup, Divider, Input, cn } from '@heroui/react'
 import { RotateCcwIcon, CheckIcon } from 'lucide-react'
 
@@ -10,20 +9,20 @@ export type OffsetControlProps = {
   onApply: () => void
 }
 
-export const OffsetControl: React.FC<OffsetControlProps> = ({
+export function OffsetControl({
   value,
   onValueChange,
   onApply,
   isValueChanged,
   compact,
-}) => {
-  const onValueChangeInput = useCallback((val: string) => {
+}: OffsetControlProps) {
+  function onValueChangeInput(val: string) {
     onValueChange(Number(val))
-  }, [])
+  }
 
-  const onPressReset = useCallback(() => {
+  function onPressReset() {
     onValueChange(0)
-  }, [])
+  }
 
   return (
     <div className={cn('flex h-fit gap-2', compact ? 'flex-row' : 'flex-col')}>

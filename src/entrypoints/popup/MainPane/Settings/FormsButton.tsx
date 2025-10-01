@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { ClipboardPenIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
@@ -8,11 +7,11 @@ import { useNcoState } from '@/hooks/useNco'
 
 import { IconLink } from '@/components/IconLink'
 
-export const FormsButton: React.FC = () => {
+export function FormsButton() {
   const stateVod = useNcoState('vod')
   const stateInfo = useNcoState('info')
 
-  const onPress = useCallback(async () => {
+  async function onPress() {
     const tab = await webext.getCurrentActiveTab()
     const url = await getFormsUrl({
       vod: stateVod,
@@ -21,11 +20,11 @@ export const FormsButton: React.FC = () => {
     })
 
     webext.tabs.create({ url })
-  }, [stateVod, stateInfo])
+  }
 
   return (
     <IconLink
-      icon={ClipboardPenIcon}
+      Icon={ClipboardPenIcon}
       title="不具合報告・機能提案"
       onPress={onPress}
     />

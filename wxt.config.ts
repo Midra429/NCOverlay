@@ -71,6 +71,13 @@ export default defineConfig({
       noExternal: ['@webext-core/messaging'],
     },
   }),
+  react: {
+    vite: {
+      babel: {
+        plugins: ['babel-plugin-react-compiler'],
+      },
+    },
+  },
   modules: [
     '@wxt-dev/webextension-polyfill',
     '@wxt-dev/auto-icons',

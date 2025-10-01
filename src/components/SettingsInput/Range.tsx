@@ -24,7 +24,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
   }
 >
 
-export const Input: React.FC<Props> = (props) => {
+export function Input(props: Props) {
   const [state, setState] = useState<number>(
     SETTINGS_DEFAULT[props.settingsKey]
   )

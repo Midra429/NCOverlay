@@ -4,7 +4,7 @@ import { DatePicker as HeroUIDatePicker, cn } from '@heroui/react'
 
 export type DatePickerProps = HeroUIDatePickerProps
 
-export const DatePicker: React.FC<DatePickerProps> = (props) => {
+export function DatePicker(props: DatePickerProps) {
   return (
     <HeroUIDatePicker
       size="sm"

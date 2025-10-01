@@ -11,7 +11,7 @@ export type PanelItemProps = {
   children: React.ReactNode
 }
 
-export const PanelItem: React.FC<PanelItemProps> = (props) => {
+export function PanelItem(props: PanelItemProps) {
   return (
     <div
       className={cn(

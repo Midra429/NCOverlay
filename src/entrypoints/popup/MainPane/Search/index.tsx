@@ -3,7 +3,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 import type { SearchSource, SearchInputHandle } from './Input'
 import type { ScTitleItem } from './SyobocalResults/TitleItem'
 
-import { memo, useMemo, useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
 import { extractVideoId } from '@/utils/extension/extractVideoId'
@@ -24,7 +24,7 @@ import { NiconicoResults } from './NiconicoResults'
 import { SyobocalResults } from './SyobocalResults'
 import { Pagination } from './Pagination'
 
-export const Search: React.FC = memo(() => {
+export function Search() {
   const inputRef = useRef<SearchInputHandle>(null)
 
   const [inputSource, setInputSource] = useState<SearchSource>()
@@ -43,49 +43,46 @@ export const Search: React.FC = memo(() => {
   const [genre] = useSettings('settings:search:genre')
   const [lengthRange] = useSettings('settings:search:lengthRange')
 
-  const isReady = useMemo(() => {
-    return !(stateStatus === 'searching' || stateStatus === 'loading')
-  }, [stateStatus])
+  const isReady = !(stateStatus === 'searching' || stateStatus === 'loading')
 
   const isNiconico = inputSource === 'niconico'
   const isSyobocal = inputSource === 'syobocal'
 
-  const niconicoOptions = useMemo<SearchNiconicoOptions>(() => {
-    return {
-      sort,
-      dateRange,
-      genre,
-      lengthRange,
+  const niconicoOptions: SearchNiconicoOptions = {
+    sort,
+    dateRange,
+    genre,
+    lengthRange,
+  }
+
+  async function searchNiconico(
+    value: string,
+    page: number,
+    options: SearchNiconicoOptions
+  ) {
+    setIsLoading(true)
+
+    setCurrentPage(page)
+    setNiconicoItems([])
+    setSyobocalItems([])
+
+    const videoId = extractVideoId(value)
+
+    const result = videoId
+      ? await searchNiconicoByIds(videoId)
+      : await searchNiconicoByKeyword(value, page, options)
+
+    if (result) {
+      setTotalCount(result.total)
+      setNiconicoItems(result.details)
+    } else {
+      setTotalCount(0)
     }
-  }, [sort, dateRange, genre, lengthRange])
 
-  const searchNiconico = useCallback(
-    async (value: string, page: number, options: SearchNiconicoOptions) => {
-      setIsLoading(true)
+    setIsLoading(false)
+  }
 
-      setCurrentPage(page)
-      setNiconicoItems([])
-      setSyobocalItems([])
-
-      const videoId = extractVideoId(value)
-
-      const result = videoId
-        ? await searchNiconicoByIds(videoId)
-        : await searchNiconicoByKeyword(value, page, options)
-
-      if (result) {
-        setTotalCount(result.total)
-        setNiconicoItems(result.details)
-      } else {
-        setTotalCount(0)
-      }
-
-      setIsLoading(false)
-    },
-    []
-  )
-
-  const searchSyobocal = useCallback(async (value: string) => {
+  async function searchSyobocal(value: string) {
     setIsLoading(true)
 
     setCurrentPage(1)
@@ -106,7 +103,7 @@ export const Search: React.FC = memo(() => {
     }
 
     setIsLoading(false)
-  }, [])
+  }
 
   useEffect(() => {
     if (!isNiconico || !inputValue) return
@@ -185,4 +182,4 @@ export const Search: React.FC = memo(() => {
       </div>
     </div>
   )
-})
+}

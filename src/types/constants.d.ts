@@ -24,5 +24,5 @@ export type SettingsInitData = {
   id: string
   title: string
   items: SettingsInputProps<SettingsKey>[]
-  icon?: React.FC<React.ComponentProps<'svg'>>
+  Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
 }[]

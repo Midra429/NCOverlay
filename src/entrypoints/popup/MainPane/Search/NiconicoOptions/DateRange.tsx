@@ -36,7 +36,7 @@ export type DateRangeProps = {
   isDisabled?: boolean
 }
 
-export const DateRange: React.FC<DateRangeProps> = ({ isDisabled }) => {
+export function DateRange({ isDisabled }: DateRangeProps) {
   const [value, setValue] = useSettings('settings:search:dateRange')
 
   return (

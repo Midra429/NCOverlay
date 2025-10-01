@@ -24,10 +24,7 @@ export type NiconicoOptionsProps = {
   isDisabled?: boolean
 }
 
-export const NiconicoOptions: React.FC<NiconicoOptionsProps> = ({
-  isOpen,
-  isDisabled,
-}) => {
+export function NiconicoOptions({ isOpen, isDisabled }: NiconicoOptionsProps) {
   const willChange = useWillChange()
 
   return (

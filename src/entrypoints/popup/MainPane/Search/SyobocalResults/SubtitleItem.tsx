@@ -33,12 +33,12 @@ export type SubtitleItemProps = {
   ref: React.Ref<SubtitleItemHandle>
 }
 
-export const SubtitleItem: React.FC<SubtitleItemProps> = ({
+export function SubtitleItem({
   title,
   subtitle,
   onClick,
   ref,
-}) => {
+}: SubtitleItemProps) {
   const detailRef = useRef<SubtitleDetailHandle>(null)
 
   const [isOpen, setIsOpen] = useState(false)

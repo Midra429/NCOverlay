@@ -2,7 +2,7 @@ import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem } from './SubtitleItem'
 
-import { useMemo, useCallback, useState, useImperativeHandle } from 'react'
+import { useState, useImperativeHandle } from 'react'
 import { Spinner } from '@heroui/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
@@ -23,35 +23,26 @@ export type SubtitleDetailProps = {
   ref: React.Ref<SubtitleDetailHandle>
 }
 
-export const SubtitleDetail: React.FC<SubtitleDetailProps> = ({
-  title,
-  subtitle,
-  ref,
-}) => {
+export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
 
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
+  const ids = stateSlotDetails?.map((v) => v.id)
 
-  const programItems = useMemo(() => {
-    const currentDate = new Date()
-    const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
-      .filter(Boolean)
-      .join(' ')
-      .trim()
+  const currentDate = new Date()
+  const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+  const programItems = programs
+    .filter((program) => new Date(program.EdTime) <= currentDate)
+    .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
+    .map((program) => programToSlotDetail(slotTitle, program))
 
-    return programs
-      .filter((program) => new Date(program.EdTime) <= currentDate)
-      .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
-      .map((program) => programToSlotDetail(slotTitle, program))
-  }, [programs])
-
-  const initialize = useCallback(async () => {
+  async function initialize() {
     if (isInitialized) return
 
     setIsInitialized(true)
@@ -69,7 +60,7 @@ export const SubtitleDetail: React.FC<SubtitleDetailProps> = ({
     }
 
     setIsLoading(false)
-  }, [isInitialized, title.TID, subtitle[0]])
+  }
 
   useImperativeHandle(ref, () => {
     return { initialize }

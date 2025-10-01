@@ -48,7 +48,7 @@ export type SortProps = {
   isDisabled?: boolean
 }
 
-export const Sort: React.FC<SortProps> = ({ isDisabled }) => {
+export function Sort({ isDisabled }: SortProps) {
   const [value, setValue] = useSettings('settings:search:sort')
 
   return (

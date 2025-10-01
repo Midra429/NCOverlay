@@ -4,36 +4,38 @@ import { webext } from '@/utils/webext'
 
 import { Tooltip } from '@/components/Tooltip'
 
-export type IconLinkProps =
+export type IconLinkProps = {
+  Icon: (props: React.ComponentProps<'svg'>) => React.ReactNode
+  title?: string
+} & (
   | {
-      icon: React.FC<any>
-      title?: string
       href: string
     }
   | {
-      icon: React.FC<any>
-      title?: string
       onPress: () => void
     }
+)
 
-export const IconLink: React.FC<IconLinkProps> = (props) => (
-  <Tooltip
-    content={
-      props.title || ('href' in props && new URL(props.href).pathname.slice(1))
-    }
-  >
-    <Button
-      size="sm"
-      radius="full"
-      variant="light"
-      isIconOnly
-      onPress={
-        'onPress' in props
-          ? props.onPress
-          : () => webext.tabs.create({ url: props.href })
+export function IconLink({ Icon, title, ...props }: IconLinkProps) {
+  return (
+    <Tooltip
+      content={
+        title || ('href' in props && new URL(props.href).pathname.slice(1))
       }
     >
-      <props.icon className="text-foreground-700 size-5" />
-    </Button>
-  </Tooltip>
-)
+      <Button
+        size="sm"
+        radius="full"
+        variant="light"
+        isIconOnly
+        onPress={
+          'onPress' in props
+            ? props.onPress
+            : () => webext.tabs.create({ url: props.href })
+        }
+      >
+        <Icon className="text-foreground-700 size-5" />
+      </Button>
+    </Tooltip>
+  )
+}

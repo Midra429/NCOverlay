@@ -1,7 +1,7 @@
 import type { Variants } from 'framer-motion'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@heroui/react'
 import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import {
@@ -22,10 +22,12 @@ const transitionVariants: Variants = {
   enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
 }
 
-export const OptionsButton: React.FC<{
+export type OptionsButtonProps = {
   isOpen: boolean
   onPress: () => void
-}> = ({ isOpen, onPress }) => {
+}
+
+export function OptionsButton({ isOpen, onPress }: OptionsButtonProps) {
   return (
     <Button
       className="!size-6 min-h-0 min-w-0"
@@ -49,10 +51,7 @@ type SlotOffsetControlProps = {
   offsetMs: StateSlotDetail['offsetMs']
 }
 
-const SlotOffsetControl: React.FC<SlotOffsetControlProps> = ({
-  id,
-  offsetMs,
-}) => {
+function SlotOffsetControl({ id, offsetMs }: SlotOffsetControlProps) {
   const [currentOffset, setCurrentOffset] = useState(0)
   const [offset, setOffset] = useState(0)
 
@@ -65,12 +64,12 @@ const SlotOffsetControl: React.FC<SlotOffsetControlProps> = ({
     }
   }, [offsetMs])
 
-  const onApply = useCallback(async () => {
+  async function onApply() {
     await ncoState?.update('slotDetails', ['id'], {
       id,
       offsetMs: offset * 1000,
     })
-  }, [id, offset])
+  }
 
   return (
     <OffsetControl
@@ -87,7 +86,7 @@ export type OptionsProps = {
   isOpen: boolean
 } & SlotOffsetControlProps
 
-export const Options: React.FC<OptionsProps> = ({ isOpen, id, offsetMs }) => {
+export function Options({ isOpen, id, offsetMs }: OptionsProps) {
   const willChange = useWillChange()
 
   return (

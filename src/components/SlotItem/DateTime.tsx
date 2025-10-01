@@ -10,7 +10,7 @@ export type DateTimeProps = {
   isSearch?: boolean
 }
 
-export const DateTime: React.FC<DateTimeProps> = ({ infoDate, isSearch }) => {
+export function DateTime({ infoDate, isSearch }: DateTimeProps) {
   return (
     <div
       className={cn(

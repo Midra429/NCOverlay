@@ -6,7 +6,7 @@ import type {
 } from '@midra/nco-utils/types/api/tver/callEPGv2'
 import type { CallEPGv2Params } from '@midra/nco-utils/api/services/tver/callEPGv2'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Divider } from '@heroui/react'
 import {
   ChevronRightIcon,
@@ -60,10 +60,10 @@ export type JikkyoEpgSelectorProps = {
   onOpenChange: () => void
 }
 
-export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
+export function JikkyoEpgSelector({
   isOpen,
   onOpenChange,
-}) => {
+}: JikkyoEpgSelectorProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const [date, setDate] = useState<EPGv2Result['date']>()
@@ -73,7 +73,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
   >([])
   const [epgData, setEpgData] = useState<EPGData | null>(null)
 
-  const callEPGv2 = useCallback(async (params: CallEPGv2Params) => {
+  async function callEPGv2(params: CallEPGv2Params) {
     setIsLoading(true)
 
     const result = await ncoApiProxy.tver.callEPGv2(params)
@@ -141,7 +141,7 @@ export const JikkyoEpgSelector: React.FC<JikkyoEpgSelectorProps> = ({
     }
 
     setIsLoading(false)
-  }, [])
+  }
 
   useEffect(() => {
     if (!isOpen || isLoading || epgData) return

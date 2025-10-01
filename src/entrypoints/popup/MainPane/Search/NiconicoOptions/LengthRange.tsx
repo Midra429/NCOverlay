@@ -36,7 +36,7 @@ export type LengthRangeProps = {
   isDisabled?: boolean
 }
 
-export const LengthRange: React.FC<LengthRangeProps> = ({ isDisabled }) => {
+export function LengthRange({ isDisabled }: LengthRangeProps) {
   const [value, setValue] = useSettings('settings:search:lengthRange')
 
   return (

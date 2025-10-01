@@ -1,4 +1,3 @@
-import { useMemo, useCallback } from 'react'
 import { RefreshCwIcon } from 'lucide-react'
 
 import { useNcoState } from '@/hooks/useNco'
@@ -6,16 +5,14 @@ import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import { PanelButton } from '@/components/PanelButton'
 
-export const ReloadButton: React.FC = () => {
+export function ReloadButton() {
   const stateStatus = useNcoState('status')
 
-  const isLoading = useMemo(() => {
-    return stateStatus === 'searching' || stateStatus === 'loading'
-  }, [stateStatus])
+  const isLoading = stateStatus === 'searching' || stateStatus === 'loading'
 
-  const onPress = useCallback(() => {
+  function onPress() {
     sendNcoMessage('reload', null)
-  }, [])
+  }
 
   return (
     <PanelButton

@@ -7,11 +7,7 @@ export type TooltipProps = React.PropsWithChildren<{
   content?: React.ReactNode
 }>
 
-export const Tooltip: React.FC<TooltipProps> = ({
-  placement,
-  content,
-  children,
-}) => {
+export function Tooltip({ placement, content, children }: TooltipProps) {
   return content ? (
     <HeroUITooltip
       classNames={{

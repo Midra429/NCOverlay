@@ -5,7 +5,7 @@ import type {
 } from '@midra/nco-utils/types/api/constants'
 import type { SettingsInputBaseProps } from '.'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Button,
   Tabs,
@@ -51,7 +51,7 @@ type ChSelectorProps = {
     | ((ids: JikkyoBsCsChannelId[]) => void)
 }
 
-const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
+function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
   const CHANNEL = JIKKYO_CHANNEL_GROUPS[type]
 
   return (
@@ -101,20 +101,20 @@ const ChSelector: React.FC<ChSelectorProps> = ({ type, chIds, setChIds }) => {
   )
 }
 
-export const Input: React.FC<Props> = (props) => {
+export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [dtvChIds, setDtvChIds] = useState<JikkyoDtvChannelId[]>([])
   const [stvChIds, setStvChIds] = useState<JikkyoBsCsChannelId[]>([])
 
-  const onReset = useCallback(() => {
+  function onReset() {
     setDtvChIds(JIKKYO_CHANNEL_GROUPS.DTV.IDS)
     setStvChIds(JIKKYO_CHANNEL_GROUPS.STV.IDS)
-  }, [])
+  }
 
-  const onSave = useCallback(() => {
+  function onSave() {
     setValue([...dtvChIds, ...stvChIds])
-  }, [dtvChIds, stvChIds])
+  }
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 

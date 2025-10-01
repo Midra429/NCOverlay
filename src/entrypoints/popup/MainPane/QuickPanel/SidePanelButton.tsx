@@ -1,11 +1,11 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 
 import { PanelButton } from '@/components/PanelButton'
 
-export const SidePanelButton: React.FC = () => {
+export function SidePanelButton() {
   const [tabId, setTabId] = useState<number>()
   const [open, setOpen] = useState(false)
 
@@ -22,7 +22,7 @@ export const SidePanelButton: React.FC = () => {
     })
   }, [])
 
-  const onPress = useCallback(() => {
+  function onPress() {
     const enabled = !open
 
     if (typeof tabId === 'number') {
@@ -34,7 +34,7 @@ export const SidePanelButton: React.FC = () => {
     }
 
     setOpen(enabled)
-  }, [tabId, open])
+  }
 
   return (
     <PanelButton

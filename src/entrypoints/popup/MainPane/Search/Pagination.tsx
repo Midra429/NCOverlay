@@ -8,12 +8,12 @@ export type PaginationProps = {
   onPageChange: (page: number) => void
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+export function Pagination({
   total,
   page,
   isDisabled,
   onPageChange,
-}) => {
+}: PaginationProps) {
   return (
     <div className="flex flex-row justify-between">
       <Button

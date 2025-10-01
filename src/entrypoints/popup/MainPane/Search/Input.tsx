@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-  useImperativeHandle,
-} from 'react'
+import { useEffect, useState, useImperativeHandle } from 'react'
 import { Button, Input, cn } from '@heroui/react'
 import { Table2Icon, SearchIcon, ChevronDownIcon } from 'lucide-react'
 import { SiNiconico } from '@icons-pack/react-simple-icons'
@@ -28,11 +22,7 @@ export type SearchInputProps = {
   ref: React.Ref<SearchInputHandle>
 }
 
-export const SearchInput: React.FC<SearchInputProps> = ({
-  isDisabled,
-  onSearch,
-  ref,
-}) => {
+export function SearchInput({ isDisabled, onSearch, ref }: SearchInputProps) {
   const [source, setSource] = useState<SearchSource>('niconico')
   const [value, setValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
@@ -41,16 +31,14 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const isNiconico = source === 'niconico'
   const isSyobocal = source === 'syobocal'
 
-  const isSearchable = useMemo(() => {
-    return value.trim() && !isDisabled
-  }, [value, isDisabled])
+  const isSearchable = value.trim() && !isDisabled
 
-  const search = useCallback(() => {
+  function search() {
     onSearch({
       source,
       value: value.trim(),
     })
-  }, [onSearch, source, value])
+  }
 
   useEffect(() => {
     ncoState?.get('info').then((info) => {

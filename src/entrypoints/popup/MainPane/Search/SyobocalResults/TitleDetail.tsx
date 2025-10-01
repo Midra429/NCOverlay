@@ -2,13 +2,7 @@ import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
 import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
 
-import {
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-  useImperativeHandle,
-} from 'react'
+import { useState, useRef, useImperativeHandle } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
@@ -35,12 +29,12 @@ export type TitleDetailProps = {
   ref: React.Ref<TitleDetailHandle>
 }
 
-export const TitleDetail: React.FC<TitleDetailProps> = ({
+export function TitleDetail({
   title,
   isOpen,
   onOpenChange,
   ref,
-}) => {
+}: TitleDetailProps) {
   const subtitleItemRefs = useRef<{
     [index: number]: SubtitleItemHandle
   }>({})
@@ -51,35 +45,27 @@ export const TitleDetail: React.FC<TitleDetailProps> = ({
 
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
+  const ids = stateSlotDetails?.map((v) => v.id)
 
-  const programItems = useMemo(() => {
-    const currentDate = new Date()
+  const currentDate = new Date()
+  const programItems = programs
+    .filter((program) => new Date(program.EdTime) <= currentDate)
+    .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
+    .map((program) => programToSlotDetail(title.Title, program))
 
-    return programs
-      .filter((program) => new Date(program.EdTime) <= currentDate)
-      .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
-      .map((program) => programToSlotDetail(title.Title, program))
-  }, [programs])
+  const macCountLength = Math.max(...subtitles.map(([cnt]) => cnt.length), 2)
+  const subtitleItems = subtitles.map((val, idx) => ({
+    subtitle: [zeroPadding(val[0], macCountLength), val[1]] as ScSubtitleItem,
+    refCallbackFunction: (handle: SubtitleItemHandle | null) => {
+      if (handle && !subtitleItemRefs.current[idx]) {
+        subtitleItemRefs.current[idx] = handle
+      } else {
+        delete subtitleItemRefs.current[idx]
+      }
+    },
+  }))
 
-  const subtitleItems = useMemo(() => {
-    const macCountLength = Math.max(...subtitles.map(([cnt]) => cnt.length), 2)
-
-    return subtitles.map((val, idx) => ({
-      subtitle: [zeroPadding(val[0], macCountLength), val[1]] as ScSubtitleItem,
-      refCallbackFunction: (handle: SubtitleItemHandle | null) => {
-        if (handle && !subtitleItemRefs.current[idx]) {
-          subtitleItemRefs.current[idx] = handle
-        } else {
-          delete subtitleItemRefs.current[idx]
-        }
-      },
-    }))
-  }, [subtitles])
-
-  const initialize = useCallback(async () => {
+  async function initialize() {
     setIsLoading(true)
     setPrograms([])
     setSubtitles([])
@@ -106,7 +92,7 @@ export const TitleDetail: React.FC<TitleDetailProps> = ({
     }
 
     setIsLoading(false)
-  }, [title.TID, title.Cat])
+  }
 
   useImperativeHandle(ref, () => {
     return { initialize }

@@ -6,7 +6,7 @@ export type StatusOverlayProps = {
   status: StateSlotDetail['status']
 }
 
-export const StatusOverlay: React.FC<StatusOverlayProps> = ({ status }) => {
+export function StatusOverlay({ status }: StatusOverlayProps) {
   if (status === 'ready' || status === 'error') return
 
   return (

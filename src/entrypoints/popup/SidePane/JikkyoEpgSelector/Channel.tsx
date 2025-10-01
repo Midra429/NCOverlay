@@ -10,7 +10,7 @@ export type ChannelCellProps = {
   tverChId: TVerChannelId
 }
 
-export const ChannelCell: React.FC<ChannelCellProps> = ({ tverChId }) => {
+export function ChannelCell({ tverChId }: ChannelCellProps) {
   const jkChId = tverToJikkyoChId(tverChId)
   const chName = JIKKYO_CHANNELS[jkChId!]
 
@@ -38,7 +38,7 @@ export type ChannelsProps = {
   tverChIds: TVerChannelId[]
 }
 
-export const Channels: React.FC<ChannelsProps> = ({ tverChIds }) => {
+export function Channels({ tverChIds }: ChannelsProps) {
   return (
     <div
       className={cn(

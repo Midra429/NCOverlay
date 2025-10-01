@@ -9,7 +9,7 @@ export type DurationProps = {
   duration: StateSlotDetail['info']['duration']
 }
 
-export const Duration: React.FC<DurationProps> = ({ className, duration }) => {
+export function Duration({ className, duration }: DurationProps) {
   return (
     <div
       className={cn(

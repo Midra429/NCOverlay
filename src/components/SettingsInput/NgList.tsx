@@ -5,7 +5,7 @@ import type {
 } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Button,
   Switch,
@@ -39,7 +39,7 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
   {}
 >
 
-const validateRegExp = (pattern: string) => {
+function validateRegExp(pattern: string) {
   try {
     new RegExp(pattern)
   } catch {
@@ -49,25 +49,21 @@ const validateRegExp = (pattern: string) => {
   return true
 }
 
-const filterNgSettingsContents = (contents: (NgSettingsContent | null)[]) => {
+function filterNgSettingsContents(contents: (NgSettingsContent | null)[]) {
   return contents.filter((val) => {
-    if (!val) return false
+    const content = val?.content.trim()
 
-    const content = val.content.trim()
-
-    if (!content) return false
-
-    if (val.isRegExp) {
-      return validateRegExp(val.content)
+    if (content) {
+      return val?.isRegExp ? validateRegExp(content) : true
     }
 
-    return true
+    return false
   }) as NgSettingsContent[]
 }
 
-const HeaderCell: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
-> = ({ className, ...props }) => {
+type CellProps = React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
+
+function HeaderCell({ className, ...props }: CellProps) {
   return (
     <div
       {...props}
@@ -84,9 +80,7 @@ const HeaderCell: React.FC<
   )
 }
 
-const ItemCell: React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
-> = ({ className, ...props }) => {
+function ItemCell({ className, ...props }: CellProps) {
   return (
     <div
       {...props}
@@ -102,7 +96,7 @@ const ItemCell: React.FC<
   )
 }
 
-const Header: React.FC = () => {
+function Header() {
   return (
     <div className="sticky top-0 z-20 flex flex-row">
       <HeaderCell className="w-[calc(100%-7rem)]">テキスト</HeaderCell>
@@ -114,10 +108,12 @@ const Header: React.FC = () => {
   )
 }
 
-const Item: React.FC<{
+type ItemProps = {
   init: NgSettingsContent
   onValueChange: (value: NgSettingsContent | null) => void
-}> = ({ init, onValueChange }) => {
+}
+
+function Item({ init, onValueChange }: ItemProps) {
   const [content, setContent] = useState<string>(init.content)
   const [isRegExp, setIsRegExp] = useState<boolean>(init.isRegExp ?? false)
   const [isRegExpValidated, setIsRegExpValidated] = useState<boolean>(true)
@@ -178,18 +174,18 @@ const Item: React.FC<{
   )
 }
 
-export const Input: React.FC<Props> = (props) => {
+export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])
 
-  const onAdd = useCallback(() => {
+  function onAdd() {
     setTmpValue((val) => [...val, { content: '' }])
-  }, [])
+  }
 
-  const onSave = useCallback(() => {
+  function onSave() {
     setValue(filterNgSettingsContents(tmpValue))
-  }, [tmpValue])
+  }
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 

@@ -3,7 +3,6 @@ import type {
   SyoboCalTitleSearch,
 } from '@midra/nco-utils/types/api/syobocal/json'
 
-import { useMemo } from 'react'
 import { cn } from '@heroui/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { CalendarDaysIcon, ShapesIcon, ChevronRightIcon } from 'lucide-react'
@@ -16,30 +15,24 @@ export type TitleItemInnerProps = {
   isHeader?: boolean
 }
 
-export const TitleItemInner: React.FC<TitleItemInnerProps> = ({
-  item,
-  isHeader,
-}) => {
+export function TitleItemInner({ item, isHeader }: TitleItemInnerProps) {
   const { ref, overflow } = useOverflowDetector()
 
-  const period = useMemo(() => {
-    const start = `${item.FirstYear}年${item.FirstMonth}月`
-
-    const end = [
+  const period = [
+    `${item.FirstYear}年${item.FirstMonth}月`,
+    [
       item.FirstEndYear &&
         item.FirstEndYear !== item.FirstYear &&
         `${item.FirstEndYear}年`,
       item.FirstEndMonth && `${item.FirstEndMonth}月`,
     ]
       .filter(Boolean)
-      .join('')
+      .join(''),
+  ]
+    .filter(Boolean)
+    .join('〜')
 
-    return [start, end].filter(Boolean).join('〜')
-  }, [item.FirstYear, item.FirstMonth, item.FirstEndYear, item.FirstEndMonth])
-
-  const category = useMemo(() => {
-    return SYOBOCAL_CATEGORIES[item.Cat]?.replace('/再放送', '')
-  }, [item.Cat])
+  const category = SYOBOCAL_CATEGORIES[item.Cat]?.replace('/再放送', '')
 
   return (
     <div className="flex flex-col items-start gap-1">
@@ -91,7 +84,7 @@ export type TitleItemProps = {
   onClick: () => void
 }
 
-export const TitleItem: React.FC<TitleItemProps> = ({ item, onClick }) => {
+export function TitleItem({ item, onClick }: TitleItemProps) {
   if (!item.FirstYear || !item.FirstMonth) {
     return null
   }

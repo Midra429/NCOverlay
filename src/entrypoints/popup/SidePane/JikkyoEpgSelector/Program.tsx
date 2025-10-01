@@ -2,7 +2,6 @@ import type { Program as EPGv2Program } from '@midra/nco-utils/types/api/tver/ca
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import type { EPGProgram, EPGContent, EPGData } from '.'
 
-import { useMemo } from 'react'
 import {
   Divider,
   Popover,
@@ -45,7 +44,7 @@ export type ProgramIconsProps = {
   icon: Partial<EPGv2Program['icon']>
 }
 
-export const ProgramIcons: React.FC<ProgramIconsProps> = ({ icon }) => {
+export function ProgramIcons({ icon }: ProgramIconsProps) {
   return (
     <>
       {icon.revival && (
@@ -74,17 +73,14 @@ export type ProgramContentProps = {
   bgColor: [light: string, dark: string]
 }
 
-export const ProgramContent: React.FC<ProgramContentProps> = ({
-  program,
-  bgColor,
-}) => {
-  const fgColor = useMemo(() => {
-    return bgColor.map((color) => readableColor(toHex(color))) as typeof bgColor
-  }, [bgColor])
-
-  const startMinutes = useMemo(() => {
-    return zeroPadding(new Date(program.startAt * 1000).getMinutes(), 2)
-  }, [program.startAt])
+export function ProgramContent({ program, bgColor }: ProgramContentProps) {
+  const fgColor = bgColor.map((color) =>
+    readableColor(toHex(color))
+  ) as typeof bgColor
+  const startMinutes = zeroPadding(
+    new Date(program.startAt * 1000).getMinutes(),
+    2
+  )
 
   return (
     <div
@@ -155,15 +151,10 @@ export type ProgramPopoverProps = {
   program: EPGProgram
 }
 
-export const ProgramPopover: React.FC<ProgramPopoverProps> = ({
-  tverChId,
-  program,
-}) => {
+export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = useMemo(() => {
-    return stateSlotDetails?.map((v) => v.id)
-  }, [stateSlotDetails])
+  const ids = stateSlotDetails?.map((v) => v.id)
 
   const { title, description, startAt, endAt, icon } = program
 
@@ -241,12 +232,12 @@ export type ProgramCellProps = {
   program: EPGProgram
 }
 
-export const ProgramCell: React.FC<ProgramCellProps> = ({
+export function ProgramCell({
   date,
   genre,
   tverChId,
   program,
-}) => {
+}: ProgramCellProps) {
   const { startAt, endAt } = program
 
   const height = ((endAt - startAt) / 3600) * ROW_HEIGHT
@@ -294,7 +285,7 @@ export type ProgramsProps = {
   data: EPGData
 }
 
-export const Programs: React.FC<ProgramsProps> = ({ data }) => {
+export function Programs({ data }: ProgramsProps) {
   const { date, contents, genre } = data
 
   return (

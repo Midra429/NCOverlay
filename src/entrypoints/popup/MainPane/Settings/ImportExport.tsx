@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Textarea, useDisclosure } from '@heroui/react'
 import {
   DownloadIcon,
@@ -19,24 +19,26 @@ import { Tooltip } from '@/components/Tooltip'
 
 import { name } from '@@/package.json'
 
-const ImportSettings: React.FC = () => {
+function validateJson(value: string): boolean {
+  try {
+    return !Array.isArray(JSON.parse(value))
+  } catch {
+    return false
+  }
+}
+
+function ImportSettings() {
   const [value, setValue] = useState('')
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-  const isValidated = useMemo(() => {
-    try {
-      return !Array.isArray(JSON.parse(value))
-    } catch {
-      return false
-    }
-  }, [value])
+  const validated = validateJson(value)
 
-  const onPaste = useCallback(async () => {
+  async function onPaste() {
     setValue(await navigator.clipboard.readText())
-  }, [])
+  }
 
-  const onSelectFile = useCallback(() => {
+  function onSelectFile() {
     const input = document.createElement('input')
 
     input.type = 'file'
@@ -57,11 +59,11 @@ const ImportSettings: React.FC = () => {
     }
 
     input.click()
-  }, [])
+  }
 
-  const onImport = useCallback(async () => {
+  async function onImport() {
     await settings.import(value)
-  }, [value])
+  }
 
   useEffect(() => {
     return () => setValue('')
@@ -85,7 +87,7 @@ const ImportSettings: React.FC = () => {
         okText="インポート"
         okIcon={<DownloadIcon className="size-4" />}
         onOk={onImport}
-        isOkDisabled={!isValidated}
+        isOkDisabled={!validated}
         header={
           <div className="flex flex-row items-center gap-0.5">
             <span>ストレージ</span>
@@ -135,16 +137,16 @@ const ImportSettings: React.FC = () => {
   )
 }
 
-const ExportSettings: React.FC = () => {
+function ExportSettings() {
   const [value, setValue] = useState('')
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-  const onCopy = useCallback(async () => {
+  async function onCopy() {
     await navigator.clipboard.writeText(value)
-  }, [value])
+  }
 
-  const onSaveFile = useCallback(async () => {
+  async function onSaveFile() {
     const url = URL.createObjectURL(
       new Blob([value], {
         type: 'application/json',
@@ -162,7 +164,7 @@ const ExportSettings: React.FC = () => {
     })
 
     URL.revokeObjectURL(url)
-  }, [value])
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -230,7 +232,7 @@ const ExportSettings: React.FC = () => {
   )
 }
 
-export const ImportExport: React.FC = () => {
+export function ImportExport() {
   return (
     <div className="flex flex-col gap-2 py-2">
       <ImportSettings />

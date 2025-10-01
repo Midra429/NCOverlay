@@ -5,7 +5,7 @@ import { Layout } from '@/components/Layout'
 import { MainPane } from './MainPane'
 import { SidePane } from './SidePane'
 
-const App: React.FC = () => {
+function App() {
   const isActive = !!ncoState
   const height = isActive ? 507 : 458
 

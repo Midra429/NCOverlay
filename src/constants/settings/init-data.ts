@@ -21,7 +21,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
     id: 'general',
     title: '全般',
-    icon: SlidersHorizontalIcon,
+    Icon: SlidersHorizontalIcon,
     items: [
       {
         settingsKey: 'settings:theme',
@@ -31,17 +31,17 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           {
             label: '自動',
             value: 'auto',
-            icon: SunMoonIcon,
+            Icon: SunMoonIcon,
           },
           {
             label: 'ライト',
             value: 'light',
-            icon: SunIcon,
+            Icon: SunIcon,
           },
           {
             label: 'ダーク',
             value: 'dark',
-            icon: MoonIcon,
+            Icon: MoonIcon,
           },
         ],
       },
@@ -91,7 +91,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
     id: 'comment',
     title: 'コメント',
-    icon: MessageSquareTextIcon,
+    Icon: MessageSquareTextIcon,
     items: [
       {
         settingsKey: 'settings:comment:fps',
@@ -173,7 +173,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
     id: 'ng',
     title: 'NG設定',
-    icon: MessageSquareOffIcon,
+    Icon: MessageSquareOffIcon,
     items: [
       {
         settingsKey: 'settings:ng:words',
@@ -213,7 +213,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
     id: 'keyboard',
     title: 'キーボード',
-    icon: KeyboardIcon,
+    Icon: KeyboardIcon,
     items: [
       {
         settingsKey: 'settings:kbd:increaseGlobalOffset',
@@ -270,7 +270,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
     id: 'plugins',
     title: 'プラグイン',
-    icon: BlocksIcon,
+    Icon: BlocksIcon,
     items: Object.entries(PLUGINS).map(([key, value]) => ({
       settingsKey: 'settings:plugins',
       inputType: 'checkcard',

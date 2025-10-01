@@ -3,7 +3,7 @@ import type { Runtime } from 'webextension-polyfill'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
-import { Fragment, useEffect, useState, useCallback } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { ScrollShadow, Button, Kbd, cn } from '@heroui/react'
 import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
@@ -77,20 +77,19 @@ const OS_KEYS: Partial<
   },
 }
 
-const isHeroUiKbdKey = (
-  key: string,
-  os?: Runtime.PlatformOs
-): key is KbdKey => {
+function isHeroUiKbdKey(key: string, os?: Runtime.PlatformOs): key is KbdKey {
   return !!(
     HEROUI_KBD_KEYS['common']?.includes(key) ||
     (os && HEROUI_KBD_KEYS[os]?.includes(key))
   )
 }
 
-const KeyboardKey: React.FC<{
+type KeyboardKeyProps = {
   kbdKey: string
   os?: Runtime.PlatformOs
-}> = ({ kbdKey, os }) => {
+}
+
+function KeyboardKey({ kbdKey, os }: KeyboardKeyProps) {
   if (!kbdKey) return
 
   const key =
@@ -122,24 +121,21 @@ export type Props<K extends Key = Key> = SettingsInputBaseProps<
   {}
 >
 
-export const Input: React.FC<Props> = (props) => {
+export function Input(props: Props) {
   const [os, setOs] = useState<Runtime.PlatformOs>()
   const [value, setValue] = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()
 
-  const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    isRecording
-      ? () => {
-          stop()
-          setValue([...keys].join('+'))
-        }
-      : (evt) => {
-          start()
-          setValue('')
-          evt.currentTarget.blur()
-        },
-    [isRecording, keys]
-  )
+  function onClick(evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    if (isRecording) {
+      stop()
+      setValue([...keys].join('+'))
+    } else {
+      start()
+      setValue('')
+      evt.currentTarget.blur()
+    }
+  }
 
   useEffect(() => {
     webext.runtime.getPlatformInfo().then((v) => setOs(v.os))

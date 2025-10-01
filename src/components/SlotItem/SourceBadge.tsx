@@ -27,7 +27,7 @@ const SOURCE_BADGE_NAME: {
   jikkyo: '実況',
 }
 
-export const SourceBadge: React.FC<SourceTagProps> = ({ className, type }) => {
+export function SourceBadge({ className, type }: SourceTagProps) {
   if (type === 'normal') return
 
   return (

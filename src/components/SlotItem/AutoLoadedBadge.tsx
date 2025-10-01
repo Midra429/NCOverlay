@@ -7,10 +7,10 @@ export type AutoLoadedBadgeProps = {
   isAutoLoaded: StateSlotDetail['isAutoLoaded']
 }
 
-export const AutoLoadedBadge: React.FC<AutoLoadedBadgeProps> = ({
+export function AutoLoadedBadge({
   className,
   isAutoLoaded,
-}) => {
+}: AutoLoadedBadgeProps) {
   if (isAutoLoaded) return
 
   return (

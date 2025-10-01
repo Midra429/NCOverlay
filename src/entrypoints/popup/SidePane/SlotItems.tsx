@@ -6,7 +6,7 @@ export type SlotItemsProps = {
   details: StateSlotDetail[]
 }
 
-export const SlotItems: React.FC<SlotItemsProps> = ({ details }) => {
+export function SlotItems({ details }: SlotItemsProps) {
   return (
     <div className="flex flex-col gap-2">
       {details.map((detail) => (

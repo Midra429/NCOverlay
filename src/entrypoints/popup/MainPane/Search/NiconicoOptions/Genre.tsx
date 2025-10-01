@@ -17,7 +17,7 @@ export type GenreProps = {
   isDisabled?: boolean
 }
 
-export const Genre: React.FC<GenreProps> = ({ isDisabled }) => {
+export function Genre({ isDisabled }: GenreProps) {
   const [value, setValue] = useSettings('settings:search:genre')
 
   return (

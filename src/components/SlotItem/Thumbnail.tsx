@@ -19,14 +19,14 @@ export type ThumbnailProps = {
   isSearch?: boolean
 }
 
-export const Thumbnail: React.FC<ThumbnailProps> = ({
+export function Thumbnail({
   id,
   type,
   offsetMs,
   isAutoLoaded,
   info,
   isSearch,
-}) => {
+}: ThumbnailProps) {
   let thumbnail: React.JSX.Element | undefined
 
   if (type === 'jikkyo') {

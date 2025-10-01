@@ -1,4 +1,3 @@
-import { useMemo, useCallback } from 'react'
 import { Button, cn } from '@heroui/react'
 import { RotateCcwIcon } from 'lucide-react'
 
@@ -16,15 +15,15 @@ export type MarkerButtonProps = {
   disabled?: boolean
 }
 
-export const MarkerButton: React.FC<MarkerButtonProps> = ({
+export function MarkerButton({
   markerIdx,
   label,
   shortLabel,
   disabled,
-}) => {
-  const onPress = useCallback(() => {
+}: MarkerButtonProps) {
+  function onPress() {
     sendNcoMessage('jumpMarker', markerIdx)
-  }, [markerIdx])
+  }
 
   return (
     <Tooltip content={label}>
@@ -42,30 +41,14 @@ export const MarkerButton: React.FC<MarkerButtonProps> = ({
   )
 }
 
-export const MarkerButtons: React.FC = () => {
+export function MarkerButtons() {
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const markerEnableFlags = useMemo(() => {
-    const flags: boolean[] = Array(MARKERS.length).fill(false)
-
-    stateSlotDetails?.forEach(({ hidden, markers }) => {
-      if (hidden) return
-
-      markers?.forEach((marker, idx) => {
-        flags[idx] ||= !!marker
-      })
-    })
-
-    return flags
-  }, [stateSlotDetails])
-
-  const hasMarker = useMemo(() => {
-    return !!stateSlotDetails?.some((v) => !v.hidden && v.markers)
-  }, [stateSlotDetails])
-
-  const resetButtonDisabled = useMemo(() => {
-    return !stateSlotDetails?.some((v) => v.offsetMs)
-  }, [stateSlotDetails])
+  const markerEnableFlags = Array(MARKERS.length)
+    .fill(false)
+    .map((_, i) => !!stateSlotDetails?.some((v) => !v.hidden && v.markers?.[i]))
+  const hasMarker = markerEnableFlags.some((v) => v)
+  const resetButtonDisabled = !stateSlotDetails?.some((v) => v.offsetMs)
 
   return (
     hasMarker && (

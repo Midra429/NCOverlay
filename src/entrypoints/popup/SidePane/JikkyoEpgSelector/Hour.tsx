@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { cn } from '@heroui/react'
 
 import { ROW_HEIGHT } from './TverEpg'
@@ -7,7 +6,7 @@ export type HourCellProps = {
   hour: number
 }
 
-export const HourCell: React.FC<HourCellProps> = ({ hour }) => {
+export function HourCell({ hour }: HourCellProps) {
   return (
     <div
       className={cn(
@@ -26,23 +25,25 @@ export const HourCell: React.FC<HourCellProps> = ({ hour }) => {
   )
 }
 
-export const Hours: React.FC = memo(() => (
-  <div
-    className={cn(
-      'sticky left-0 z-20',
-      'flex flex-col',
-      'shrink-0',
-      'border-divider border-r-1'
-    )}
-    style={{
-      width: 20,
-    }}
-  >
-    {Array(24)
-      .fill(0)
-      .map((_, i) => (i + 5) % 24)
-      .map((hour) => (
-        <HourCell key={hour} hour={hour} />
-      ))}
-  </div>
-))
+export function Hours() {
+  return (
+    <div
+      className={cn(
+        'sticky left-0 z-20',
+        'flex flex-col',
+        'shrink-0',
+        'border-divider border-r-1'
+      )}
+      style={{
+        width: 20,
+      }}
+    >
+      {Array(24)
+        .fill(0)
+        .map((_, i) => (i + 5) % 24)
+        .map((hour) => (
+          <HourCell key={hour} hour={hour} />
+        ))}
+    </div>
+  )
+}

@@ -1,16 +1,16 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { CameraIcon, CheckIcon, XIcon } from 'lucide-react'
 
 import { capture } from '@/utils/extension/capture'
 
 import { PanelButton } from '@/components/PanelButton'
 
-export const CaptureButton: React.FC = () => {
+export function CaptureButton() {
   const [isLoading, setIsLoading] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
   const [isFailed, setIsFailed] = useState(false)
 
-  const onPress = useCallback(async () => {
+  async function onPress() {
     setIsLoading(true)
 
     const result = await capture()
@@ -30,7 +30,7 @@ export const CaptureButton: React.FC = () => {
         setIsCopied(false)
       }, 2000)
     }
-  }, [])
+  }
 
   return (
     <PanelButton

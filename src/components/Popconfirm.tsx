@@ -1,6 +1,6 @@
 import type { PopoverProps, ButtonProps } from '@heroui/react'
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import {
   Popover,
   PopoverTrigger,
@@ -44,12 +44,12 @@ const popoverIcon = tv({
   },
 })
 
-export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
+export function Popconfirm(props: PopconfirmProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isOkLoading, setIsOkLoading] = useState(false)
   const [isCancelLoading, setIsCancelLoading] = useState(false)
 
-  const onPressCancel = useCallback(async () => {
+  async function onPressCancel() {
     if (props.onCancel) {
       const response = props.onCancel()
 
@@ -63,9 +63,9 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
     }
 
     setIsOpen(false)
-  }, [props.onCancel])
+  }
 
-  const onPressOk = useCallback(async () => {
+  async function onPressOk() {
     const response = props.onOk()
 
     if (response instanceof Promise) {
@@ -77,7 +77,7 @@ export const Popconfirm: React.FC<PopconfirmProps> = (props) => {
     }
 
     setIsOpen(false)
-  }, [props.onOk])
+  }
 
   return (
     <Popover

@@ -1,9 +1,11 @@
 import { cn } from '@heroui/react'
 
-export const ItemLabel: React.FC<{
+export type ItemLabelProps = {
   title: React.ReactNode
   description?: React.ReactNode
-}> = (props) => {
+}
+
+export function ItemLabel(props: ItemLabelProps) {
   return (
     <div className="flex flex-col gap-0.5">
       <span className="text-small text-foreground">{props.title}</span>

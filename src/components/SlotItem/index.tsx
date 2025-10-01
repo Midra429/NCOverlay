@@ -6,7 +6,7 @@ import type {
 } from '@/ncoverlay/state'
 import type { PanelItemProps } from '@/components/PanelItem'
 
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { cn } from '@heroui/react'
 
 import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
@@ -34,17 +34,17 @@ export type SlotItemProps = {
   isDisabled?: boolean
 }
 
-export const SlotItem: React.FC<SlotItemProps> = ({
+export function SlotItem({
   classNames,
   detail,
   isSearch,
   isDisabled,
-}) => {
+}: SlotItemProps) {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
   const isError = detail.status === 'error'
 
-  const onPressAdd = useCallback(async () => {
+  async function onPressAdd() {
     await ncoState?.add('slotDetails', {
       ...detail,
       status: 'loading',
@@ -120,9 +120,9 @@ export const SlotItem: React.FC<SlotItemProps> = ({
     }
 
     await ncoState?.set('status', 'ready')
-  }, [detail])
+  }
 
-  const onPressRemove = useCallback(async () => {
+  async function onPressRemove() {
     await ncoState?.set('status', 'loading')
 
     const { id } = detail
@@ -131,7 +131,7 @@ export const SlotItem: React.FC<SlotItemProps> = ({
     await ncoState?.remove('slots', { id })
 
     await ncoState?.set('status', 'ready')
-  }, [detail.id])
+  }
 
   return (
     <PanelItem

@@ -6,7 +6,7 @@ import { filesize } from '@/utils/filesize'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 
-export const StorageSizes: React.FC = () => {
+export function StorageSizes() {
   const [storageBytes, setStorageBytes] = useState<number>(0)
   const [settingsBytes, setSettingsBytes] = useState<number>(0)
 

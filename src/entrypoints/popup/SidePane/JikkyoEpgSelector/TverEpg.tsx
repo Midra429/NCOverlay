@@ -1,6 +1,6 @@
 import type { EPGData, EPGContent, EPGProgram } from '.'
 
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
 import { Channels } from './Channel'
@@ -10,10 +10,12 @@ import { Programs } from './Program'
 export const COLUMN_WIDTH = 140
 export const ROW_HEIGHT = 150
 
-const CurrentBar: React.FC<{
+type CurrentBarProps = {
   top: number
   ref: React.Ref<HTMLDivElement>
-}> = ({ top, ref }) => {
+}
+
+function CurrentBar({ top, ref }: CurrentBarProps) {
   return (
     <div
       className={cn(
@@ -33,26 +35,21 @@ export type TverEpgProps = {
   isLoading?: boolean
 }
 
-export const TverEpg: React.FC<TverEpgProps> = ({ data, isLoading }) => {
+export function TverEpg({ data, isLoading }: TverEpgProps) {
   const currentBarRef = useRef<HTMLDivElement>(null)
 
   const [time, updateTime] = useState(Date.now() / 1000)
 
-  const tverChIds = useMemo(() => {
-    return data?.contents.map((v) => v.tverChId) ?? []
-  }, [data?.contents])
+  const tverChIds = data?.contents.map((v) => v.tverChId) ?? []
 
-  const contents: EPGContent[] = useMemo(() => {
-    return (
-      data?.contents.map<EPGContent>((content) => ({
-        ...content,
-        programs: content.programs.map<EPGProgram>((program) => ({
-          ...program,
-          isDisabled: time <= program.endAt,
-        })),
-      })) ?? []
-    )
-  }, [data?.contents, time])
+  const contents: EPGContent[] =
+    data?.contents.map<EPGContent>((content) => ({
+      ...content,
+      programs: content.programs.map<EPGProgram>((program) => ({
+        ...program,
+        isDisabled: time <= program.endAt,
+      })),
+    })) ?? []
 
   useEffect(() => {
     if (isLoading || !data) return

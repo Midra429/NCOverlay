@@ -2,7 +2,7 @@ import { Spinner, cn } from '@heroui/react'
 
 import { useNcoState } from '@/hooks/useNco'
 
-export const StatusOverlay: React.FC = () => {
+export function StatusOverlay() {
   const stateStatus = useNcoState('status')
 
   return (

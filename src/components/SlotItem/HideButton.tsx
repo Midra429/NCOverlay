@@ -1,6 +1,6 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, cn } from '@heroui/react'
 import { EyeOffIcon } from 'lucide-react'
 
@@ -13,21 +13,21 @@ export type HideButtonProps = {
   hidden: StateSlotDetail['hidden']
 }
 
-export const HideButton: React.FC<HideButtonProps> = ({ id, hidden }) => {
+export function HideButton({ id, hidden }: HideButtonProps) {
   const [tmpHidden, setTmpHidden] = useState(false)
 
   useEffect(() => {
     setTmpHidden(!!hidden)
   }, [hidden])
 
-  const onPress = useCallback(async () => {
+  async function onPress() {
     setTmpHidden((val) => !val)
 
     await ncoState?.update('slotDetails', ['id'], {
       id,
       hidden: !tmpHidden,
     })
-  }, [id, tmpHidden])
+  }
 
   return (
     <Tooltip placement="left" content={tmpHidden ? '表示' : '非表示'}>

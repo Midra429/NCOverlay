@@ -11,7 +11,7 @@ export type SyobocalResultsProps = {
   titles: ScTitleItem[]
 }
 
-export const SyobocalResults: React.FC<SyobocalResultsProps> = ({ titles }) => {
+export function SyobocalResults({ titles }: SyobocalResultsProps) {
   const detailRef = useRef<TitleDetailHandle>(null)
 
   const [selectedTitle, setSelectedTitle] = useState<ScTitleItem>()

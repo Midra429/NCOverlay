@@ -8,10 +8,7 @@ export type ButtonsOverlayProps = {
   onRemove: () => void
 }
 
-export const ButtonsOverlay: React.FC<ButtonsOverlayProps> = ({
-  status,
-  onRemove,
-}) => {
+export function ButtonsOverlay({ status, onRemove }: ButtonsOverlayProps) {
   if (status !== 'ready' && status !== 'error') return
 
   return (

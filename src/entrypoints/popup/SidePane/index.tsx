@@ -1,5 +1,3 @@
-import { memo } from 'react'
-
 import { useNcoState } from '@/hooks/useNco'
 
 import { PositionControl } from '@/components/PositionControl'
@@ -11,7 +9,7 @@ import { StatusOverlay } from './StatusOverlay'
 /**
  * サイド
  */
-export const SidePane: React.FC = memo(() => {
+export function SidePane() {
   const stateSlotDetails = useNcoState('slotDetails')
 
   return (
@@ -29,4 +27,4 @@ export const SidePane: React.FC = memo(() => {
       <PositionControl className="border-foreground-200 border-t-1" compact />
     </div>
   )
-})
+}
