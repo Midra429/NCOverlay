@@ -33,7 +33,8 @@ export function OffsetControl({
               key={sec}
               className={cn(
                 'min-w-8 px-2',
-                'border-divider [&:not(:first-child)]:border-l-1'
+                'border-divider [&:not(:first-child)]:border-l-1',
+                'first:rounded-s-small! last:rounded-e-small!'
               )}
               onPress={() => onValueChange(value + sec)}
             >
@@ -66,7 +67,8 @@ export function OffsetControl({
               key={sec}
               className={cn(
                 'min-w-8 px-2',
-                'border-divider [&:not(:first-child)]:border-l-1'
+                'border-divider [&:not(:first-child)]:border-l-1',
+                'first:rounded-s-small! last:rounded-e-small!'
               )}
               onPress={() => onValueChange(value + sec)}
             >
