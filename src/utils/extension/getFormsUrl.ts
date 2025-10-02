@@ -1,9 +1,14 @@
 import type { Runtime } from 'webextension-polyfill'
+import type {
+  ExtractedResultSingleEpisode,
+  ExtractedResultMultipleEpisodes,
+} from '@midra/nco-utils/parse/libs/extract/index'
 import type { StateVod, StateInfo } from '@/ncoverlay/state'
 
 import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS } from '@/constants'
 import { VODS } from '@/constants/vods'
 import { webext } from '@/utils/webext'
+import get from '@/utils/get-value'
 
 const CONTENTS = {
   bug: '不具合報告',
@@ -19,49 +24,123 @@ const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
   android: 'Android',
 }
 
-export async function getFormsUrl(inputs?: {
+type Maybe<T> = T | null | undefined
+type NestedKeyOf<T extends Record<string, unknown>> = {
+  [K in keyof T & string]: T[K] extends Maybe<Record<string, unknown>>
+    ? T[K] extends Maybe<Record<string, unknown>>
+      ? `${K}.${NestedKeyOf<NonNullable<T[K]>>}`
+      : K
+    : K
+}[keyof T & string]
+
+type ExtractedResultNestedKey =
+  | NestedKeyOf<ExtractedResultSingleEpisode>
+  | NestedKeyOf<ExtractedResultMultipleEpisodes>
+
+const EXTRACTED_RESULT_NESTED_KEYS: ExtractedResultNestedKey[] = [
+  'input',
+
+  'title',
+  'titleStripped',
+
+  'season.text',
+  'season.number',
+  'season.prefix',
+  'season.numberText',
+  'season.suffix',
+  'season.indices',
+
+  'seasonAlt.text',
+  'seasonAlt.number',
+  'seasonAlt.prefix',
+  'seasonAlt.numberText',
+  'seasonAlt.suffix',
+  'seasonAlt.indices',
+
+  'episode.text',
+  'episode.number',
+  'episode.prefix',
+  'episode.numberText',
+  'episode.suffix',
+  'episode.indices',
+
+  'episodeAlt.text',
+  'episodeAlt.number',
+  'episodeAlt.prefix',
+  'episodeAlt.numberText',
+  'episodeAlt.suffix',
+  'episodeAlt.indices',
+
+  'episodes',
+  'episodesDivider',
+
+  'subtitle',
+  'subtitleStripped',
+]
+
+export async function getFormsUrl({
+  content,
+  vod,
+  info,
+  url,
+}: {
   content?: keyof typeof CONTENTS
   vod?: StateVod | null
   info?: StateInfo | null
   url?: string | null
-}) {
+} = {}) {
   const { version } = webext.runtime.getManifest()
   const { os } = await webext.runtime.getPlatformInfo()
 
   const osName = OS_NAMES[os]
 
-  const url = new URL(GOOGLE_FORMS_URL)
+  const formUrl = new URL(GOOGLE_FORMS_URL)
 
-  url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VERSION}`, version)
+  formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VERSION}`, version)
 
   if (osName) {
-    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.OS}`, osName)
+    formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.OS}`, osName)
   }
 
   if (webext.isChrome) {
-    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Chrome')
+    formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Chrome')
   } else if (webext.isFirefox) {
-    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Firefox')
+    formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Firefox')
   }
 
-  if (inputs?.content) {
-    url.searchParams.set(
+  if (content) {
+    formUrl.searchParams.set(
       `entry.${GOOGLE_FORMS_IDS.CONTENT}`,
-      CONTENTS[inputs.content]
+      CONTENTS[content]
     )
   }
 
-  if (inputs?.vod) {
-    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[inputs.vod])
+  if (vod) {
+    formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[vod])
   }
 
-  const info = inputs?.info && JSON.stringify(inputs.info, null, 2)
+  const input =
+    info?.input &&
+    [
+      ...(typeof info.input === 'string'
+        ? [`input: ${JSON.stringify(info.input)}`]
+        : EXTRACTED_RESULT_NESTED_KEYS.map((key) => {
+            const val = get(info.input, key)
 
-  const title = [info, inputs?.url].filter(Boolean).join('\n\n').trim()
+            return val != null && val !== ''
+              ? `${key}: ${JSON.stringify(val, null, 2)}`
+              : null
+          })),
+      `duration: ${info.duration}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+  const title = [url, input].filter(Boolean).join('\n\n').trim()
 
   if (title) {
-    url.searchParams.set(`entry.${GOOGLE_FORMS_IDS.TITLE}`, title)
+    formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.TITLE}`, title)
   }
 
-  return url.href
+  return formUrl.href
 }
