@@ -349,7 +349,7 @@ export class NCOSearcher {
       const slot = loadedSlots.find((v) => v.id === id)
       const detail = updateSlotDetails.find((v) => v.id === id)
 
-      if (slot && detail?.info?.count?.comment) {
+      if (slot && detail) {
         slots.push(slot)
 
         await this.#state.update('slotDetails', ['id'], detail)

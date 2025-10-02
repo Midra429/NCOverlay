@@ -63,7 +63,7 @@ export type StateSlotDetailBase = {
    * 動画ID or `${jkChId}:${starttime}-${endtime}`
    */
   id: string
-  status: StateStatus
+  status: 'pending' | 'loading' | 'ready' | 'error'
   markers?: (number | null)[]
   offsetMs?: number
   translucent?: boolean

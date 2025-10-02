@@ -49,9 +49,7 @@ export function Counts({ status, infoCount, isSearch }: CountsProps) {
             base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-[4px]'],
             content: 'text-tiny',
           }}
-          isLoaded={
-            0 < infoCount.comment || status === 'ready' || status === 'error'
-          }
+          isLoaded={status !== 'loading'}
         >
           {infoCount.comment.toLocaleString('ja-JP')}
         </Skeleton>
