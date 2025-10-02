@@ -1,6 +1,7 @@
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
+import { parse } from '@midra/nco-utils/parse'
 import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
@@ -78,7 +79,11 @@ async function main() {
         if (normalizedSeasonName.includes(normalizedSeriesTitle)) {
           workTitle = program.season.name
         } else {
-          workTitle = `${seriesTitle} ${program.season.name}`
+          const { season } = parse(`${seriesTitle} #0`)
+
+          if (!season) {
+            workTitle = `${seriesTitle} ${program.season.name}`
+          }
         }
       }
 
