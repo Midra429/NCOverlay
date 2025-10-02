@@ -8,7 +8,7 @@ export default async function () {
 
   // v3.13.4 -> v3.20.2
   if (migrate_version < 4) {
-    logger.log('migration: v3.13.4 -> v3.20.2')
+    logger.log('migration', 'v3.13.4 -> v3.20.2')
 
     // @ts-ignore
     await storage.remove('settings:ng:useNiconicoAccount')

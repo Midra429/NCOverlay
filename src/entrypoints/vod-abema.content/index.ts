@@ -25,7 +25,7 @@ export default defineContentScript({
 async function main() {
   if (!(await checkVodEnable(vod))) return
 
-  logger.log(`vod-${vod}.js`)
+  logger.log('vod', vod)
 
   async function getProgramId() {
     let programId: string | undefined
