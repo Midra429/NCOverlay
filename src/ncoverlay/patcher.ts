@@ -11,7 +11,7 @@ import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
 
 export type PlayingInfo = {
-  input: string
+  input: string | ExtractedResult
   duration: number
   disableExtract?: boolean
 }
@@ -71,20 +71,22 @@ export class NCOPatcher {
         const info = await this.#getInfo(this.#nco)
 
         let parsed: ExtractedResult | undefined
-        let duration: NCOSearcherAutoLoadArgs['duration'] | undefined
 
         if (info) {
-          duration = Math.floor(info.duration)
+          const { input } = info
 
           if (info.disableExtract) {
-            parsed = {
-              ...parse(''),
-              input: info.input,
-              title: info.input,
-              titleStripped: info.input,
-            }
+            parsed =
+              typeof input === 'string'
+                ? {
+                    ...parse(''),
+                    input: input,
+                    title: input,
+                    titleStripped: input,
+                  }
+                : input
           } else {
-            parsed = parse(info.input)
+            parsed = parse(input)
           }
         }
 
@@ -92,7 +94,7 @@ export class NCOPatcher {
 
         const args: NCOSearcherAutoLoadArgs = {
           input: parsed ?? '',
-          duration: duration ?? 0,
+          duration: info ? Math.floor(info.duration) : 0,
           targets: {
             official: autoLoads.includes('official'),
             danime: autoLoads.includes('danime'),

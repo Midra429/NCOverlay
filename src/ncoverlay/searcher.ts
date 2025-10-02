@@ -5,6 +5,7 @@ import type {
   NCOState,
   StateSlot,
   StateSlotDetail,
+  StateSlotDetailDefault,
   StateSlotDetailUpdate,
 } from './state'
 
@@ -87,14 +88,12 @@ export class NCOSearcher {
 
     // ニコニコ動画
     if (searchResults) {
-      ;(
-        [
-          ['official', searchResults.official],
-          ['danime', searchResults.danime],
-          ['chapter', [searchResults.chapter[0]]],
-          ['szbh', searchResults.szbh],
-        ] as const
-      ).forEach(([type, results]) => {
+      Object.entries({
+        official: searchResults.official,
+        danime: searchResults.danime,
+        chapter: [searchResults.chapter[0]],
+        szbh: searchResults.szbh,
+      }).forEach(([type, results]) => {
         results.forEach((result) => {
           if (!result || loadedIds.includes(result.contentId)) return
 
@@ -111,7 +110,7 @@ export class NCOSearcher {
 
           loadingSlotDetails.push(
             searchDataToSlotDetail(result, {
-              type,
+              type: type as StateSlotDetailDefault['type'],
               status: 'loading',
               offsetMs,
               isAutoLoaded,
@@ -122,10 +121,10 @@ export class NCOSearcher {
     }
 
     // ニコニコ実況 過去ログ
-    if (syobocalPrograms && parsed.isSingleEpisode && parsed.episode) {
+    if (syobocalPrograms) {
       const slotTitle = [
         searchSyobocalResults.title.Title,
-        `#${parsed.episode.number}`,
+        `#${syobocalPrograms[0].Count}`,
         searchSyobocalResults.subtitle,
       ]
         .filter(Boolean)

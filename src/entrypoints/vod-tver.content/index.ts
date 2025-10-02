@@ -49,27 +49,36 @@ async function main() {
           'span[class^="episode-live-list-column_title"]'
         )?.textContent
 
-      const seriesTitleSeason =
-        seriesTitleText && parse(`${seriesTitleText} #0`).season
+      const { title, season } = seriesTitleText
+        ? parse(
+            `${seriesTitleText} ${(seasonText !== '本編' && `(${seasonText})`) || ''} #0`
+          )
+        : {}
+      const parsed = parse(
+        `${title ?? ''} ${season?.text ?? ''} ${episodeTitle}`
+      )
 
-      const workTitle =
-        [
-          seriesTitleText,
-          !seriesTitleSeason && seasonText !== '本編' && seasonText,
-        ]
-          .filter(Boolean)
-          .join(' ')
-          .trim() || null
+      if (!parsed.title) {
+        parsed.title = title ?? null
+        parsed.titleStripped = parsed.title
+      }
+      if (parsed.isSingleEpisode && !parsed.episode && !parsed.subtitle) {
+        const { subtitle, subtitleStripped } = parse(
+          `タイトル #0 ${episodeTitle}`
+        )
+
+        parsed.subtitle = subtitle
+        parsed.subtitleStripped = subtitleStripped
+      }
 
       const duration = nco.renderer.video.duration ?? 0
 
-      logger.log('workTitle', workTitle)
-      logger.log('episodeTitle', episodeTitle)
+      logger.log('parsed', parsed)
       logger.log('duration', duration)
 
-      return workTitle
+      return parsed.title
         ? {
-            input: `${workTitle} ${episodeTitle}`,
+            input: parsed,
             duration,
           }
         : null
