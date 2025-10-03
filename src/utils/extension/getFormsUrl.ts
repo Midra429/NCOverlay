@@ -1,5 +1,6 @@
 import type { Runtime } from 'webextension-polyfill'
 import type {
+  ExtractedResult,
   ExtractedResultSingleEpisode,
   ExtractedResultMultipleEpisodes,
 } from '@midra/nco-utils/parse/libs/extract/index'
@@ -78,6 +79,40 @@ const EXTRACTED_RESULT_NESTED_KEYS: ExtractedResultNestedKey[] = [
   'subtitleStripped',
 ]
 
+function formatEpisodes(input: ExtractedResultMultipleEpisodes): string {
+  const { episodes, episodesDivider } = input
+
+  if (!episodes || !episodesDivider) return ''
+
+  const text = episodes.map((v) => JSON.stringify(v.text))
+  const number = episodes.map((v) => v.number)
+  const numberText = episodes.map((v) => JSON.stringify(v.numberText))
+  const indices = episodes.map((v) => `[${v.indices.join(', ')}]`)
+
+  return [
+    `episodes.text: [${text.join(', ')}]`,
+    `episodes.number: [${number.join(', ')}]`,
+    `episodes.numberText: [${numberText.join(', ')}]`,
+    `episodes.indices: [${indices.join(', ')}]`,
+  ].join('\n')
+}
+
+function formatKeyValue(input: ExtractedResult, key: string): string | null {
+  const val = get(input, key)
+
+  if (val == null || val === '') return null
+
+  if (key.endsWith('.indices')) {
+    return `${key}: [${(val as []).join(', ')}]`
+  }
+
+  if (key === 'episodes' && !input.isSingleEpisode) {
+    return formatEpisodes(input)
+  }
+
+  return `${key}: ${JSON.stringify(val)}`
+}
+
 export async function getFormsUrl({
   content,
   vod,
@@ -119,24 +154,22 @@ export async function getFormsUrl({
     formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[vod])
   }
 
-  const input =
-    info?.input &&
-    [
-      ...(typeof info.input === 'string'
-        ? [`input: ${JSON.stringify(info.input)}`]
-        : EXTRACTED_RESULT_NESTED_KEYS.map((key) => {
-            const val = get(info.input, key)
+  const input = info?.input
 
-            return val != null && val !== ''
-              ? `${key}: ${JSON.stringify(val, null, 2)}`
-              : null
-          })),
+  const inputText =
+    input &&
+    [
+      ...(typeof input === 'string'
+        ? [`input: ${JSON.stringify(input)}`]
+        : EXTRACTED_RESULT_NESTED_KEYS.map((key) =>
+            formatKeyValue(input, key)
+          )),
       `duration: ${info.duration}`,
     ]
       .filter(Boolean)
       .join('\n')
 
-  const title = [url, input].filter(Boolean).join('\n\n').trim()
+  const title = [url, inputText].filter(Boolean).join('\n\n').trim()
 
   if (title) {
     formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.TITLE}`, title)
