@@ -1,6 +1,8 @@
 import * as utilsLogger from '@midra/nco-utils/utils/logger'
 
-utilsLogger.setLoggerName('NCOverlay')
+import { displayName } from '@@/package.json'
+
+utilsLogger.setLoggerName(displayName)
 utilsLogger.setLoggerLevels({
   verbose: true,
   info: true,
