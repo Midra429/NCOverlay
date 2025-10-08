@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Tabs, Tab } from '@heroui/react'
 import { SearchIcon, LayoutGridIcon, SettingsIcon } from 'lucide-react'
 
@@ -39,6 +40,21 @@ export type MainPaneProps = {
  * メイン
  */
 export function MainPane({ quickpanel }: MainPaneProps) {
+  const [selectedKey, setSelectedKey] = useState<string>()
+  const [disableAnimation, setDisableAnimation] = useState(true)
+
+  useEffect(() => {
+    if (!quickpanel) return
+
+    setTimeout(() => {
+      setSelectedKey('quickpanel')
+
+      setTimeout(() => {
+        setDisableAnimation(false)
+      })
+    })
+  }, [quickpanel])
+
   return (
     <div className="flex size-full flex-col">
       {quickpanel ? (
@@ -53,7 +69,9 @@ export function MainPane({ quickpanel }: MainPaneProps) {
           radius="none"
           fullWidth
           destroyInactiveTabPanel={false}
-          defaultSelectedKey="quickpanel"
+          disableAnimation={disableAnimation}
+          selectedKey={selectedKey}
+          onSelectionChange={(key) => setSelectedKey(key as string)}
           items={tabItems}
         >
           {({ key, title, Icon, children }) => (

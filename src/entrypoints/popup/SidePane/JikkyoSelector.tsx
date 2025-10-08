@@ -229,7 +229,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
           label="開始日時"
           selectorIcon={<CalendarDaysIcon />}
           isDisabled={!isReady}
-          maxValue={currentDateTime}
+          maxValue={currentDateTime as any}
           value={startDateTime as any}
           onChange={setStartDateTime as any}
         />
@@ -242,7 +242,8 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={min}
                 className={cn(
                   'min-w-8 px-2',
-                  'border-divider [&:not(:first-child)]:border-l-1'
+                  'border-divider [&:not(:first-child)]:border-l-1',
+                  'first:rounded-s-small! last:rounded-e-small!'
                 )}
                 onPress={() => {
                   setEndDateTime((date) => date.add({ minutes: min }))
@@ -269,7 +270,8 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={min}
                 className={cn(
                   'min-w-8 px-2',
-                  'border-divider [&:not(:first-child)]:border-l-1'
+                  'border-divider [&:not(:first-child)]:border-l-1',
+                  'first:rounded-s-small! last:rounded-e-small!'
                 )}
                 onPress={() => {
                   setEndDateTime((date) => date.add({ minutes: min }))
@@ -289,7 +291,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
           label="終了日時"
           selectorIcon={<CalendarDaysIcon />}
           isDisabled={!isReady}
-          maxValue={currentDateTime}
+          maxValue={currentDateTime as any}
           value={endDateTime as any}
           onChange={setEndDateTime as any}
         />

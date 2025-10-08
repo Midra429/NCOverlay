@@ -32,7 +32,7 @@ export function Pagination({
           wrapper: 'shadow-none',
           item: [
             'bg-default/40 shadow-none',
-            '[&:first-of-type:last-of-type]:rounded-full',
+            '[&:first-of-type:last-of-type]:rounded-full!',
           ],
         }}
         size="sm"
