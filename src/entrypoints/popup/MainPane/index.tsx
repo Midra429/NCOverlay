@@ -40,19 +40,17 @@ export type MainPaneProps = {
  * メイン
  */
 export function MainPane({ quickpanel }: MainPaneProps) {
-  const [selectedKey, setSelectedKey] = useState<string>()
+  const [selectedKey, setSelectedKey] = useState('quickpanel')
   const [disableAnimation, setDisableAnimation] = useState(true)
 
   useEffect(() => {
     if (!quickpanel) return
 
-    setTimeout(() => {
-      setSelectedKey('quickpanel')
+    const timeoutId = setTimeout(() => {
+      setDisableAnimation(false)
+    }, 50)
 
-      setTimeout(() => {
-        setDisableAnimation(false)
-      })
-    })
+    return () => clearInterval(timeoutId)
   }, [quickpanel])
 
   return (
