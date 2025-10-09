@@ -33,11 +33,11 @@ async function main() {
   registerProxy('ncoSearch', ncoSearch, onMessage)
   registerUtilsMessage()
 
+  // 権限をリクエスト
+  requestPermissions()
+
   // インストール・アップデート時
   webext.runtime.onInstalled.addListener(async ({ reason }) => {
-    // 権限をリクエスト
-    requestPermissions()
-
     switch (reason) {
       case 'install':
         if (import.meta.env.PROD) {
@@ -133,7 +133,7 @@ async function main() {
 
       // サイドパネル
       case 'sidepanel':
-        port.onDisconnect.addListener(async () => {
+        port.onDisconnect.addListener(() => {
           webext.sidePanel.setOptions({
             enabled: false,
             tabId,
