@@ -147,7 +147,6 @@ export class NCOverlay {
     },
 
     playing: () => {
-      this.renderer.stop()
       this.renderer.start()
 
       this.#trigger('playing')
@@ -160,6 +159,7 @@ export class NCOverlay {
     },
 
     seeked: () => {
+      this.renderer.updateTime()
       this.renderer.render()
 
       this.#trigger('seeked')
@@ -167,6 +167,10 @@ export class NCOverlay {
 
     timeupdate: () => {
       this.#trigger('timeupdate')
+    },
+
+    ratechange: () => {
+      this.renderer.updateTime()
     },
   }
 
@@ -256,7 +260,6 @@ export class NCOverlay {
           (status === 'ready' || status === 'error') &&
           !this.renderer.video.paused
         ) {
-          this.renderer.stop()
           this.renderer.start()
         }
       }),

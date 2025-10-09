@@ -16,8 +16,6 @@ import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 import { VODS } from '@/constants/vods'
 import { PLUGINS } from '@/constants/plugins'
 
-import { webext } from '@/utils/webext'
-
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
@@ -99,9 +97,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:comment:fps',
         inputType: 'select',
         label: 'フレームレート',
-        description: webext.isFirefox
-          ? '※現在、Firefox版は描画処理とブラウザの相性により30fps程しか出ません。'
-          : undefined,
         options: [
           { label: '30fps', value: 30 },
           { label: '60fps', value: 60 },

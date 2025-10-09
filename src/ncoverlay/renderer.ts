@@ -21,6 +21,10 @@ export class NCORenderer {
   #options: NiconiCommentsOptions | null = null
   #offset: number = 0
 
+  #startTimestamp: number = 0
+  #startTime: number = 0
+  #playbackRate: number = 1
+
   #intervalMs: number = 1000 / 60
   #frameId: number = 0
   #lastFrameTime: number = 0
@@ -53,6 +57,10 @@ export class NCORenderer {
     this.#niconicomments = null
     this.#threads = null
     this.#offset = 0
+
+    this.#startTimestamp = 0
+    this.#startTime = 0
+    this.#playbackRate = 1
 
     document.body.classList.remove('NCOverlay-Capture')
   }
@@ -110,25 +118,47 @@ export class NCORenderer {
     }
   }
 
-  render() {
-    const time = this.video.currentTime - this.#offset
+  updateTime() {
+    this.#startTimestamp = performance.now()
+    this.#startTime = this.video.currentTime
+    this.#playbackRate = this.video.playbackRate
+  }
 
-    this.#niconicomments?.drawCanvas(0 < time ? (time * 100) | 0 : 0)
+  render() {
+    const time =
+      (this.#startTime - this.#offset) * 100 +
+      ((performance.now() - this.#startTimestamp) * this.#playbackRate) / 10
+
+    this.#niconicomments?.drawCanvas(0 < time ? time : 0)
   }
 
   start() {
-    this.#frameId = window.requestAnimationFrame((time) => {
-      this.#frameReqCallback(time)
-    })
+    this.updateTime()
+
+    this.#startRequestAnimationFrame()
   }
 
   stop() {
+    this.updateTime()
+
+    this.#stopRequestAnimationFrame()
+  }
+
+  #startRequestAnimationFrame() {
+    if (this.#frameId) {
+      this.#stopRequestAnimationFrame()
+    }
+
+    this.#frameId = window.requestAnimationFrame(this.#animationFrameCallback)
+  }
+
+  #stopRequestAnimationFrame() {
     window.cancelAnimationFrame(this.#frameId)
 
     this.#frameId = 0
   }
 
-  #frameReqCallback(time: number) {
+  #animationFrameCallback = (time: number) => {
     if (this.#intervalMs) {
       const delta = time - this.#lastFrameTime
 
@@ -141,7 +171,7 @@ export class NCORenderer {
       this.render()
     }
 
-    this.start()
+    this.#startRequestAnimationFrame()
   }
 
   /**
