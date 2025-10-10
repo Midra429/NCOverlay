@@ -147,13 +147,23 @@ export class NCOPatcher {
       load()
     })
 
+    const intervalMs = 500
+    let lastTime = performance.now()
+
     this.#nco.addEventListener('timeupdate', function () {
-      ncoMessenger
-        .sendMessage('timeupdate', {
-          id: this.id,
-          time: this.renderer.video.currentTime * 1000,
-        })
-        .catch(() => {})
+      const time = performance.now()
+      const delta = time - lastTime
+
+      if (intervalMs < delta) {
+        lastTime = time - (delta % intervalMs)
+
+        ncoMessenger
+          .sendMessage('timeupdate', {
+            id: this.id,
+            time: this.renderer.video.currentTime * 1000,
+          })
+          .catch(() => {})
+      }
     })
 
     this.#appendCanvas(this.#video, this.#nco.renderer.canvas)

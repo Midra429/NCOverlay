@@ -129,7 +129,7 @@ export class NCOverlay {
   /**
    * 描画するコメントデータを更新する
    */
-  async #updateRendererThreads() {
+  #updateRendererThreads = async () => {
     const threads = await this.state.getThreads()
 
     this.renderer.setThreads(threads)
@@ -186,13 +186,6 @@ export class NCOverlay {
       this.renderer.video.addEventListener(type, listener)
     }
 
-    /**
-     * 描画データの更新
-     */
-    const updateRenderer = () => {
-      this.#updateRendererThreads()
-    }
-
     // ストレージの監視
     this.#storageOnChangeRemoveListeners.push(
       // 設定 (コメント:表示サイズ)
@@ -218,16 +211,25 @@ export class NCOverlay {
       // 設定（コメント:コメントアシストの表示を抑制）
       settings.onChange(
         'settings:comment:hideAssistedComments',
-        updateRenderer
+        this.#updateRendererThreads
       ),
 
       // 設定 (NG設定)
-      settings.onChange('settings:ng:words', updateRenderer),
-      settings.onChange('settings:ng:commands', updateRenderer),
-      settings.onChange('settings:ng:ids', updateRenderer),
-      settings.onChange('settings:ng:largeComments', updateRenderer),
-      settings.onChange('settings:ng:fixedComments', updateRenderer),
-      settings.onChange('settings:ng:coloredComments', updateRenderer),
+      settings.onChange('settings:ng:words', this.#updateRendererThreads),
+      settings.onChange('settings:ng:commands', this.#updateRendererThreads),
+      settings.onChange('settings:ng:ids', this.#updateRendererThreads),
+      settings.onChange(
+        'settings:ng:largeComments',
+        this.#updateRendererThreads
+      ),
+      settings.onChange(
+        'settings:ng:fixedComments',
+        this.#updateRendererThreads
+      ),
+      settings.onChange(
+        'settings:ng:coloredComments',
+        this.#updateRendererThreads
+      ),
 
       // 検索ステータス
       this.state.onChange('status', async (status) => {
@@ -270,7 +272,7 @@ export class NCOverlay {
       }),
 
       // スロット
-      this.state.onChange('slots', updateRenderer),
+      this.state.onChange('slots', this.#updateRendererThreads),
 
       // スロットの情報
       this.state.onChange('slotDetails', (newValue, oldValue) => {
@@ -291,7 +293,7 @@ export class NCOverlay {
         }))
 
         if (!equal(newVal, oldVal)) {
-          updateRenderer()
+          this.#updateRendererThreads()
         }
       })
     )

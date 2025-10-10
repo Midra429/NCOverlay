@@ -19,10 +19,11 @@ export class NCORenderer {
   #niconicomments: NiconiComments | null = null
   #threads: V1Thread[] | null = null
   #options: NiconiCommentsOptions | null = null
-  #offset: number = 0
 
+  #offset: number = 0
   #startTimestamp: number = 0
   #startTime: number = 0
+  #startTimeVpos: number = 0
   #playbackRate: number = 1
 
   #intervalMs: number = 1000 / 60
@@ -47,7 +48,6 @@ export class NCORenderer {
     this.canvas.remove()
 
     this.video.classList.remove('NCOverlay-Video')
-    this.canvas.classList.remove('NCOverlay-Canvas')
   }
 
   clear() {
@@ -56,10 +56,11 @@ export class NCORenderer {
     this.#niconicomments?.clear()
     this.#niconicomments = null
     this.#threads = null
-    this.#offset = 0
 
+    this.#offset = 0
     this.#startTimestamp = 0
     this.#startTime = 0
+    this.#startTimeVpos = 0
     this.#playbackRate = 1
 
     document.body.classList.remove('NCOverlay-Capture')
@@ -82,6 +83,7 @@ export class NCORenderer {
   setOffset(offset: number) {
     if (this.#offset !== offset) {
       this.#offset = offset
+      this.#startTimeVpos = Math.max((this.#startTime - this.#offset) * 100, 0)
 
       if (!this.#frameId) {
         this.render()
@@ -103,6 +105,13 @@ export class NCORenderer {
     this.canvas.style.opacity = opacity.toString()
   }
 
+  updateTime() {
+    this.#startTimestamp = performance.now()
+    this.#startTime = this.video.currentTime
+    this.#startTimeVpos = Math.max((this.#startTime - this.#offset) * 100, 0)
+    this.#playbackRate = this.video.playbackRate
+  }
+
   reload() {
     this.#niconicomments?.clear()
     this.#niconicomments = null
@@ -118,44 +127,36 @@ export class NCORenderer {
     }
   }
 
-  updateTime() {
-    this.#startTimestamp = performance.now()
-    this.#startTime = this.video.currentTime
-    this.#playbackRate = this.video.playbackRate
-  }
-
   render() {
-    const time =
-      (this.#startTime - this.#offset) * 100 +
+    const vpos =
+      this.#startTimeVpos +
       ((performance.now() - this.#startTimestamp) * this.#playbackRate) / 10
 
-    this.#niconicomments?.drawCanvas(0 < time ? time : 0)
+    this.#niconicomments?.drawCanvas(vpos)
   }
 
   start() {
+    this.#stopRequestAnimationFrame()
+
     this.updateTime()
 
     this.#startRequestAnimationFrame()
   }
 
   stop() {
-    this.updateTime()
-
     this.#stopRequestAnimationFrame()
   }
 
   #startRequestAnimationFrame() {
-    if (this.#frameId) {
-      this.#stopRequestAnimationFrame()
-    }
-
     this.#frameId = window.requestAnimationFrame(this.#animationFrameCallback)
   }
 
   #stopRequestAnimationFrame() {
-    window.cancelAnimationFrame(this.#frameId)
+    if (this.#frameId) {
+      window.cancelAnimationFrame(this.#frameId)
 
-    this.#frameId = 0
+      this.#frameId = 0
+    }
   }
 
   #animationFrameCallback = (time: number) => {
