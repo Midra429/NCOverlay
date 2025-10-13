@@ -1,4 +1,4 @@
-import type { ExtractedResult } from '@midra/nco-utils/parse/libs/extract'
+import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { VodKey } from '@/types/constants'
 import type { NCOSearcherAutoLoadArgs } from './searcher'
 
@@ -11,7 +11,7 @@ import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
 
 export type PlayingInfo = {
-  input: string | ExtractedResult
+  input: string | ParsedResult
   duration: number
   disableExtract?: boolean
 }
@@ -70,7 +70,7 @@ export class NCOPatcher {
       try {
         const info = await this.#getInfo(this.#nco)
 
-        let parsed: ExtractedResult | undefined
+        let parsed: ParsedResult | undefined
 
         if (info) {
           const { input } = info
