@@ -1,9 +1,9 @@
 import type {
-  VideoData,
+  DataComment,
   NvComment,
 } from '@midra/nco-utils/types/api/niconico/video'
 
-export function filterNvComment(comment: VideoData['comment']): NvComment {
+export function filterNvComment(comment: DataComment) {
   // 除外
   const ignoreThreadIds = comment.threads.flatMap((val) => {
     const threadId = `${val.forkLabel}:${val.id.toString()}` as const
@@ -21,13 +21,9 @@ export function filterNvComment(comment: VideoData['comment']): NvComment {
     return []
   })
 
-  return {
-    ...comment.nvComment,
-    params: {
-      ...comment.nvComment.params,
-      targets: comment.nvComment.params.targets.filter((val) => {
-        return !ignoreThreadIds.includes(`${val.fork}:${val.id}`)
-      }),
-    },
-  }
+  comment.nvComment.params.targets = comment.nvComment.params.targets.filter(
+    (val) => {
+      return !ignoreThreadIds.includes(`${val.fork}:${val.id}`)
+    }
+  )
 }

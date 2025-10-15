@@ -53,7 +53,7 @@ export async function getNiconicoComments(
     videos.map(async (videoData, idx) => {
       if (!videoData) return null
 
-      const nvComment = filterNvComment(videoData.comment)
+      filterNvComment(videoData.comment)
 
       if (1 < amount) {
         const additionals = {
@@ -62,7 +62,7 @@ export async function getNiconicoComments(
         }
 
         const baseThreadsData = await ncoApiProxy.niconico.threads(
-          nvComment,
+          videoData.comment,
           additionals
         )
         const baseMainThread = baseThreadsData?.threads
@@ -78,11 +78,12 @@ export async function getNiconicoComments(
           return baseThreadsData
         }
 
-        nvComment.params.targets = nvComment.params.targets.filter((val) => {
-          return (
-            val.fork === baseMainThread.fork && val.id === baseMainThread.id
-          )
-        })
+        videoData.comment.nvComment.params.targets =
+          videoData.comment.nvComment.params.targets.filter((val) => {
+            return (
+              val.fork === baseMainThread.fork && val.id === baseMainThread.id
+            )
+          })
 
         additionals.when = Math.floor(
           new Date(baseMainThread.comments[0].postedAt).getTime() / 1000
@@ -92,7 +93,7 @@ export async function getNiconicoComments(
 
         while (0 < count--) {
           const threadsData = await ncoApiProxy.niconico.threads(
-            nvComment,
+            videoData.comment,
             additionals
           )
           const mainThread = threadsData?.threads.find((val) => {
@@ -116,7 +117,7 @@ export async function getNiconicoComments(
 
         return baseThreadsData
       } else {
-        return ncoApiProxy.niconico.threads(nvComment, {
+        return ncoApiProxy.niconico.threads(videoData.comment, {
           when: params[idx].when,
         })
       }
