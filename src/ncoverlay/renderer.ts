@@ -123,6 +123,7 @@ export class NCORenderer {
         ...this.#options,
       })
 
+      this.updateTime()
       this.render()
     }
   }
