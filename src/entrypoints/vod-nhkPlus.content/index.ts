@@ -7,7 +7,7 @@ import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
+import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'

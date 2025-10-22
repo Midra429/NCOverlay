@@ -1,5 +1,5 @@
 import type { V1Thread } from '@xpadev-net/niconicomments'
-import type { NgSettingsConverted } from '@/utils/extension/getNgSettings'
+import type { NgSettingsConverted } from '@/utils/api/niconico/getNgSettings'
 
 export function isNgComment(
   { body, commands, userId }: V1Thread['comments'][number],

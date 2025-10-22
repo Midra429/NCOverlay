@@ -1,5 +1,5 @@
 import type { Ng } from '@midra/nco-utils/types/api/niconico/video'
-import type { NgSettingsConverted } from '@/utils/extension/getNgSettings'
+import type { NgSettingsConverted } from '@/utils/api/niconico/getNgSettings'
 
 export function extractNgSettings(ng: Ng): NgSettingsConverted {
   const ngSettings: NgSettingsConverted = {

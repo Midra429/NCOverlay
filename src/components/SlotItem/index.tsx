@@ -9,8 +9,8 @@ import type { PanelItemProps } from '@/components/PanelItem'
 import { useState } from 'react'
 import { cn } from '@heroui/react'
 
-import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
-import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
+import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
+import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
 
 import { ncoState } from '@/hooks/useNco'
 

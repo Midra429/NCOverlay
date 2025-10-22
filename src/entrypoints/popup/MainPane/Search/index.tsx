@@ -1,4 +1,4 @@
-import type { SearchNiconicoOptions } from '@/utils/api/searchNiconico'
+import type { SearchNiconicoOptions } from '@/utils/api/niconico/searchNiconico'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 import type { SearchSource, SearchInputHandle } from './Input'
 import type { ScTitleItem } from './SyobocalResults/TitleItem'
@@ -6,16 +6,16 @@ import type { ScTitleItem } from './SyobocalResults/TitleItem'
 import { useState, useEffect, useRef } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
-import { extractVideoId } from '@/utils/extension/extractVideoId'
-import { extractSyobocalId } from '@/utils/extension/extractSyobocalId'
+import { extractVideoId } from '@/utils/api/niconico/extractVideoId'
+import { extractSyobocalId } from '@/utils/api/syobocal/extractSyobocalId'
 import {
   searchNiconicoByIds,
   searchNiconicoByKeyword,
-} from '@/utils/api/searchNiconico'
+} from '@/utils/api/niconico/searchNiconico'
 import {
   searchSyobocalByIds,
   searchSyobocalByKeyword,
-} from '@/utils/api/searchSyobocal'
+} from '@/utils/api/syobocal/searchSyobocal'
 import { useSettings } from '@/hooks/useSettings'
 import { useNcoState } from '@/hooks/useNco'
 

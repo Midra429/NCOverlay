@@ -15,10 +15,10 @@ import { jikkyoToSyobocalChId } from '@midra/nco-utils/api/utils/jikkyoToSyoboca
 import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikkyoChId'
 
 import { logger } from '@/utils/logger'
-import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
-import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
-import { searchDataToSlotDetail } from '@/utils/api/searchDataToSlotDetail'
-import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
+import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
+import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
+import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDetail'
+import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
 export type NCOSearcherAutoLoadArgs = Omit<

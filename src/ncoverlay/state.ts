@@ -9,9 +9,9 @@ import equal from 'fast-deep-equal'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { deepmerge } from '@/utils/deepmerge'
-import { getNgSettings } from '@/utils/extension/getNgSettings'
-import { isNgComment } from '@/utils/extension/applyNgSetting'
-import { findAssistedComments } from '@/utils/extension/findAssistedComments'
+import { getNgSettings } from '@/utils/api/niconico/getNgSettings'
+import { isNgComment } from '@/utils/api/niconico/applyNgSetting'
+import { findAssistedCommentIds } from '@/utils/api/niconico/findAssistedCommentIds'
 
 export type NCOStateItems = {
   [key: `state:${string}:status`]: StateStatus | null
@@ -150,7 +150,7 @@ export async function filterDisplayThreads(
 
       // コメントアシストと予想されるコメント
       const assistedCommentIds = hideAssistedComments
-        ? findAssistedComments(thread.comments).map((v) => v.id)
+        ? findAssistedCommentIds(thread.comments)
         : null
 
       const comments = thread.comments

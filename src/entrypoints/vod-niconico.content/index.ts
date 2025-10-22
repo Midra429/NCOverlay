@@ -6,8 +6,8 @@ import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { getNiconicoComments } from '@/utils/api/getNiconicoComments'
-import { videoDataToSlotDetail } from '@/utils/api/videoDataToSlotDetail'
+import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
+import { videoDataToSlotDetail } from '@/utils/api/niconico/videoDataToSlotDetail'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'

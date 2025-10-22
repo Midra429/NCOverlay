@@ -7,7 +7,7 @@ import { Spinner } from '@heroui/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
-import { programToSlotDetail } from '@/utils/api/programToSlotDetail'
+import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { useNcoState } from '@/hooks/useNco'
 

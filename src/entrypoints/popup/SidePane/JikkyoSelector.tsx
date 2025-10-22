@@ -15,7 +15,7 @@ import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
 
 import { formatDate } from '@/utils/format'
-import { getJikkyoKakologs } from '@/utils/api/getJikkyoKakologs'
+import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
 
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
