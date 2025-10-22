@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { HeroUIProvider, twMergeConfig, cn } from '@heroui/react'
+import { ToastProvider } from '@heroui/toast'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -25,6 +26,14 @@ export function Layout(props: LayoutProps) {
 
   return (
     <HeroUIProvider locale="ja-JP">
+      <ToastProvider
+        placement="top-center"
+        toastProps={{
+          size: 'sm',
+          timeout: 3000,
+        }}
+      />
+
       <main
         className={cn('overflow-x-hidden overflow-y-auto', props.className)}
         style={props.style}

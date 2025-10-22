@@ -9,6 +9,7 @@ import {
   DropdownItem,
   cn,
 } from '@heroui/react'
+import { addToast } from '@heroui/toast'
 import { CopyIcon, PlusIcon, ClockIcon } from 'lucide-react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 
@@ -178,25 +179,76 @@ export function Item({ comment, offsetMs }: ItemProps) {
     (1 <= comment.nicoruCount && NICORU_COLORS[1]) ||
     undefined
 
-  // メニュー (コメント)
   function copyComment() {
-    navigator.clipboard.writeText(comment.body)
+    navigator.clipboard
+      .writeText(comment.body)
+      .then(() => {
+        addToast({
+          color: 'success',
+          title: 'コメントをコピーしました',
+        })
+      })
+      .catch(() => {
+        addToast({
+          color: 'danger',
+          title: 'コメントのコピーに失敗しました',
+        })
+      })
   }
   function copyId() {
-    navigator.clipboard.writeText(comment.userId)
+    navigator.clipboard
+      .writeText(comment.userId)
+      .then(() => {
+        addToast({
+          color: 'success',
+          title: 'ユーザーIDをコピーしました',
+        })
+      })
+      .catch(() => {
+        addToast({
+          color: 'danger',
+          title: 'ユーザーIDのコピーに失敗しました',
+        })
+      })
   }
 
   async function addNgComment() {
-    settings.set('settings:ng:words', [
-      ...(await settings.get('settings:ng:words')),
-      { content: comment.body },
-    ])
+    settings
+      .set('settings:ng:words', [
+        ...(await settings.get('settings:ng:words')),
+        { content: comment.body },
+      ])
+      .then(() => {
+        addToast({
+          color: 'success',
+          title: 'NG設定(コメント)に追加しました',
+        })
+      })
+      .catch(() => {
+        addToast({
+          color: 'danger',
+          title: 'NG設定(コメント)の追加に失敗しました',
+        })
+      })
   }
   async function addNgId() {
-    settings.set('settings:ng:ids', [
-      ...(await settings.get('settings:ng:ids')),
-      { content: comment.userId },
-    ])
+    settings
+      .set('settings:ng:ids', [
+        ...(await settings.get('settings:ng:ids')),
+        { content: comment.userId },
+      ])
+      .then(() => {
+        addToast({
+          color: 'success',
+          title: 'NG設定(ユーザーID)に追加しました',
+        })
+      })
+      .catch(() => {
+        addToast({
+          color: 'danger',
+          title: 'NG設定(ユーザーID)の追加に失敗しました',
+        })
+      })
   }
 
   const commentMenu = (
@@ -218,6 +270,7 @@ export function Item({ comment, offsetMs }: ItemProps) {
       <DropdownSection aria-label="アクション" showDivider>
         <DropdownItem
           key="copy-comment"
+          description={comment.body}
           startContent={<CopyIcon className="size-4 shrink-0" />}
           onPress={copyComment}
         >
@@ -226,6 +279,7 @@ export function Item({ comment, offsetMs }: ItemProps) {
 
         <DropdownItem
           key="copy-user-id"
+          description={comment.userId}
           startContent={<CopyIcon className="size-4 shrink-0" />}
           onPress={copyId}
         >
