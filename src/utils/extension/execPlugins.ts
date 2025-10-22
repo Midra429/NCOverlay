@@ -22,7 +22,7 @@ export async function execPlugins<VodKey extends PluginVodKey>(
   const disablePlugins = new Map<PluginId<VodKey>, () => void>()
 
   settings.watch('settings:plugins', (keys) => {
-    pluginIds.forEach((id) => {
+    for (const id of pluginIds) {
       const pluginKey = `${vod}:${id}` as PluginKey
 
       // プラグイン ON
@@ -38,6 +38,6 @@ export async function execPlugins<VodKey extends PluginVodKey>(
         disablePlugins.get(id)!()
         disablePlugins.delete(id)
       }
-    })
+    }
   })
 }

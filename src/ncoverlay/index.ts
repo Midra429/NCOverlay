@@ -101,9 +101,11 @@ export class NCOverlay {
     const newDetails = structuredClone(oldDetails)
 
     if (marker === null) {
-      newDetails?.forEach((detail) => {
-        delete detail.offsetMs
-      })
+      if (newDetails) {
+        for (const detail of newDetails) {
+          delete detail.offsetMs
+        }
+      }
     } else {
       const markerIdx =
         typeof marker === 'string'
@@ -112,13 +114,15 @@ export class NCOverlay {
 
       const currentTimeMs = this.renderer.video.currentTime * 1000
 
-      newDetails?.forEach((detail) => {
-        const marker = detail.markers?.[markerIdx]
+      if (newDetails) {
+        for (const detail of newDetails) {
+          const marker = detail.markers?.[markerIdx]
 
-        if (marker) {
-          detail.offsetMs = marker * -1 + currentTimeMs
+          if (marker) {
+            detail.offsetMs = marker * -1 + currentTimeMs
+          }
         }
-      })
+      }
 
       await this.state.remove('offset')
     }
@@ -347,13 +351,15 @@ export class NCOverlay {
   } = {}
 
   #trigger<Type extends keyof NCOverlayEventMap>(type: Type) {
-    this.#listeners[type]?.forEach((listener) => {
-      try {
-        listener.call(this)
-      } catch (err) {
-        logger.error(type, err)
+    if (this.#listeners[type]) {
+      for (const listener of this.#listeners[type]) {
+        try {
+          listener.call(this)
+        } catch (err) {
+          logger.error(type, err)
+        }
       }
-    })
+    }
   }
 
   addEventListener<Type extends keyof NCOverlayEventMap>(

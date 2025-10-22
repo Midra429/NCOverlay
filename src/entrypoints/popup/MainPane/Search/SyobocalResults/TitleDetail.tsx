@@ -142,9 +142,9 @@ export function TitleDetail({
                 if (item.isOpen) {
                   item.close()
                 } else {
-                  Object.values(subtitleItemRefs.current).forEach((item) => {
+                  for (const item of Object.values(subtitleItemRefs.current)) {
                     item.close()
-                  })
+                  }
 
                   item.open()
                 }

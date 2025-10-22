@@ -22,9 +22,9 @@ const timeupdateEvent = {
 ncoMessenger.onMessage('timeupdate', ({ data }) => {
   if (data.id !== ncoId) return
 
-  timeupdateEvent._listeners.forEach((listener) => {
+  for (const listener of timeupdateEvent._listeners) {
     listener(data.time)
-  })
+  }
 })
 
 export async function initializeNcoState(tabId?: number) {

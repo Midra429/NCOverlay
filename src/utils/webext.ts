@@ -54,16 +54,14 @@ if (webext.isFirefox) {
   webext.storage.local.getBytesInUse = async function (keys) {
     const values = await this.get(keys)
 
-    let bytes = 0
-
-    Object.entries(values).forEach(([key, value]) => {
-      bytes += new Blob([
+    return Object.entries(values).reduce((prev, [key, value]) => {
+      const { size } = new Blob([
         key,
         typeof value === 'string' ? value : JSON.stringify(value),
-      ]).size
-    })
+      ])
 
-    return bytes
+      return prev + size
+    }, 0)
   }
 
   if (webext.sidebarAction) {

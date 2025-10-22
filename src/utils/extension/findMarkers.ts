@@ -17,28 +17,28 @@ export function findMarkers(threads: V1Thread[]): (number | null)[] {
     const rangeStart = range?.[0] && range[0] * 1000
     const rangeEnd = range?.[1] && range[1] * 1000
 
-    comments
-      .filter((cmt) => {
-        if (rangeStart && cmt.vposMs < rangeStart) return false
-        if (rangeEnd && rangeEnd < cmt.vposMs) return false
-        return regexp.test(cmt.body)
-      })
-      .forEach((cmt, idx, ary) => {
-        const commentsInRange = ary.slice(idx).filter((val) => {
-          return val.vposMs - cmt.vposMs <= 5000
-        })
-        const count = commentsInRange.length
+    const filtered = comments.filter((cmt) => {
+      if (rangeStart && cmt.vposMs < rangeStart) return false
+      if (rangeEnd && rangeEnd < cmt.vposMs) return false
+      return regexp.test(cmt.body)
+    })
 
-        if (tmpCount < count) {
-          const first = commentsInRange.at(0)!
-          const last = commentsInRange.at(-1)!
+    for (let i = 0; i < filtered.length; i++) {
+      const cmt = filtered[i]
 
-          tmpCount = count
-          tmpVposMs = Math.trunc(
-            first.vposMs + (last.vposMs - first.vposMs) / 4
-          )
-        }
+      const commentsInRange = filtered.slice(i).filter((val) => {
+        return val.vposMs - cmt.vposMs <= 5000
       })
+      const count = commentsInRange.length
+
+      if (tmpCount < count) {
+        const first = commentsInRange.at(0)!
+        const last = commentsInRange.at(-1)!
+
+        tmpCount = count
+        tmpVposMs = Math.trunc(first.vposMs + (last.vposMs - first.vposMs) / 4)
+      }
+    }
 
     if (tmpCount && tmpVposMs) {
       return tmpVposMs

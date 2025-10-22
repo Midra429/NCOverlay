@@ -8,9 +8,11 @@ export function extractNgSettings(ng: Ng): NgSettingsConverted {
     ids: [],
   }
 
-  ng.viewer?.items.forEach((item) => {
-    ngSettings[`${item.type}s` as const]?.push(item.source)
-  })
+  if (ng.viewer) {
+    for (const item of ng.viewer.items) {
+      ngSettings[`${item.type}s` as const]?.push(item.source)
+    }
+  }
 
   return ngSettings
 }

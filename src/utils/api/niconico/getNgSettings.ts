@@ -47,9 +47,9 @@ export async function getNgSettings(): Promise<NgSettingsConverted> {
   }
 
   if (values['settings:ng:coloredComments']) {
-    Object.keys(NICONICO_COLOR_COMMANDS).forEach((content) => {
+    for (const content of Object.keys(NICONICO_COLOR_COMMANDS)) {
       ngCommands.add({ content })
-    })
+    }
 
     ngCommands.add({
       content: COLOR_CODE,

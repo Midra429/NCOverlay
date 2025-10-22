@@ -130,8 +130,8 @@ function getCmtClassAndColor(commands: string[]) {
   let cmtBgColor: string | undefined
   let cmtFgColor: string | undefined
 
-  commands?.forEach((command) => {
-    if (command === 'white') return
+  for (const command of commands) {
+    if (command === 'white') continue
 
     if (command in COMMENT_CELL_COMMAND_CLASSES) {
       cmtCellCmdClass.push(COMMENT_CELL_COMMAND_CLASSES[command])
@@ -148,7 +148,7 @@ function getCmtClassAndColor(commands: string[]) {
         cn('border-foreground-300 m-[-1px] rounded-[5px] border-1 px-1')
       )
     }
-  })
+  }
 
   return { cmtCellCmdClass, cmtCmdClass, cmtBgColor, cmtFgColor }
 }

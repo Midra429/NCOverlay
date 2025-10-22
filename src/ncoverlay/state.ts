@@ -6,6 +6,7 @@ import type { NCOSearcherAutoLoadArgs } from './searcher'
 
 import equal from 'fast-deep-equal'
 
+import { logger } from '@/utils/logger'
 import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
 import { deepmerge } from '@/utils/deepmerge'
@@ -134,24 +135,31 @@ export async function filterDisplayThreads(
     'settings:comment:hideAssistedComments'
   )
 
-  details.forEach((detail) => {
+  for (const detail of details) {
     if (detail.hidden || detail.status !== 'ready') {
-      return
+      continue
     }
 
     const slot = slots.find((slot) => slot.id === detail.id)
 
-    if (!slot) return
+    if (!slot) continue
 
-    slot.threads.forEach((thread) => {
+    for (const thread of slot.threads) {
       const key = `${thread.fork}:${thread.id}`
 
-      if (threadMap.has(key)) return
+      if (threadMap.has(key)) continue
 
       // コメントアシストと予想されるコメント
       const assistedCommentIds = hideAssistedComments
         ? findAssistedCommentIds(thread.comments)
         : null
+
+      if (assistedCommentIds) {
+        logger.log(
+          'assistedComment',
+          `[${key}] ${assistedCommentIds.length} / ${thread.comments.length}`
+        )
+      }
 
       const comments = thread.comments
         .filter((cmt) => {
@@ -189,8 +197,8 @@ export async function filterDisplayThreads(
           _nco: {},
         })
       }
-    })
-  })
+    }
+  }
 
   const threads = [...threadMap.values()]
 
