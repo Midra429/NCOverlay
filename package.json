@@ -20,7 +20,7 @@
     "@heroui/react": "2.8.5",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@internationalized/date": "^3.10.0",
-    "@midra/nco-utils": "^0.1.0",
+    "@midra/nco-utils": "^0.1.2",
     "@webext-core/messaging": "^2.3.0",
     "@wxt-dev/webextension-polyfill": "^1.0.0",
     "@xpadev-net/niconicomments": "^0.2.76",
@@ -30,7 +30,7 @@
     "filesize": "^11.0.13",
     "framer-motion": "^12.23.24",
     "hotkeys-js": "^3.13.15",
-    "lucide-react": "^0.545.0",
+    "lucide-react": "^0.546.0",
     "nanoid": "^5.1.6",
     "nanoid-dictionary": "^5.0.0",
     "react": "^19.2.0",
@@ -41,7 +41,7 @@
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.14",
+    "@tailwindcss/postcss": "^4.1.15",
     "@types/nanoid-dictionary": "^4.2.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -53,9 +53,9 @@
     "clsx": "^2.1.1",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.7.0",
+    "prettier-plugin-tailwindcss": "^0.7.1",
     "sass": "^1.93.2",
-    "tailwindcss": "^4.1.14",
+    "tailwindcss": "^4.1.15",
     "typescript": "^5.9.3",
     "utility-types": "^3.11.0",
     "wxt": "^0.20.11"
