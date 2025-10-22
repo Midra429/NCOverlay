@@ -201,6 +201,20 @@ export function Item({ comment, offsetMs }: ItemProps) {
 
   const commentMenu = (
     <DropdownMenu variant="flat">
+      <DropdownSection aria-label="コメント" showDivider>
+        <DropdownItem
+          key="comment"
+          classNames={{
+            base: [
+              'pointer-events-none',
+              '[&>span]:line-clamp-5 [&>span]:wrap-anywhere [&>span]:break-all [&>span]:whitespace-pre-wrap',
+            ],
+          }}
+        >
+          {comment.body}
+        </DropdownItem>
+      </DropdownSection>
+
       <DropdownSection aria-label="アクション" showDivider>
         <DropdownItem
           key="copy-comment"
