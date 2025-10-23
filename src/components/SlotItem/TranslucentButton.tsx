@@ -41,7 +41,7 @@ export function TranslucentButton({
     >
       <Button
         className={cn(
-          '!size-6 min-h-0 min-w-0',
+          'size-6! min-h-0 min-w-0',
           !tmpTranslucent && 'text-foreground-700'
         )}
         size="sm"

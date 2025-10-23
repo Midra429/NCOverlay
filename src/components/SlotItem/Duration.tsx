@@ -13,7 +13,7 @@ export function Duration({ className, duration }: DurationProps) {
   return (
     <div
       className={cn(
-        'px-1 py-[1px]',
+        'px-1 py-px',
         'border-1 border-white/25',
         'rounded-md',
         'text-mini',

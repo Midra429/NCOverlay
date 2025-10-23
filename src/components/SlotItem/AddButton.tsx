@@ -9,7 +9,7 @@ export function AddButton({ onPress }: AddButtonProps) {
   return (
     <div
       className={cn(
-        'absolute inset-[1px] z-10',
+        'absolute inset-px z-10',
         'flex items-center justify-center',
         'bg-background/50 backdrop-blur-xs',
         'rounded-lg',

@@ -16,7 +16,7 @@ export function AutoLoadedBadge({
   return (
     <div
       className={cn(
-        'px-1 py-[1px]',
+        'px-1 py-px',
         'border-1 border-gray-800/50',
         'rounded-md',
         'text-mini',

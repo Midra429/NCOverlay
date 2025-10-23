@@ -145,7 +145,7 @@ function getCmtClassAndColor(commands: string[]) {
       cmtFgColor = readableColor(cmtBgColor)
 
       cmtCmdClass.push(
-        cn('border-foreground-300 m-[-1px] rounded-[5px] border-1 px-1')
+        cn('border-foreground-300 -m-px rounded-[5px] border-1 px-1')
       )
     }
   }
@@ -368,7 +368,7 @@ export function Item({ comment, offsetMs }: ItemProps) {
       {/* 再生時間 */}
       <ItemCellWithMenu
         classNames={{
-          wrapper: 'w-[5rem] font-mono',
+          wrapper: 'w-20 font-mono',
           cell: 'justify-center',
         }}
         style={{ backgroundColor: nicoruColor }}

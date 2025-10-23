@@ -30,7 +30,7 @@ export type OptionsButtonProps = {
 export function OptionsButton({ isOpen, onPress }: OptionsButtonProps) {
   return (
     <Button
-      className="!size-6 min-h-0 min-w-0"
+      className="size-6! min-h-0 min-w-0"
       size="sm"
       radius="full"
       variant="flat"

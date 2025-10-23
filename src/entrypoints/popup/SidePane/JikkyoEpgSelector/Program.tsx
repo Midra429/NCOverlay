@@ -260,7 +260,7 @@ export function ProgramCell({
       <PopoverTrigger
         className={cn(
           'bg-content1 hover:bg-content2/90 aria-expanded:bg-content2/90',
-          'transition-background !duration-150',
+          'transition-background duration-150!',
           'aria-expanded:scale-100',
           'aria-expanded:opacity-100',
           program.isDisabled && 'pointer-events-none opacity-50'

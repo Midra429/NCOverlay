@@ -155,7 +155,7 @@ export function Input(props: Props) {
             'bg-default-100',
             'data-[recording=true]:bg-primary/15 dark:data-[recording=true]:bg-primary/20',
             'overflow-x-hidden',
-            'transition-colors !duration-150'
+            'transition-colors duration-150!'
           )}
           data-recording={isRecording}
         >

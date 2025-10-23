@@ -204,7 +204,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={key}
                 classNames={{
                   base: [
-                    '[&:last-child]:mb-0',
+                    'last:mb-0',
                     '[&:last-child>ul>li[role="separator"]]:hidden',
                   ],
                 }}
@@ -242,7 +242,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={min}
                 className={cn(
                   'min-w-8 px-2',
-                  'border-divider [&:not(:first-child)]:border-l-1',
+                  'border-divider not-first:border-l-1',
                   'first:rounded-s-small! last:rounded-e-small!'
                 )}
                 onPress={() => {
@@ -270,7 +270,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={min}
                 className={cn(
                   'min-w-8 px-2',
-                  'border-divider [&:not(:first-child)]:border-l-1',
+                  'border-divider not-first:border-l-1',
                   'first:rounded-s-small! last:rounded-e-small!'
                 )}
                 onPress={() => {

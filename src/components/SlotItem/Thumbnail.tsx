@@ -34,7 +34,7 @@ export function Thumbnail({
 
     // 実況のチャンネル情報
     thumbnail = (
-      <div className="bg-content3 h-full rounded-lg p-[1px]">
+      <div className="bg-content3 h-full rounded-lg p-px">
         <div
           className={cn(
             'relative',
@@ -45,7 +45,7 @@ export function Thumbnail({
             'select-none'
           )}
         >
-          <span className={cn('absolute top-[4px]', 'text-mini text-white/80')}>
+          <span className={cn('absolute top-1', 'text-mini text-white/80')}>
             {jkChId}
           </span>
 
@@ -65,7 +65,7 @@ export function Thumbnail({
     thumbnail = (
       <Image
         classNames={{
-          wrapper: 'bg-foreground-300 h-full rounded-lg p-[1px]',
+          wrapper: 'bg-foreground-300 h-full rounded-lg p-px',
           img: 'aspect-video h-full rounded-lg object-cover',
         }}
         src={info.thumbnail}
@@ -80,8 +80,8 @@ export function Thumbnail({
 
       <div
         className={cn(
-          'absolute top-[2px] left-[2px] z-10',
-          'flex flex-col items-start gap-[1px]'
+          'absolute top-0.5 left-0.5 z-10',
+          'flex flex-col items-start gap-px'
         )}
       >
         {/* ソース */}
@@ -93,13 +93,13 @@ export function Thumbnail({
 
       {/* オフセット */}
       <Offset
-        className="absolute bottom-[2px] left-[2px] z-10"
+        className="absolute bottom-0.5 left-0.5 z-10"
         offsetMs={offsetMs}
       />
 
       {/* 長さ */}
       <Duration
-        className="absolute right-[2px] bottom-[2px] z-10"
+        className="absolute right-0.5 bottom-0.5 z-10"
         duration={info.duration}
       />
     </>

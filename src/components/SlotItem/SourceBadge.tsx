@@ -33,7 +33,7 @@ export function SourceBadge({ className, type }: SourceTagProps) {
   return (
     <div
       className={cn(
-        'px-1 py-[1px]',
+        'px-1 py-px',
         'border-1 border-white/80',
         'rounded-md',
         'text-mini',

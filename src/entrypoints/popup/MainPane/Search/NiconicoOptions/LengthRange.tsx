@@ -42,7 +42,7 @@ export function LengthRange({ isDisabled }: LengthRangeProps) {
   return (
     <Select
       classNames={{
-        base: 'shrink-[5]',
+        base: 'shrink-5',
       }}
       size="mini"
       fullWidth
@@ -59,7 +59,7 @@ export function LengthRange({ isDisabled }: LengthRangeProps) {
             classNames={{
               base: 'gap-1 rounded-md px-1.5 py-1',
               title: 'text-tiny',
-              selectedIcon: '!size-mini',
+              selectedIcon: 'size-mini!',
             }}
           >
             {label}

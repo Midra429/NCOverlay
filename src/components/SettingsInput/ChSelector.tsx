@@ -83,7 +83,7 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
             ],
             wrapper: [
               'rounded-full',
-              'before:!bg-default-50 before:rounded-full before:border-1',
+              'before:bg-default-50! before:rounded-full before:border-1',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-col',

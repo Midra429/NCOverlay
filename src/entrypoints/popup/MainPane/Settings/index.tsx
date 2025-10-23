@@ -110,7 +110,7 @@ const accordionItemSettings = SETTINGS_INIT_DATA.map(
             className={cn(
               'py-0.5',
               'border-foreground-200',
-              '[&:not(:first-child)]:border-t-1'
+              'not-first:border-t-1'
             )}
           >
             <Input {...(item as any)} />
@@ -228,19 +228,19 @@ export function Settings() {
         base: cn(
           'overflow-hidden',
           'data-[open=true]:overflow-visible',
-          'border-foreground-200 border-1 !p-0 !shadow-none',
-          '[&>*]:px-3'
+          'border-foreground-200 border-1 p-0! shadow-none!',
+          '*:px-3'
         ),
         heading: cn(
           'sticky top-0 z-20',
           'gap-0',
-          'rounded-t-medium mb-[-1px]',
+          'rounded-t-medium -mb-px',
           'border-foreground-200 border-b-1',
           'bg-content1'
         ),
         trigger: 'gap-2',
-        startContent: '[&>*]:size-4',
-        content: 'flex flex-col overflow-hidden py-[1px]',
+        startContent: '*:size-4',
+        content: 'flex flex-col overflow-hidden py-px',
       }}
       variant="splitted"
       isCompact

@@ -15,7 +15,7 @@ function HeaderCell({ className, ...props }: HeaderCellProps) {
         'bg-content2 text-content2-foreground',
         'border-divider border-b-1',
         'text-tiny font-semibold',
-        '[&:not(:first-child)]:border-l-1',
+        'not-first:border-l-1',
         className
       )}
     />
@@ -27,7 +27,7 @@ export function Header() {
     <div className="sticky top-0 z-10 flex flex-row">
       <HeaderCell className="w-[calc(100%-5rem)]">コメント</HeaderCell>
 
-      <HeaderCell className="w-[5rem]">再生時間</HeaderCell>
+      <HeaderCell className="w-20">再生時間</HeaderCell>
 
       <HeaderCell className="w-12">
         <SmileIcon className="size-4" strokeWidth={2.5} />

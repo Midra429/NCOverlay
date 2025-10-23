@@ -53,7 +53,7 @@ const select = tv({
       mini: {
         label: 'hidden',
         trigger: 'h-6 min-h-6 px-1.5',
-        innerWrapper: '!pt-0 [&:has(>svg)]:gap-1.5',
+        innerWrapper: 'pt-0! [&:has(>svg)]:gap-1.5',
         selectorIcon: 'end-1.5',
         value: 'text-mini',
         listbox: 'p-0',

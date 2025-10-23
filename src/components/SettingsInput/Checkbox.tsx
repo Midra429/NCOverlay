@@ -72,7 +72,7 @@ export function Input(props: Props) {
             ],
             wrapper: [
               'm-0 rounded-full',
-              'before:!bg-default-50 before:rounded-full before:border-1',
+              'before:bg-default-50! before:rounded-full before:border-1',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-row',

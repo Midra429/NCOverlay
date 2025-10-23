@@ -20,7 +20,7 @@ function CurrentBar({ top, ref }: CurrentBarProps) {
     <div
       className={cn(
         'absolute z-20',
-        'h-[1px] w-full',
+        'h-px w-full',
         'bg-primary opacity-80',
         'pointer-events-none'
       )}

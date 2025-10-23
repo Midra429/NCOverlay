@@ -54,7 +54,7 @@ export function Sort({ isDisabled }: SortProps) {
   return (
     <Select
       classNames={{
-        base: 'shrink-[4]',
+        base: 'shrink-4',
       }}
       size="mini"
       fullWidth
@@ -71,7 +71,7 @@ export function Sort({ isDisabled }: SortProps) {
             classNames={{
               base: 'gap-1 rounded-md px-1.5 py-1',
               title: 'text-tiny',
-              selectedIcon: '!size-mini',
+              selectedIcon: 'size-mini!',
             }}
           >
             {label}

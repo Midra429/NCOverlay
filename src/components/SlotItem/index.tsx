@@ -152,11 +152,8 @@ export function SlotItem({
         className={cn(
           'relative flex flex-row p-1',
           isSearch
-            ? [
-                'gap-1.5',
-                detail.type === 'jikkyo' ? 'h-[4.25rem]' : 'h-[5.125rem]',
-              ]
-            : 'h-[5.75rem] gap-2'
+            ? ['gap-1.5', detail.type === 'jikkyo' ? 'h-17' : 'h-20.5']
+            : 'h-23 gap-2'
         )}
       >
         <div

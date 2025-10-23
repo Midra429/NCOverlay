@@ -73,7 +73,7 @@ function HeaderCell({ className, ...props }: CellProps) {
         'bg-content2 text-content2-foreground',
         'border-divider border-b-1',
         'text-tiny font-semibold',
-        '[&:not(:first-child)]:border-l-1',
+        'not-first:border-l-1',
         className
       )}
     />
@@ -89,7 +89,7 @@ function ItemCell({ className, ...props }: CellProps) {
         'shrink-0 p-1.5',
         'border-divider border-b-1',
         'text-small',
-        '[&:not(:first-child)]:border-l-1',
+        'not-first:border-l-1',
         className
       )}
     />
@@ -101,9 +101,9 @@ function Header() {
     <div className="sticky top-0 z-20 flex flex-row">
       <HeaderCell className="w-[calc(100%-7rem)]">テキスト</HeaderCell>
 
-      <HeaderCell className="w-[4rem]">正規表現</HeaderCell>
+      <HeaderCell className="w-16">正規表現</HeaderCell>
 
-      <HeaderCell className="w-[3rem]">削除</HeaderCell>
+      <HeaderCell className="w-12">削除</HeaderCell>
     </div>
   )
 }
@@ -144,7 +144,7 @@ function Item({ init, onValueChange }: ItemProps) {
       </ItemCell>
 
       <ItemCell
-        className={cn('flex items-center justify-center', 'w-[4rem] p-0 py-1')}
+        className={cn('flex items-center justify-center', 'w-16 p-0 py-1')}
       >
         <Switch
           classNames={{
@@ -157,7 +157,7 @@ function Item({ init, onValueChange }: ItemProps) {
       </ItemCell>
 
       <ItemCell
-        className={cn('flex items-center justify-center', 'w-[3rem] p-0 py-1')}
+        className={cn('flex items-center justify-center', 'w-12 p-0 py-1')}
       >
         <Button
           className="text-foreground"
