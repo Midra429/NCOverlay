@@ -242,8 +242,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={min}
                 className={cn(
                   'min-w-8 px-2',
-                  'border-divider not-first:border-l-1',
-                  'first:rounded-s-small! last:rounded-e-small!'
+                  'border-divider not-first:border-l-1'
                 )}
                 onPress={() => {
                   setEndDateTime((date) => date.add({ minutes: min }))
@@ -270,8 +269,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
                 key={min}
                 className={cn(
                   'min-w-8 px-2',
-                  'border-divider not-first:border-l-1',
-                  'first:rounded-s-small! last:rounded-e-small!'
+                  'border-divider not-first:border-l-1'
                 )}
                 onPress={() => {
                   setEndDateTime((date) => date.add({ minutes: min }))
