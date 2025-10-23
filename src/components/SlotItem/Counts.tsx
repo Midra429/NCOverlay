@@ -46,8 +46,8 @@ export function Counts({ status, infoCount, isSearch }: CountsProps) {
 
         <Skeleton
           classNames={{
-            base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-[4px]'],
-            content: 'text-tiny',
+            base: ['min-w-12 data-[loaded=true]:min-w-0', 'rounded-sm'],
+            content: isSearch ? 'text-mini' : 'text-tiny',
           }}
           isLoaded={status !== 'loading'}
         >
