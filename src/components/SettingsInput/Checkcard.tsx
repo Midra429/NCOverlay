@@ -11,17 +11,14 @@ export type Key = {
     : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'checkcard',
-  {
-    options: {
-      label: string
-      value: StorageItems[K][number]
-      description?: string
-    }[]
-  }
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'checkcard'> {
+  options: {
+    label: string
+    value: StorageItems[K][number]
+    description?: string
+  }[]
+}
 
 export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)

@@ -13,17 +13,14 @@ export type Key = {
     : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'select',
-  {
-    options: {
-      label: string
-      value: StorageItems[K]
-      Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
-    }[]
-  }
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'select'> {
+  options: {
+    label: string
+    value: StorageItems[K]
+    Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
+  }[]
+}
 
 export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)

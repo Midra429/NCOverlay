@@ -8,7 +8,7 @@ import { sendNcoMessage } from '@/ncoverlay/messaging'
 
 import { Tooltip } from '@/components/Tooltip'
 
-export type MarkerButtonProps = {
+export interface MarkerButtonProps {
   markerIdx: number | null
   label: React.ReactNode
   shortLabel: React.ReactNode

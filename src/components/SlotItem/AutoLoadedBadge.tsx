@@ -2,7 +2,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { cn } from '@heroui/react'
 
-export type AutoLoadedBadgeProps = {
+export interface AutoLoadedBadgeProps {
   className?: string
   isAutoLoaded: StateSlotDetail['isAutoLoaded']
 }

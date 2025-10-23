@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Divider, Input, cn } from '@heroui/react'
 import { RotateCcwIcon, CheckIcon } from 'lucide-react'
 
-export type OffsetControlProps = {
+export interface OffsetControlProps {
   value: number
   isValueChanged?: boolean
   compact?: boolean

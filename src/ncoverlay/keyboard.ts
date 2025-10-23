@@ -7,9 +7,9 @@ import hotkeys from 'hotkeys-js'
 
 import { storage } from '@/utils/storage/extension'
 
-type NCOKeyboardFunctions = Readonly<{
-  jumpMarker: NCOverlay['jumpMarker']
-}>
+interface NCOKeyboardFunctions {
+  readonly jumpMarker: NCOverlay['jumpMarker']
+}
 
 function register(
   key: Extract<StorageKey, `settings:kbd:${string}`>,

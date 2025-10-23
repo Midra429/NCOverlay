@@ -18,7 +18,7 @@ import { ncoMessenger } from './messaging'
 
 import './style.scss'
 
-export type NCOverlayEventMap = {
+export interface NCOverlayEventMap {
   playing: (this: NCOverlay) => void
   pause: (this: NCOverlay) => void
   seeked: (this: NCOverlay) => void

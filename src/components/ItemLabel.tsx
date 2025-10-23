@@ -1,6 +1,6 @@
 import { cn } from '@heroui/react'
 
-export type ItemLabelProps = {
+export interface ItemLabelProps {
   title: React.ReactNode
   description?: React.ReactNode
 }

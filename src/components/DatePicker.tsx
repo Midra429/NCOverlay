@@ -2,7 +2,7 @@ import type { DatePickerProps as HeroUIDatePickerProps } from '@heroui/react'
 
 import { DatePicker as HeroUIDatePicker, cn } from '@heroui/react'
 
-export type DatePickerProps = HeroUIDatePickerProps
+export interface DatePickerProps extends HeroUIDatePickerProps {}
 
 export function DatePicker(props: DatePickerProps) {
   return (

@@ -10,16 +10,15 @@ import * as KbdShortcut from './KbdShortcut'
 import * as NgList from './NgList'
 import * as ChSelector from './ChSelector'
 
-export type SettingsInputBaseProps<
+export interface SettingsInputBaseProps<
   K extends SettingsKey,
   T extends SettingsInputType,
-  P extends object = {},
-> = {
+> {
   settingsKey: K
   inputType: T
   label: string
   description?: string
-} & P
+}
 
 export type SettingsInputType = keyof typeof SettingsInput
 

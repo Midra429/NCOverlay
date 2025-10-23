@@ -11,7 +11,8 @@ export type Key = {
   [key in SettingsKey]: StorageItems[key] extends boolean ? key : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<K, 'toggle', {}>
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'toggle'> {}
 
 export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)

@@ -21,7 +21,7 @@ const SETTINGS_EXPORT_KEYS = [
 /**
  * 設定を取得
  */
-export type SettingsGetFunction = {
+export interface SettingsGetFunction {
   /** すべての設定を取得 */
   (): Promise<SettingItems>
 
@@ -39,15 +39,17 @@ export type SettingsGetFunction = {
 /**
  * 設定を更新
  */
-export type SettingsSetFunction = <Key extends SettingsKey>(
-  key: Key,
-  value: SettingItems[Key] | null | undefined
-) => Promise<void>
+export interface SettingsSetFunction {
+  <Key extends SettingsKey>(
+    key: Key,
+    value: SettingItems[Key] | null | undefined
+  ): Promise<void>
+}
 
 /**
  * 設定を削除
  */
-export type SettingsRemoveFunction = {
+export interface SettingsRemoveFunction {
   /** すべての設定を削除 */
   (): Promise<void>
 
@@ -58,7 +60,7 @@ export type SettingsRemoveFunction = {
 /**
  * 設定の使用量をバイト単位で取得
  */
-export type SettingsGetBytesInUseFunction = {
+export interface SettingsGetBytesInUseFunction {
   /** 全体の使用量を取得 */
   (): Promise<number>
 
@@ -69,30 +71,34 @@ export type SettingsGetBytesInUseFunction = {
 /**
  * 設定が変更
  */
-export type SettingsOnChangeFunction = <Key extends SettingsKey>(
-  key: Key,
-  callback: StorageOnChangeCallback<Key>
-) => () => void
+export interface SettingsOnChangeFunction {
+  <Key extends SettingsKey>(
+    key: Key,
+    callback: StorageOnChangeCallback<Key>
+  ): () => void
+}
 
 /**
  * 設定を読み込み、変更を監視する
  */
-export type SettingsWatch = <Key extends SettingsKey>(
-  key: Key,
-  callback: (value: SettingItems[Key]) => void
-) => () => void
+export interface SettingsWatch {
+  <Key extends SettingsKey>(
+    key: Key,
+    callback: (value: SettingItems[Key]) => void
+  ): () => void
+}
 
 /**
  * 設定をインポート
  */
-export type SettingsImportFunction = {
+export interface SettingsImportFunction {
   (values: string | SettingsExportItems): Promise<void>
 }
 
 /**
  * 設定をエクスポート
  */
-export type SettingsExportFunction = {
+export interface SettingsExportFunction {
   (): Promise<SettingsExportItems>
 }
 

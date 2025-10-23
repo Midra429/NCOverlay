@@ -5,7 +5,7 @@ import { CalendarDaysIcon } from 'lucide-react'
 
 import { formatDate } from '@/utils/format'
 
-export type DateTimeProps = {
+export interface DateTimeProps {
   infoDate: StateSlotDetail['info']['date']
   isSearch?: boolean
 }

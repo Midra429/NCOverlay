@@ -13,11 +13,11 @@ import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/SlotItem'
 
-export type SubtitleDetailHandle = {
+export interface SubtitleDetailHandle {
   initialize: () => void
 }
 
-export type SubtitleDetailProps = {
+export interface SubtitleDetailProps {
   title: ScTitleItem
   subtitle: ScSubtitleItem
   ref: React.Ref<SubtitleDetailHandle>

@@ -40,7 +40,7 @@ const programIcon = tv({
   },
 })
 
-export type ProgramIconsProps = {
+export interface ProgramIconsProps {
   icon: Partial<EPGv2Program['icon']>
 }
 
@@ -68,7 +68,7 @@ export function ProgramIcons({ icon }: ProgramIconsProps) {
   )
 }
 
-export type ProgramContentProps = {
+export interface ProgramContentProps {
   program: EPGProgram
   bgColor: [light: string, dark: string]
 }
@@ -146,7 +146,7 @@ export function ProgramContent({ program, bgColor }: ProgramContentProps) {
   )
 }
 
-export type ProgramPopoverProps = {
+export interface ProgramPopoverProps {
   tverChId: EPGContent['tverChId']
   program: EPGProgram
 }
@@ -225,7 +225,7 @@ export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
   )
 }
 
-export type ProgramCellProps = {
+export interface ProgramCellProps {
   date: EPGData['date']
   genre: EPGData['genre']
   tverChId: EPGContent['tverChId']
@@ -281,7 +281,7 @@ export function ProgramCell({
   )
 }
 
-export type ProgramsProps = {
+export interface ProgramsProps {
   data: EPGData
 }
 

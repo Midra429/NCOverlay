@@ -20,13 +20,13 @@ const transitionVariants: Variants = {
 
 export type ScSubtitleItem = [count: string, text: string]
 
-export type SubtitleItemHandle = {
+export interface SubtitleItemHandle {
   isOpen: boolean
   open: () => void
   close: () => void
 }
 
-export type SubtitleItemProps = {
+export interface SubtitleItemProps {
   title: ScTitleItem
   subtitle: ScSubtitleItem
   onClick: () => void

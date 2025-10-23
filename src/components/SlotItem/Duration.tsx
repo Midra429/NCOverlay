@@ -4,7 +4,7 @@ import { cn } from '@heroui/react'
 
 import { formatDuration } from '@/utils/format'
 
-export type DurationProps = {
+export interface DurationProps {
   className?: string
   duration: StateSlotDetail['info']['duration']
 }

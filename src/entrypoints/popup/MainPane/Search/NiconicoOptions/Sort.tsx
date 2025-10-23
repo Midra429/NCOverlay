@@ -44,7 +44,7 @@ const SORT_OPTIONS: {
   },
 ]
 
-export type SortProps = {
+export interface SortProps {
   isDisabled?: boolean
 }
 

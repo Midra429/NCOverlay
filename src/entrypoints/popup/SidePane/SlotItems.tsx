@@ -2,7 +2,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { SlotItem } from '@/components/SlotItem'
 
-export type SlotItemsProps = {
+export interface SlotItemsProps {
   details: StateSlotDetail[]
 }
 

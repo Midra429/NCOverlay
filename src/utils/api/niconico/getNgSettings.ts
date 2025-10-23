@@ -4,7 +4,7 @@ import { NICONICO_COLOR_COMMANDS, COLOR_CODE } from '@/constants'
 
 import { settings } from '@/utils/settings/extension'
 
-export type NgSettingsConverted = {
+export interface NgSettingsConverted {
   words: (string | RegExp)[]
   commands: (string | RegExp)[]
   ids: (string | RegExp)[]

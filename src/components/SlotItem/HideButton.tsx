@@ -8,7 +8,7 @@ import { ncoState } from '@/hooks/useNco'
 
 import { Tooltip } from '@/components/Tooltip'
 
-export type HideButtonProps = {
+export interface HideButtonProps {
   id: StateSlotDetail['id']
   hidden: StateSlotDetail['hidden']
 }

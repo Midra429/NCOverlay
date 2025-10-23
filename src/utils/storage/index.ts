@@ -3,7 +3,7 @@ import type { StorageItems, StorageKey } from '@/types/storage'
 /**
  * ストレージのアイテムを取得
  */
-export type StorageGetFunction = {
+export interface StorageGetFunction {
   /** すべてのアイテムを取得 */
   (): Promise<{
     [key in StorageKey]?: StorageItems[key]
@@ -23,15 +23,17 @@ export type StorageGetFunction = {
 /**
  * ストレージにアイテムを設定
  */
-export type StorageSetFunction = <Key extends StorageKey>(
-  key: Key,
-  value: StorageItems[Key] | null | undefined
-) => Promise<void>
+export interface StorageSetFunction {
+  <Key extends StorageKey>(
+    key: Key,
+    value: StorageItems[Key] | null | undefined
+  ): Promise<void>
+}
 
 /**
  * ストレージからアイテムを削除
  */
-export type StorageRemoveFunction = {
+export interface StorageRemoveFunction {
   /** すべてのアイテムを削除 */
   (): Promise<void>
 
@@ -42,7 +44,7 @@ export type StorageRemoveFunction = {
 /**
  * ストレージの使用量をバイト単位で取得
  */
-export type StorageGetBytesInUseFunction = {
+export interface StorageGetBytesInUseFunction {
   /** 全体の使用量を取得 */
   (): Promise<number>
 
@@ -51,33 +53,36 @@ export type StorageGetBytesInUseFunction = {
 }
 
 /** アイテムが変更されたときのコールバック */
-export type StorageOnChangeCallback<Key extends StorageKey> = (
-  newValue: StorageItems[Key] | null,
-  oldValue: StorageItems[Key] | null
-) => void
+export interface StorageOnChangeCallback<Key extends StorageKey> {
+  (newValue: StorageItems[Key] | null, oldValue: StorageItems[Key] | null): void
+}
 
 /**
  * ストレージのアイテムが変更
  */
-export type StorageOnChangeFunction = <Key extends StorageKey>(
-  key: Key,
-  callback: StorageOnChangeCallback<Key>
-) => () => void
+export interface StorageOnChangeFunction {
+  <Key extends StorageKey>(
+    key: Key,
+    callback: StorageOnChangeCallback<Key>
+  ): () => void
+}
 
 /**
  * ストレージの読み込み・監視のコールバック
  */
-export type StorageWatchCallback<Key extends StorageKey> = (
-  value: StorageItems[Key] | null
-) => void
+export interface StorageWatchCallback<Key extends StorageKey> {
+  (value: StorageItems[Key] | null): void
+}
 
 /**
  * ストレージを読み込み、変更を監視する
  */
-export type StorageWatch = <Key extends StorageKey>(
-  key: Key,
-  callback: StorageWatchCallback<Key>
-) => () => void
+export interface StorageWatch {
+  <Key extends StorageKey>(
+    key: Key,
+    callback: StorageWatchCallback<Key>
+  ): () => void
+}
 
 export class WebExtStorage {
   readonly get: StorageGetFunction

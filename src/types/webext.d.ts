@@ -67,7 +67,7 @@ declare module 'webextension-polyfill' {
     }
   }
 
-  type WebExtBrowser = Browser & {
+  interface WebExtBrowser extends Browser {
     sidePanel: SidePanel.Static
 
     isChrome: boolean

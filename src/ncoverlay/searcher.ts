@@ -22,10 +22,8 @@ import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDet
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
-export type NCOSearcherAutoLoadArgs = Omit<
-  BuildSearchQueryArgs,
-  'userAgent'
-> & {
+export interface NCOSearcherAutoLoadArgs
+  extends Omit<BuildSearchQueryArgs, 'userAgent'> {
   jikkyo?: boolean
   jikkyoChannelIds?: JikkyoChannelId[]
 }

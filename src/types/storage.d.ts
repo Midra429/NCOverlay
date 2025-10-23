@@ -7,19 +7,19 @@ import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems } from '@/ncoverlay/state'
 
-export type NgSettingsContent = {
+export interface NgSettingsContent {
   content: string
   isRegExp?: boolean
 }
 
-export type NgSettings = {
+export interface NgSettings {
   words: NgSettingsContent[]
   commands: NgSettingsContent[]
   ids: NgSettingsContent[]
 }
 
 /** < v3.13.1 */
-export type StorageItems_v2 = {
+export interface StorageItems_v2 {
   /**
    * コメント:自動検索
    * @default true
@@ -28,7 +28,7 @@ export type StorageItems_v2 = {
 }
 
 /** v3.13.1 <= */
-export type StorageItems_v3 = {
+export interface StorageItems_v3 {
   /**
    * NG設定:ニコニコ側のNG設定を使用
    * @default false
@@ -36,7 +36,7 @@ export type StorageItems_v3 = {
   'settings:ng:useNiconicoAccount': boolean
 }
 
-export type StorageItems_v4 = {
+export interface StorageItems_v4 {
   // 全般 //////////////////////////////////////////////////
   /**
    * テーマ

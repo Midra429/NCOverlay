@@ -25,7 +25,7 @@ import { Select, SelectItem } from '@/components/Select'
 
 import { TverEpg } from './TverEpg'
 
-export type EPGProgram = {
+export interface EPGProgram {
   id?: string
   title: string
   description?: string
@@ -36,26 +36,27 @@ export type EPGProgram = {
   isDisabled?: boolean
 }
 
-export type EPGContent = {
+export interface EPGContent {
   tverChId: TVerChannelId
   programs: EPGProgram[]
 }
 
-export type EPGGenre = Record<
-  EPGv2GenreColor['genre'],
-  {
-    name: EPGv2GenreColor['name']
-    color: EPGv2GenreColor['color']
-  }
->
+export interface EPGGenre
+  extends Record<
+    EPGv2GenreColor['genre'],
+    {
+      name: EPGv2GenreColor['name']
+      color: EPGv2GenreColor['color']
+    }
+  > {}
 
-export type EPGData = {
+export interface EPGData {
   date: [start: number, end: number]
   contents: EPGContent[]
   genre: EPGGenre
 }
 
-export type JikkyoEpgSelectorProps = {
+export interface JikkyoEpgSelectorProps {
   isOpen: boolean
   onOpenChange: () => void
 }

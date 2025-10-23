@@ -2,7 +2,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { Spinner, cn } from '@heroui/react'
 
-export type StatusOverlayProps = {
+export interface StatusOverlayProps {
   status: StateSlotDetail['status']
 }
 

@@ -8,7 +8,7 @@ import { ncoState } from '@/hooks/useNco'
 
 import { Tooltip } from '@/components/Tooltip'
 
-export type TranslucentButton = {
+export interface TranslucentButton {
   id: StateSlotDetail['id']
   hidden: StateSlotDetail['hidden']
   translucent: StateSlotDetail['translucent']

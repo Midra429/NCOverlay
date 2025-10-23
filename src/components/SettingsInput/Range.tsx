@@ -12,17 +12,14 @@ export type Key = {
   [key in SettingsKey]: StorageItems[key] extends number ? key : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'range',
-  {
-    min: number
-    max: number
-    step: number
-    prefix?: string
-    suffix?: string
-  }
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'range'> {
+  min: number
+  max: number
+  step: number
+  prefix?: string
+  suffix?: string
+}
 
 export function Input(props: Props) {
   const [state, setState] = useState<number>(

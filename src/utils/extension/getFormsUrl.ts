@@ -3,7 +3,7 @@ import type {
   ExtractedResult,
   ExtractedResultSingleEpisode,
   ExtractedResultMultipleEpisodes,
-} from '@midra/nco-utils/parse/libs/extract/index'
+} from '@midra/nco-utils/parse/libs/extract'
 import type { StateVod, StateInfo } from '@/ncoverlay/state'
 
 import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS } from '@/constants'

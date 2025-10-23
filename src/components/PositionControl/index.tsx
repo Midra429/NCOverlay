@@ -3,10 +3,11 @@ import { cn } from '@heroui/react'
 import { MarkerButtons } from './MarkerButtons'
 import { GlobalOffsetControl } from './GlobalOffsetControl'
 
-export type PositionControlProps = React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
-> & {
+export interface PositionControlProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
   compact?: boolean
 }
 

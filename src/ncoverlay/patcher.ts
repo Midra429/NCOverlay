@@ -10,7 +10,7 @@ import { settings } from '@/utils/settings/extension'
 import { NCOverlay } from '.'
 import { ncoMessenger } from './messaging'
 
-export type PlayingInfo = {
+export interface PlayingInfo {
   input: string | ParsedResult
   duration: number
   disableExtract?: boolean

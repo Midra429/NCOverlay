@@ -33,11 +33,8 @@ export type Key = {
   [key in SettingsNgKey]: StorageItems[key] extends unknown[] ? key : never
 }[SettingsNgKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'ng-list',
-  {}
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'ng-list'> {}
 
 function validateRegExp(pattern: string) {
   try {
@@ -61,7 +58,8 @@ function filterNgSettingsContents(contents: (NgSettingsContent | null)[]) {
   }) as NgSettingsContent[]
 }
 
-type CellProps = React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
+interface CellProps
+  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {}
 
 function HeaderCell({ className, ...props }: CellProps) {
   return (
@@ -108,7 +106,7 @@ function Header() {
   )
 }
 
-type ItemProps = {
+interface ItemProps {
   init: NgSettingsContent
   onValueChange: (value: NgSettingsContent | null) => void
 }

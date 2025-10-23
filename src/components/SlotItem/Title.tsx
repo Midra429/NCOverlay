@@ -7,7 +7,7 @@ import { ProgramIcons } from '@/entrypoints/popup/SidePane/JikkyoEpgSelector/Pro
 
 const programIconsRegExp = /^(?:[🈟🈡🈞]\s?)+/
 
-export type TitleProps = {
+export interface TitleProps {
   id: StateSlotDetail['info']['id']
   source: StateSlotDetailJikkyo['info']['source']
   title: StateSlotDetail['info']['title']

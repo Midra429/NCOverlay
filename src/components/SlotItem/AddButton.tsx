@@ -1,7 +1,7 @@
 import { Button, cn } from '@heroui/react'
 import { PlusIcon } from 'lucide-react'
 
-export type AddButtonProps = {
+export interface AddButtonProps {
   onPress: () => void
 }
 

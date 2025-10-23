@@ -9,7 +9,8 @@ export type Key = {
   [key in SettingsKey]: StorageItems[key] extends string ? key : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<K, 'text', {}>
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'text'> {}
 
 export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)

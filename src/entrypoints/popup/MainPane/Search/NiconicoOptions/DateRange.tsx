@@ -32,7 +32,7 @@ const DATE_RANGE_OPTIONS: {
   },
 ]
 
-export type DateRangeProps = {
+export interface DateRangeProps {
   isDisabled?: boolean
 }
 

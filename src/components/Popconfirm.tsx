@@ -11,7 +11,7 @@ import {
 } from '@heroui/react'
 import { InfoIcon } from 'lucide-react'
 
-export type PopconfirmProps = {
+export interface PopconfirmProps {
   children: React.ReactElement
 
   placement?: PopoverProps['placement']

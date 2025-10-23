@@ -10,7 +10,7 @@ import { AutoLoadedBadge } from './AutoLoadedBadge'
 import { Offset } from './Offset'
 import { Duration } from './Duration'
 
-export type ThumbnailProps = {
+export interface ThumbnailProps {
   id: StateSlotDetail['id']
   type: StateSlotDetail['type']
   offsetMs: StateSlotDetail['offsetMs']

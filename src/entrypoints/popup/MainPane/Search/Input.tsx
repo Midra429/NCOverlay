@@ -11,12 +11,12 @@ import { NiconicoOptions } from './NiconicoOptions'
 
 export type SearchSource = 'niconico' | 'syobocal'
 
-export type SearchInputHandle = {
+export interface SearchInputHandle {
   setSource: (source: SearchSource) => void
   setValue: (value: string) => void
 }
 
-export type SearchInputProps = {
+export interface SearchInputProps {
   isDisabled: boolean
   onSearch: (change: { source: SearchSource; value: string }) => void
   ref: React.Ref<SearchInputHandle>

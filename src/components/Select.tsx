@@ -11,7 +11,7 @@ import {
   tv,
 } from '@heroui/react'
 
-export type SelectProps = Omit<HeroUISelectProps, 'size'> & {
+export interface SelectProps extends Omit<HeroUISelectProps, 'size'> {
   size?: HeroUISelectProps['size'] | 'mini'
 }
 

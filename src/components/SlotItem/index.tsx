@@ -27,7 +27,7 @@ import { HideButton } from './HideButton'
 import { TranslucentButton } from './TranslucentButton'
 import { Options, OptionsButton } from './Options'
 
-export type SlotItemProps = {
+export interface SlotItemProps {
   classNames?: PanelItemProps['classNames']
   detail: StateSlotDetail
   isSearch?: boolean

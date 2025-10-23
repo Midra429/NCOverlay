@@ -6,7 +6,7 @@ import { Button, cn } from '@heroui/react'
 import { ItemLabel } from '@/components/ItemLabel'
 import { Popconfirm } from '@/components/Popconfirm'
 
-export type ItemButtonProps = {
+export interface ItemButtonProps {
   title: React.ReactNode
   description?: React.ReactNode
   button: {

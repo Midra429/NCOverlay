@@ -4,7 +4,7 @@ import { ncoState, useNcoState } from '@/hooks/useNco'
 
 import { OffsetControl } from '@/components/OffsetControl'
 
-export type GlobalOffsetControlProps = {
+export interface GlobalOffsetControlProps {
   compact?: boolean
 }
 

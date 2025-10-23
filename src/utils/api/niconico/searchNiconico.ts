@@ -31,7 +31,7 @@ export async function searchNiconicoByIds(...contentIds: string[]) {
   return null
 }
 
-export type SearchNiconicoOptions = {
+export interface SearchNiconicoOptions {
   sort?: SettingItems['settings:search:sort']
   dateRange?: SettingItems['settings:search:dateRange']
   genre?: SettingItems['settings:search:genre']

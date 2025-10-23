@@ -14,16 +14,13 @@ export type Key = {
     : never
 }[SettingsKey]
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'checkbox',
-  {
-    options: {
-      label: string
-      value: StorageItems[K][number]
-    }[]
-  }
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'checkbox'> {
+  options: {
+    label: string
+    value: StorageItems[K][number]
+  }[]
+}
 
 export function Input(props: Props) {
   const [value, setValue] = useSettings(props.settingsKey)

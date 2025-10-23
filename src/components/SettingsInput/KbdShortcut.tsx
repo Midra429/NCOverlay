@@ -84,7 +84,7 @@ function isHeroUiKbdKey(key: string, os?: Runtime.PlatformOs): key is KbdKey {
   )
 }
 
-type KeyboardKeyProps = {
+interface KeyboardKeyProps {
   kbdKey: string
   os?: Runtime.PlatformOs
 }
@@ -115,11 +115,8 @@ function KeyboardKey({ kbdKey, os }: KeyboardKeyProps) {
 
 export type Key = Extract<SettingsKey, `settings:kbd:${string}`>
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'kbd-shortcut',
-  {}
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'kbd-shortcut'> {}
 
 export function Input(props: Props) {
   const [os, setOs] = useState<Runtime.PlatformOs>()

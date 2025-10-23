@@ -10,7 +10,7 @@ import {
 } from '@heroui/react'
 import { XIcon } from 'lucide-react'
 
-export type ModalProps = {
+export interface ModalProps {
   fullWidth?: boolean
 
   isOpen: HeroUIModalProps['isOpen']

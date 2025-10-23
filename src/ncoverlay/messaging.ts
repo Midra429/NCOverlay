@@ -8,7 +8,7 @@ import { webext } from '@/utils/webext'
 
 // popup, background -> content
 
-type ProtocolMap = {
+interface ProtocolMap {
   getId: (args?: null) => string | null
 
   getCurrentTime: (args?: null) => number

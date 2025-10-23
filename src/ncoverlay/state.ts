@@ -1,6 +1,7 @@
 import type { DeepPartial } from 'utility-types'
 import type { V1Thread } from '@xpadev-net/niconicomments'
 import type { VodKey } from '@/types/constants'
+import type { V1ThreadComment } from '@/types/niconico'
 import type { StorageOnChangeCallback } from '@/utils/storage'
 import type { NCOSearcherAutoLoadArgs } from './searcher'
 
@@ -14,7 +15,7 @@ import { getNgSettings } from '@/utils/api/niconico/getNgSettings'
 import { isNgComment } from '@/utils/api/niconico/applyNgSetting'
 import { findAssistedCommentIds } from '@/utils/api/niconico/findAssistedCommentIds'
 
-export type NCOStateItems = {
+export interface NCOStateItems {
   [key: `state:${string}:status`]: StateStatus | null
   [key: `state:${string}:vod`]: StateVod | null
   [key: `state:${string}:info`]: StateInfo | null
@@ -50,7 +51,7 @@ export type StateInfo = Partial<NCOSearcherAutoLoadArgs>
 
 export type StateOffset = number
 
-export type StateSlot = {
+export interface StateSlot {
   /**
    * 動画ID or `${jkChId}:${starttime}-${endtime}`
    */
@@ -59,7 +60,7 @@ export type StateSlot = {
   isAutoLoaded?: boolean
 }
 
-export type StateSlotDetailBase = {
+export interface StateSlotDetailBase {
   /**
    * 動画ID or `${jkChId}:${starttime}-${endtime}`
    */
@@ -72,7 +73,7 @@ export type StateSlotDetailBase = {
   isAutoLoaded?: boolean
 }
 
-export type StateSlotDetailDefault = StateSlotDetailBase & {
+export interface StateSlotDetailDefault extends StateSlotDetailBase {
   type: 'normal' | 'official' | 'danime' | 'chapter' | 'szbh'
   info: {
     id: string
@@ -90,7 +91,7 @@ export type StateSlotDetailDefault = StateSlotDetailBase & {
   }
 }
 
-export type StateSlotDetailJikkyo = StateSlotDetailBase & {
+export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
   type: 'jikkyo'
   info: {
     id: string | null
@@ -110,13 +111,13 @@ export type StateSlotDetail = StateSlotDetailDefault | StateSlotDetailJikkyo
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
 
-export type NcoV1ThreadComment = V1Thread['comments'][number] & {
+export interface NcoV1ThreadComment extends V1ThreadComment {
   _nco: {
     slotType: StateSlotDetail['type']
   }
 }
 
-export type NcoV1Thread = Omit<V1Thread, 'comments'> & {
+export interface NcoV1Thread extends Omit<V1Thread, 'comments'> {
   comments: NcoV1ThreadComment[]
   _nco: {}
 }

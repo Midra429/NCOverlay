@@ -8,7 +8,7 @@ import '@/assets/style.css'
 
 twMergeConfig.classGroups['font-size'].push({ text: ['mini'] })
 
-export type LayoutProps = {
+export interface LayoutProps {
   children: React.ReactNode
   className?: string
   style?: React.CSSProperties

@@ -10,7 +10,7 @@ import { Programs } from './Program'
 export const COLUMN_WIDTH = 140
 export const ROW_HEIGHT = 150
 
-type CurrentBarProps = {
+interface CurrentBarProps {
   top: number
   ref: React.Ref<HTMLDivElement>
 }
@@ -30,7 +30,7 @@ function CurrentBar({ top, ref }: CurrentBarProps) {
   )
 }
 
-export type TverEpgProps = {
+export interface TverEpgProps {
   data: EPGData | null
   isLoading?: boolean
 }

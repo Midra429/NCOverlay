@@ -3,7 +3,7 @@ import type { ButtonProps } from '@heroui/react'
 import { Button, cn } from '@heroui/react'
 import { Tooltip } from './Tooltip'
 
-export type PanelButtonProps = ButtonProps & {
+export interface PanelButtonProps extends ButtonProps {
   label?: string
 }
 

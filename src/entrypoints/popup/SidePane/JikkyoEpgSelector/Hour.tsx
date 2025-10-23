@@ -2,7 +2,7 @@ import { cn } from '@heroui/react'
 
 import { ROW_HEIGHT } from './TverEpg'
 
-export type HourCellProps = {
+export interface HourCellProps {
   hour: number
 }
 

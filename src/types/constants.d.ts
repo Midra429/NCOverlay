@@ -20,9 +20,11 @@ export type Plugins<VodKey extends PluginVodKey> = {
   [id in PluginId<VodKey>]: PluginFunction
 }
 
-export type SettingsInitData = {
+export interface SettingsInitItem {
   id: string
   title: string
   items: SettingsInputProps<SettingsKey>[]
   Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
-}[]
+}
+
+export type SettingsInitData = SettingsInitItem[]

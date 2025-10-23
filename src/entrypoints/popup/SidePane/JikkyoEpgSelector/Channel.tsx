@@ -6,7 +6,7 @@ import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { COLUMN_WIDTH } from './TverEpg'
 
-export type ChannelCellProps = {
+export interface ChannelCellProps {
   tverChId: TVerChannelId
 }
 
@@ -34,7 +34,7 @@ export function ChannelCell({ tverChId }: ChannelCellProps) {
   )
 }
 
-export type ChannelsProps = {
+export interface ChannelsProps {
   tverChIds: TVerChannelId[]
 }
 

@@ -12,7 +12,7 @@ import { defineWindowMessaging } from '@webext-core/messaging/page'
 
 // content (world: MAIN) -> content
 
-type ProtocolMap = {
+interface ProtocolMap {
   'get': (
     args: Parameters<StorageGetFunction>
   ) => Awaited<ReturnType<StorageGetFunction>>

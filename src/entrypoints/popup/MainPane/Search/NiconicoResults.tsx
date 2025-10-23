@@ -4,7 +4,7 @@ import { useNcoState } from '@/hooks/useNco'
 
 import { SlotItem } from '@/components/SlotItem'
 
-export type NiconicoResultsProps = {
+export interface NiconicoResultsProps {
   details: StateSlotDetail[]
 }
 

@@ -2,7 +2,7 @@ import type { ClassValue } from 'clsx'
 
 import { cn } from '@heroui/react'
 
-export type PanelItemProps = {
+export interface PanelItemProps {
   className?: string
   classNames?: {
     wrapper?: ClassValue

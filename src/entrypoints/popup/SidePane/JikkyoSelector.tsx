@@ -74,7 +74,7 @@ function createSlotDetailJikkyo({
   }
 }
 
-export type JikkyoSelectorProps = {
+export interface JikkyoSelectorProps {
   isOpen: boolean
   onOpenChange: () => void
 }

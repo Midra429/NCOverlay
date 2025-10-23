@@ -19,7 +19,7 @@ const transitionVariants: Variants = {
   enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
 }
 
-export type NiconicoOptionsProps = {
+export interface NiconicoOptionsProps {
   isOpen: boolean
   isDisabled?: boolean
 }

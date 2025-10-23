@@ -5,7 +5,7 @@ import { PlayIcon, MessageSquareTextIcon, HeartIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-export type CountsProps = {
+export interface CountsProps {
   status: StateSlotDetail['status']
   infoCount: StateSlotDetail['info']['count']
   isSearch?: boolean

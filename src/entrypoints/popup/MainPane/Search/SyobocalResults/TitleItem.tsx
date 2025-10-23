@@ -10,7 +10,7 @@ import { SYOBOCAL_CATEGORIES } from '@midra/nco-utils/api/constants'
 
 export type ScTitleItem = SyoboCalTitleMedium | SyoboCalTitleSearch
 
-export type TitleItemInnerProps = {
+export interface TitleItemInnerProps {
   item: ScTitleItem
   isHeader?: boolean
 }
@@ -79,7 +79,7 @@ export function TitleItemInner({ item, isHeader }: TitleItemInnerProps) {
   )
 }
 
-export type TitleItemProps = {
+export interface TitleItemProps {
   item: ScTitleItem
   onClick: () => void
 }

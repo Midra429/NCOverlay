@@ -7,7 +7,8 @@ import { logger } from '@/utils/logger'
 import { getObjectFitRect } from '@/utils/dom/getObjectFitRect'
 import { sendUtilsMessage } from '@/utils/extension/messaging'
 
-type NiconiCommentsOptions = Partial<Omit<BaseOptions, 'mode' | 'format'>>
+interface NiconiCommentsOptions
+  extends Partial<Omit<BaseOptions, 'mode' | 'format'>> {}
 
 /**
  * NCOverlayの描画担当

@@ -1,9 +1,8 @@
 import { cn } from '@heroui/react'
 import { SmileIcon } from 'lucide-react'
 
-type HeaderCellProps = React.PropsWithChildren<
-  React.HTMLAttributes<HTMLDivElement>
->
+interface HeaderCellProps
+  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {}
 
 function HeaderCell({ className, ...props }: HeaderCellProps) {
   return (

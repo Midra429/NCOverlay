@@ -1,6 +1,4 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
-
-type V1ThreadComment = V1Thread['comments'][number]
+import type { V1ThreadComment } from '@/types/niconico'
 
 // コメントアシストの開始日
 const COMMENT_ASSIST_START_DATE = new Date('2025-04-26T00:00:00+09:00')
@@ -40,7 +38,7 @@ function isAssistedComment(
   )
 }
 
-export type AssistedCommentResult = {
+export interface AssistedCommentResult {
   id: V1ThreadComment['id']
   score: number
 }

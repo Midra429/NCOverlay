@@ -32,7 +32,7 @@ const tabItems: {
   },
 ]
 
-export type MainPaneProps = {
+export interface MainPaneProps {
   quickpanel?: boolean
 }
 

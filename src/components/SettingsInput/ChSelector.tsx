@@ -32,18 +32,15 @@ import { Tooltip } from '@/components/Tooltip'
 
 export type Key = 'settings:comment:jikkyoChannelIds'
 
-export type Props<K extends Key = Key> = SettingsInputBaseProps<
-  K,
-  'ch-selector',
-  {
-    options: {
-      label: string
-      value: JikkyoChannelId
-    }[]
-  }
->
+export interface Props<K extends Key = Key>
+  extends SettingsInputBaseProps<K, 'ch-selector'> {
+  options: {
+    label: string
+    value: JikkyoChannelId
+  }[]
+}
 
-type ChSelectorProps = {
+interface ChSelectorProps {
   type: keyof typeof JIKKYO_CHANNEL_GROUPS
   chIds: JikkyoDtvChannelId[] | JikkyoBsCsChannelId[]
   setChIds:

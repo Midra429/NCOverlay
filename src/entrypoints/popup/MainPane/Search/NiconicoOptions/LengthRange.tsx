@@ -32,7 +32,7 @@ const LENGTH_RANGE_OPTIONS: {
   },
 ]
 
-export type LengthRangeProps = {
+export interface LengthRangeProps {
   isDisabled?: boolean
 }
 

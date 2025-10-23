@@ -59,9 +59,8 @@ const NICORU_COLORS: Record<number, string> = {
   4: 'rgb(252 216 66 / 50%)',
 }
 
-type ItemCellProps = React.PropsWithChildren<
-  React.HTMLAttributes<HTMLDivElement>
->
+interface ItemCellProps
+  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {}
 
 function ItemCell({ className, ...props }: ItemCellProps) {
   return (
@@ -78,7 +77,7 @@ function ItemCell({ className, ...props }: ItemCellProps) {
   )
 }
 
-type ItemCellWithMenuProps = {
+interface ItemCellWithMenuProps {
   classNames?: SlotsToClasses<'trigger' | 'wrapper' | 'cell'>
   style?: React.CSSProperties
   children: React.ReactNode
@@ -153,7 +152,7 @@ function getCmtClassAndColor(commands: string[]) {
   return { cmtCellCmdClass, cmtCmdClass, cmtBgColor, cmtFgColor }
 }
 
-export type ItemProps = {
+export interface ItemProps {
   comment: NcoV1ThreadComment
   offsetMs: number
 }

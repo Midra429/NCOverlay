@@ -3,7 +3,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 import { Button, cn } from '@heroui/react'
 import { Trash2Icon } from 'lucide-react'
 
-export type ButtonsOverlayProps = {
+export interface ButtonsOverlayProps {
   status: StateSlotDetail['status']
   onRemove: () => void
 }

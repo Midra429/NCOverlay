@@ -2,10 +2,11 @@ import type { TooltipPlacement } from '@heroui/react'
 
 import { Tooltip as HeroUITooltip } from '@heroui/react'
 
-export type TooltipProps = React.PropsWithChildren<{
-  placement?: TooltipPlacement
-  content?: React.ReactNode
-}>
+export interface TooltipProps
+  extends React.PropsWithChildren<{
+    placement?: TooltipPlacement
+    content?: React.ReactNode
+  }> {}
 
 export function Tooltip({ placement, content, children }: TooltipProps) {
   return content ? (

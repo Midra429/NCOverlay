@@ -18,11 +18,11 @@ import { SlotItem } from '@/components/SlotItem'
 import { TitleItemInner } from './TitleItem'
 import { SubtitleItem } from './SubtitleItem'
 
-export type TitleDetailHandle = {
+export interface TitleDetailHandle {
   initialize: () => void
 }
 
-export type TitleDetailProps = {
+export interface TitleDetailProps {
   title: ScTitleItem
   isOpen: boolean
   onOpenChange: () => void

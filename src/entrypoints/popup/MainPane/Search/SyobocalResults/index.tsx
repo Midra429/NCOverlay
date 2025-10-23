@@ -7,7 +7,7 @@ import { useDisclosure } from '@heroui/react'
 import { TitleItem } from './TitleItem'
 import { TitleDetail } from './TitleDetail'
 
-export type SyobocalResultsProps = {
+export interface SyobocalResultsProps {
   titles: ScTitleItem[]
 }
 

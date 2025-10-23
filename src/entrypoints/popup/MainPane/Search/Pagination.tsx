@@ -1,7 +1,7 @@
 import { Button, Pagination as HeroUIPagination } from '@heroui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
-export type PaginationProps = {
+export interface PaginationProps {
   total: number
   page: number
   isDisabled?: boolean
