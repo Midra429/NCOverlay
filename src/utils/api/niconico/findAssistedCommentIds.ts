@@ -31,10 +31,8 @@ function isAssistedComment(
       (target.commands.length === 1 && target.commands[0] === '184')) &&
     // ニコるが10未満
     target.nicoruCount < 10 &&
-    // 時間差が8秒以下 (ターゲットが右側)
-    (target.vposMs - base.vposMs <= 8000 ||
-      // 時間差が5秒以下 (ターゲットが左側)
-      base.vposMs - target.vposMs <= 5000)
+    // 時間差が8秒以下
+    Math.abs(target.vposMs - base.vposMs) <= 8000
   )
 }
 
@@ -119,13 +117,7 @@ export function findAssistedCommentIds(
         (v) => v.userId === userId
       ).length
 
-      if (6 <= sameUserCount) {
-        score += 3
-      } else if (4 <= sameUserCount) {
-        score += 2
-      } else if (2 <= sameUserCount) {
-        score += 1
-      }
+      score += Math.min(sameUserCount - 1, 3)
 
       return scoreThreshold < score ? id : []
     })
