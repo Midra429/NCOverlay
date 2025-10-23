@@ -164,9 +164,9 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       {
         settingsKey: 'settings:comment:hideAssistedComments',
         inputType: 'toggle',
-        label: 'コメントアシストの表示を抑制（β）',
+        label: 'コメントアシストの表示を抑制',
         description:
-          'コメントアシストと予想されるコメントの表示を抑制します。\n※テンプレコメントも対象になる可能性があります',
+          'コメントアシスト機能を使用したと予想されるコメントの表示を抑制します。\n※正確には判定できないので、テンプレコメントも対象になる可能性があります',
       },
     ],
   },
