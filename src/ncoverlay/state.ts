@@ -155,7 +155,7 @@ export async function filterDisplayThreads(
         ? findAssistedCommentIds(thread.comments)
         : null
 
-      if (assistedCommentIds) {
+      if (assistedCommentIds && thread.comments.length) {
         logger.log(
           'assistedComment',
           `[${key}] ${assistedCommentIds.length} / ${thread.comments.length}`
