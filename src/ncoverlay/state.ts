@@ -136,6 +136,9 @@ export async function filterDisplayThreads(
     'settings:comment:hideAssistedComments'
   )
 
+  let cmtCnt = 0
+  let assistedCmtCnt = 0
+
   for (const detail of details) {
     if (detail.hidden || detail.status !== 'ready') {
       continue
@@ -155,12 +158,8 @@ export async function filterDisplayThreads(
         ? findAssistedCommentIds(thread.comments)
         : null
 
-      if (assistedCommentIds && thread.comments.length) {
-        logger.log(
-          'assistedComment',
-          `[${key}] ${assistedCommentIds.length} / ${thread.comments.length}`
-        )
-      }
+      cmtCnt += thread.comments.length
+      assistedCmtCnt += assistedCommentIds?.length ?? 0
 
       const comments = thread.comments
         .filter((cmt) => {
@@ -199,6 +198,10 @@ export async function filterDisplayThreads(
         })
       }
     }
+  }
+
+  if (hideAssistedComments) {
+    logger.log('assistedComment', `${assistedCmtCnt} / ${cmtCnt}`)
   }
 
   const threads = [...threadMap.values()]
