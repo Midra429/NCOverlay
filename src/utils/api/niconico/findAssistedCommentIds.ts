@@ -52,10 +52,7 @@ export interface AssistedCommentResult {
 /**
  * アシストコメントを探す
  */
-export function findAssistedCommentIds(
-  comments: V1ThreadComment[],
-  scoreThreshold = 4
-): string[] {
+export function findAssistedCommentIds(comments: V1ThreadComment[]): string[] {
   if (comments.length <= 3) {
     return []
   }
@@ -96,44 +93,35 @@ export function findAssistedCommentIds(
   }
 
   return sameCommentGroups.flatMap<string>(([base, ...targets]) => {
-    let baseScore = 0
-
-    // 同じコメントの数
-    const sameCommentCount = targets.length
-
-    if (sameCommentCount <= 2) return []
-
-    if (8 <= sameCommentCount) {
-      baseScore += 3
-    } else if (6 <= sameCommentCount) {
-      baseScore += 2
-    } else if (4 <= sameCommentCount) {
-      baseScore += 1
-    }
-
     // 文字の長さ
     const wordCount = base.body.length
+    const wordScore =
+      (8 <= wordCount && 4) ||
+      (4 <= wordCount && 3) ||
+      (2 <= wordCount && 2) ||
+      (1 <= wordCount && 1) ||
+      0
 
-    if (9 <= wordCount) {
-      baseScore += 3
-    } else if (6 <= wordCount) {
-      baseScore += 2
-    } else if (3 <= wordCount) {
-      baseScore += 1
-    }
+    // 同じコメントの数
+    const commentCount = targets.length
+    const commentScore =
+      (9 <= commentCount && 4) ||
+      (7 <= commentCount && 3) ||
+      (5 <= commentCount && 2) ||
+      (3 <= commentCount && 1) ||
+      0
 
-    if (!baseScore) return []
+    if (!wordScore && !commentScore) return []
 
     return targets.flatMap<string>(({ id, userId }) => {
-      // 合計スコア (1 <= n <= 9)
-      let score = baseScore
-
       // ユーザーが同じコメントをした回数
-      const sameUserCount = userCounts[userId]
+      const userCount = userCounts[userId]
 
-      score += Math.min(sameUserCount - 1, 3)
+      const scoreThreshold = 5 - Math.min(userCount, 4)
 
-      return scoreThreshold < score ? id : []
+      return scoreThreshold <= wordScore && scoreThreshold <= commentScore
+        ? id
+        : []
     })
   })
 }
