@@ -350,7 +350,7 @@ export class NCOverlay {
     [type in keyof NCOverlayEventMap]?: NCOverlayEventMap[type][]
   } = {}
 
-  #trigger<Type extends keyof NCOverlayEventMap>(type: Type) {
+  #trigger<T extends keyof NCOverlayEventMap>(type: T) {
     if (this.#listeners[type]) {
       for (const listener of this.#listeners[type]) {
         try {
@@ -362,17 +362,17 @@ export class NCOverlay {
     }
   }
 
-  addEventListener<Type extends keyof NCOverlayEventMap>(
-    type: Type,
-    callback: NCOverlayEventMap[Type]
+  addEventListener<T extends keyof NCOverlayEventMap>(
+    type: T,
+    callback: NCOverlayEventMap[T]
   ) {
     this.#listeners[type] ??= []
     this.#listeners[type]!.push(callback)
   }
 
-  removeEventListener<Type extends keyof NCOverlayEventMap>(
-    type: Type,
-    callback: NCOverlayEventMap[Type]
+  removeEventListener<T extends keyof NCOverlayEventMap>(
+    type: T,
+    callback: NCOverlayEventMap[T]
   ) {
     this.#listeners[type] = this.#listeners[type]?.filter(
       (cb) => cb !== callback

@@ -3,7 +3,7 @@ import type { WindowMessenger } from '@webext-core/messaging/page'
 import type { ProxyService } from '@webext-core/proxy-service'
 import type { Service, ProtocolMap } from '.'
 
-export function createProxy<TService extends Service>(
+export function createProxy<S extends Service>(
   name: string,
   sendMessage: (
     | ExtensionMessenger<ProtocolMap>
@@ -12,8 +12,8 @@ export function createProxy<TService extends Service>(
 ) {
   const messageKey = `proxy-service:${name}`
 
-  const create = (paths: string[] = []): ProxyService<TService> => {
-    const wrapped = (() => {}) as ProxyService<TService>
+  const create = (paths: string[] = []): ProxyService<S> => {
+    const wrapped = (() => {}) as ProxyService<S>
 
     const proxy = new Proxy(wrapped, {
       get(target, p, receiver) {

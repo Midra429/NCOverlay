@@ -4,9 +4,9 @@ import type { Service, ProtocolMap } from '.'
 
 import get from '@/utils/get-value'
 
-export function registerProxy<TService extends Service>(
+export function registerProxy<S extends Service>(
   name: string,
-  service: TService,
+  service: S,
   onMessage: (
     | ExtensionMessenger<ProtocolMap>
     | WindowMessenger<ProtocolMap>

@@ -28,8 +28,8 @@ export type NCOStateItemKey =
   keyof NCOStateItems extends `state:${string}:${infer K}` ? K : never
 
 export type NCOStateArrayItemKey = {
-  [key in keyof NCOStateItems]: NCOStateItems[key] extends unknown[] | null
-    ? key
+  [K in keyof NCOStateItems]: NCOStateItems[K] extends unknown[] | null
+    ? K
     : never
 }[keyof NCOStateItems] extends `state:${string}:${infer K}`
   ? K
@@ -223,28 +223,25 @@ export class NCOState {
     this.clear()
   }
 
-  get<Key extends NCOStateItemKey>(
-    key: Key
-  ): Promise<NCOStateItem<Key> | null> {
+  get<K extends NCOStateItemKey>(key: K): Promise<NCOStateItem<K> | null> {
     return storage.get(`state:${this.ncoId}:${key}`)
   }
 
   async getThreads() {
     return filterDisplayThreads(
-      await this.get('slots'),
-      await this.get('slotDetails')
+      ...(await Promise.all([this.get('slots'), this.get('slotDetails')]))
     )
   }
 
-  set<Key extends NCOStateItemKey>(key: Key, value: NCOStateItem<Key>) {
+  set<K extends NCOStateItemKey>(key: K, value: NCOStateItem<K>) {
     return storage.set(`state:${this.ncoId}:${key}`, value as any)
   }
 
-  async add<Key extends NCOStateArrayItemKey>(
-    key: Key,
-    ...values: NonNullable<NCOStateItem<Key>>
+  async add<K extends NCOStateArrayItemKey>(
+    key: K,
+    ...values: NonNullable<NCOStateItem<K>>
   ) {
-    const oldValue = await this.get<Key>(key)
+    const oldValue = await this.get<K>(key)
 
     const exists = values.some((val) => {
       return oldValue?.some((old) => old.id === val.id)
@@ -253,22 +250,21 @@ export class NCOState {
     if (!exists) {
       const value = (
         oldValue ? [...oldValue, ...values] : values
-      ) as NCOStateItem<Key>
+      ) as NCOStateItem<K>
 
       return this.set(key, value)
     }
   }
 
   async update<
-    Key extends NCOStateArrayItemKey,
-    Value extends NonNullable<NCOStateItem<Key>>,
-    UpdateValue extends Value extends Array<any> ? Value[number] : Value,
-    UpdateFixedProps extends (keyof UpdateValue)[],
+    K extends NCOStateArrayItemKey,
+    V extends NonNullable<NCOStateItem<K>>,
+    U extends V extends unknown[] ? V[number] : V,
+    P extends keyof U = never,
   >(
-    key: Key,
-    fixedProps: UpdateFixedProps,
-    value: DeepPartial<UpdateValue> &
-      Required<Pick<UpdateValue, UpdateFixedProps[number]>>
+    key: K,
+    fixedPropKeys: readonly P[],
+    value: DeepPartial<U> & Required<Pick<U, P>>
   ): Promise<boolean> {
     const oldValue = await this.get(key)
 
@@ -278,9 +274,9 @@ export class NCOState {
 
     if (Array.isArray(oldValue)) {
       const idx = oldValue.findIndex((old) => {
-        return fixedProps.every((k) =>
-          equal(old[k as keyof typeof old], value[k])
-        )
+        return fixedPropKeys.every((key) => {
+          return equal((old as U)[key], value[key])
+        })
       })
 
       if (idx !== -1) {
@@ -307,11 +303,10 @@ export class NCOState {
     return false
   }
 
-  async remove<
-    Key extends NCOStateItemKey,
-    Value extends NCOStateItem<Key>,
-    Target extends Value extends Array<any> ? Partial<Value[number]> : never,
-  >(key: Key, target?: Target) {
+  async remove<K extends NCOStateItemKey, V extends NCOStateItem<K>>(
+    key: K,
+    target?: V extends unknown[] ? Partial<V[number]> : never
+  ) {
     if (target) {
       const oldValue = await this.get(key)
 
@@ -325,7 +320,7 @@ export class NCOState {
         })
 
         if (oldValue.length !== newValue.length) {
-          return this.set(key, newValue as Value)
+          return this.set(key, newValue as V)
         }
       }
     } else {
@@ -344,9 +339,9 @@ export class NCOState {
     ])
   }
 
-  onChange<Key extends NCOStateItemKey>(
-    key: Key,
-    callback: StorageOnChangeCallback<`state:${string}:${Key}`>
+  onChange<K extends NCOStateItemKey>(
+    key: K,
+    callback: StorageOnChangeCallback<`state:${string}:${K}`>
   ) {
     return storage.onChange(`state:${this.ncoId}:${key}`, callback)
   }

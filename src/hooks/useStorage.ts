@@ -5,34 +5,34 @@ import { useEffect, useState } from 'react'
 
 import { storage } from '@/utils/storage/extension'
 
-export function useStorage<Key extends StorageKey>(
-  key: Key,
-  initialValue: StorageItems[Key]
+export function useStorage<K extends StorageKey>(
+  key: K,
+  initialValue: StorageItems[K]
 ): [
-  StorageItems[Key],
-  React.Dispatch<React.SetStateAction<StorageItems[Key] | null>>,
+  StorageItems[K],
+  React.Dispatch<React.SetStateAction<StorageItems[K] | null>>,
   { loading: boolean },
 ]
 
-export function useStorage<Key extends StorageKey>(
-  key: Key
+export function useStorage<K extends StorageKey>(
+  key: K
 ): [
-  StorageItems[Key] | null,
-  React.Dispatch<React.SetStateAction<StorageItems[Key] | null>>,
+  StorageItems[K] | null,
+  React.Dispatch<React.SetStateAction<StorageItems[K] | null>>,
   { loading: boolean },
 ]
 
-export function useStorage<Key extends StorageKey>(
-  key: Key,
-  initialValue?: StorageItems[Key]
+export function useStorage<K extends StorageKey>(
+  key: K,
+  initialValue?: StorageItems[K]
 ) {
-  const [state, setState] = useState<StorageItems[Key] | null>(
+  const [state, setState] = useState<StorageItems[K] | null>(
     initialValue ?? null
   )
   const [loading, setLoading] = useState<boolean>(true)
 
   const setValue: React.Dispatch<
-    React.SetStateAction<StorageItems[Key] | null>
+    React.SetStateAction<StorageItems[K] | null>
   > = (value) => {
     if (typeof value === 'function') {
       storage.set(key, value(state))
@@ -47,7 +47,7 @@ export function useStorage<Key extends StorageKey>(
       setLoading(false)
     })
 
-    const callback: StorageOnChangeCallback<Key> = (value) => {
+    const callback: StorageOnChangeCallback<K> = (value) => {
       setState(value ?? initialValue ?? null)
     }
 

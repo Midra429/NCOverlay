@@ -52,10 +52,10 @@ export function useNcoStateReady(tabId?: number) {
   return state
 }
 
-export function useNcoState<Key extends NCOStateItemKey>(
-  key: Key
-): NCOStateItem<Key> | null {
-  const [state, setState] = useState<NCOStateItem<Key> | null>(null)
+export function useNcoState<K extends NCOStateItemKey>(
+  key: K
+): NCOStateItem<K> | null {
+  const [state, setState] = useState<NCOStateItem<K> | null>(null)
 
   useEffect(() => {
     if (!ncoState) return

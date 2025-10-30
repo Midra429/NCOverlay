@@ -228,7 +228,9 @@ export class NCOSearcher {
         results: $Values<typeof searchResults>,
         comments: Awaited<ReturnType<typeof getNiconicoComments>>
       ) {
-        for (let i = 0; i < comments.length; i++) {
+        const len = comments.length
+
+        for (let i = 0; i < len; i++) {
           const result = results[i]
           const cmt = comments[i]
 
@@ -370,7 +372,11 @@ export class NCOSearcher {
 
     await this.#state.add('slots', ...slots)
 
-    logger.log('slots', await this.#state.get('slots'))
-    logger.log('slotDetails', await this.#state.get('slotDetails'))
+    this.#state.get('slots').then((val) => {
+      logger.log('slots', val)
+    })
+    this.#state.get('slotDetails').then((val) => {
+      logger.log('slotDetails', val)
+    })
   }
 }
