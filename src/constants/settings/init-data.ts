@@ -58,7 +58,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       {
         settingsKey: 'settings:capture:format',
         inputType: 'select',
-        label: 'キャプチャー: 形式',
+        label: 'キャプチャ: 形式',
         options: [
           { label: 'JPEG', value: 'jpeg' },
           { label: 'PNG', value: 'png' },
@@ -67,7 +67,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       {
         settingsKey: 'settings:capture:method',
         inputType: 'select',
-        label: 'キャプチャー: 方式',
+        label: 'キャプチャ: 方式',
         options: [
           { label: 'ウィンドウ', value: 'window' },
           { label: 'コピー', value: 'copy' },

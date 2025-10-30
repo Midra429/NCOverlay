@@ -51,13 +51,13 @@ export interface StorageItems_v4 {
   'settings:vods': VodKey[]
 
   /**
-   * キャプチャー: 形式
+   * キャプチャ: 形式
    * @default 'jpeg'
    */
   'settings:capture:format': 'jpeg' | 'png'
 
   /**
-   * キャプチャー: 方式
+   * キャプチャ: 方式
    * @default 'jpeg'
    */
   'settings:capture:method': 'window' | 'copy'
