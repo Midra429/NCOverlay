@@ -24,29 +24,30 @@ export function convertNgSettingsContent({
 }
 
 export async function getNgSettings(): Promise<NgSettingsConverted> {
-  const values = await settings.get(
-    'settings:ng:largeComments',
-    'settings:ng:fixedComments',
-    'settings:ng:coloredComments',
-    'settings:ng:words',
-    'settings:ng:commands',
-    'settings:ng:ids'
-  )
+  const [largeComments, fixedComments, coloredComments, words, commands, ids] =
+    await settings.get(
+      'settings:ng:largeComments',
+      'settings:ng:fixedComments',
+      'settings:ng:coloredComments',
+      'settings:ng:words',
+      'settings:ng:commands',
+      'settings:ng:ids'
+    )
 
-  const ngWords = new Set(values['settings:ng:words'])
-  const ngCommands = new Set(values['settings:ng:commands'])
-  const ngIds = new Set(values['settings:ng:ids'])
+  const ngWords = new Set(words)
+  const ngCommands = new Set(commands)
+  const ngIds = new Set(ids)
 
-  if (values['settings:ng:largeComments']) {
+  if (largeComments) {
     ngCommands.add({ content: 'big' })
   }
 
-  if (values['settings:ng:fixedComments']) {
+  if (fixedComments) {
     ngCommands.add({ content: 'ue' })
     ngCommands.add({ content: 'shita' })
   }
 
-  if (values['settings:ng:coloredComments']) {
+  if (coloredComments) {
     for (const content of Object.keys(NICONICO_COLOR_COMMANDS)) {
       ngCommands.add({ content })
     }

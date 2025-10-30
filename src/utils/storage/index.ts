@@ -10,13 +10,13 @@ export interface StorageGetFunction {
   }>
 
   /** 1つのアイテムを取得 */
-  <Key extends StorageKey>(key: Key): Promise<StorageItems[Key] | null>
+  <K extends StorageKey>(key: K): Promise<StorageItems[K] | null>
 
   /** 複数のアイテムを取得 */
-  <Keys extends StorageKey[]>(
-    ...keys: Keys
+  <K extends StorageKey[]>(
+    ...keys: K
   ): Promise<{
-    [key in Keys[number]]: StorageItems[key] | null
+    [P in keyof K]: StorageItems[K[P]] | null
   }>
 }
 
@@ -24,9 +24,9 @@ export interface StorageGetFunction {
  * ストレージにアイテムを設定
  */
 export interface StorageSetFunction {
-  <Key extends StorageKey>(
-    key: Key,
-    value: StorageItems[Key] | null | undefined
+  <K extends StorageKey>(
+    key: K,
+    value: StorageItems[K] | null | undefined
   ): Promise<void>
 }
 
@@ -53,35 +53,32 @@ export interface StorageGetBytesInUseFunction {
 }
 
 /** アイテムが変更されたときのコールバック */
-export interface StorageOnChangeCallback<Key extends StorageKey> {
-  (newValue: StorageItems[Key] | null, oldValue: StorageItems[Key] | null): void
+export interface StorageOnChangeCallback<K extends StorageKey> {
+  (newValue: StorageItems[K] | null, oldValue: StorageItems[K] | null): void
 }
 
 /**
  * ストレージのアイテムが変更
  */
 export interface StorageOnChangeFunction {
-  <Key extends StorageKey>(
-    key: Key,
-    callback: StorageOnChangeCallback<Key>
+  <K extends StorageKey>(
+    key: K,
+    callback: StorageOnChangeCallback<K>
   ): () => void
 }
 
 /**
  * ストレージの読み込み・監視のコールバック
  */
-export interface StorageWatchCallback<Key extends StorageKey> {
-  (value: StorageItems[Key] | null): void
+export interface StorageWatchCallback<K extends StorageKey> {
+  (value: StorageItems[K] | null): void
 }
 
 /**
  * ストレージを読み込み、変更を監視する
  */
 export interface StorageWatch {
-  <Key extends StorageKey>(
-    key: Key,
-    callback: StorageWatchCallback<Key>
-  ): () => void
+  <K extends StorageKey>(key: K, callback: StorageWatchCallback<K>): () => void
 }
 
 export class WebExtStorage {

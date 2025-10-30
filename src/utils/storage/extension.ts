@@ -10,16 +10,22 @@ const extensionStorage = webext.storage.local
 
 export const storage = new WebExtStorage({
   get: async (...keys: StorageKey[]) => {
-    if (keys.length === 1) {
+    if (!keys.length) {
+      return extensionStorage.get()
+    } else if (keys.length === 1) {
       const key = keys[0]
       const value: any = (await extensionStorage.get(key))[key]
 
       return value ?? null
-    }
+    } else {
+      return Promise.all(
+        keys.map(async (key) => {
+          const value = (await extensionStorage.get(key))[key]
 
-    return keys.length
-      ? extensionStorage.get(Object.fromEntries(keys.map((key) => [key, null])))
-      : extensionStorage.get()
+          return value ?? null
+        })
+      )
+    }
   },
 
   set: async (key, value) => {

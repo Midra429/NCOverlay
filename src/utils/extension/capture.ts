@@ -8,14 +8,14 @@ import { sendNcoMessage } from '@/ncoverlay/messaging'
 export async function capture(): Promise<
   StorageItems['settings:capture:method'] | false
 > {
-  const {
-    'settings:capture:format': captureFormat,
-    'settings:capture:method': captureMethod,
-  } = await settings.get('settings:capture:format', 'settings:capture:method')
+  const [format, method] = await settings.get(
+    'settings:capture:format',
+    'settings:capture:method'
+  )
 
   const response = await sendNcoMessage(
     'capture',
-    captureMethod === 'copy' ? 'png' : captureFormat
+    method === 'copy' ? 'png' : format
   )
 
   if (response?.data) {
@@ -24,7 +24,7 @@ export async function capture(): Promise<
         type: `image/${response.format}`,
       })
 
-      switch (captureMethod) {
+      switch (method) {
         case 'copy':
           await navigator.clipboard.write([
             new ClipboardItem({ [blob.type]: blob }),
@@ -41,7 +41,7 @@ export async function capture(): Promise<
           })
       }
 
-      return captureMethod
+      return method
     } catch (err) {
       logger.error('capture', err)
     }

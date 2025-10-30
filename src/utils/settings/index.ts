@@ -26,13 +26,13 @@ export interface SettingsGetFunction {
   (): Promise<SettingItems>
 
   /** 1つの設定を取得 */
-  <Key extends SettingsKey>(key: Key): Promise<SettingItems[Key]>
+  <K extends SettingsKey>(key: K): Promise<SettingItems[K]>
 
   /** 複数の設定を取得 */
-  <Keys extends SettingsKey[]>(
-    ...keys: Keys
+  <K extends SettingsKey[]>(
+    ...keys: K
   ): Promise<{
-    [key in Keys[number]]: SettingItems[key]
+    [P in keyof K]: SettingItems[K[P]]
   }>
 }
 
@@ -40,9 +40,9 @@ export interface SettingsGetFunction {
  * 設定を更新
  */
 export interface SettingsSetFunction {
-  <Key extends SettingsKey>(
-    key: Key,
-    value: SettingItems[Key] | null | undefined
+  <K extends SettingsKey>(
+    key: K,
+    value: SettingItems[K] | null | undefined
   ): Promise<void>
 }
 
@@ -72,9 +72,9 @@ export interface SettingsGetBytesInUseFunction {
  * 設定が変更
  */
 export interface SettingsOnChangeFunction {
-  <Key extends SettingsKey>(
-    key: Key,
-    callback: StorageOnChangeCallback<Key>
+  <K extends SettingsKey>(
+    key: K,
+    callback: StorageOnChangeCallback<K>
   ): () => void
 }
 
@@ -82,9 +82,9 @@ export interface SettingsOnChangeFunction {
  * 設定を読み込み、変更を監視する
  */
 export interface SettingsWatch {
-  <Key extends SettingsKey>(
-    key: Key,
-    callback: (value: SettingItems[Key]) => void
+  <K extends SettingsKey>(
+    key: K,
+    callback: (value: SettingItems[K]) => void
   ): () => void
 }
 
@@ -118,24 +118,25 @@ export class WebExtSettings {
   }
 
   readonly get: SettingsGetFunction = async (...keys: SettingsKey[]) => {
-    const values = await this.#storage.get(...keys)
+    if (!keys.length) {
+      const values = await this.#storage.get()
+      const items = Object.fromEntries(
+        Object.entries(values).map(([key, val]) => {
+          return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
+        })
+      ) as SettingItems
 
-    if (keys.length === 1) {
-      return (values ?? SETTINGS_DEFAULT[keys[0]]) as any
+      return { ...SETTINGS_DEFAULT, ...items }
+    } else if (keys.length === 1) {
+      const key = keys[0]
+      const value = (await this.#storage.get(key)) as any
+
+      return value ?? SETTINGS_DEFAULT[key]
+    } else {
+      const values = await this.#storage.get(...keys)
+
+      return values.map((v, i) => v ?? SETTINGS_DEFAULT[keys[i]])
     }
-
-    const items = Object.fromEntries(
-      Object.entries(values).map(([key, val]) => {
-        return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
-      })
-    ) as SettingItems
-
-    return keys.length
-      ? items
-      : {
-          ...SETTINGS_DEFAULT,
-          ...items,
-        }
   }
 
   readonly remove: SettingsRemoveFunction = (...keys: SettingsKey[]) => {
