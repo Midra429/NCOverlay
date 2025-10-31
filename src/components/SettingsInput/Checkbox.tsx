@@ -9,9 +9,7 @@ import { useSettings } from '@/hooks/useSettings'
 import { Tooltip } from '@/components/Tooltip'
 
 export type Key = {
-  [key in SettingsKey]: StorageItems[key] extends (string | number)[]
-    ? key
-    : never
+  [P in SettingsKey]: StorageItems[P] extends (string | number)[] ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>

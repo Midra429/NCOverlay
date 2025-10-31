@@ -18,6 +18,10 @@ export interface NgSettings {
   ids: NgSettingsContent[]
 }
 
+export interface InternalItems {
+  _migrate_version: number
+}
+
 /** < v3.13.1 */
 export interface StorageItems_v2 {
   /**
@@ -36,7 +40,7 @@ export interface StorageItems_v3 {
   'settings:ng:useNiconicoAccount': boolean
 }
 
-export interface StorageItems_v4 {
+export interface SettingItems {
   // 全般 //////////////////////////////////////////////////
   /**
    * テーマ
@@ -267,29 +271,27 @@ export interface StorageItems_v4 {
   'settings:search:lengthRange': [start: number | null, end: number | null]
 }
 
-export type StorageItems = StorageItems_v4 & {
-  '_migrate_version': number
+export interface SettingsExportItems
+  extends Partial<InternalItems & SettingItems> {}
 
+export interface TemporaryItems {
   /**
    * コメント:不透明度 (パネル用)
    * @default undefined
    */
   'tmp:comment:opacity': number
-} & NCOStateItems
+}
 
+export interface StateItems extends NCOStateItems {}
+
+export type StorageItems = InternalItems &
+  SettingItems &
+  TemporaryItems &
+  StateItems
+
+export type InternalKey = keyof InternalItems
+export type SettingsKey = keyof SettingItems
+export type SettingsExportKey = keyof SettingsExportItems
+export type TemporaryKey = keyof TemporaryItems
+export type StateKey = keyof StateItems
 export type StorageKey = keyof StorageItems
-
-export type InternalKey = Extract<StorageKey, `_${string}`>
-export type InternalItems = { [k in InternalKey]: StorageItems[k] }
-
-export type TemporaryKey = Extract<StorageKey, `tmp:${string}`>
-export type TemporaryItems = { [k in TemporaryKey]: StorageItems[k] }
-
-export type SettingsKey = Extract<StorageKey, `settings:${string}`>
-export type SettingItems = { [k in SettingsKey]: StorageItems[k] }
-
-export type StateKey = Extract<StorageKey, `state:${string}`>
-export type StateItems = { [k in StateKey]: StorageItems[k] }
-
-export type SettingsExportKey = InternalKey | SettingsKey
-export type SettingsExportItems = Partial<InternalItems & SettingItems>

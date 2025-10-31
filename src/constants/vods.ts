@@ -32,5 +32,5 @@ export const VODS = {
   nhkPlus: 'NHKプラス',
   tver: 'TVer',
 } as const satisfies {
-  [key in VodKey]: string
+  [P in VodKey]: string
 }

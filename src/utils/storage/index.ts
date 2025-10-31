@@ -6,7 +6,7 @@ import type { StorageItems, StorageKey } from '@/types/storage'
 export interface StorageGetFunction {
   /** すべてのアイテムを取得 */
   (): Promise<{
-    [key in StorageKey]?: StorageItems[key]
+    [P in StorageKey]?: StorageItems[P]
   }>
 
   /** 1つのアイテムを取得 */

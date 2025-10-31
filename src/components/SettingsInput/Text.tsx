@@ -6,7 +6,7 @@ import { Input as HeroUIInput } from '@heroui/react'
 import { useSettings } from '@/hooks/useSettings'
 
 export type Key = {
-  [key in SettingsKey]: StorageItems[key] extends string ? key : never
+  [P in SettingsKey]: StorageItems[P] extends string ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>

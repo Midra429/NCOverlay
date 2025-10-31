@@ -8,7 +8,7 @@ import { useSettings } from '@/hooks/useSettings'
 import { ItemLabel } from '@/components/ItemLabel'
 
 export type Key = {
-  [key in SettingsKey]: StorageItems[key] extends boolean ? key : never
+  [P in SettingsKey]: StorageItems[P] extends boolean ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>

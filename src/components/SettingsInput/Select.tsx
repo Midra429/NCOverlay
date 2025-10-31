@@ -8,8 +8,8 @@ import { useSettings } from '@/hooks/useSettings'
 import { Select, SelectItem } from '@/components/Select'
 
 export type Key = {
-  [key in SettingsKey]: StorageItems[key] extends string | number | boolean
-    ? key
+  [P in SettingsKey]: StorageItems[P] extends string | number | boolean
+    ? P
     : never
 }[SettingsKey]
 

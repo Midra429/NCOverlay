@@ -30,7 +30,7 @@ import { Tooltip } from '@/components/Tooltip'
 type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
 
 export type Key = {
-  [key in SettingsNgKey]: StorageItems[key] extends unknown[] ? key : never
+  [P in SettingsNgKey]: StorageItems[P] extends unknown[] ? P : never
 }[SettingsNgKey]
 
 export interface Props<K extends Key = Key>

@@ -23,7 +23,7 @@ import { sendNcoMessage } from '@/ncoverlay/messaging'
 import { ncoState } from '@/hooks/useNco'
 
 const COMMENT_WRAPPER_TYPE_CLASSES: {
-  [k in StateSlotDetail['type']]: string
+  [P in StateSlotDetail['type']]: string
 } = {
   normal: cn('before:bg-transparent'),
   official: cn('before:bg-[#ffe248] dark:before:bg-[#ffd700]'),

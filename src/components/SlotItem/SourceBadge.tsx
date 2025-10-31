@@ -8,7 +8,7 @@ export interface SourceTagProps {
 }
 
 const SOURCE_BADGE_CLASSES: {
-  [k in Exclude<SourceTagProps['type'], 'normal'>]: string
+  [P in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   official: cn('bg-[#ffe248] text-black dark:bg-[#ffd700]'),
   danime: cn('bg-danime-400 dark:bg-danime-500 text-white'),
@@ -18,7 +18,7 @@ const SOURCE_BADGE_CLASSES: {
 }
 
 const SOURCE_BADGE_NAME: {
-  [k in Exclude<SourceTagProps['type'], 'normal'>]: string
+  [P in Exclude<SourceTagProps['type'], 'normal'>]: string
 } = {
   official: '公式',
   danime: 'dアニメ',

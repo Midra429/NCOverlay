@@ -36,7 +36,7 @@ export const PLUGINS = {
     },
   ],
 } as const satisfies {
-  [key in VodKey]?: {
+  [P in VodKey]?: {
     id: string
     title: string
     description?: string

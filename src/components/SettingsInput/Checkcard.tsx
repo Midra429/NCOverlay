@@ -6,9 +6,7 @@ import { CheckboxGroup, Checkbox, cn } from '@heroui/react'
 import { useSettings } from '@/hooks/useSettings'
 
 export type Key = {
-  [key in SettingsKey]: StorageItems[key] extends (string | number)[]
-    ? key
-    : never
+  [P in SettingsKey]: StorageItems[P] extends (string | number)[] ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>

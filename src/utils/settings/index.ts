@@ -124,7 +124,7 @@ export class WebExtSettings {
         Object.entries(values).map(([key, val]) => {
           return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
         })
-      ) as SettingItems
+      )
 
       return { ...SETTINGS_DEFAULT, ...items }
     } else if (keys.length === 1) {

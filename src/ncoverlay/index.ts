@@ -144,7 +144,7 @@ export class NCOverlay {
    * イベントリスナー
    */
   #videoEventListeners: {
-    [type in keyof HTMLVideoElementEventMap]?: (evt: Event) => void
+    [P in keyof HTMLVideoElementEventMap]?: (evt: Event) => void
   } = {
     loadedmetadata: () => {
       this.#trigger('loadedmetadata')
@@ -347,7 +347,7 @@ export class NCOverlay {
   }
 
   #listeners: {
-    [type in keyof NCOverlayEventMap]?: NCOverlayEventMap[type][]
+    [P in keyof NCOverlayEventMap]?: NCOverlayEventMap[P][]
   } = {}
 
   #trigger<T extends keyof NCOverlayEventMap>(type: T) {
