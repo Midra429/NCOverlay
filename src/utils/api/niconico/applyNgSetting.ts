@@ -1,8 +1,8 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread, V1Comment } from '@xpadev-net/niconicomments'
 import type { NgSettingsConverted } from '@/utils/api/niconico/getNgSettings'
 
 export function isNgComment(
-  { body, commands, userId }: V1Thread['comments'][number],
+  { body, commands, userId }: V1Comment,
   ngSettings: NgSettingsConverted
 ): boolean {
   // 単語

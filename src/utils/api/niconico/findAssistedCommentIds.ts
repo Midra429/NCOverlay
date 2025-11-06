@@ -1,6 +1,6 @@
-import type { V1ThreadComment } from '@/types/niconico'
+import type { V1Comment } from '@xpadev-net/niconicomments'
 
-interface V1ThreadCommentSorted extends V1ThreadComment {
+interface V1CommentSorted extends V1Comment {
   _postedAtTime: number
 }
 
@@ -9,7 +9,7 @@ const COMMENT_ASSIST_STARTED_AT = new Date(
   '2025-04-26T00:00:00+09:00'
 ).getTime()
 
-function isAssistedCommentBase(comment: V1ThreadCommentSorted): boolean {
+function isAssistedCommentBase(comment: V1CommentSorted): boolean {
   const cmdLen = comment.commands.length
 
   return (
@@ -21,8 +21,8 @@ function isAssistedCommentBase(comment: V1ThreadCommentSorted): boolean {
 }
 
 function isAssistedComment(
-  base: V1ThreadCommentSorted,
-  target: V1ThreadCommentSorted
+  base: V1CommentSorted,
+  target: V1CommentSorted
 ): boolean {
   const cmdLen = target.commands.length
 
@@ -45,26 +45,26 @@ function isAssistedComment(
 }
 
 export interface AssistedCommentResult {
-  id: V1ThreadComment['id']
+  id: V1Comment['id']
   score: number
 }
 
 /**
  * アシストコメントを探す
  */
-export function findAssistedCommentIds(comments: V1ThreadComment[]): string[] {
+export function findAssistedCommentIds(comments: V1Comment[]): string[] {
   if (comments.length <= 3) {
     return []
   }
 
   const sameCommentGroups: [
-    base: V1ThreadCommentSorted,
-    ...targets: V1ThreadCommentSorted[],
+    base: V1CommentSorted,
+    ...targets: V1CommentSorted[],
   ][] = []
 
   // 投稿日時順にソート
   const sorted = comments
-    .map<V1ThreadCommentSorted>((cmt) => ({
+    .map<V1CommentSorted>((cmt) => ({
       ...cmt,
       _postedAtTime: new Date(cmt.postedAt).getTime(),
     }))

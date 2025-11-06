@@ -1,7 +1,6 @@
 import type { DeepPartial } from 'utility-types'
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread, V1Comment } from '@xpadev-net/niconicomments'
 import type { VodKey } from '@/types/constants'
-import type { V1ThreadComment } from '@/types/niconico'
 import type { StorageOnChangeCallback } from '@/utils/storage'
 import type { NCOSearcherAutoLoadArgs } from './searcher'
 
@@ -111,14 +110,14 @@ export type StateSlotDetail = StateSlotDetailDefault | StateSlotDetailJikkyo
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
 
-export interface NcoV1ThreadComment extends V1ThreadComment {
+export interface NcoV1Comment extends V1Comment {
   _nco: {
     slotType: StateSlotDetail['type']
   }
 }
 
 export interface NcoV1Thread extends Omit<V1Thread, 'comments'> {
-  comments: NcoV1ThreadComment[]
+  comments: NcoV1Comment[]
   _nco: {}
 }
 
@@ -168,7 +167,7 @@ export async function filterDisplayThreads(
 
           return !(isNg || isAssisted)
         })
-        .map<NcoV1ThreadComment>((cmt) => {
+        .map<NcoV1Comment>((cmt) => {
           // オフセット
           const vposMs = cmt.vposMs + (detail.offsetMs ?? 0)
 
