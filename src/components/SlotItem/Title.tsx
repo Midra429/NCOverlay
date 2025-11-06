@@ -3,7 +3,7 @@ import type { StateSlotDetail, StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import { Link, cn } from '@heroui/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 
-import { ProgramIcons } from '@/entrypoints/popup/SidePane/JikkyoEpgSelector/Program'
+import { ProgramIcons } from '@/components/ProgramIcons'
 
 const programIconsRegExp = /^(?:[🈟🈡🈞]\s?)+/
 
