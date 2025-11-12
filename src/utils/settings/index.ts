@@ -191,9 +191,11 @@ export class WebExtSettings {
     )
   }
 
-  readonly export: SettingsExportFunction = () => {
-    return this.#storage.get(
-      ...SETTINGS_EXPORT_KEYS
-    ) as Promise<SettingsExportItems>
+  readonly export: SettingsExportFunction = async () => {
+    const values = await this.#storage.get(...SETTINGS_EXPORT_KEYS)
+
+    return Object.fromEntries(
+      SETTINGS_EXPORT_KEYS.map((k, i) => [k, values[i]])
+    )
   }
 }
