@@ -115,7 +115,7 @@ export function TitleDetail({
           {isLoading ? (
             <Spinner size="lg" color="primary" />
           ) : (
-            <span className="text-small text-foreground-500">
+            <span className="text-foreground-500 text-small">
               サブタイトルまたは放送時間がありません
             </span>
           )}

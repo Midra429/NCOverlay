@@ -32,7 +32,7 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
 export function QuickPanel() {
   return (
     <div className="flex h-full flex-col">
-      <div className="border-foreground-200 bg-content1 flex flex-row border-b-1">
+      <div className="flex flex-row border-foreground-200 border-b-1 bg-content1">
         <ReloadButton />
 
         <Divider orientation="vertical" />

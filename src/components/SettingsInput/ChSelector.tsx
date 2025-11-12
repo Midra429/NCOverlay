@@ -87,11 +87,11 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
           }}
           value={id}
         >
-          <span className="text-tiny text-foreground-500 dark:text-foreground-600">
+          <span className="text-foreground-500 text-tiny dark:text-foreground-600">
             {id}
           </span>
 
-          <span className="text-small line-clamp-1">{JIKKYO_CHANNELS[id]}</span>
+          <span className="line-clamp-1 text-small">{JIKKYO_CHANNELS[id]}</span>
         </Checkbox>
       ))}
     </CheckboxGroup>

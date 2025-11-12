@@ -4,11 +4,11 @@ import { tv } from '@heroui/react'
 
 const programIcon = tv({
   base: [
-    'relative -top-[0.5px]',
+    '-top-[0.5px] relative',
     'inline-flex items-center justify-center',
     'mr-0.5 size-[calc(1em+3px)]',
-    'rounded-xs select-none',
-    'text-[calc(1em-1px)] font-normal',
+    'select-none rounded-xs',
+    'font-normal text-[calc(1em-1px)]',
     'text-white dark:text-black',
   ],
   variants: {

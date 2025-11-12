@@ -14,7 +14,7 @@ export function HourCell({ hour }: HourCellProps) {
         'shrink-0',
         'border-divider border-b-1',
         'bg-content2 text-content2-foreground',
-        'text-mini font-semibold'
+        'font-semibold text-mini'
       )}
       style={{
         height: ROW_HEIGHT,

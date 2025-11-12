@@ -13,7 +13,7 @@ function HeaderCell({ className, ...props }: HeaderCellProps) {
         'shrink-0 py-1.5',
         'bg-content2 text-content2-foreground',
         'border-divider border-b-1',
-        'text-tiny font-semibold',
+        'font-semibold text-tiny',
         'not-first:border-l-1',
         className
       )}

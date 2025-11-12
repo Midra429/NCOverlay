@@ -59,11 +59,11 @@ export function Input(props: Props) {
           }}
           value={value}
         >
-          <span className="text-small line-clamp-2">{label}</span>
+          <span className="line-clamp-2 text-small">{label}</span>
           {description && (
             <span
               className={cn(
-                'text-tiny line-clamp-2',
+                'line-clamp-2 text-tiny',
                 'text-foreground-500 dark:text-foreground-600'
               )}
             >

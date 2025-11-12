@@ -70,13 +70,13 @@ export function SubtitleItem({
         )}
         onClick={onClick}
       >
-        <div className="text-tiny flex flex-row gap-1.5">
-          <span className="text-foreground-500 dark:text-foreground-600 shrink-0">
+        <div className="flex flex-row gap-1.5 text-tiny">
+          <span className="shrink-0 text-foreground-500 dark:text-foreground-600">
             #{subtitle[0]}
           </span>
 
           <span
-            className="line-clamp-2 font-semibold break-all"
+            className="line-clamp-2 break-all font-semibold"
             title={overflow ? subtitle[1] : undefined}
             ref={titleRef}
           >
@@ -86,7 +86,7 @@ export function SubtitleItem({
 
         <div
           className={cn(
-            'text-foreground-500 dark:text-foreground-600 shrink-0 px-1',
+            'shrink-0 px-1 text-foreground-500 dark:text-foreground-600',
             'rotate-0 data-[open=true]:rotate-180',
             'transition-transform'
           )}

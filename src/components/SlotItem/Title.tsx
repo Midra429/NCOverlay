@@ -38,7 +38,7 @@ export function Title({ id, source, title, isSearch }: TitleProps) {
   const element = (
     <span
       className={cn(
-        'line-clamp-3 font-semibold break-all whitespace-pre-wrap',
+        'line-clamp-3 whitespace-pre-wrap break-all font-semibold',
         isSearch ? 'text-mini' : 'text-tiny'
       )}
       title={overflow ? title : undefined}

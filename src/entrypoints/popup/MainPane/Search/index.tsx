@@ -160,7 +160,7 @@ export function Search() {
 
       <div
         className={cn(
-          'border-foreground-200 bg-content1 border-t-1 p-2',
+          'border-foreground-200 border-t-1 bg-content1 p-2',
           isSyobocal && 'hidden'
         )}
       >

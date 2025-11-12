@@ -71,7 +71,7 @@ export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
       {isLoading ? (
         <Spinner size="sm" color="primary" />
       ) : (
-        <span className="text-tiny text-foreground-500 my-0.5">
+        <span className="my-0.5 text-foreground-500 text-tiny">
           放送時間がありません
         </span>
       )}

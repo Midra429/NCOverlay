@@ -21,7 +21,7 @@ export function ChannelCell({ tverChId }: ChannelCellProps) {
         'shrink-0',
         'border-divider border-r-1',
         'bg-content2 text-content2-foreground',
-        'text-mini font-semibold',
+        'font-semibold text-mini',
         'truncate'
       )}
       style={{
@@ -48,7 +48,7 @@ export function Channels({ tverChIds }: ChannelsProps) {
       )}
     >
       <div
-        className={cn('bg-content2 shrink-0', 'border-divider border-r-1')}
+        className={cn('shrink-0 bg-content2', 'border-divider border-r-1')}
         style={{ width: 20 }}
       />
 

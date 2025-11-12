@@ -30,7 +30,11 @@ function validateJson(value: string): boolean {
 function ImportSettings() {
   const [value, setValue] = useState('')
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const { isOpen, onOpen, onOpenChange } = useDisclosure({
+    onChange() {
+      setValue('')
+    },
+  })
 
   const validated = validateJson(value)
 
@@ -64,10 +68,6 @@ function ImportSettings() {
   async function onImport() {
     await settings.import(value)
   }
-
-  useEffect(() => {
-    return () => setValue('')
-  }, [isOpen])
 
   return (
     <>
@@ -114,7 +114,7 @@ function ImportSettings() {
           </Button>
         }
       >
-        <div className="bg-content1 size-full p-2">
+        <div className="size-full bg-content1 p-2">
           <Textarea
             classNames={{
               base: 'size-full',
@@ -209,7 +209,7 @@ function ExportSettings() {
           </Tooltip>
         }
       >
-        <div className="bg-content1 size-full p-2">
+        <div className="size-full bg-content1 p-2">
           <Textarea
             classNames={{
               base: 'size-full',

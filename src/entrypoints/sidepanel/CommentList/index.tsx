@@ -13,7 +13,7 @@ import { Item } from './Item'
 const components: VirtuosoProps<NcoV1Comment, any>['components'] = {
   EmptyPlaceholder: () => (
     <div className="flex size-full items-center justify-center">
-      <span className="text-small text-foreground-500">
+      <span className="text-foreground-500 text-small">
         コメントはありません
       </span>
     </div>

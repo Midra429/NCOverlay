@@ -103,7 +103,7 @@ function KeyboardKey({ kbdKey, os }: KeyboardKeyProps) {
         'justify-center',
         'min-w-8 shrink-0 px-2 py-0.5',
         'bg-content1 text-content1-foreground/80',
-        'border-content1-foreground/25 border-1',
+        'border-1 border-content1-foreground/25',
         'shadow-none'
       )}
       keys={isKey ? key : undefined}
@@ -147,7 +147,7 @@ export function Input(props: Props) {
           className={cn(
             'h-8 w-full',
             'rounded-small',
-            'border-divider border-1',
+            'border-1 border-divider',
             'data-[recording=true]:border-primary',
             'bg-default-100',
             'data-[recording=true]:bg-primary/15 dark:data-[recording=true]:bg-primary/20',
@@ -177,7 +177,7 @@ export function Input(props: Props) {
                     </Fragment>
                   ))
               ) : (
-                <span className="text-small text-foreground-500 pl-1 select-none">
+                <span className="select-none pl-1 text-foreground-500 text-small">
                   未設定
                 </span>
               )}

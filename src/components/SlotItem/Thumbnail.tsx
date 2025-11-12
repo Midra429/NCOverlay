@@ -34,7 +34,7 @@ export function Thumbnail({
 
     // 実況のチャンネル情報
     thumbnail = (
-      <div className="bg-content3 h-full rounded-lg p-px">
+      <div className="h-full rounded-lg bg-content3 p-px">
         <div
           className={cn(
             'relative',

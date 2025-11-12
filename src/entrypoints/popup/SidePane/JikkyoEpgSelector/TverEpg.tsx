@@ -78,7 +78,7 @@ export function TverEpg({ data, isLoading }: TverEpgProps) {
       {isLoading ? (
         <Spinner size="lg" color="primary" />
       ) : (
-        <span className="text-small text-foreground-500">
+        <span className="text-foreground-500 text-small">
           番組表データがありません
         </span>
       )}

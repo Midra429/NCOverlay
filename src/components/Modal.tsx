@@ -66,7 +66,7 @@ export function Modal(props: ModalProps) {
               </HeroUIModalHeader>
             )}
 
-            <HeroUIModalBody className="bg-background max-h-full gap-0 overflow-auto">
+            <HeroUIModalBody className="max-h-full gap-0 overflow-auto bg-background">
               {props.children}
             </HeroUIModalBody>
 

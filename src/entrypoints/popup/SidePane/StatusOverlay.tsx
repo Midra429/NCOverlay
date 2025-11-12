@@ -19,7 +19,7 @@ export function StatusOverlay() {
           <p className="text-small">検索中...</p>
         </>
       ) : (
-        <span className="text-small text-foreground-500">
+        <span className="text-foreground-500 text-small">
           コメントはありません
         </span>
       )}

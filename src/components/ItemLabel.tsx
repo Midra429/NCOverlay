@@ -8,11 +8,11 @@ export interface ItemLabelProps {
 export function ItemLabel(props: ItemLabelProps) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-small text-foreground">{props.title}</span>
+      <span className="text-foreground text-small">{props.title}</span>
       {props.description && (
         <span
           className={cn(
-            'text-tiny whitespace-pre-wrap',
+            'whitespace-pre-wrap text-tiny',
             'text-foreground-500 dark:text-foreground-600'
           )}
         >

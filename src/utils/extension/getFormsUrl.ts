@@ -25,20 +25,20 @@ const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
   android: 'Android',
 }
 
-type Maybe<T> = T | null | undefined
-type NestedKeyOf<T extends Record<string, unknown>> = {
-  [K in keyof T & string]: T[K] extends Maybe<Record<string, unknown>>
-    ? T[K] extends Maybe<Record<string, unknown>>
-      ? `${K}.${NestedKeyOf<NonNullable<T[K]>>}`
-      : K
-    : K
+type NotObject = string | number | boolean | unknown[] | null | undefined
+type NestedKeyOf<T extends unknown> = {
+  [K in keyof T & string]: T[K] extends NotObject
+    ? K
+    : T[K] extends NotObject
+      ? K
+      : `${K}.${NestedKeyOf<NonNullable<T[K]>>}`
 }[keyof T & string]
 
 type ExtractedResultNestedKey =
   | NestedKeyOf<ExtractedResultSingleEpisode>
   | NestedKeyOf<ExtractedResultMultipleEpisodes>
 
-const EXTRACTED_RESULT_NESTED_KEYS: ExtractedResultNestedKey[] = [
+const EXTRACTED_RESULT_KEYS: ExtractedResultNestedKey[] = [
   'input',
 
   'title',
@@ -161,9 +161,7 @@ export async function getFormsUrl({
     [
       ...(typeof input === 'string'
         ? [`input: ${JSON.stringify(input)}`]
-        : EXTRACTED_RESULT_NESTED_KEYS.map((key) =>
-            formatKeyValue(input, key)
-          )),
+        : EXTRACTED_RESULT_KEYS.map((key) => formatKeyValue(input, key))),
       `duration: ${info.duration}`,
     ]
       .filter(Boolean)

@@ -28,7 +28,7 @@ export function MarkerButton({
   return (
     <Tooltip content={label}>
       <Button
-        className="text-small min-w-0"
+        className="min-w-0 text-small"
         variant="flat"
         size="sm"
         fullWidth

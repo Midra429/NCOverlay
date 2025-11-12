@@ -48,7 +48,7 @@ export function DatePicker(props: DatePickerProps) {
       )}
       popoverProps={{
         classNames: {
-          content: cn('border-divider border-1'),
+          content: cn('border-1 border-divider'),
         },
         ...props.popoverProps,
       }}

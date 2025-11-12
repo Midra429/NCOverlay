@@ -45,7 +45,7 @@ export function ProgramContent({ program, bgColor }: ProgramContentProps) {
       )}
     >
       <div
-        className={cn('flex flex-col gap-1', 'text-mini break-all')}
+        className={cn('flex flex-col gap-1', 'break-all text-mini')}
         title={program.description || program.title}
       >
         <span className="flex items-start gap-1">
@@ -91,7 +91,7 @@ export function ProgramContent({ program, bgColor }: ProgramContentProps) {
         </span>
 
         {/* 概要 */}
-        <span className="text-foreground-500 dark:text-foreground-600 px-1">
+        <span className="px-1 text-foreground-500 dark:text-foreground-600">
           {program.description}
         </span>
       </div>
@@ -243,12 +243,12 @@ export function Programs({ data }: ProgramsProps) {
 
   return (
     <div
-      className="bg-content3 flex shrink-0 flex-row overflow-hidden"
+      className="flex shrink-0 flex-row overflow-hidden bg-content3"
       style={{ maxHeight: ROW_HEIGHT * 24 }}
     >
-      {contents.map((content, idx) => (
+      {contents.map((content) => (
         <div
-          key={idx}
+          key={content.tverChId}
           className={cn(
             'relative',
             'flex flex-col',
@@ -257,9 +257,9 @@ export function Programs({ data }: ProgramsProps) {
           )}
           style={{ width: COLUMN_WIDTH }}
         >
-          {content.programs.map((program, idx) => (
+          {content.programs.map((program) => (
             <ProgramCell
-              key={idx}
+              key={`${content.tverChId}-${program.startAt}-${program.endAt}`}
               date={date}
               genre={genre}
               tverChId={content.tverChId}

@@ -54,7 +54,7 @@ const accordionItemInfo = (
   >
     <div className="flex flex-col gap-1 py-2">
       <div className="flex flex-row items-center justify-between">
-        <div className="text-medium flex flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-2 text-medium">
           <Image
             className="select-none"
             radius="none"
@@ -67,7 +67,7 @@ const accordionItemInfo = (
           <span className="font-bold">{name}</span>
 
           <Link
-            className="text-foreground-500 dark:text-foreground-600 text-[length:inherit]"
+            className="text-[length:inherit] text-foreground-500 dark:text-foreground-600"
             underline="hover"
             href={`${GITHUB_URL}/releases/tag/v${version}`}
             isExternal
@@ -228,13 +228,13 @@ export function Settings() {
         base: cn(
           'overflow-hidden',
           'data-[open=true]:overflow-visible',
-          'border-foreground-200 border-1 p-0! shadow-none!',
+          'border-1 border-foreground-200 p-0! shadow-none!',
           '*:px-3'
         ),
         heading: cn(
           'sticky top-0 z-20',
           'gap-0',
-          'rounded-t-medium -mb-px',
+          '-mb-px rounded-t-medium',
           'border-foreground-200 border-b-1',
           'bg-content1'
         ),
@@ -247,7 +247,7 @@ export function Settings() {
       defaultExpandedKeys={['_info']}
     >
       {accordionItemInfo}
-      {...accordionItemSettings as any}
+      {...(accordionItemSettings as any)}
       {accordionItemStorage}
       {accordionItemOthers}
     </Accordion>

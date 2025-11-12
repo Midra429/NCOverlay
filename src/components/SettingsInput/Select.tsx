@@ -59,7 +59,7 @@ export function Input(props: Props) {
       {props.description && (
         <span
           className={cn(
-            'text-tiny mb-2 whitespace-pre-wrap',
+            'mb-2 whitespace-pre-wrap text-tiny',
             'text-foreground-500 dark:text-foreground-600'
           )}
         >

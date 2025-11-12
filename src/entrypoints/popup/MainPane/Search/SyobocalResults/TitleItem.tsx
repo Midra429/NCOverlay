@@ -95,7 +95,7 @@ export function TitleItem({ item, onClick }: TitleItemProps) {
         'flex flex-row items-center justify-between',
         'p-2',
         'rounded-medium',
-        'border-foreground-200 hover:border-default-400 border-1',
+        'border-1 border-foreground-200 hover:border-default-400',
         'bg-content1 hover:bg-content2/90',
         'text-foreground',
         'cursor-pointer',
@@ -105,7 +105,7 @@ export function TitleItem({ item, onClick }: TitleItemProps) {
     >
       <TitleItemInner item={item} />
 
-      <div className="text-foreground-500 dark:text-foreground-600 shrink-0 px-1">
+      <div className="shrink-0 px-1 text-foreground-500 dark:text-foreground-600">
         <ChevronRightIcon className="size-4" />
       </div>
     </div>
