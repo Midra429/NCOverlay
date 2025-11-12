@@ -10,7 +10,7 @@ import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
-import './style.scss'
+import './style.css'
 
 const vod: VodKey = 'tver'
 

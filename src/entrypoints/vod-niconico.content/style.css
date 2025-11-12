@@ -1,15 +1,15 @@
 .NCOverlay {
-  > div[data-name='comment'] {
+  > div[data-name="comment"] {
     > canvas:not(.NCOverlay-Canvas) {
       display: none;
     }
   }
 }
 
-// フルスクリーン (ブラウザサイズ)
+/* フルスクリーン (ブラウザサイズ) */
 section:has(> style:first-child) {
   .grid-area_\[player\] {
-    div[data-styling-id=':r3:'] {
+    div[data-styling-id=":r3:"] {
       background-color: #000;
     }
   }

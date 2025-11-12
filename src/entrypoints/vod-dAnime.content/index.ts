@@ -11,7 +11,7 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
-import './style.scss'
+import './style.css'
 
 const vod: VodKey = 'dAnime'
 

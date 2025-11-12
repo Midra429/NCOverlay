@@ -13,7 +13,7 @@ import { formatedToSeconds } from '@/utils/format'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
-import './style.scss'
+import './style.css'
 
 const vod: VodKey = 'primeVideo'
 

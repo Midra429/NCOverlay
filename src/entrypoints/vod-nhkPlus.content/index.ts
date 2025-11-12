@@ -12,7 +12,7 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
-import './style.scss'
+import './style.css'
 
 const vod: VodKey = 'nhkPlus'
 
@@ -65,7 +65,7 @@ async function main() {
       logger.log('input', input)
       logger.log('duration', duration)
 
-      return { input, duration, disableExtract: true }
+      return { input, duration, disableParse: true }
     },
     autoLoad: async (nco, { input, duration, jikkyo, jikkyoChannelIds }) => {
       if (

@@ -13,7 +13,7 @@ import { ncoMessenger } from './messaging'
 export interface PlayingInfo {
   input: string | ParsedResult
   duration: number
-  disableExtract?: boolean
+  disableParse?: boolean
 }
 
 export class NCOPatcher {
@@ -75,7 +75,7 @@ export class NCOPatcher {
         if (info) {
           const { input } = info
 
-          if (info.disableExtract) {
+          if (info.disableParse) {
             parsed =
               typeof input === 'string'
                 ? {

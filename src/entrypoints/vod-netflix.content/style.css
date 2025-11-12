@@ -1,0 +1,7 @@
+.NCOverlay-Capture {
+  div[data-uia="player"] {
+    > *:not(div[data-uia="video-canvas"]) {
+      display: none !important;
+    }
+  }
+}

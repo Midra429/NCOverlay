@@ -1,6 +1,6 @@
 .NCOverlay-Capture {
-  div[class^='player_container_'] {
-    > *:not(div[class^='player_']),
+  div[class^="player_container_"] {
+    > *:not(div[class^="player_"]),
     .video-js > *:not(.NCOverlay-Video, .NCOverlay-Canvas) {
       display: none !important;
     }
@@ -13,7 +13,7 @@
   align-items: center;
   background-color: #000;
 
-  > div[class^='player_aspectRatioWrapper__'] {
+  > div[class^="player_aspectRatioWrapper__"] {
     width: min(100vw, 177.78vh);
     padding-top: min(56.25vw, 100vh);
   }
