@@ -25,6 +25,12 @@ declare module 'webextension-polyfill' {
     }
   }
 
+  namespace Action {
+    interface Static {
+      getPopupPath(tabId?: number): string | undefined
+    }
+  }
+
   namespace SidePanel {
     interface OpenOptions {
       tabId?: number
@@ -74,8 +80,6 @@ declare module 'webextension-polyfill' {
     isFirefox: boolean
     isSafari: boolean
 
-    getCurrentActiveTab(
-      windowId?: number
-    ): Promise<(Tabs.Tab & { id: number }) | null>
+    getCurrentActiveTab(windowId?: number): Promise<Tabs.Tab | null>
   }
 }

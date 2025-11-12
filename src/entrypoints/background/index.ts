@@ -180,5 +180,14 @@ async function main() {
   // サイドパネル
   webext.sidePanel.setOptions({ enabled: false })
 
+  // ポップアップをウィンドウで開く (テスト用)
+  // webext.action.setPopup({ popup: '' })
+  // webext.action.onClicked.addListener((tab) => {
+  //   webext.windows.create({
+  //     type: 'popup',
+  //     url: webext.action.getPopupPath(tab?.id),
+  //   })
+  // })
+
   logger.log('settings', await settings.get())
 }

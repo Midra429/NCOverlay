@@ -3,6 +3,7 @@ import type { WebExtBrowser, SidePanel } from 'webextension-polyfill'
 import { browser } from '@wxt-dev/webextension-polyfill/browser'
 
 const webext = browser as WebExtBrowser
+const manifest = webext.runtime.getManifest()
 
 webext.isChrome =
   import.meta.env.CHROME || import.meta.env.EDGE || import.meta.env.OPERA
@@ -10,23 +11,40 @@ webext.isFirefox = import.meta.env.FIREFOX
 webext.isSafari = import.meta.env.SAFARI
 
 webext.getCurrentActiveTab = async function (windowId) {
-  const [tab] = await this.tabs.query({
-    active: true,
-    ...(typeof windowId === 'number' && windowId !== this.windows.WINDOW_ID_NONE
-      ? { windowId }
-      : { currentWindow: true }),
-  })
+  const tabId = new URL(location.href).searchParams.get(
+    `_${EXT_BUILD_ID}_tabId`
+  )
+
+  const [tab] = tabId
+    ? [await this.tabs.get(Number(tabId))]
+    : await this.tabs.query({
+        active: true,
+        ...(typeof windowId === 'number' &&
+        windowId !== this.windows.WINDOW_ID_NONE
+          ? { windowId }
+          : { currentWindow: true }),
+      })
 
   if (typeof tab?.id === 'number' && tab.id !== this.tabs.TAB_ID_NONE) {
-    return tab as any
+    return tab
   }
 
   return null
 }
 
+if (webext.action) {
+  webext.action.getPopupPath = function (tabId) {
+    return typeof tabId === 'number' && tabId !== webext.tabs.TAB_ID_NONE
+      ? `${manifest.action?.default_popup}?_${EXT_BUILD_ID}_tabId=${tabId}`
+      : manifest.action?.default_popup
+  }
+}
+
 // Chrome
 if (webext.isChrome) {
   if (webext.sidePanel) {
+    webext.sidePanel.path = manifest.side_panel?.default_path
+
     webext.sidePanel.open = new Proxy(webext.sidePanel.open, {
       apply(
         target,
@@ -66,6 +84,8 @@ if (webext.isFirefox) {
 
   if (webext.sidebarAction) {
     webext.sidePanel = {
+      path: manifest.sidebar_action?.default_panel,
+
       open() {
         return webext.sidebarAction.open()
       },
@@ -101,13 +121,6 @@ if (webext.isFirefox) {
       },
     }
   }
-}
-
-if (webext.sidePanel) {
-  const { side_panel, sidebar_action } = webext.runtime.getManifest()
-
-  webext.sidePanel.path =
-    side_panel?.default_path ?? sidebar_action?.default_panel
 }
 
 export { webext }
