@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Textarea, useDisclosure } from '@heroui/react'
+import { Button, Textarea, useDisclosure, addToast } from '@heroui/react'
 import {
   DownloadIcon,
   UploadIcon,
@@ -143,7 +143,20 @@ function ExportSettings() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   async function onCopy() {
-    await navigator.clipboard.writeText(value)
+    navigator.clipboard
+      .writeText(value)
+      .then(() => {
+        addToast({
+          color: 'success',
+          title: '設定をコピーしました',
+        })
+      })
+      .catch(() => {
+        addToast({
+          color: 'danger',
+          title: '設定のコピーに失敗しました',
+        })
+      })
   }
 
   async function onSaveFile() {
