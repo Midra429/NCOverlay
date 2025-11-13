@@ -119,7 +119,10 @@ function Item({ init, onValueChange }: ItemProps) {
   useEffect(() => {
     setIsRegExpValidated(!isRegExp || !content || validateRegExp(content))
 
-    onValueChange({ content, isRegExp })
+    onValueChange({
+      content,
+      isRegExp: isRegExp || undefined,
+    })
   }, [content, isRegExp])
 
   return (
