@@ -82,7 +82,7 @@ export function SearchInput({ isDisabled, onSearch, ref }: SearchInputProps) {
         <div className="flex w-full flex-row">
           <Select
             classNames={{
-              base: 'w-9 max-w-9 min-w-9',
+              base: 'w-9 min-w-9 max-w-9',
               label: 'hidden',
               trigger: 'block rounded-r-none px-0 [&>svg]:hidden',
               innerWrapper: 'size-full',
@@ -117,7 +117,7 @@ export function SearchInput({ isDisabled, onSearch, ref }: SearchInputProps) {
               label: 'hidden',
               mainWrapper: 'w-full',
               inputWrapper: [
-                'border-divider border-1 border-x-0',
+                'border-1 border-divider border-x-0',
                 'shadow-none',
               ],
               input: 'pr-5',

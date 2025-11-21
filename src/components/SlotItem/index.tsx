@@ -45,12 +45,14 @@ export function SlotItem({
   const isError = detail.status === 'error'
 
   async function onPressAdd() {
-    await ncoState?.add('slotDetails', {
+    if (!ncoState) return
+
+    await ncoState.add('slotDetails', {
       ...detail,
       status: 'loading',
     })
 
-    await ncoState?.set('status', 'loading')
+    await ncoState.set('status', 'loading')
 
     const { type, id, info } = detail
 
@@ -110,27 +112,29 @@ export function SlotItem({
     }
 
     if (slotDetail && slot) {
-      await ncoState?.update('slotDetails', ['id'], slotDetail)
-      await ncoState?.add('slots', slot)
+      await ncoState.update('slotDetails', ['id'], slotDetail)
+      await ncoState.add('slots', slot)
     } else {
-      await ncoState?.update('slotDetails', ['id'], {
+      await ncoState.update('slotDetails', ['id'], {
         id,
         status: 'error',
       })
     }
 
-    await ncoState?.set('status', 'ready')
+    await ncoState.set('status', 'ready')
   }
 
   async function onPressRemove() {
-    await ncoState?.set('status', 'loading')
+    if (!ncoState) return
+
+    await ncoState.set('status', 'loading')
 
     const { id } = detail
 
-    await ncoState?.remove('slotDetails', { id })
-    await ncoState?.remove('slots', { id })
+    await ncoState.remove('slotDetails', { id })
+    await ncoState.remove('slots', { id })
 
-    await ncoState?.set('status', 'ready')
+    await ncoState.set('status', 'ready')
   }
 
   return (
@@ -198,7 +202,7 @@ export function SlotItem({
           {/* タイトル */}
           <Title
             id={detail.info.id}
-            source={detail.type === 'jikkyo' ? detail.info.source : null}
+            source={'source' in detail.info ? detail.info.source : null}
             title={detail.info.title}
             isSearch={isSearch}
           />

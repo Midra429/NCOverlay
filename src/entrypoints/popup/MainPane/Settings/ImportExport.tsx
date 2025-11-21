@@ -10,8 +10,8 @@ import {
   FileOutputIcon,
 } from 'lucide-react'
 
-import { settings } from '@/utils/settings/extension'
 import { webext } from '@/utils/webext'
+import { settings } from '@/utils/settings/extension'
 
 import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
@@ -31,15 +31,13 @@ function ImportSettings() {
   const [value, setValue] = useState('')
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure({
-    onChange() {
-      setValue('')
-    },
+    onChange: () => setValue(''),
   })
 
   const validated = validateJson(value)
 
   async function onPaste() {
-    setValue(await navigator.clipboard.readText())
+    navigator.clipboard.readText().then(setValue)
   }
 
   function onSelectFile() {
@@ -121,9 +119,9 @@ function ImportSettings() {
               label: 'hidden',
               inputWrapper: [
                 'h-full! w-full!',
-                'border-divider border-1 shadow-none',
+                'border-1 border-divider shadow-none',
               ],
-              input: 'text-tiny size-full font-mono',
+              input: 'size-full font-mono text-tiny',
             }}
             disableAutosize
             label="入力"
@@ -229,9 +227,9 @@ function ExportSettings() {
               label: 'hidden',
               inputWrapper: [
                 'h-full! w-full!',
-                'border-divider border-1 shadow-none',
+                'border-1 border-divider shadow-none',
               ],
-              input: 'text-tiny size-full font-mono',
+              input: 'size-full font-mono text-tiny',
             }}
             disableAutosize
             isReadOnly

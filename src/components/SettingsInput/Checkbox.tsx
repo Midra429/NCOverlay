@@ -27,7 +27,7 @@ export function Input(props: Props) {
     <CheckboxGroup
       classNames={{
         base: 'gap-2 py-2',
-        label: 'text-small text-foreground',
+        label: 'text-foreground text-small',
         wrapper: 'gap-x-[5px] gap-y-1.5',
       }}
       size="sm"
@@ -55,19 +55,19 @@ export function Input(props: Props) {
           classNames={{
             base: [
               'flex-1',
-              'max-w-none min-w-fit',
+              'min-w-fit max-w-none',
               'm-0 px-1.5 py-1',
               'bg-default-100 hover:bg-default-200',
               'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-full',
-              'border-divider hover:border-default-400 border-1',
+              'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
               'cursor-pointer',
             ],
             wrapper: [
               'm-0 rounded-full',
-              'before:bg-default-50! before:rounded-full before:border-1',
+              'before:rounded-full before:border-1 before:bg-default-50!',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-row',

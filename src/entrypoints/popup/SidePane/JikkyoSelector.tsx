@@ -111,14 +111,14 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
     })
 
   async function onAdd() {
-    if (!slotDetail) return
+    if (!ncoState || !slotDetail) return
 
-    await ncoState?.add('slotDetails', {
+    await ncoState.add('slotDetails', {
       ...slotDetail,
       status: 'loading',
     })
 
-    await ncoState?.set('status', 'loading')
+    await ncoState.set('status', 'loading')
 
     const { id } = slotDetail
 
@@ -133,7 +133,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
     if (comment) {
       const { thread, markers, kawaiiCount } = comment
 
-      await ncoState?.update('slotDetails', ['id'], {
+      await ncoState.update('slotDetails', ['id'], {
         id,
         status: 'ready',
         markers,
@@ -145,18 +145,18 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
         },
       })
 
-      await ncoState?.add('slots', {
+      await ncoState.add('slots', {
         id,
         threads: [thread],
       })
     } else {
-      await ncoState?.update('slotDetails', ['id'], {
+      await ncoState.update('slotDetails', ['id'], {
         id,
         status: 'error',
       })
     }
 
-    await ncoState?.set('status', 'ready')
+    await ncoState.set('status', 'ready')
   }
 
   return (

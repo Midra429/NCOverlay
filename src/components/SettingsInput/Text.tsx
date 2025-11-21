@@ -19,7 +19,7 @@ export function Input(props: Props) {
     <HeroUIInput
       classNames={{
         base: 'py-2',
-        inputWrapper: 'border-divider border-1 shadow-none',
+        inputWrapper: 'border-1 border-divider shadow-none',
       }}
       labelPlacement="outside"
       label={props.label}

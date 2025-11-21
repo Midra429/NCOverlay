@@ -24,6 +24,9 @@ export function formatDuration(seconds: number) {
 
 export function formatDate(
   date: string | number | Date,
+  /**
+   * @default 'YYYY/MM/DD(d) hh:mm'
+   */
   format: string = 'YYYY/MM/DD(d) hh:mm'
 ) {
   if (!(date instanceof Date)) {

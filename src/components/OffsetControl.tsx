@@ -44,7 +44,7 @@ export function OffsetControl({
 
         <Input
           classNames={{
-            inputWrapper: 'border-divider border-1 shadow-none',
+            inputWrapper: 'border-1 border-divider shadow-none',
             input: [
               'text-right',
               '[appearance:textfield]',

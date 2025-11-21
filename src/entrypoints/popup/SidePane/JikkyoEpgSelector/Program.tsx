@@ -205,7 +205,7 @@ export function ProgramCell({
     <Popover
       classNames={{
         backdrop: 'bg-transparent',
-        content: 'border-foreground-100 border-1',
+        content: 'border-1 border-foreground-100',
       }}
       backdrop="opaque"
       placement="right-start"

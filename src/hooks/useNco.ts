@@ -60,9 +60,7 @@ export function useNcoState<K extends NCOStateItemKey>(
   useEffect(() => {
     if (!ncoState) return
 
-    ncoState.get(key).then((value) => {
-      setState(value)
-    })
+    ncoState.get(key).then(setState)
 
     let ngOnChangeRemoveListeners: (() => void)[] | undefined
 
@@ -85,9 +83,7 @@ export function useNcoState<K extends NCOStateItemKey>(
       ]
     }
 
-    const onChangeRemoveListener = ncoState.onChange(key, (value) => {
-      setState(value)
-    })
+    const onChangeRemoveListener = ncoState.onChange(key, setState)
 
     return () => {
       onChangeRemoveListener()
