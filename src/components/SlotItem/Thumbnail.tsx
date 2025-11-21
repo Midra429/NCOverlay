@@ -61,11 +61,36 @@ export function Thumbnail({
         </div>
       </div>
     )
+  } else if (type === 'file' && 'source' in info) {
+    thumbnail = (
+      <div className="h-full rounded-lg bg-content3 p-px">
+        <div
+          className={cn(
+            'relative',
+            'flex flex-col items-center justify-center',
+            'aspect-video h-full overflow-hidden rounded-lg',
+            'px-1',
+            'bg-blue-500 dark:bg-blue-600',
+            'select-none'
+          )}
+        >
+          <span
+            className={cn(
+              'line-clamp-1',
+              'font-bold text-white',
+              isSearch ? 'text-mini' : 'text-small'
+            )}
+          >
+            {info.source === 'nicolog' ? 'nicolog' : 'ローカル'}
+          </span>
+        </div>
+      </div>
+    )
   } else if ('thumbnail' in info) {
     thumbnail = (
       <Image
         classNames={{
-          wrapper: 'bg-foreground-300 h-full rounded-lg p-px',
+          wrapper: 'h-full rounded-lg bg-foreground-300 p-px',
           img: 'aspect-video h-full rounded-lg object-cover',
         }}
         src={info.thumbnail}
@@ -85,7 +110,10 @@ export function Thumbnail({
         )}
       >
         {/* ソース */}
-        <SourceBadge type={type} />
+        <SourceBadge
+          type={type}
+          source={'source' in info ? info.source : null}
+        />
 
         {/* 自動 / 手動 */}
         {!isSearch && <AutoLoadedBadge isAutoLoaded={isAutoLoaded} />}

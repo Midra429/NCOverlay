@@ -12,14 +12,20 @@ import {
   ChevronDownIcon,
   CalendarClockIcon,
   Table2Icon,
+  FileTextIcon,
+  DatabaseIcon,
 } from 'lucide-react'
+
+// import { openWindow } from '@/entrypoints/input-file/open'
 
 import { JikkyoSelector } from './JikkyoSelector'
 import { JikkyoEpgSelector } from './JikkyoEpgSelector'
+import { NicologSelector } from './NicologSelector'
 
 export function Header() {
   const jkModalDc = useDisclosure()
   const jkEpgModalDc = useDisclosure()
+  const nicologModalDc = useDisclosure()
 
   return (
     <>
@@ -39,7 +45,7 @@ export function Header() {
         <Dropdown
           classNames={{
             backdrop: 'bg-transparent',
-            content: 'border-foreground-100 min-w-32 border-1',
+            content: 'min-w-32 border-1 border-foreground-100',
           }}
           backdrop="opaque"
           placement="bottom-end"
@@ -77,6 +83,22 @@ export function Header() {
             >
               ニコニコ実況 過去ログ (番組表)
             </DropdownItem>
+
+            {/* <DropdownItem
+              key="files"
+              startContent={<FileTextIcon className="size-4" />}
+              onPress={() => openWindow('select-comment-files')}
+            >
+              ローカルファイル (β)
+            </DropdownItem> */}
+
+            <DropdownItem
+              key="nicolog"
+              startContent={<DatabaseIcon className="size-4" />}
+              onPress={nicologModalDc.onOpen}
+            >
+              nicolog (ニコニコ生放送のアニメコメントアーカイブ)
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -89,6 +111,11 @@ export function Header() {
       <JikkyoEpgSelector
         isOpen={jkEpgModalDc.isOpen}
         onOpenChange={jkEpgModalDc.onOpenChange}
+      />
+
+      <NicologSelector
+        isOpen={nicologModalDc.isOpen}
+        onOpenChange={nicologModalDc.onOpenChange}
       />
     </>
   )

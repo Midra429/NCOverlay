@@ -105,7 +105,25 @@ export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
   }
 }
 
-export type StateSlotDetail = StateSlotDetailDefault | StateSlotDetailJikkyo
+export interface StateSlotDetailFile extends StateSlotDetailBase {
+  type: 'file'
+  info: {
+    id: string | null
+    source: 'nicolog' | null
+    title: string
+    duration: null
+    date: number
+    count: {
+      comment: number
+      kawaii?: number
+    }
+  }
+}
+
+export type StateSlotDetail =
+  | StateSlotDetailDefault
+  | StateSlotDetailJikkyo
+  | StateSlotDetailFile
 
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
@@ -222,8 +240,29 @@ export class NCOState {
     this.clear()
   }
 
-  get<K extends NCOStateItemKey>(key: K): Promise<NCOStateItem<K> | null> {
-    return storage.get(`state:${this.ncoId}:${key}`)
+  async get<K extends NCOStateItemKey, V extends NCOStateItem<K>>(
+    key: K,
+    target?: V extends unknown[] ? Partial<V[number]> : never
+  ): Promise<NCOStateItem<K> | null> {
+    const value = await storage.get(`state:${this.ncoId}:${key}`)
+
+    if (target) {
+      if (Array.isArray(value)) {
+        const entries = Object.entries(target)
+
+        const filtered = value.filter((val) => {
+          return entries.every(([k, v]) => {
+            return equal(val[k as keyof typeof val], v)
+          })
+        })
+
+        return filtered as NCOStateItem<K>
+      }
+    } else {
+      return value
+    }
+
+    return null
   }
 
   async getThreads() {
@@ -240,7 +279,7 @@ export class NCOState {
     key: K,
     ...values: NonNullable<NCOStateItem<K>>
   ) {
-    const oldValue = await this.get<K>(key)
+    const oldValue = await this.get(key)
 
     const exists = values.some((val) => {
       return oldValue?.some((old) => old.id === val.id)
@@ -313,8 +352,8 @@ export class NCOState {
         const entries = Object.entries(target)
 
         const newValue = oldValue.filter((old) => {
-          return !entries.every(([key, val]) => {
-            return equal(old[key as keyof typeof old], val)
+          return !entries.every(([k, v]) => {
+            return equal(old[k as keyof typeof old], v)
           })
         })
 

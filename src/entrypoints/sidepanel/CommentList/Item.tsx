@@ -31,6 +31,7 @@ const COMMENT_WRAPPER_TYPE_CLASSES: {
   chapter: cn('before:bg-danime-400 dark:before:bg-danime-500'),
   szbh: cn('before:bg-gray-500 dark:before:bg-gray-600'),
   jikkyo: cn('before:bg-jikkyo-600 dark:before:bg-jikkyo-700'),
+  file: cn('before:bg-blue-500 dark:before:bg-blue-600'),
 }
 
 const COMMENT_CELL_COMMAND_CLASSES: Record<string, string> = {
@@ -42,13 +43,13 @@ const COMMENT_CELL_COMMAND_CLASSES: Record<string, string> = {
 
 const COMMENT_COMMAND_CLASSES: Record<string, string> = {
   // サイズ: 大
-  'big': cn('text-[110%] font-bold'),
+  big: cn('font-bold text-[110%]'),
   // サイズ: 小
-  'small': cn('text-[75%]'),
+  small: cn('text-[75%]'),
   // 明朝体
-  'mincho': cn('font-serif'),
+  mincho: cn('font-serif'),
   // 半透明
-  '_live': cn('opacity-50'),
+  _live: cn('opacity-50'),
   'nico:opacity:0.5': cn('opacity-50'),
 }
 
@@ -95,7 +96,7 @@ function ItemCellWithMenu({
       classNames={{
         backdrop: 'bg-transparent',
         base: 'max-w-[90vw]',
-        content: 'border-foreground-100 overflow-hidden border-1',
+        content: 'overflow-hidden border-1 border-foreground-100',
       }}
       backdrop="opaque"
     >
@@ -105,7 +106,7 @@ function ItemCellWithMenu({
           'shrink-0',
           'cursor-pointer',
           'hover:bg-default/20 aria-expanded:bg-default/20',
-          'dark:hover:bg-default/40 dark:aria-expanded:bg-default/40',
+          'dark:aria-expanded:bg-default/40 dark:hover:bg-default/40',
           'aria-expanded:scale-100',
           'aria-expanded:opacity-100',
           classNames?.trigger
@@ -144,7 +145,7 @@ function getCmtClassAndColor(commands: string[]) {
       cmtFgColor = readableColor(cmtBgColor)
 
       cmtCmdClass.push(
-        cn('border-foreground-300 -m-px rounded-[5px] border-1 px-1')
+        cn('-m-px rounded-[5px] border-1 border-foreground-300 px-1')
       )
     }
   }
@@ -258,7 +259,7 @@ export function Item({ comment, offsetMs }: ItemProps) {
           classNames={{
             base: [
               'pointer-events-none',
-              '[&>span]:line-clamp-5 [&>span]:wrap-anywhere [&>span]:break-all [&>span]:whitespace-pre-wrap',
+              '[&>span]:wrap-anywhere [&>span]:line-clamp-5 [&>span]:whitespace-pre-wrap [&>span]:break-all',
             ],
           }}
         >

@@ -1,33 +1,46 @@
-import type { StateSlotDetail } from '@/ncoverlay/state'
+import type {
+  StateSlotDetail,
+  StateSlotDetailJikkyo,
+  StateSlotDetailFile,
+} from '@/ncoverlay/state'
 
 import { cn } from '@heroui/react'
 
 export interface SourceTagProps {
   className?: string
   type: StateSlotDetail['type']
+  source: (StateSlotDetailJikkyo | StateSlotDetailFile)['info']['source']
 }
 
+type SourceBadgeKey =
+  | Exclude<SourceTagProps['type'], 'normal'>
+  | NonNullable<SourceTagProps['source']>
+
 const SOURCE_BADGE_CLASSES: {
-  [P in Exclude<SourceTagProps['type'], 'normal'>]: string
+  [P in SourceBadgeKey]?: string
 } = {
   official: cn('bg-[#ffe248] text-black dark:bg-[#ffd700]'),
-  danime: cn('bg-danime-400 dark:bg-danime-500 text-white'),
-  chapter: cn('bg-danime-400 dark:bg-danime-500 text-white'),
+  danime: cn('bg-danime-400 text-white dark:bg-danime-500'),
+  chapter: cn('bg-danime-400 text-white dark:bg-danime-500'),
   szbh: cn('bg-gray-500 text-white dark:bg-gray-600'),
-  jikkyo: cn('bg-jikkyo-600 dark:bg-jikkyo-700 text-white'),
+  jikkyo: cn('bg-jikkyo-600 text-white dark:bg-jikkyo-700'),
+  nicolog: cn('bg-[#252525] text-white'),
+  file: cn('bg-blue-500 text-white dark:bg-blue-600'),
 }
 
 const SOURCE_BADGE_NAME: {
-  [P in Exclude<SourceTagProps['type'], 'normal'>]: string
+  [P in SourceBadgeKey]?: string
 } = {
   official: '公式',
   danime: 'dアニメ',
   chapter: 'dアニメ(分割)',
   szbh: 'コメント専用',
   jikkyo: '実況',
+  nicolog: '生放送',
+  file: 'ファイル',
 }
 
-export function SourceBadge({ className, type }: SourceTagProps) {
+export function SourceBadge({ className, type, source }: SourceTagProps) {
   if (type === 'normal') return
 
   return (
@@ -38,11 +51,11 @@ export function SourceBadge({ className, type }: SourceTagProps) {
         'rounded-md',
         'text-mini',
         'select-none',
-        SOURCE_BADGE_CLASSES[type],
+        (source && SOURCE_BADGE_CLASSES[source]) || SOURCE_BADGE_CLASSES[type],
         className
       )}
     >
-      {SOURCE_BADGE_NAME[type]}
+      {(source && SOURCE_BADGE_NAME[source]) || SOURCE_BADGE_NAME[type]}
     </div>
   )
 }
