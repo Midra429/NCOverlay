@@ -21,7 +21,7 @@
 - [Netflix](https://www.netflix.com/)
 - [Hulu](https://www.hulu.jp/)
 - [ニコニコ動画](https://www.nicovideo.jp/)
-- [NHKプラス](https://plus.nhk.jp/)
+- ~~[NHKプラス](https://plus.nhk.jp/)~~
 - [TVer](https://tver.jp/)
 
 ※ 増減する可能性あり
@@ -50,7 +50,7 @@ https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 
 ## 開発
 ### 環境
-- [bun](https://bun.com/)
+- [Bun](https://bun.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Chrome](https://www.google.com/intl/ja/chrome/)
 
@@ -88,7 +88,8 @@ bun run zip:firefox
 ## ライブラリ
 - **nco-utils**<br>
 [GitHub](https://github.com/Midra429/nco-utils) / [npm](https://www.npmjs.com/package/@midra/nco-utils)<br>
-NCOverlay用のユーティリティライブラリ
+NCOverlay用のユーティリティライブラリ<br>
+タイトル解析、自動検索、各サービスのAPI関連
 
 ## スペシャルサンクス
 - **xpadev-net/niconicomments**<br>
@@ -102,6 +103,10 @@ https://docs.cal.syoboi.jp/spec/json.php/<br>
 - **ニコニコ実況 過去ログ API**<br>
 https://jikkyo.tsukumijima.net/<br>
 ニコニコ実況の過去ログ
+
+- **nicolog**<br>
+https://nicolog.ecchi.club/<br>
+ニコニコ生放送のアニメコメントアーカイブ
 
 ## ライセンス
 当ライセンスは [MIT](LICENSE.txt) ライセンスの規約に基づいて付与されています。
