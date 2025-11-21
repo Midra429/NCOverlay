@@ -17,6 +17,9 @@ import './style.css'
 
 const vod: VodKey = 'primeVideo'
 
+const SEASON_EP_REGEXP =
+  /^(?:シーズン\d+、エピソード\d+|Season\s\d+,\sEp\.\d+)\s?/
+
 export default defineContentScript({
   matches: MATCHES[vod],
   runAt: 'document_end',
@@ -39,10 +42,12 @@ async function main() {
         return null
       }
 
-      const titleElem = player.querySelector<HTMLElement>(
+      const titleElem = await querySelectorAsync<HTMLElement>(
+        player,
         '.atvwebplayersdk-title-text'
       )
-      const subtitleElem = player.querySelector<HTMLElement>(
+      const subtitleElem = await querySelectorAsync<HTMLElement>(
+        player,
         '.atvwebplayersdk-subtitle-text'
       )
       const timeindicatorElem = await querySelectorAsync<HTMLElement>(
@@ -51,15 +56,18 @@ async function main() {
       )
 
       const title = titleElem?.textContent
-      const season_episode = subtitleElem?.firstChild?.textContent
-      const subtitle = subtitleElem?.lastChild?.textContent
+      let season_episode = subtitleElem?.firstChild?.textContent
+      let subtitle = subtitleElem?.lastChild?.textContent
 
       const seasonNum = Number(
-        season_episode?.match(/(?<=シーズン|Season)\d+/)?.[0] ?? -1
+        season_episode?.match(/(?<=シーズン|Season\s)\d+/)?.[0] ?? -1
       )
       const episodeNum = Number(
         season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
       )
+
+      season_episode = season_episode?.replace(SEASON_EP_REGEXP, '')
+      subtitle = subtitle?.replace(SEASON_EP_REGEXP, '')
 
       const seasonNumVague = Number(
         normalize(title ?? '').match(/(?<=[^\d]+)[2-9]$/)?.[0] ?? -1
@@ -95,7 +103,7 @@ async function main() {
 
       return workTitle
         ? {
-            input: `${workTitle} ${episodeTitle}`,
+            input: `${workTitle} ${episodeTitle ?? ''}`,
             duration,
           }
         : null
