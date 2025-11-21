@@ -10,6 +10,7 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
+  "biome.enabled": true,
   "tailwindCSS.classAttributes": [
     "class",
     "className",
