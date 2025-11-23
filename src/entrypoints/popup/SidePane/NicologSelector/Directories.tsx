@@ -5,11 +5,10 @@ import { RadioGroup, Radio, Spinner, cn } from '@heroui/react'
 import { ChevronRightIcon, FolderIcon, FolderOpenIcon } from 'lucide-react'
 import { parse } from '@midra/nco-utils/parse'
 import { compare } from '@midra/nco-utils/compare'
+import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog'
 
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { ncoState } from '@/hooks/useNco'
-
-import { NICO_LIVE_ANIME_ROOT } from '.'
 
 export interface DirectoriesProps {
   directoryName: string | null
@@ -44,40 +43,37 @@ export function Directories({
     ncoApiProxy.nicolog
       .list({ path: NICO_LIVE_ANIME_ROOT })
       .then((list) => {
-        const directories = list?.content.filter(({ is_dir }) => is_dir)
+        const directories = list?.content.filter((v) => v.is_dir)
         // .sort((a, b) => b.created - a.created)
 
         setDirectories(directories ?? [])
 
         // 視聴中の作品タイトルを選択
         ncoState?.get('info').then((info) => {
-          if (!info || !info.input || typeof info.input === 'string') return
+          if (!info || typeof info.input === 'string' || !info.input?.title) {
+            return
+          }
 
-          const title = info.input.titleStripped
+          const base = parse(`${info.input.titleStripped} #0`)
+          const idx =
+            directories?.findIndex((v) => compare(base, `${v.name} #0`)) ?? -1
 
-          if (title) {
-            const parsed = parse(`${title} #0`)
-            const idx =
-              directories?.findIndex((v) => compare(`${v.name} #0`, parsed)) ??
-              -1
+          if (idx !== -1) {
+            const directory = directories![idx]
+            const element = directoryItemRefs.current[idx]
 
-            if (idx !== -1) {
-              const directory = directories![idx]
-              const element = directoryItemRefs.current[idx]
+            setDirectoryName(directory.name)
 
-              setDirectoryName(directory.name)
-
-              setTimeout(
-                (elm) => {
-                  elm.scrollIntoView({
-                    behavior: 'instant',
-                    block: 'start',
-                  })
-                },
-                0,
-                element
-              )
-            }
+            setTimeout(
+              (elm) => {
+                elm.scrollIntoView({
+                  behavior: 'instant',
+                  block: 'start',
+                })
+              },
+              0,
+              element
+            )
           }
         })
       })

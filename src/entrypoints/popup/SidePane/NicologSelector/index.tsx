@@ -2,6 +2,7 @@ import type { StateSlotDetailFile } from '@/ncoverlay/state'
 
 import { useState } from 'react'
 import { ChevronRightIcon, PlusIcon } from 'lucide-react'
+import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog'
 
 import { getNicologComments } from '@/utils/api/nicolog/getNicologComments'
 import { ncoState, useNcoState } from '@/hooks/useNco'
@@ -10,13 +11,6 @@ import { Modal } from '@/components/Modal'
 
 import { Directories } from './Directories'
 import { Files } from './Files'
-
-export const NICO_LIVE_ANIME_ROOT = '/nico-live-anime'
-export const IGNORE_NAME_SUFFIXES = [
-  '_raw.xml',
-  '振り返り上映会.xml',
-  '一挙放送.xml',
-]
 
 function createSlotDetailFile(path: string): StateSlotDetailFile {
   return {

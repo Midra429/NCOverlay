@@ -3,11 +3,10 @@ import type { ContentFormatted } from '@midra/nco-utils/types/api/nicolog/list'
 import { useEffect, useState } from 'react'
 import { RadioGroup, Radio, Spinner, cn } from '@heroui/react'
 import { CalendarDaysIcon } from 'lucide-react'
+import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog'
 
 import { formatDate } from '@/utils/format'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
-
-import { NICO_LIVE_ANIME_ROOT, IGNORE_NAME_SUFFIXES } from '.'
 
 export interface FilesProps {
   directoryName: string | null
@@ -25,11 +24,13 @@ export function Files({ directoryName, disabledIds, setFileName }: FilesProps) {
     setIsLoading(true)
 
     ncoApiProxy.nicolog
-      .list({ path: `${NICO_LIVE_ANIME_ROOT}/${directoryName}` })
+      .list({
+        path: `${NICO_LIVE_ANIME_ROOT}/${directoryName}`,
+      })
       .then((list) => {
-        const files = list?.content.filter(({ name, is_dir }) => {
-          return !is_dir && !IGNORE_NAME_SUFFIXES.some((v) => name.endsWith(v))
-        })
+        const files = list?.content.filter(
+          (v) => !v.is_dir && !v.name.endsWith('_raw.xml')
+        )
         // .sort((a, b) => b.created - a.created)
 
         setFiles(files ?? [])
