@@ -1,7 +1,22 @@
 import type { ExtensionMessenger } from '@webext-core/messaging'
 import type { WindowMessenger } from '@webext-core/messaging/page'
-import type { ProxyService } from '@webext-core/proxy-service'
 import type { Service, ProtocolMap } from '.'
+
+type PromisifyFunction<T> = T extends (...args: infer P) => infer R
+  ? R extends Promise<any>
+    ? T
+    : (...args: P) => Promise<R>
+  : never
+type DeepAsync<TService> = TService extends (...args: any[]) => any
+  ? PromisifyFunction<TService>
+  : TService extends Record<string, any>
+    ? {
+        [K in keyof TService]: DeepAsync<TService[K]>
+      }
+    : never
+type ProxyService<TService> = TService extends DeepAsync<TService>
+  ? TService
+  : DeepAsync<TService>
 
 export function createProxy<S extends Service>(
   name: string,

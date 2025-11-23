@@ -7,6 +7,7 @@ import {
   MoonIcon,
   SlidersHorizontalIcon,
   MessageSquareTextIcon,
+  SearchIcon,
   MessageSquareOffIcon,
   BlocksIcon,
   KeyboardIcon,
@@ -133,28 +134,6 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         suffix: '倍',
       },
       {
-        settingsKey: 'settings:comment:autoLoads',
-        inputType: 'checkbox',
-        label: '自動検索',
-        description: `${VODS.nhkPlus}は\n「実況(過去ログ)」のみ`,
-        options: [
-          { label: '公式', value: 'official' },
-          { label: 'dアニメ', value: 'danime' },
-          { label: 'dアニメ(分割)', value: 'chapter' },
-          { label: 'コメント専用', value: 'szbh' },
-          { label: '実況(過去ログ)', value: 'jikkyo' },
-        ],
-      },
-      {
-        settingsKey: 'settings:comment:jikkyoChannelIds',
-        inputType: 'ch-selector',
-        label: '自動検索: 実況チャンネル',
-        options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
-          label: `${id}: ${val}`,
-          value: id as JikkyoChannelId,
-        })),
-      },
-      {
         settingsKey: 'settings:comment:useNiconicoCredentials',
         inputType: 'toggle',
         label: 'ニコニコのログイン情報を使用',
@@ -167,6 +146,36 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: 'コメントアシストの表示を抑制',
         description:
           'コメントアシスト機能を使用したと予想されるコメントの表示を抑制します。\n※正確には判定できないので、テンプレコメントも対象になる可能性があります',
+      },
+    ],
+  },
+  {
+    id: 'auto-search',
+    title: '自動検索',
+    Icon: SearchIcon,
+    items: [
+      {
+        settingsKey: 'settings:comment:autoLoads',
+        inputType: 'checkbox',
+        label: '検索対象',
+        description: `${VODS.nhkPlus}は「実況」のみ`,
+        options: [
+          { label: '公式', value: 'official' },
+          { label: 'dアニメ', value: 'danime' },
+          { label: 'dアニメ(分割)', value: 'chapter' },
+          { label: 'コメント専用', value: 'szbh' },
+          { label: '実況', value: 'jikkyo' },
+          { label: '生放送', value: 'nicolog' },
+        ],
+      },
+      {
+        settingsKey: 'settings:comment:jikkyoChannelIds',
+        inputType: 'ch-selector',
+        label: '実況チャンネル',
+        options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
+          label: `${id}: ${val}`,
+          value: id as JikkyoChannelId,
+        })),
       },
     ],
   },

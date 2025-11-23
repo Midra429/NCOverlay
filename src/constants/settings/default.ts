@@ -19,12 +19,14 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:opacity': 100,
   'settings:comment:scale': 100,
   'settings:comment:amount': 1,
-  'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
   'settings:comment:useNiconicoCredentials': true,
+  'settings:comment:hideAssistedComments': false,
+
+  // 自動検索
+  'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
   'settings:comment:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
-  'settings:comment:hideAssistedComments': false,
 
   // NG設定
   'settings:ng:words': [],

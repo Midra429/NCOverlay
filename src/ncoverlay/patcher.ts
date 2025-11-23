@@ -117,6 +117,7 @@ export class NCOPatcher {
           args.jikkyoChannelIds = await settings.get(
             'settings:comment:jikkyoChannelIds'
           )
+          args.nicolog = autoLoads.includes('nicolog')
 
           if (this.#autoLoad) {
             await this.#autoLoad(this.#nco, args)

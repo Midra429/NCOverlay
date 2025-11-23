@@ -108,7 +108,20 @@ export interface SettingItems {
   'settings:comment:amount': number
 
   /**
-   * コメント:自動検索
+   * コメント:ニコニコのログイン情報を使用
+   * @default true
+   */
+  'settings:comment:useNiconicoCredentials': boolean
+
+  /**
+   * コメント:コメントアシストを非表示
+   * @default false
+   */
+  'settings:comment:hideAssistedComments': boolean
+
+  // 自動検索 //////////////////////////////////////////////////
+  /**
+   * 自動検索:検索対象
    * @default true
    */
   'settings:comment:autoLoads': (
@@ -117,25 +130,14 @@ export interface SettingItems {
     | 'chapter'
     | 'szbh'
     | 'jikkyo'
+    | 'nicolog'
   )[]
 
   /**
-   * コメント:ニコニコのログイン情報を使用
-   * @default true
-   */
-  'settings:comment:useNiconicoCredentials': boolean
-
-  /**
-   * コメント:実況チャンネル
+   * 自動検索:実況チャンネル
    * @default []
    */
   'settings:comment:jikkyoChannelIds': JikkyoChannelId[]
-
-  /**
-   * コメント:コメントアシストを非表示
-   * @default false
-   */
-  'settings:comment:hideAssistedComments': boolean
 
   // NG設定 //////////////////////////////////////////////////
   /**

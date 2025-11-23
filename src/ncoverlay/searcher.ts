@@ -12,20 +12,24 @@ import type {
 
 import { parse } from '@midra/nco-utils/parse'
 import { REGEXP_DANIME_CHAPTER } from '@midra/nco-utils/search/constants'
+import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog/list'
 import { jikkyoToSyobocalChId } from '@midra/nco-utils/api/utils/jikkyoToSyobocalChId'
 import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikkyoChId'
 
 import { logger } from '@/utils/logger'
 import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
 import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
+import { getNicologComments } from '@/utils/api/nicolog/getNicologComments'
 import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDetail'
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
+import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
 export interface NCOSearcherAutoLoadArgs
   extends Omit<BuildSearchQueryArgs, 'userAgent'> {
   jikkyo?: boolean
   jikkyoChannelIds?: JikkyoChannelId[]
+  nicolog?: boolean
 }
 
 /**
@@ -42,7 +46,14 @@ export class NCOSearcher {
     args.input = parse(args.input)
 
     const isAutoLoaded = true
-    const { input: parsed, duration, targets, jikkyo, jikkyoChannelIds } = args
+    const {
+      input: parsed,
+      duration,
+      targets,
+      jikkyo,
+      jikkyoChannelIds,
+      nicolog,
+    } = args
 
     const channelIds = jikkyoChannelIds
       ?.map(jikkyoToSyobocalChId)
@@ -52,24 +63,28 @@ export class NCOSearcher {
     const loadedIds =
       (await this.#state.get('slotDetails'))?.map((v) => v.id) ?? []
 
-    const [searchResults, searchSyobocalResults] = await Promise.all([
-      // ニコニコ動画 検索
-      ncoSearchProxy.niconico({
-        input: parsed,
-        duration,
-        targets,
-        userAgent: EXT_USER_AGENT,
-      }),
+    const [searchResults, searchSyobocalResults, searchNicologResult] =
+      await Promise.all([
+        // ニコニコ動画 検索
+        ncoSearchProxy.niconico({
+          input: parsed,
+          duration,
+          targets,
+          userAgent: EXT_USER_AGENT,
+        }),
 
-      // ニコニコ実況 過去ログ 検索
-      jikkyo
-        ? ncoSearchProxy.syobocal({
-            input: parsed,
-            channelIds,
-            userAgent: EXT_USER_AGENT,
-          })
-        : null,
-    ])
+        // ニコニコ実況 過去ログ 検索
+        jikkyo
+          ? ncoSearchProxy.syobocal({
+              input: parsed,
+              channelIds,
+              userAgent: EXT_USER_AGENT,
+            })
+          : null,
+
+        // nicolog 検索
+        nicolog ? ncoSearchProxy.nicolog(parsed) : null,
+      ])
 
     const currentTime = Date.now()
 
@@ -81,6 +96,7 @@ export class NCOSearcher {
 
     logger.log('searchResults', searchResults)
     logger.log('searchSyobocalResults', searchSyobocalResults)
+    logger.log('searchNicologResult', searchNicologResult)
 
     // ロード中のデータ
     const loadingSlotDetails: StateSlotDetail[] = []
@@ -152,6 +168,16 @@ export class NCOSearcher {
       }
     }
 
+    // nicolog
+    if (searchNicologResult) {
+      loadingSlotDetails.push(
+        detailToSlotDetail(searchNicologResult, {
+          status: 'loading',
+          isAutoLoaded,
+        })
+      )
+    }
+
     await this.#state.add('slotDetails', ...loadingSlotDetails)
 
     // コメント取得
@@ -176,6 +202,7 @@ export class NCOSearcher {
       commentsChapter,
       commentsSzbh,
       commentsJikkyo,
+      commentsNicolog,
     ] = await Promise.all([
       // ニコニコ動画 コメント 取得
       getNiconicoComments(
@@ -207,6 +234,13 @@ export class NCOSearcher {
             }))
           )
         : null,
+
+      // nicolog 取得
+      getNicologComments(
+        loadingSlotDetails
+          .filter((v) => v.type === 'file')
+          .map((v) => `${NICO_LIVE_ANIME_ROOT}/${v.id}`)
+      ),
     ])
 
     logger.log('commentsOfficial', commentsOfficial)
@@ -214,6 +248,7 @@ export class NCOSearcher {
     logger.log('commentsChapter', commentsChapter)
     logger.log('commentsSzbh', commentsSzbh)
     logger.log('commentsJikkyo', commentsJikkyo)
+    logger.log('commentsNicolog', commentsNicolog)
 
     const loadedSlots: StateSlot[] = []
     const updateSlotDetails: StateSlotDetailUpdate[] = []
@@ -345,6 +380,32 @@ export class NCOSearcher {
           id: thread.id as string,
           status: 'ready',
           markers,
+          info: {
+            count: {
+              comment: thread.commentCount,
+              kawaii: kawaiiCount,
+            },
+          },
+        })
+      }
+    }
+
+    // nicolog
+    if (commentsNicolog) {
+      for (const cmt of commentsNicolog) {
+        if (!cmt) continue
+
+        const { data, thread, kawaiiCount } = cmt
+
+        loadedSlots.push({
+          id: data.id,
+          threads: [thread],
+          isAutoLoaded,
+        })
+
+        updateSlotDetails.push({
+          id: data.id,
+          status: 'ready',
           info: {
             count: {
               comment: thread.commentCount,
