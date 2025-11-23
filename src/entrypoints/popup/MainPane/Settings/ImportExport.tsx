@@ -18,6 +18,7 @@ import { Modal } from '@/components/Modal'
 import { Tooltip } from '@/components/Tooltip'
 
 import { name } from '@@/package.json'
+import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 
 function validateJson(value: string): boolean {
   try {
@@ -35,6 +36,15 @@ function ImportSettings() {
   })
 
   const validated = validateJson(value)
+
+  const onPress = webext.isFirefox
+    ? () => {
+        openPopupWindow('import-settings', {
+          width: 370,
+          height: 470,
+        })
+      }
+    : onOpen
 
   async function onPaste() {
     navigator.clipboard.readText().then(setValue)
@@ -75,62 +85,64 @@ function ImportSettings() {
           variant: 'flat',
           startContent: <DownloadIcon />,
           text: 'インポート',
-          onPress: onOpen,
+          onPress,
         }}
       />
 
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        okText="インポート"
-        okIcon={<DownloadIcon className="size-4" />}
-        onOk={onImport}
-        isOkDisabled={!validated}
-        header={
-          <div className="flex flex-row items-center gap-0.5">
-            <span>ストレージ</span>
-            <ChevronRightIcon className="size-5 opacity-50" />
-            <span>設定をインポート</span>
-          </div>
-        }
-        headerEndContent={
-          <Tooltip content="貼り付け" placement="left">
-            <Button size="sm" variant="flat" isIconOnly onPress={onPaste}>
-              <ClipboardPasteIcon className="size-4" />
+      {!webext.isFirefox && (
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          okText="インポート"
+          okIcon={<DownloadIcon className="size-4" />}
+          onOk={onImport}
+          isOkDisabled={!validated}
+          header={
+            <div className="flex flex-row items-center gap-0.5">
+              <span>ストレージ</span>
+              <ChevronRightIcon className="size-5 opacity-50" />
+              <span>設定をインポート</span>
+            </div>
+          }
+          headerEndContent={
+            <Tooltip content="貼り付け" placement="left">
+              <Button size="sm" variant="flat" isIconOnly onPress={onPaste}>
+                <ClipboardPasteIcon className="size-4" />
+              </Button>
+            </Tooltip>
+          }
+          footerStartContent={
+            <Button
+              size="sm"
+              variant="flat"
+              color="primary"
+              startContent={<FileInputIcon className="size-4" />}
+              onPress={onSelectFile}
+            >
+              選択
             </Button>
-          </Tooltip>
-        }
-        footerStartContent={
-          <Button
-            size="sm"
-            variant="flat"
-            color="primary"
-            startContent={<FileInputIcon className="size-4" />}
-            onPress={onSelectFile}
-          >
-            選択
-          </Button>
-        }
-      >
-        <div className="size-full bg-content1 p-2">
-          <Textarea
-            classNames={{
-              base: 'size-full',
-              label: 'hidden',
-              inputWrapper: [
-                'h-full! w-full!',
-                'border-1 border-divider shadow-none',
-              ],
-              input: 'size-full font-mono text-tiny',
-            }}
-            disableAutosize
-            label="入力"
-            labelPlacement="outside"
-            value={value}
-            onValueChange={setValue}
-          />
-        </div>
-      </Modal>
+          }
+        >
+          <div className="size-full bg-content1 p-2">
+            <Textarea
+              classNames={{
+                base: 'size-full',
+                label: 'hidden',
+                inputWrapper: [
+                  'h-full! w-full!',
+                  'border-1 border-divider shadow-none',
+                ],
+                input: 'size-full font-mono text-tiny',
+              }}
+              disableAutosize
+              label="入力"
+              labelPlacement="outside"
+              value={value}
+              onValueChange={setValue}
+            />
+          </div>
+        </Modal>
+      )}
     </>
   )
 }
@@ -139,6 +151,15 @@ function ExportSettings() {
   const [value, setValue] = useState('')
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  const onPress = webext.isFirefox
+    ? () => {
+        openPopupWindow('export-settings', {
+          width: 370,
+          height: 470,
+        })
+      }
+    : onOpen
 
   async function onCopy() {
     navigator.clipboard
@@ -195,50 +216,52 @@ function ExportSettings() {
           variant: 'flat',
           startContent: <UploadIcon />,
           text: 'エクスポート',
-          onPress: onOpen,
+          onPress,
         }}
       />
 
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        okText="保存"
-        okIcon={<FileOutputIcon className="size-4" />}
-        onOk={onSaveFile}
-        header={
-          <div className="flex flex-row items-center gap-0.5">
-            <span>ストレージ</span>
-            <ChevronRightIcon className="size-5 opacity-50" />
-            <span>設定をエクスポート</span>
+      {!webext.isFirefox && (
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          okText="保存"
+          okIcon={<FileOutputIcon className="size-4" />}
+          onOk={onSaveFile}
+          header={
+            <div className="flex flex-row items-center gap-0.5">
+              <span>ストレージ</span>
+              <ChevronRightIcon className="size-5 opacity-50" />
+              <span>設定をエクスポート</span>
+            </div>
+          }
+          headerEndContent={
+            <Tooltip content="コピー" placement="left">
+              <Button size="sm" variant="flat" isIconOnly onPress={onCopy}>
+                <ClipboardCopyIcon className="size-4" />
+              </Button>
+            </Tooltip>
+          }
+        >
+          <div className="size-full bg-content1 p-2">
+            <Textarea
+              classNames={{
+                base: 'size-full',
+                label: 'hidden',
+                inputWrapper: [
+                  'h-full! w-full!',
+                  'border-1 border-divider shadow-none',
+                ],
+                input: 'size-full font-mono text-tiny',
+              }}
+              disableAutosize
+              isReadOnly
+              label="出力"
+              labelPlacement="outside"
+              value={value}
+            />
           </div>
-        }
-        headerEndContent={
-          <Tooltip content="コピー" placement="left">
-            <Button size="sm" variant="flat" isIconOnly onPress={onCopy}>
-              <ClipboardCopyIcon className="size-4" />
-            </Button>
-          </Tooltip>
-        }
-      >
-        <div className="size-full bg-content1 p-2">
-          <Textarea
-            classNames={{
-              base: 'size-full',
-              label: 'hidden',
-              inputWrapper: [
-                'h-full! w-full!',
-                'border-1 border-divider shadow-none',
-              ],
-              input: 'size-full font-mono text-tiny',
-            }}
-            disableAutosize
-            isReadOnly
-            label="出力"
-            labelPlacement="outside"
-            value={value}
-          />
-        </div>
-      </Modal>
+        </Modal>
+      )}
     </>
   )
 }

@@ -76,6 +76,8 @@ declare module 'webextension-polyfill' {
   interface WebExtBrowser extends Browser {
     sidePanel: SidePanel.Static
 
+    SEARCH_PARAM_TAB_ID: `_${string}_tabId`
+
     isChrome: boolean
     isFirefox: boolean
     isSafari: boolean

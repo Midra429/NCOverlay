@@ -12,6 +12,7 @@ import { XIcon } from 'lucide-react'
 
 export interface ModalProps {
   fullWidth?: boolean
+  disableAnimation?: boolean
 
   isOpen: HeroUIModalProps['isOpen']
   onOpenChange: HeroUIModalProps['onOpenChange']
@@ -47,6 +48,7 @@ export function Modal(props: ModalProps) {
       size="full"
       hideCloseButton
       isKeyboardDismissDisabled={true}
+      disableAnimation={props.disableAnimation}
       isOpen={props.isOpen}
       onOpenChange={props.onOpenChange}
       onClose={props.onClose}

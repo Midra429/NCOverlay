@@ -5,6 +5,8 @@ import { browser } from '@wxt-dev/webextension-polyfill/browser'
 const webext = browser as WebExtBrowser
 const manifest = webext.runtime.getManifest()
 
+webext.SEARCH_PARAM_TAB_ID = `_${EXT_BUILD_ID}_tabId`
+
 webext.isChrome =
   import.meta.env.CHROME || import.meta.env.EDGE || import.meta.env.OPERA
 webext.isFirefox = import.meta.env.FIREFOX
@@ -12,7 +14,7 @@ webext.isSafari = import.meta.env.SAFARI
 
 webext.getCurrentActiveTab = async function (windowId) {
   const tabId = new URL(location.href).searchParams.get(
-    `_${EXT_BUILD_ID}_tabId`
+    webext.SEARCH_PARAM_TAB_ID
   )
 
   const [tab] = tabId
@@ -35,7 +37,7 @@ webext.getCurrentActiveTab = async function (windowId) {
 if (webext.action) {
   webext.action.getPopupPath = function (tabId) {
     return typeof tabId === 'number' && tabId !== webext.tabs.TAB_ID_NONE
-      ? `${manifest.action?.default_popup}?_${EXT_BUILD_ID}_tabId=${tabId}`
+      ? `${manifest.action?.default_popup}?${webext.SEARCH_PARAM_TAB_ID}=${tabId}`
       : manifest.action?.default_popup
   }
 }
