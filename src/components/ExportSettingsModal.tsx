@@ -22,32 +22,31 @@ export interface ExportSettingsModalProps
   extends Omit<ModalProps, 'children'> {}
 
 export function ExportSettingsModal(props: ExportSettingsModalProps) {
-  const [value, setValue] = useState('')
+  const [text, setText] = useState('')
 
   function reset() {
-    setValue('')
+    setText('')
   }
 
   async function onCopy() {
-    navigator.clipboard
-      .writeText(value)
-      .then(() => {
-        addToast({
-          color: 'success',
-          title: '設定をコピーしました',
-        })
+    try {
+      await navigator.clipboard.writeText(text)
+
+      addToast({
+        color: 'success',
+        title: '設定をコピーしました',
       })
-      .catch(() => {
-        addToast({
-          color: 'danger',
-          title: '設定のコピーに失敗しました',
-        })
+    } catch {
+      addToast({
+        color: 'danger',
+        title: '設定のコピーに失敗しました',
       })
+    }
   }
 
   async function onSaveFile() {
     const url = URL.createObjectURL(
-      new Blob([value], {
+      new Blob([text], {
         type: 'application/json',
       })
     )
@@ -63,10 +62,10 @@ export function ExportSettingsModal(props: ExportSettingsModalProps) {
     URL.revokeObjectURL(url)
   }
 
-  function onOpen() {
-    settings.export().then((values) => {
-      setValue(JSON.stringify(values, null, 2))
-    })
+  async function onOpen() {
+    const values = await settings.export()
+
+    setText(JSON.stringify(values, null, 2))
   }
 
   function onClose() {
@@ -112,7 +111,7 @@ export function ExportSettingsModal(props: ExportSettingsModalProps) {
           isReadOnly
           label="出力"
           labelPlacement="outside"
-          value={value}
+          value={text}
         />
       </div>
     </Modal>

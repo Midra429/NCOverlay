@@ -11,7 +11,7 @@ export interface NiconicoResultsProps {
 export function NiconicoResults({ details }: NiconicoResultsProps) {
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = stateSlotDetails?.map((v) => v.id)
+  const ids = stateSlotDetails?.map((v) => v.id) ?? []
 
   return (
     <div className="flex flex-col gap-2">
@@ -20,7 +20,7 @@ export function NiconicoResults({ details }: NiconicoResultsProps) {
           key={detail.id}
           detail={detail}
           isSearch
-          isDisabled={ids?.includes(detail.id)}
+          isDisabled={ids.includes(detail.id)}
         />
       ))}
     </div>

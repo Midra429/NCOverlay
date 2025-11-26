@@ -3,7 +3,7 @@ import { webext } from '@/utils/webext'
 export type OpenAction =
   | 'import-settings'
   | 'export-settings'
-  | 'select-comment-files'
+  | 'select-comment-file'
 
 export interface OpenOptions {
   width?: number

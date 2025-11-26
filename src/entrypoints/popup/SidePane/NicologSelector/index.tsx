@@ -46,8 +46,7 @@ export function NicologSelector({
   const stateSlotDetails = useNcoState('slotDetails')
 
   const isReady = !(stateStatus === 'searching' || stateStatus === 'loading')
-
-  const ids = stateSlotDetails?.map((v) => v.id)
+  const ids = stateSlotDetails?.map((v) => v.id) ?? []
 
   const slotDetail =
     directoryName &&
@@ -57,12 +56,12 @@ export function NicologSelector({
   async function onAdd() {
     if (!ncoState || !slotDetail) return
 
+    await ncoState.set('status', 'loading')
+
     await ncoState.add('slotDetails', {
       ...slotDetail,
       status: 'loading',
     })
-
-    await ncoState.set('status', 'loading')
 
     const { id } = slotDetail
 
@@ -106,7 +105,7 @@ export function NicologSelector({
       onOpenChange={onOpenChange}
       okText="追加"
       okIcon={<PlusIcon className="size-4" />}
-      isOkDisabled={!isReady || !slotDetail || ids?.includes(slotDetail.id)}
+      isOkDisabled={!isReady || !slotDetail || ids.includes(slotDetail.id)}
       onOk={onAdd}
       header={
         <div className="flex flex-row items-center gap-0.5">

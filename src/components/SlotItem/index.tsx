@@ -27,109 +27,120 @@ import { HideButton } from './HideButton'
 import { TranslucentButton } from './TranslucentButton'
 import { Options, OptionsButton } from './Options'
 
-export interface SlotItemProps {
+export type SlotItemProps = {
   classNames?: PanelItemProps['classNames']
   detail: StateSlotDetail
-  isSearch?: boolean
   isDisabled?: boolean
-}
+} & (
+  | {
+      isSearch?: false
+      onAdd?: undefined
+    }
+  | {
+      isSearch: true
+      onAdd?: () => void | Promise<void>
+    }
+)
 
 export function SlotItem({
   classNames,
   detail,
   isSearch,
   isDisabled,
+  onAdd,
 }: SlotItemProps) {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 
   const isError = detail.status === 'error'
 
-  async function onPressAdd() {
-    if (!ncoState) return
+  const onPressAdd =
+    onAdd ??
+    (async () => {
+      if (!ncoState) return
 
-    await ncoState.add('slotDetails', {
-      ...detail,
-      status: 'loading',
-    })
+      await ncoState.set('status', 'loading')
 
-    await ncoState.set('status', 'loading')
-
-    const { type, id, info } = detail
-
-    let slotDetail: StateSlotDetailUpdate | undefined
-    let slot: StateSlot | undefined
-
-    if (type === 'jikkyo') {
-      const [comment] = await getJikkyoKakologs([
-        {
-          jkChId: id.split(':')[0] as JikkyoChannelId,
-          starttime: info.date[0] / 1000,
-          endtime: info.date[1] / 1000,
-        },
-      ])
-
-      if (comment) {
-        const { thread, markers, kawaiiCount } = comment
-
-        slotDetail = {
-          id,
-          status: 'ready',
-          markers,
-          info: {
-            count: {
-              comment: thread.commentCount,
-              kawaii: kawaiiCount,
-            },
-          },
-        }
-
-        slot = { id, threads: [thread] }
-      }
-    } else {
-      const [comment] = await getNiconicoComments([{ contentId: id }])
-
-      if (comment) {
-        const { data, threads, kawaiiCount } = comment
-
-        slotDetail = {
-          id,
-          status: 'ready',
-          info: {
-            count: {
-              view: data.video.count.view,
-              comment: data.video.count.comment,
-              kawaii: kawaiiCount,
-            },
-            thumbnail:
-              data.video.thumbnail.largeUrl ||
-              data.video.thumbnail.middleUrl ||
-              data.video.thumbnail.url,
-          },
-        }
-
-        slot = { id, threads }
-      }
-    }
-
-    if (slotDetail && slot) {
-      await ncoState.update('slotDetails', ['id'], slotDetail)
-      await ncoState.add('slots', slot)
-    } else {
-      await ncoState.update('slotDetails', ['id'], {
-        id,
-        status: 'error',
+      await ncoState.add('slotDetails', {
+        ...detail,
+        status: 'loading',
       })
-    }
 
-    await ncoState.set('status', 'ready')
-  }
+      const { type, id, info } = detail
+
+      let slotDetail: StateSlotDetailUpdate | undefined
+      let slot: StateSlot | undefined
+
+      if (type === 'jikkyo') {
+        const [comment] = await getJikkyoKakologs([
+          {
+            jkChId: id.split(':')[0] as JikkyoChannelId,
+            starttime: info.date[0] / 1000,
+            endtime: info.date[1] / 1000,
+          },
+        ])
+
+        if (comment) {
+          const { thread, markers, kawaiiCount } = comment
+
+          slotDetail = {
+            id,
+            status: 'ready',
+            markers,
+            info: {
+              count: {
+                comment: thread.commentCount,
+                kawaii: kawaiiCount,
+              },
+            },
+          }
+
+          slot = { id, threads: [thread] }
+        }
+      } else {
+        const [comment] = await getNiconicoComments([{ contentId: id }])
+
+        if (comment) {
+          const { data, threads, kawaiiCount } = comment
+
+          slotDetail = {
+            id,
+            status: 'ready',
+            info: {
+              count: {
+                view: data.video.count.view,
+                comment: data.video.count.comment,
+                kawaii: kawaiiCount,
+              },
+              thumbnail:
+                data.video.thumbnail.largeUrl ||
+                data.video.thumbnail.middleUrl ||
+                data.video.thumbnail.url,
+            },
+          }
+
+          slot = { id, threads }
+        }
+      }
+
+      if (slotDetail && slot) {
+        await ncoState.update('slotDetails', ['id'], slotDetail)
+        await ncoState.add('slots', slot)
+      } else {
+        await ncoState.update('slotDetails', ['id'], {
+          id,
+          status: 'error',
+        })
+      }
+
+      await ncoState.set('status', 'ready')
+    })
 
   async function onPressRemove() {
     if (!ncoState) return
 
-    await ncoState.set('status', 'loading')
-
     const { id } = detail
+
+    await ncoState.set('status', 'loading')
 
     await ncoState.remove('slotDetails', { id })
     await ncoState.remove('slots', { id })

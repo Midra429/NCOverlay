@@ -107,7 +107,7 @@ export interface ProgramPopoverProps {
 export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = stateSlotDetails?.map((v) => v.id)
+  const ids = stateSlotDetails?.map((v) => v.id) ?? []
 
   const { title, description, startAt, endAt, icon } = program
 
@@ -172,7 +172,7 @@ export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
         }}
         detail={slotDetail}
         isSearch
-        isDisabled={ids?.includes(id)}
+        isDisabled={ids.includes(id)}
       />
     </div>
   )

@@ -30,7 +30,7 @@ export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
 
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = stateSlotDetails?.map((v) => v.id)
+  const ids = stateSlotDetails?.map((v) => v.id) ?? []
 
   const currentDate = new Date()
   const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
@@ -83,7 +83,7 @@ export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
           key={detail.id}
           detail={detail}
           isSearch
-          isDisabled={ids?.includes(detail.id)}
+          isDisabled={ids.includes(detail.id)}
         />
       ))}
     </div>

@@ -1,6 +1,6 @@
 import type { ModalProps } from '@/components/Modal'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button, Textarea } from '@heroui/react'
 import {
   DownloadIcon,
@@ -19,33 +19,31 @@ export interface ImportSettingsModalProps
   extends Omit<ModalProps, 'children'> {}
 
 export function ImportSettingsModal(props: ImportSettingsModalProps) {
-  const [value, setValue] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const validated = validateJsonString(value, { object: true })
+  const [text, setText] = useState('')
+
+  const validated = !!text && validateJsonString(text, { object: true })
 
   function reset() {
-    setValue('')
+    setText('')
   }
 
   async function onPaste() {
-    navigator.clipboard.readText().then(setValue)
+    const text = await navigator.clipboard.readText()
+
+    setText(text)
   }
 
-  function onSelectFile() {
-    const input = document.createElement('input')
+  async function onChange({ target }: React.ChangeEvent<HTMLInputElement>) {
+    const file = target.files?.[0] ?? null
+    const text = (await file?.text()) ?? ''
 
-    input.type = 'file'
-    input.accept = 'application/json'
-
-    input.onchange = () => {
-      input.files?.[0].text().then(setValue)
-    }
-
-    input.click()
+    setText(text)
   }
 
   async function onImport() {
-    await settings.import(value)
+    await settings.import(text)
   }
 
   function onClose() {
@@ -81,12 +79,20 @@ export function ImportSettingsModal(props: ImportSettingsModalProps) {
           variant="flat"
           color="primary"
           startContent={<FileInputIcon className="size-4" />}
-          onPress={onSelectFile}
+          onPress={() => inputRef.current?.click()}
         >
           選択
         </Button>
       }
     >
+      <input
+        type="file"
+        accept="application/json"
+        hidden
+        onChange={onChange}
+        ref={inputRef}
+      />
+
       <div className="size-full bg-content1 p-2">
         <Textarea
           classNames={{
@@ -101,8 +107,8 @@ export function ImportSettingsModal(props: ImportSettingsModalProps) {
           disableAutosize
           label="入力"
           labelPlacement="outside"
-          value={value}
-          onValueChange={setValue}
+          value={text}
+          onValueChange={setText}
         />
       </div>
     </Modal>

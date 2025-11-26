@@ -9,16 +9,16 @@ import { ExportSettingsModal } from '@/components/ExportSettingsModal'
 
 import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 
+const popupWindowOptions = {
+  width: 370,
+  height: 470,
+}
+
 function ImportSettings() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onPress = webext.isFirefox
-    ? () => {
-        openPopupWindow('import-settings', {
-          width: 370,
-          height: 470,
-        })
-      }
+    ? () => openPopupWindow('import-settings', popupWindowOptions)
     : onOpen
 
   return (
@@ -44,12 +44,7 @@ function ExportSettings() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onPress = webext.isFirefox
-    ? () => {
-        openPopupWindow('export-settings', {
-          width: 370,
-          height: 470,
-        })
-      }
+    ? () => openPopupWindow('export-settings', popupWindowOptions)
     : onOpen
 
   return (

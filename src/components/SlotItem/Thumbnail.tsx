@@ -2,6 +2,7 @@ import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { Image, cn } from '@heroui/react'
+import { FileTextIcon } from 'lucide-react'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
@@ -74,15 +75,19 @@ export function Thumbnail({
             'select-none'
           )}
         >
-          <span
-            className={cn(
-              'line-clamp-1',
-              'font-bold text-white',
-              isSearch ? 'text-mini' : 'text-small'
-            )}
-          >
-            {info.source === 'nicolog' ? 'nicolog' : 'ローカル'}
-          </span>
+          {info.source === 'nicolog' ? (
+            <span
+              className={cn(
+                'line-clamp-1',
+                'font-bold text-white',
+                isSearch ? 'text-mini' : 'text-small'
+              )}
+            >
+              nicolog
+            </span>
+          ) : (
+            <FileTextIcon className="size-8 text-white" strokeWidth={1.5} />
+          )}
         </div>
       </div>
     )

@@ -98,8 +98,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
   const stateSlotDetails = useNcoState('slotDetails')
 
   const isReady = !(stateStatus === 'searching' || stateStatus === 'loading')
-
-  const ids = stateSlotDetails?.map((v) => v.id)
+  const ids = stateSlotDetails?.map((v) => v.id) ?? []
 
   const slotDetail =
     jkChId &&
@@ -109,6 +108,8 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
       startDateTime,
       endDateTime,
     })
+
+  const isOkDisabled = !isReady || !slotDetail || ids.includes(slotDetail.id)
 
   function reset() {
     const endDateTime = currentDateTime.set({
@@ -125,12 +126,12 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
   async function onAdd() {
     if (!ncoState || !slotDetail) return
 
+    await ncoState.set('status', 'loading')
+
     await ncoState.add('slotDetails', {
       ...slotDetail,
       status: 'loading',
     })
-
-    await ncoState.set('status', 'loading')
 
     const { id } = slotDetail
 
@@ -178,7 +179,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
       okText="追加"
       okIcon={<PlusIcon className="size-4" />}
       onOk={onAdd}
-      isOkDisabled={!isReady || !slotDetail || ids?.includes(slotDetail.id)}
+      isOkDisabled={isOkDisabled}
       onClose={reset}
       header={
         <div className="flex flex-row items-center gap-0.5">
@@ -313,7 +314,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
           <SlotItem
             detail={slotDetail}
             isSearch
-            isDisabled={ids?.includes(slotDetail.id)}
+            isDisabled={isOkDisabled}
             onAdd={() => onAdd().then(reset)}
           />
         )}

@@ -45,7 +45,7 @@ export function TitleDetail({
 
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const ids = stateSlotDetails?.map((v) => v.id)
+  const ids = stateSlotDetails?.map((v) => v.id) ?? []
 
   const currentDate = new Date()
   const programItems = programs
@@ -127,7 +127,7 @@ export function TitleDetail({
               key={detail.id}
               detail={detail}
               isSearch
-              isDisabled={ids?.includes(detail.id)}
+              isDisabled={ids.includes(detail.id)}
             />
           ))}
 
