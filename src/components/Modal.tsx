@@ -1,5 +1,6 @@
 import type { ModalProps as HeroUIModalProps } from '@heroui/react'
 
+import { useEffect } from 'react'
 import {
   Button,
   Modal as HeroUIModal,
@@ -14,9 +15,11 @@ export interface ModalProps {
   fullWidth?: boolean
   disableAnimation?: boolean
 
-  isOpen: HeroUIModalProps['isOpen']
-  onOpenChange: HeroUIModalProps['onOpenChange']
-  onClose?: HeroUIModalProps['onClose']
+  isOpen?: HeroUIModalProps['isOpen']
+  defaultOpen?: HeroUIModalProps['defaultOpen']
+  onOpenChange?: HeroUIModalProps['onOpenChange']
+  onOpen?: () => void
+  onClose?: () => void
 
   okText?: string
   okIcon?: React.ReactNode
@@ -36,6 +39,12 @@ export interface ModalProps {
 }
 
 export function Modal(props: ModalProps) {
+  useEffect(() => {
+    if (props.isOpen || props.defaultOpen) {
+      props.onOpen?.()
+    }
+  }, [props.isOpen])
+
   return (
     <HeroUIModal
       classNames={{
@@ -50,7 +59,14 @@ export function Modal(props: ModalProps) {
       isKeyboardDismissDisabled={true}
       disableAnimation={props.disableAnimation}
       isOpen={props.isOpen}
-      onOpenChange={props.onOpenChange}
+      defaultOpen={props.defaultOpen}
+      onOpenChange={(isOpen) => {
+        props.onOpenChange?.(isOpen)
+
+        if (isOpen) {
+          props.onOpen?.()
+        }
+      }}
       onClose={props.onClose}
     >
       <HeroUIModalContent>

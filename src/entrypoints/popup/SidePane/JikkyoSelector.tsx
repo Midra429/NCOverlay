@@ -110,6 +110,18 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
       endDateTime,
     })
 
+  function reset() {
+    const endDateTime = currentDateTime.set({
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+    })
+
+    setJkChId(undefined)
+    setEndDateTime(endDateTime)
+    setStartDateTime(endDateTime.add({ minutes: -30 }))
+  }
+
   async function onAdd() {
     if (!ncoState || !slotDetail) return
 
@@ -165,8 +177,9 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
       onOpenChange={onOpenChange}
       okText="追加"
       okIcon={<PlusIcon className="size-4" />}
-      isOkDisabled={!isReady || !slotDetail || ids?.includes(slotDetail.id)}
       onOk={onAdd}
+      isOkDisabled={!isReady || !slotDetail || ids?.includes(slotDetail.id)}
+      onClose={reset}
       header={
         <div className="flex flex-row items-center gap-0.5">
           <span>追加</span>
@@ -301,6 +314,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
             detail={slotDetail}
             isSearch
             isDisabled={ids?.includes(slotDetail.id)}
+            onAdd={() => onAdd().then(reset)}
           />
         )}
       </div>

@@ -148,7 +148,7 @@ export class NCOPatcher {
       load()
     })
 
-    const intervalMs = 500
+    const intervalMs = 250
     let lastTime = performance.now()
 
     this.#nco.addEventListener('timeupdate', function () {

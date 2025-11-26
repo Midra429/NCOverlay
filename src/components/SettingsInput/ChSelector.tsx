@@ -54,7 +54,7 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
   return (
     <CheckboxGroup
       classNames={{
-        label: 'text-small text-foreground hidden',
+        label: 'hidden text-foreground text-small',
         wrapper: 'gap-1.5 p-1.5',
       }}
       size="sm"
@@ -73,14 +73,14 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
               'bg-default-100 hover:bg-default-200',
               'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
               'rounded-medium',
-              'border-divider hover:border-default-400 border-1',
+              'border-1 border-divider hover:border-default-400',
               'data-[selected=true]:border-primary',
               'transition-colors motion-reduce:transition-none',
               'cursor-pointer',
             ],
             wrapper: [
               'rounded-full',
-              'before:bg-default-50! before:rounded-full before:border-1',
+              'before:rounded-full before:border-1 before:bg-default-50!',
               'after:rounded-full',
             ],
             label: 'flex w-full flex-col',
@@ -155,7 +155,7 @@ export function Input(props: Props) {
         onOk={onSave}
         header={
           <div className="flex flex-row items-center gap-0.5">
-            <span>コメント</span>
+            <span>自動検索</span>
             <ChevronRightIcon className="size-5 opacity-50" />
             <span>{props.label}</span>
           </div>
@@ -176,10 +176,10 @@ export function Input(props: Props) {
       >
         <Tabs
           classNames={{
-            base: 'border-foreground-200 bg-content1 border-b-1',
+            base: 'border-foreground-200 border-b-1 bg-content1',
             tabList: 'p-0',
             tab: 'h-10 p-0',
-            panel: 'bg-content1 overflow-x-hidden overflow-y-auto p-0',
+            panel: 'overflow-y-auto overflow-x-hidden bg-content1 p-0',
           }}
           variant="underlined"
           color="primary"

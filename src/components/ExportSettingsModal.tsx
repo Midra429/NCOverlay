@@ -1,6 +1,6 @@
 import type { ModalProps } from '@/components/Modal'
 
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { Button, Textarea, addToast } from '@heroui/react'
 import {
   ChevronRightIcon,
@@ -18,16 +18,16 @@ import { name } from '@@/package.json'
 
 const { version } = webext.runtime.getManifest()
 
-export interface ExportSettingsModalProps extends Omit<ModalProps, 'children'> {
-  value: string
-  setValue: React.Dispatch<React.SetStateAction<string>>
-}
+export interface ExportSettingsModalProps
+  extends Omit<ModalProps, 'children'> {}
 
-export function ExportSettingsModal({
-  value,
-  setValue,
-  ...props
-}: ExportSettingsModalProps) {
+export function ExportSettingsModal(props: ExportSettingsModalProps) {
+  const [value, setValue] = useState('')
+
+  function reset() {
+    setValue('')
+  }
+
   async function onCopy() {
     navigator.clipboard
       .writeText(value)
@@ -63,11 +63,16 @@ export function ExportSettingsModal({
     URL.revokeObjectURL(url)
   }
 
-  useEffect(() => {
+  function onOpen() {
     settings.export().then((values) => {
       setValue(JSON.stringify(values, null, 2))
     })
-  }, [])
+  }
+
+  function onClose() {
+    reset()
+    props.onClose?.()
+  }
 
   return (
     <Modal
@@ -75,6 +80,8 @@ export function ExportSettingsModal({
       okText="保存"
       okIcon={<FileOutputIcon className="size-4" />}
       onOk={onSaveFile}
+      onOpen={onOpen}
+      onClose={onClose}
       header={
         <div className="flex flex-row items-center gap-0.5">
           <span>ストレージ</span>

@@ -1,5 +1,6 @@
 import type { ModalProps } from '@/components/Modal'
 
+import { useState } from 'react'
 import { Button, Textarea } from '@heroui/react'
 import {
   DownloadIcon,
@@ -14,17 +15,17 @@ import { settings } from '@/utils/settings/extension'
 import { Modal } from './Modal'
 import { Tooltip } from './Tooltip'
 
-export interface ImportSettingsModalProps extends Omit<ModalProps, 'children'> {
-  value: string
-  setValue: React.Dispatch<React.SetStateAction<string>>
-}
+export interface ImportSettingsModalProps
+  extends Omit<ModalProps, 'children'> {}
 
-export function ImportSettingsModal({
-  value,
-  setValue,
-  ...props
-}: ImportSettingsModalProps) {
+export function ImportSettingsModal(props: ImportSettingsModalProps) {
+  const [value, setValue] = useState('')
+
   const validated = validateJsonString(value, { object: true })
+
+  function reset() {
+    setValue('')
+  }
 
   async function onPaste() {
     navigator.clipboard.readText().then(setValue)
@@ -37,17 +38,7 @@ export function ImportSettingsModal({
     input.accept = 'application/json'
 
     input.onchange = () => {
-      const file = input.files?.item(0)
-
-      if (file) {
-        const fileReader = new FileReader()
-
-        fileReader.onload = () => {
-          setValue(fileReader.result?.toString() ?? '')
-        }
-
-        fileReader.readAsText(file)
-      }
+      input.files?.[0].text().then(setValue)
     }
 
     input.click()
@@ -57,6 +48,11 @@ export function ImportSettingsModal({
     await settings.import(value)
   }
 
+  function onClose() {
+    reset()
+    props.onClose?.()
+  }
+
   return (
     <Modal
       {...props}
@@ -64,6 +60,7 @@ export function ImportSettingsModal({
       okIcon={<DownloadIcon className="size-4" />}
       onOk={onImport}
       isOkDisabled={!validated}
+      onClose={onClose}
       header={
         <div className="flex flex-row items-center gap-0.5">
           <span>ストレージ</span>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useDisclosure } from '@heroui/react'
 import { DownloadIcon, UploadIcon } from 'lucide-react'
 
@@ -11,11 +10,7 @@ import { ExportSettingsModal } from '@/components/ExportSettingsModal'
 import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 
 function ImportSettings() {
-  const [value, setValue] = useState('')
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure({
-    onChange: () => setValue(''),
-  })
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onPress = webext.isFirefox
     ? () => {
@@ -39,20 +34,13 @@ function ImportSettings() {
       />
 
       {!webext.isFirefox && (
-        <ImportSettingsModal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          value={value}
-          setValue={setValue}
-        />
+        <ImportSettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
       )}
     </>
   )
 }
 
 function ExportSettings() {
-  const [value, setValue] = useState('')
-
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onPress = webext.isFirefox
@@ -77,12 +65,7 @@ function ExportSettings() {
       />
 
       {!webext.isFirefox && (
-        <ExportSettingsModal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          value={value}
-          setValue={setValue}
-        />
+        <ExportSettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
       )}
     </>
   )
