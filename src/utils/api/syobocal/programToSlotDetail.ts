@@ -1,8 +1,11 @@
+import type { DeepPartial } from 'utility-types'
 import type { SyoboCalProgram } from '@midra/nco-utils/types/api/syobocal/json'
 import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikkyoChId'
+
+import { deepmerge } from '@/utils/deepmerge'
 
 function isInteger(str: string) {
   return /^\d+$/.test(str)
@@ -11,7 +14,7 @@ function isInteger(str: string) {
 export function programToSlotDetail(
   title: string,
   program: SyoboCalProgram | SyoboCalProgramDb,
-  detail?: Partial<StateSlotDetailJikkyo>
+  detail?: DeepPartial<StateSlotDetailJikkyo>
 ): StateSlotDetailJikkyo {
   let starttime: number
   let endtime: number
@@ -45,20 +48,22 @@ export function programToSlotDetail(
     }
   }
 
-  return {
-    type: 'jikkyo',
-    id,
-    status: 'pending',
-    info: {
-      id: program.TID,
-      source: 'syobocal',
-      title: [...flags, title].join(' ').trim(),
-      duration: (endtime - starttime) / 1000,
-      date: [starttime, endtime],
-      count: {
-        comment: 0,
+  return deepmerge<StateSlotDetailJikkyo, any>(
+    {
+      type: 'jikkyo',
+      id,
+      status: 'pending',
+      info: {
+        id: program.TID,
+        source: 'syobocal',
+        title: [...flags, title].join(' ').trim(),
+        duration: (endtime - starttime) / 1000,
+        date: [starttime, endtime],
+        count: {
+          comment: 0,
+        },
       },
     },
-    ...detail,
-  }
+    detail
+  )
 }
