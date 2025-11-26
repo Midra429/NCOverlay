@@ -16,7 +16,10 @@ import {
   DatabaseIcon,
 } from 'lucide-react'
 
-// import { openWindow } from '@/entrypoints/input-file/open'
+import { webext } from '@/utils/webext'
+import { openPopupWindow } from '@/entrypoints/popup-windows/open'
+
+import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
 import { JikkyoSelector } from './JikkyoSelector'
 import { JikkyoEpgSelector } from './JikkyoEpgSelector'
@@ -26,6 +29,16 @@ export function Header() {
   const jkModalDc = useDisclosure()
   const jkEpgModalDc = useDisclosure()
   const nicologModalDc = useDisclosure()
+  const fileModalDc = useDisclosure()
+
+  const onPressFile = webext.isFirefox
+    ? () => {
+        openPopupWindow('select-comment-file', {
+          width: 500,
+          height: 600,
+        })
+      }
+    : fileModalDc.onOpen
 
   return (
     <>
@@ -84,20 +97,20 @@ export function Header() {
               ニコニコ実況 過去ログ (番組表)
             </DropdownItem>
 
-            {/* <DropdownItem
-              key="files"
-              startContent={<FileTextIcon className="size-4" />}
-              onPress={() => openWindow('select-comment-files')}
-            >
-              ローカルファイル (β)
-            </DropdownItem> */}
-
             <DropdownItem
               key="nicolog"
               startContent={<DatabaseIcon className="size-4" />}
               onPress={nicologModalDc.onOpen}
             >
               nicolog (ニコニコ生放送のアニメコメントアーカイブ)
+            </DropdownItem>
+
+            <DropdownItem
+              key="file"
+              startContent={<FileTextIcon className="size-4" />}
+              onPress={onPressFile}
+            >
+              ローカルファイル (β)
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -117,6 +130,13 @@ export function Header() {
         isOpen={nicologModalDc.isOpen}
         onOpenChange={nicologModalDc.onOpenChange}
       />
+
+      {!webext.isFirefox && (
+        <SelectCommentFileModal
+          isOpen={fileModalDc.isOpen}
+          onOpenChange={fileModalDc.onOpenChange}
+        />
+      )}
     </>
   )
 }
