@@ -8,6 +8,11 @@ export const LINKS: {
   url?: string
 }[] = [
   {
+    title: 'Discord',
+    label: '参加',
+    url: 'https://u.midra.me/discord-extensions',
+  },
+  {
     title: 'X (Twitter)',
     label: '@Midra429',
     url: 'https://x.com/Midra429',

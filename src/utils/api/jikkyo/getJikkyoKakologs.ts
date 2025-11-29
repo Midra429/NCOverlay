@@ -1,4 +1,4 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 
 import { KAWAII_REGEXP } from '@/constants'

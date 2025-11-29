@@ -1,5 +1,5 @@
 import type { $Values } from 'utility-types'
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { BuildSearchQueryArgs } from '@midra/nco-utils/search/lib/buildSearchQuery'
 import type {
@@ -395,11 +395,11 @@ export class NCOSearcher {
       for (const cmt of commentsNicolog) {
         if (!cmt) continue
 
-        const { data, thread, kawaiiCount } = cmt
+        const { data, threads, commentCount, kawaiiCount } = cmt
 
         loadedSlots.push({
           id: data.id,
-          threads: [thread],
+          threads,
           isAutoLoaded,
         })
 
@@ -408,7 +408,7 @@ export class NCOSearcher {
           status: 'ready',
           info: {
             count: {
-              comment: thread.commentCount,
+              comment: commentCount,
               kawaii: kawaiiCount,
             },
           },

@@ -1,4 +1,4 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
 
 import { KAWAII_REGEXP } from '@/constants'
@@ -61,7 +61,7 @@ export async function getNiconicoComments(
           res_from: -1000,
         }
 
-        const baseThreadsData = await ncoApiProxy.niconico.threads(
+        const baseThreadsData = await ncoApiProxy.niconico.v1.threads(
           videoData.comment,
           additionals
         )
@@ -92,7 +92,7 @@ export async function getNiconicoComments(
         let count = amount - 1
 
         while (0 < count--) {
-          const threadsData = await ncoApiProxy.niconico.threads(
+          const threadsData = await ncoApiProxy.niconico.v1.threads(
             videoData.comment,
             additionals
           )
@@ -117,7 +117,7 @@ export async function getNiconicoComments(
 
         return baseThreadsData
       } else {
-        return ncoApiProxy.niconico.threads(videoData.comment, {
+        return ncoApiProxy.niconico.v1.threads(videoData.comment, {
           when: params[idx].when,
         })
       }
@@ -125,24 +125,26 @@ export async function getNiconicoComments(
   )
 
   return threadsData.map((val, idx) => {
-    if (!val) return null
+    if (val) {
+      const data = videos[idx]!
 
-    const data = videos[idx]!
+      // コメントのNG設定を適用
+      const threads = applyNgSettings(
+        val.threads,
+        extractNgSettings(data.comment.ng)
+      )
 
-    // コメントのNG設定を適用
-    const threads = applyNgSettings(
-      val.threads,
-      extractNgSettings(data.comment.ng)
-    )
+      const kawaiiCount = threads
+        .map((thread) => {
+          return thread.comments.filter((cmt) => {
+            return KAWAII_REGEXP.test(cmt.body)
+          }).length
+        })
+        .reduce((prev, current) => prev + current, 0)
 
-    const kawaiiCount = threads
-      .map((thread) => {
-        return thread.comments.filter((cmt) => {
-          return KAWAII_REGEXP.test(cmt.body)
-        }).length
-      })
-      .reduce((prev, current) => prev + current, 0)
-
-    return { data, threads, kawaiiCount }
+      return { data, threads, kawaiiCount }
+    } else {
+      return null
+    }
   })
 }

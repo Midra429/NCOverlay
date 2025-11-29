@@ -1,4 +1,5 @@
-import type { BaseOptions, V1Thread } from '@xpadev-net/niconicomments'
+import type { BaseOptions } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { StorageItems } from '@/types/storage'
 
 import NiconiComments from '@xpadev-net/niconicomments'

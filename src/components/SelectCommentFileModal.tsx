@@ -1,17 +1,23 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { StateSlotDetailFile } from '@/ncoverlay/state'
 import type { ModalProps } from '@/components/Modal'
-import type { Threads } from '@midra/nco-utils/types/api/niconico/threads'
 
 import { useState, useRef } from 'react'
-import { Button, Textarea } from '@heroui/react'
+import { addToast, Button, Textarea } from '@heroui/react'
 import { ChevronRightIcon, PlusIcon, FileInputIcon } from 'lucide-react'
-import { array, parse } from 'valibot'
-import { legacyApiXmlToV1Thread } from '@midra/nco-utils/api/utils/niconico/legacy'
+import { parseV1Threads } from '@midra/nco-utils/api/utils/niconico/v1/threads'
+import {
+  parseLegacyJson,
+  legacyJsonToV1Threads,
+} from '@midra/nco-utils/api/utils/niconico/legacy/json'
+import {
+  parseLegacyXml,
+  legacyXmlToV1Threads,
+} from '@midra/nco-utils/api/utils/niconico/legacy/xml'
 
-import { ZV1Thread } from '@/schemas/niconico/v1'
 import { KAWAII_REGEXP } from '@/constants'
 
+import { validateJsonString } from '@/utils/validateJsonString'
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
 import { Modal } from './Modal'
@@ -84,29 +90,42 @@ export function SelectCommentFileModal(props: SelectCommentFileModalProps) {
     setFile(file)
     setText(text)
 
-    switch (file?.type) {
-      case 'application/json':
-        try {
-          const json = JSON.parse(text) as Threads
-          const threads = parse(array(ZV1Thread), json.data?.threads)
+    try {
+      switch (file?.type) {
+        case 'application/json':
+          // v1
+          if (validateJsonString(text, { object: true })) {
+            const json = parseV1Threads(text)
+            const { threads } = json.data
 
-          setThreads(threads.length ? threads : null)
-        } catch {
-          setThreads(null)
-        }
+            setThreads(threads)
+          }
+          // legacy
+          else {
+            const json = parseLegacyJson(text)
+            const threads = legacyJsonToV1Threads(json)
 
-        break
+            setThreads(threads)
+          }
 
-      case 'application/xml':
-      case 'text/xml':
-        const thread = legacyApiXmlToV1Thread(text, {
-          id: file.name,
-          fork: 'local',
-        })
+          break
 
-        setThreads(thread ? [thread] : null)
+        case 'application/xml':
+        case 'text/xml':
+          const xml = parseLegacyXml(text)
+          const threads = legacyXmlToV1Threads(xml)
 
-        break
+          setThreads(threads)
+
+          break
+      }
+    } catch {
+      addToast({
+        color: 'danger',
+        title: 'ファイルの解析に失敗しました',
+      })
+
+      setThreads(null)
     }
   }
 

@@ -1,4 +1,4 @@
-import type { V1Comment } from '@xpadev-net/niconicomments'
+import type { V1Comment } from '@midra/nco-utils/types/api/niconico/v1/threads'
 
 interface V1CommentSorted extends V1Comment {
   _postedAtTime: number

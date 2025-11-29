@@ -1,5 +1,8 @@
 import type { DeepPartial } from 'utility-types'
-import type { V1Thread, V1Comment } from '@xpadev-net/niconicomments'
+import type {
+  V1Thread,
+  V1Comment,
+} from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { VodKey } from '@/types/constants'
 import type { StorageOnChangeCallback } from '@/utils/storage'
 import type { NCOSearcherAutoLoadArgs } from './searcher'

@@ -70,7 +70,7 @@ export function NicologSelector({
     ])
 
     if (comment) {
-      const { data, thread, kawaiiCount } = comment
+      const { data, threads, commentCount, kawaiiCount } = comment
 
       await ncoState.update('slotDetails', ['id'], {
         id,
@@ -78,7 +78,7 @@ export function NicologSelector({
         info: {
           date: data.created,
           count: {
-            comment: thread.commentCount,
+            comment: commentCount,
             kawaii: kawaiiCount,
           },
         },
@@ -86,7 +86,7 @@ export function NicologSelector({
 
       await ncoState.add('slots', {
         id,
-        threads: [thread],
+        threads,
       })
     } else {
       await ncoState.update('slotDetails', ['id'], {

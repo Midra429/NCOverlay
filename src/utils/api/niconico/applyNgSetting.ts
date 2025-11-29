@@ -1,4 +1,7 @@
-import type { V1Thread, V1Comment } from '@xpadev-net/niconicomments'
+import type {
+  V1Thread,
+  V1Comment,
+} from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { NgSettingsConverted } from '@/utils/api/niconico/getNgSettings'
 
 export function isNgComment(

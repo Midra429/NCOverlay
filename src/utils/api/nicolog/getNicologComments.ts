@@ -1,4 +1,4 @@
-import type { V1Thread } from '@xpadev-net/niconicomments'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { GetDataFormatted } from '@midra/nco-utils/types/api/nicolog/get'
 
 import { KAWAII_REGEXP } from '@/constants'
@@ -11,7 +11,8 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 export async function getNicologComments(paths: string[]): Promise<
   ({
     data: GetDataFormatted
-    thread: V1Thread
+    threads: V1Thread[]
+    commentCount: number
     kawaiiCount: number
   } | null)[]
 > {
@@ -27,15 +28,23 @@ export async function getNicologComments(paths: string[]): Promise<
     })
   )
 
-  return files.map((thread, idx) => {
-    if (thread) {
+  return files.map((threads, idx) => {
+    if (threads) {
       const data = details[idx]!
 
-      const kawaiiCount = thread.comments.filter((cmt) => {
-        return KAWAII_REGEXP.test(cmt.body)
-      }).length
+      const commentCount = threads.reduce(
+        (prev, current) => prev + current.comments.length,
+        0
+      )
+      const kawaiiCount = threads
+        .map((thread) => {
+          return thread.comments.filter((cmt) => {
+            return KAWAII_REGEXP.test(cmt.body)
+          }).length
+        })
+        .reduce((prev, current) => prev + current, 0)
 
-      return { data, thread, kawaiiCount }
+      return { data, threads, commentCount, kawaiiCount }
     } else {
       return null
     }
