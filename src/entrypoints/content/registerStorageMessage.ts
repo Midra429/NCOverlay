@@ -1,4 +1,5 @@
-import { uid } from '@/utils/uid'
+import { uid } from '@midra/nco-utils/utils/uid'
+
 import { storage } from '@/utils/storage/extension'
 import { storageMessenger } from '@/utils/storage/messaging'
 

@@ -14,10 +14,10 @@ import {
   Tv2Icon,
   XIcon,
 } from 'lucide-react'
+import { zeroPadding } from '@midra/nco-utils/utils/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
 
-import { zeroPadding } from '@/utils/zeroPadding'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { Modal } from '@/components/Modal'

@@ -1,9 +1,9 @@
 import type { UserManifest } from 'wxt'
 
 import { defineConfig } from 'wxt'
+import { uid } from '@midra/nco-utils/utils/uid'
 
 import { GITHUB_URL } from './src/constants'
-import { uid } from './src/utils/uid'
 import { name, displayName, version, description } from './package.json'
 
 const EXT_BUILD_ID = JSON.stringify(uid())

@@ -1,11 +1,11 @@
 import type { Runtime } from 'webextension-polyfill'
 
 import equal from 'fast-deep-equal'
+import { uid } from '@midra/nco-utils/utils/uid'
 
 import { MARKERS } from '@/constants/markers'
 
 import { logger } from '@/utils/logger'
-import { uid } from '@/utils/uid'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
 import { sendUtilsMessage } from '@/utils/extension/messaging'

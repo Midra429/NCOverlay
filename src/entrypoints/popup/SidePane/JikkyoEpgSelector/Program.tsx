@@ -9,10 +9,10 @@ import {
   cn,
 } from '@heroui/react'
 import { darken, saturate, toHex } from 'color2k'
+import { zeroPadding } from '@midra/nco-utils/utils/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
 
-import { zeroPadding } from '@/utils/zeroPadding'
 import { readableColor } from '@/utils/color'
 import { useNcoState } from '@/hooks/useNco'
 

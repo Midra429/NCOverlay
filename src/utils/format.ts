@@ -1,4 +1,4 @@
-import { zeroPadding } from './zeroPadding'
+import { zeroPadding } from '@midra/nco-utils/utils/zeroPadding'
 
 export function formatDuration(seconds: number) {
   const sign = seconds < 0 ? '-' : ''

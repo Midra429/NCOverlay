@@ -4,10 +4,10 @@ import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
 
 import { useState, useRef, useImperativeHandle } from 'react'
 import { Spinner, cn } from '@heroui/react'
+import { zeroPadding } from '@midra/nco-utils/utils/zeroPadding'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 
-import { zeroPadding } from '@/utils/zeroPadding'
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { useNcoState } from '@/hooks/useNco'
