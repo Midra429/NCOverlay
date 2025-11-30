@@ -34,11 +34,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Node.jsをインストール
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-
       - name: Bunをインストール
         uses: oven-sh/setup-bun@v2
 
@@ -49,8 +44,8 @@ jobs:
 
       - name: バージョンを更新
         run: |
-          npm version ${{ github.event.inputs.bump_type }}
-          echo VERSION="v$(cat ./package.json | jq -r '.version')" >> "${GITHUB_ENV}"
+          bunx bumpp ${{ github.event.inputs.bump_type }} --commit "v%s" --yes
+          echo VERSION="$(cat ./package.json | jq -r '.version')" >> "${GITHUB_ENV}"
 
       - name: 拡張機能をビルド
         run: |
@@ -58,17 +53,12 @@ jobs:
           bun run zip
           bun run zip:firefox
 
-      - name: リポジトリへプッシュ
-        run: |
-          git push
-          git push --tags
-
       - name: GitHubへリリース
         run: |
-          gh release create "${VERSION}" \
+          gh release create "v${VERSION}" \
             ./dist/*-chrome.zip \
             ./dist/*-firefox.zip \
-            -t "$(cat ./package.json | jq -r '.displayName') ${VERSION}"
+            -t "$(cat ./package.json | jq -r '.displayName') v${VERSION}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
