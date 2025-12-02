@@ -34,12 +34,12 @@ export type SettingsInputProps<K extends SettingsKey> =
   | (K extends ChSelector.Key ? ChSelector.Props<K> : never)
 
 export const SettingsInput = {
-  'select': Select.Input,
-  'toggle': Toggle.Input,
-  'text': Text.Input,
-  'range': Range.Input,
-  'checkbox': Checkbox.Input,
-  'checkcard': Checkcard.Input,
+  select: Select.Input,
+  toggle: Toggle.Input,
+  text: Text.Input,
+  range: Range.Input,
+  checkbox: Checkbox.Input,
+  checkcard: Checkcard.Input,
   'kbd-shortcut': KbdShortcut.Input,
   'ng-list': NgList.Input,
   'ch-selector': ChSelector.Input,

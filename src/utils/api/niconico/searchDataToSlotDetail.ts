@@ -6,6 +6,9 @@ import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 
 import { deepmerge } from '@/utils/deepmerge'
 
+const ANIME_TAG_REGEXP = /(^|\s)アニメ(\s|$)/
+const SZBH_TAG_REGEXP = /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i
+
 export function searchDataToSlotDetail(
   data: SearchData<
     | 'contentId'
@@ -26,13 +29,9 @@ export function searchDataToSlotDetail(
   const isOfficialAnime = !!(
     data.channelId &&
     data.categoryTags &&
-    /(^|\s)アニメ(\s|$)/.test(data.categoryTags)
+    ANIME_TAG_REGEXP.test(data.categoryTags)
   )
-  const isSzbh = !!(
-    data.userId &&
-    data.tags &&
-    /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i.test(data.tags)
-  )
+  const isSzbh = !!(data.userId && data.tags && SZBH_TAG_REGEXP.test(data.tags))
 
   return deepmerge<StateSlotDetailDefault, any>(
     {

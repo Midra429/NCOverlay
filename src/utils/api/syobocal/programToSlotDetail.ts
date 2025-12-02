@@ -7,8 +7,10 @@ import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikky
 
 import { deepmerge } from '@/utils/deepmerge'
 
+const INT_REGEXP = /^\d+$/
+
 function isInteger(str: string) {
-  return /^\d+$/.test(str)
+  return INT_REGEXP.test(str)
 }
 
 export function programToSlotDetail(

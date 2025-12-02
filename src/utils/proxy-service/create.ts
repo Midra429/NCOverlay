@@ -14,9 +14,8 @@ type DeepAsync<TService> = TService extends (...args: any[]) => any
         [K in keyof TService]: DeepAsync<TService[K]>
       }
     : never
-type ProxyService<TService> = TService extends DeepAsync<TService>
-  ? TService
-  : DeepAsync<TService>
+type ProxyService<TService> =
+  TService extends DeepAsync<TService> ? TService : DeepAsync<TService>
 
 export function createProxy<S extends Service>(
   name: string,

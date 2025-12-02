@@ -1,7 +1,7 @@
 .NCOverlay-Video {
-  aspect-ratio: 16 / 9;
   height: auto !important;
   max-height: 100%;
+  aspect-ratio: 16 / 9;
   margin: auto;
 }
 

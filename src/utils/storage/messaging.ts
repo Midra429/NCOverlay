@@ -13,19 +13,19 @@ import { defineWindowMessaging } from '@webext-core/messaging/page'
 // content (world: MAIN) -> content
 
 interface ProtocolMap {
-  'get': (
+  get: (
     args: Parameters<StorageGetFunction>
   ) => Awaited<ReturnType<StorageGetFunction>>
 
-  'set': (
+  set: (
     args: Parameters<StorageSetFunction>
   ) => Awaited<ReturnType<StorageSetFunction>>
 
-  'remove': (
+  remove: (
     args: Parameters<StorageRemoveFunction>
   ) => Awaited<ReturnType<StorageRemoveFunction>>
 
-  'getBytesInUse': (
+  getBytesInUse: (
     args: Parameters<StorageGetBytesInUseFunction>
   ) => Awaited<ReturnType<StorageGetBytesInUseFunction>>
 

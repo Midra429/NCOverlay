@@ -9,6 +9,8 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 import { searchDataToSlotDetail } from './searchDataToSlotDetail'
 
+const TIMEZONE_SUFFIX_REGEXP = /\[.+\]$/
+
 export async function searchNiconicoByIds(...contentIds: string[]) {
   const useNiconicoCredentials = await settings.get(
     'settings:comment:useNiconicoCredentials'
@@ -49,20 +51,20 @@ export async function searchNiconicoByKeyword(
   const current = now(getLocalTimeZone())
 
   const filters: SearchQueryFilters = {
-    'commentCounter': { gt: 0 },
-    'startTime': options?.dateRange
+    commentCounter: { gt: 0 },
+    startTime: options?.dateRange
       ? {
           gte: options.dateRange[0]
             ? current
                 .add(options.dateRange[0])
                 .toString()
-                .replace(/\[.+\]$/, '')
+                .replace(TIMEZONE_SUFFIX_REGEXP, '')
             : undefined,
           lte: options.dateRange[1]
             ? current
                 .add(options.dateRange[1])
                 .toString()
-                .replace(/\[.+\]$/, '')
+                .replace(TIMEZONE_SUFFIX_REGEXP, '')
             : undefined,
         }
       : undefined,
@@ -70,7 +72,7 @@ export async function searchNiconicoByKeyword(
       options?.genre && options.genre !== '未指定'
         ? [options.genre]
         : undefined,
-    'lengthSeconds': options?.lengthRange
+    lengthSeconds: options?.lengthRange
       ? {
           gte: options.lengthRange[0] ?? undefined,
           lte: options.lengthRange[1] ?? undefined,

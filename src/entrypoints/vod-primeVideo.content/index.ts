@@ -15,10 +15,13 @@ import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
 
-const vod: VodKey = 'primeVideo'
-
+const SEASON_NUM_REGEXP = /(?<=シーズン|Season\s)\d+/
+const SEASON_NUM_VAGUE_REGEXP = /(?<=[^\d]+)[2-9]$/
+const EP_NUM_REGEXP = /(?<=エピソード|Ep\.)\d+/
 const SEASON_EP_REGEXP =
   /^(?:シーズン\d+、エピソード\d+|Season\s\d+,\sEp\.\d+)\s?/
+
+const vod: VodKey = 'primeVideo'
 
 export default defineContentScript({
   matches: MATCHES[vod],
@@ -60,17 +63,15 @@ async function main() {
       let subtitle = subtitleElem?.lastChild?.textContent
 
       const seasonNum = Number(
-        season_episode?.match(/(?<=シーズン|Season\s)\d+/)?.[0] ?? -1
+        season_episode?.match(SEASON_NUM_REGEXP)?.[0] ?? -1
       )
-      const episodeNum = Number(
-        season_episode?.match(/(?<=エピソード|Ep\.)\d+/)?.[0] ?? -1
-      )
+      const episodeNum = Number(season_episode?.match(EP_NUM_REGEXP)?.[0] ?? -1)
 
       season_episode = season_episode?.replace(SEASON_EP_REGEXP, '')
       subtitle = subtitle?.replace(SEASON_EP_REGEXP, '')
 
       const seasonNumVague = Number(
-        normalize(title ?? '').match(/(?<=[^\d]+)[2-9]$/)?.[0] ?? -1
+        normalize(title ?? '').match(SEASON_NUM_VAGUE_REGEXP)?.[0] ?? -1
       )
 
       const parsedSubtitle = parse(`タイトル ${subtitle}`)

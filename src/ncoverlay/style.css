@@ -3,8 +3,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
   pointer-events: none;
+  object-fit: contain;
 }
 
 :root:has([nco-fullscreen]) {
@@ -15,13 +15,13 @@
   position: fixed !important;
   inset: 0 !important;
   z-index: 10000 !important;
+  box-sizing: border-box !important;
   width: 100% !important;
-  height: 100% !important;
   min-width: 0 !important;
-  min-height: 0 !important;
   max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
   max-height: none !important;
   margin: 0 !important;
-  box-sizing: border-box !important;
   transform: none !important;
 }

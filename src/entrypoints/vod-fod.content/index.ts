@@ -14,6 +14,8 @@ import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
 
+const TRAILING_SLASH_REGEXP = /\/$/
+
 const vod: VodKey = 'fod'
 
 export default defineContentScript({
@@ -30,7 +32,10 @@ async function main() {
   const patcher = new NCOPatcher({
     vod,
     getInfo: async (nco) => {
-      const id = location.pathname.replace(/\/$/, '').split('/').at(-1)
+      const id = location.pathname
+        .replace(TRAILING_SLASH_REGEXP, '')
+        .split('/')
+        .at(-1)
       const token = getCookie('CT')
 
       if (!id || !token) {

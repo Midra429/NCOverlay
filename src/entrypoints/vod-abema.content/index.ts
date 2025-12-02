@@ -14,6 +14,10 @@ import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
 
+const EP_PATH_REGEXP = /^\/video\/episode\/.+$/
+const SLOT_PATH_REGEXP = /^\/channels\/[^\/]+\/slots\/.+$/
+const EP_TITLE_LAST_REGEXP = /^最終(?:回|話)(?=\s)/
+
 const vod: VodKey = 'abema'
 
 export default defineContentScript({
@@ -32,9 +36,9 @@ async function main() {
 
     const { pathname } = location
 
-    if (/^\/video\/episode\/.+$/.test(pathname)) {
+    if (EP_PATH_REGEXP.test(pathname)) {
       programId = pathname.split('/').at(-1)
-    } else if (/^\/channels\/[^\/]+\/slots\/.+$/.test(pathname)) {
+    } else if (SLOT_PATH_REGEXP.test(pathname)) {
       const id = pathname.split('/').at(-1)
       const token = localStorage.getItem('abm_token')
 
@@ -91,7 +95,7 @@ async function main() {
 
       if (workTitle !== program.episode.title) {
         episodeTitle = program.episode.title.replace(
-          /^最終(?:回|話)(?=\s)/,
+          EP_TITLE_LAST_REGEXP,
           `第${program.episode.number}話`
         )
       }
@@ -130,10 +134,7 @@ async function main() {
     } else {
       const { pathname } = location
 
-      if (
-        /^\/video\/episode\/.+$/.test(pathname) ||
-        /^\/channels\/[^\/]+\/slots\/.+$/.test(pathname)
-      ) {
+      if (EP_PATH_REGEXP.test(pathname) || SLOT_PATH_REGEXP.test(pathname)) {
         const video = document.body.querySelector<HTMLVideoElement>(
           '.com-a-Video__video > video[preload][src]'
         )

@@ -13,6 +13,8 @@ import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
 
+const EP_TITLE_LAST_REGEXP = /最終(?:回|話)/
+
 const vod: VodKey = 'dAnime'
 
 export default defineContentScript({
@@ -48,7 +50,7 @@ async function main() {
       if (partData.partDispNumber === '本編') {
         episodeText = ''
       } else if (
-        /最終(?:回|話)/.test(partData.partDispNumber) &&
+        EP_TITLE_LAST_REGEXP.test(partData.partDispNumber) &&
         partData.prevTitle
       ) {
         const parsed = parse(partData.prevTitle)

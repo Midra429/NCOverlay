@@ -9,8 +9,8 @@
 
 [nco-fullscreen] {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   background-color: #000;
 
   > div[class^="player_aspectRatioWrapper__"] {
