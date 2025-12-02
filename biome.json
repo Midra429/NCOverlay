@@ -1,17 +1,23 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+
+  "files": {
+    "includes": ["**", "!dist/**/*", "!node_modules/**/*"]
+  },
+
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
-  "files": {
-    "includes": ["**", "!!**/dist"]
-  },
+
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": false,
+      "performance": {
+        "useTopLevelRegex": "on"
+      },
       "nursery": {
         "useSortedClasses": {
           "fix": "safe",
@@ -24,9 +30,17 @@
       }
     }
   },
+
   "assist": {
-    "enabled": false
+    "enabled": true,
+    "actions": {
+      "recommended": false,
+      "source": {
+        "useSortedProperties": "on"
+      }
+    }
   },
+
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -38,31 +52,33 @@
     "bracketSameLine": false,
     "bracketSpacing": true,
     "expand": "auto",
-    "useEditorconfig": true,
-    "includes": ["**", "!dist/**/*", "!node_modules/**/*"]
+    "useEditorconfig": true
   },
-  "html": {
-    "formatter": {
-      "indentScriptAndStyle": false,
-      "selfCloseVoidElements": "always"
-    }
-  },
-  "css": {
-    "parser": {
-      "tailwindDirectives": true
-    }
-  },
+
   "javascript": {
     "formatter": {
+      "quoteStyle": "single",
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
       "trailingCommas": "es5",
       "semicolons": "asNeeded",
       "arrowParentheses": "always",
       "bracketSameLine": false,
-      "quoteStyle": "single",
-      "attributePosition": "auto",
-      "bracketSpacing": true
+      "bracketSpacing": true,
+      "attributePosition": "auto"
+    }
+  },
+
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+
+  "html": {
+    "formatter": {
+      "indentScriptAndStyle": false,
+      "selfCloseVoidElements": "always"
     }
   }
 }
