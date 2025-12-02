@@ -8,19 +8,22 @@
   "type": "module",
   "scripts": {
     "pre": "wxt prepare",
-    "dev": "wxt",
+    "dev:chrome": "wxt -b chrome",
     "dev:firefox": "wxt -b firefox",
-    "build": "wxt build",
+    "build": "conc bun:build:*",
+    "build:chrome": "wxt build -b chrome",
     "build:firefox": "wxt build -b firefox",
-    "zip": "wxt zip",
+    "zip": "conc bun:zip:*",
+    "zip:chrome": "wxt zip -b chrome",
     "zip:firefox": "wxt zip -b firefox",
-    "compile": "tsc --noEmit --skipLibCheck"
+    "compile": "tsc --noEmit --skipLibCheck",
+    "check": "bun biome check --write"
   },
   "dependencies": {
     "@heroui/react": "2.8.5",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@internationalized/date": "^3.10.0",
-    "@midra/nco-utils": "1.0.2",
+    "@midra/nco-utils": "1.0.3",
     "@webext-core/messaging": "^2.3.0",
     "@wxt-dev/webextension-polyfill": "^1.0.0",
     "@xpadev-net/niconicomments": "^0.2.76",
@@ -37,7 +40,7 @@
     "react-detectable-overflow": "^0.8.0",
     "react-dom": "^19.2.0",
     "react-hotkeys-hook": "^5.2.1",
-    "react-virtuoso": "^4.15.0",
+    "react-virtuoso": "^4.16.1",
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
@@ -52,6 +55,7 @@
     "@wxt-dev/module-react": "^1.1.5",
     "babel-plugin-react-compiler": "^1.0.0",
     "clsx": "^2.1.1",
+    "concurrently": "^9.2.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
