@@ -92,7 +92,9 @@ export function findAssistedCommentIds(comments: V1Comment[]): string[] {
     userCounts[userId]++
   }
 
-  return sameCommentGroups.flatMap<string>(([base, ...targets]) => {
+  const results: string[] = []
+
+  for (const [base, ...targets] of sameCommentGroups) {
     // 文字の長さ
     const wordCount = base.body.length
     const wordScore =
@@ -111,17 +113,18 @@ export function findAssistedCommentIds(comments: V1Comment[]): string[] {
       (3 <= commentCount && 1) ||
       0
 
-    if (!wordScore && !commentScore) return []
+    if (!wordScore && !commentScore) continue
 
-    return targets.flatMap<string>(({ id, userId }) => {
+    for (const { id, userId } of targets) {
       // ユーザーが同じコメントをした回数
       const userCount = userCounts[userId]
-
       const scoreThreshold = 5 - Math.min(userCount, 4)
 
-      return scoreThreshold <= wordScore && scoreThreshold <= commentScore
-        ? id
-        : []
-    })
-  })
+      if (scoreThreshold <= wordScore && scoreThreshold <= commentScore) {
+        results.push(id)
+      }
+    }
+  }
+
+  return results
 }

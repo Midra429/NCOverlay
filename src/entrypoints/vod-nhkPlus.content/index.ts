@@ -7,12 +7,15 @@ import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
+import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
+
+const GTV_ID_REGEXP = /^g\d_/
+const ETV_ID_REGEXP = /^e\d_/
 
 const vod: VodKey = 'nhkPlus'
 
@@ -38,8 +41,8 @@ async function main() {
       streamId = location.pathname.split('/').at(-1) ?? null
 
       jkChId =
-        (streamId?.match(/^g\d_/) && 'jk1') ||
-        (streamId?.match(/^e\d_/) && 'jk2') ||
+        (streamId?.match(GTV_ID_REGEXP) && 'jk1') ||
+        (streamId?.match(ETV_ID_REGEXP) && 'jk2') ||
         null
 
       if (!streamId || !jkChId) {
@@ -97,9 +100,7 @@ async function main() {
         },
       })
 
-      const [comment] = await getJikkyoKakologs([
-        { jkChId, starttime, endtime },
-      ])
+      const comment = await getJikkyoKakolog({ jkChId, starttime, endtime })
 
       if (comment) {
         const { thread, markers, kawaiiCount } = comment

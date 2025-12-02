@@ -15,7 +15,7 @@ import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
 
 import { formatDate } from '@/utils/format'
-import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
+import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
 
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
@@ -135,13 +135,11 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
 
     const { id } = slotDetail
 
-    const [comment] = await getJikkyoKakologs([
-      {
-        jkChId: jkChId!,
-        starttime: startDateTime.toDate().getTime() / 1000,
-        endtime: endDateTime.toDate().getTime() / 1000,
-      },
-    ])
+    const comment = await getJikkyoKakolog({
+      jkChId,
+      starttime: startDateTime.toDate().getTime() / 1000,
+      endtime: endDateTime.toDate().getTime() / 1000,
+    })
 
     if (comment) {
       const { thread, markers, kawaiiCount } = comment

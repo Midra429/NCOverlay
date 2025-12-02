@@ -6,7 +6,7 @@ import { MATCHES } from '@/constants/matches'
 
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
+import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { videoDataToSlotDetail } from '@/utils/api/niconico/videoDataToSlotDetail'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
@@ -66,10 +66,14 @@ async function main() {
         })
       )
 
-      const [comment] = await getNiconicoComments([videoData])
+      const comment = await getNiconicoComment(videoData)
 
       if (comment) {
-        const { data, threads, kawaiiCount } = comment
+        const {
+          videoData: { video },
+          threads,
+          kawaiiCount,
+        } = comment
 
         await nco.state.update('slotDetails', ['id'], {
           id,
@@ -83,8 +87,8 @@ async function main() {
 
         await nco.state.add('slots', { id, threads })
 
-        const input = data.video.title
-        const duration = data.video.duration
+        const input = video.title
+        const duration = video.duration
 
         logger.log('input', input)
         logger.log('duration', duration)

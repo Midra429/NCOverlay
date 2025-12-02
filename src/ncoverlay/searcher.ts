@@ -17,13 +17,26 @@ import { jikkyoToSyobocalChId } from '@midra/nco-utils/api/utils/jikkyoToSyoboca
 import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikkyoChId'
 
 import { logger } from '@/utils/logger'
-import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
-import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
-import { getNicologComments } from '@/utils/api/nicolog/getNicologComments'
+import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
+import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
+import { getNicologComment } from '@/utils/api/nicolog/getNicologComment'
 import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDetail'
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
 import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
+
+const loadingSlotDetailsTemplate: Record<
+  StateSlotDetail['type'],
+  Map<string, StateSlotDetail>
+> = {
+  normal: new Map(),
+  official: new Map(),
+  danime: new Map(),
+  chapter: new Map(),
+  szbh: new Map(),
+  jikkyo: new Map(),
+  file: new Map(),
+}
 
 export interface NCOSearcherAutoLoadArgs
   extends Omit<BuildSearchQueryArgs, 'userAgent'> {
@@ -60,8 +73,8 @@ export class NCOSearcher {
       .filter((v) => v !== null)
 
     // 読み込み済みのスロットID
-    const loadedIds =
-      (await this.#state.get('slotDetails'))?.map((v) => v.id) ?? []
+    const slotDetails = await this.#state.get('slotDetails')
+    const loadedIds = slotDetails?.map((v) => v.id) ?? []
 
     const [searchResults, searchSyobocalResults, searchNicologResult] =
       await Promise.all([
@@ -88,18 +101,16 @@ export class NCOSearcher {
 
     const currentTime = Date.now()
 
-    const syobocalPrograms =
-      searchSyobocalResults &&
-      searchSyobocalResults.programs.filter(
-        (val) => new Date(val.EdTime).getTime() < currentTime
-      )
+    const syobocalPrograms = searchSyobocalResults?.programs.filter(
+      (val) => new Date(val.EdTime).getTime() < currentTime
+    )
 
     logger.log('searchResults', searchResults)
     logger.log('searchSyobocalResults', searchSyobocalResults)
     logger.log('searchNicologResult', searchNicologResult)
 
     // ロード中のデータ
-    const loadingSlotDetails: StateSlotDetail[] = []
+    const loadingSlotDetails = structuredClone(loadingSlotDetailsTemplate)
 
     // ニコニコ動画
     if (searchResults) {
@@ -123,14 +134,14 @@ export class NCOSearcher {
             }
           }
 
-          loadingSlotDetails.push(
-            searchDataToSlotDetail(result, {
-              type: type as StateSlotDetailDefault['type'],
-              status: 'loading',
-              offsetMs,
-              isAutoLoaded,
-            })
-          )
+          const slotDetail = searchDataToSlotDetail(result, {
+            type,
+            status: 'loading',
+            offsetMs,
+            isAutoLoaded,
+          })
+
+          loadingSlotDetails[slotDetail.type].set(slotDetail.id, slotDetail)
         }
       }
 
@@ -141,7 +152,7 @@ export class NCOSearcher {
     }
 
     // ニコニコ実況 過去ログ
-    if (syobocalPrograms) {
+    if (searchSyobocalResults && syobocalPrograms?.length) {
       const slotTitle = [
         searchSyobocalResults.title.Title,
         `#${syobocalPrograms[0].Count}`,
@@ -159,32 +170,37 @@ export class NCOSearcher {
 
         if (loadedIds.includes(id)) continue
 
-        loadingSlotDetails.push(
-          programToSlotDetail(slotTitle, program, {
-            status: 'loading',
-            isAutoLoaded,
-          })
-        )
+        const slotDetail = programToSlotDetail(slotTitle, program, {
+          status: 'loading',
+          isAutoLoaded,
+        })
+
+        loadingSlotDetails[slotDetail.type].set(slotDetail.id, slotDetail)
       }
     }
 
     // nicolog
     if (searchNicologResult) {
-      loadingSlotDetails.push(
-        detailToSlotDetail(searchNicologResult, {
-          status: 'loading',
-          isAutoLoaded,
-        })
-      )
+      const slotDetail = detailToSlotDetail(searchNicologResult, {
+        status: 'loading',
+        isAutoLoaded,
+      })
+
+      loadingSlotDetails[slotDetail.type].set(slotDetail.id, slotDetail)
     }
 
-    await this.#state.add('slotDetails', ...loadingSlotDetails)
+    const loadingSlotDetailsArray = Object.values(loadingSlotDetails).flatMap(
+      (v) => v.values().toArray()
+    )
+
+    await this.#state.add('slotDetails', ...loadingSlotDetailsArray)
 
     // コメント取得
     await this.#state.set('status', 'loading')
 
-    const jikkyoIds = loadingSlotDetails
-      .filter((v) => v.type === 'jikkyo')
+    const jikkyoIds = loadingSlotDetails.jikkyo
+      .values()
+      .toArray()
       .map((v) => v.id)
 
     const scPrograms = syobocalPrograms?.filter((program) => {
@@ -205,41 +221,37 @@ export class NCOSearcher {
       commentsNicolog,
     ] = await Promise.all([
       // ニコニコ動画 コメント 取得
-      getNiconicoComments(
-        loadingSlotDetails
-          .filter((v) => v.type === 'official')
-          .map((v) => ({ contentId: v.id }))
+      Promise.all(
+        loadingSlotDetails.official
+          .values()
+          .map((v) => getNiconicoComment(v.id))
       ),
-      getNiconicoComments(
-        loadingSlotDetails
-          .filter((v) => v.type === 'danime')
-          .map((v) => ({ contentId: v.id }))
+      Promise.all(
+        loadingSlotDetails.danime.values().map((v) => getNiconicoComment(v.id))
       ),
-      getNiconicoComments(
-        searchResults.chapter.map((v) => ({ contentId: v.contentId }))
+      Promise.all(
+        searchResults.chapter.map((v) => getNiconicoComment(v.contentId))
       ),
-      getNiconicoComments(
-        loadingSlotDetails
-          .filter((v) => v.type === 'szbh')
-          .map((v) => ({ contentId: v.id }))
+      Promise.all(
+        loadingSlotDetails.szbh.values().map((v) => getNiconicoComment(v.id))
       ),
 
       // ニコニコ実況 過去ログ 取得
-      scPrograms
-        ? getJikkyoKakologs(
-            scPrograms.map((val) => ({
-              jkChId: syobocalToJikkyoChId(val.ChID)!,
-              starttime: new Date(val.StTime).getTime() / 1000,
-              endtime: new Date(val.EdTime).getTime() / 1000,
-            }))
-          )
-        : null,
+      Promise.all(
+        scPrograms?.map((val) => {
+          return getJikkyoKakolog({
+            jkChId: syobocalToJikkyoChId(val.ChID)!,
+            starttime: new Date(val.StTime).getTime() / 1000,
+            endtime: new Date(val.EdTime).getTime() / 1000,
+          })
+        }) ?? []
+      ),
 
       // nicolog 取得
-      getNicologComments(
-        loadingSlotDetails
-          .filter((v) => v.type === 'file')
-          .map((v) => `${NICO_LIVE_ANIME_ROOT}/${v.id}`)
+      Promise.all(
+        loadingSlotDetails.file
+          .values()
+          .map((v) => getNicologComment(`${NICO_LIVE_ANIME_ROOT}/${v.id}`))
       ),
     ])
 
@@ -250,19 +262,17 @@ export class NCOSearcher {
     logger.log('commentsJikkyo', commentsJikkyo)
     logger.log('commentsNicolog', commentsNicolog)
 
-    const loadedSlots: StateSlot[] = []
-    const updateSlotDetails: StateSlotDetailUpdate[] = []
+    const loadedSlotMap = new Map<string, StateSlot>()
+    const updateSlotDetailMap = new Map<string, StateSlotDetailUpdate>()
 
     // 公式, dアニメ, コメント専用
-    if (
-      commentsOfficial.length ||
-      commentsDAnime.length ||
-      commentsSzbh.length
-    ) {
+    if (commentsOfficial || commentsDAnime || commentsSzbh) {
       function addLoadedSlots(
         results: $Values<typeof searchResults>,
-        comments: Awaited<ReturnType<typeof getNiconicoComments>>
+        comments: Awaited<ReturnType<typeof getNiconicoComment>>[]
       ) {
+        if (!comments) return
+
         const len = comments.length
 
         for (let i = 0; i < len; i++) {
@@ -272,23 +282,27 @@ export class NCOSearcher {
           if (!cmt) continue
 
           const id = result.contentId
-          const { data, threads, kawaiiCount } = cmt
+          const {
+            videoData: { video },
+            threads,
+            kawaiiCount,
+          } = cmt
 
-          loadedSlots.push({ id, threads, isAutoLoaded })
+          loadedSlotMap.set(id, { id, threads, isAutoLoaded })
 
-          updateSlotDetails.push({
+          updateSlotDetailMap.set(id, {
             id,
             status: 'ready',
             info: {
               count: {
-                view: data.video.count.view,
-                comment: data.video.count.comment,
+                view: video.count.view,
+                comment: video.count.comment,
                 kawaii: kawaiiCount,
               },
               thumbnail:
-                data.video.thumbnail.largeUrl ||
-                data.video.thumbnail.middleUrl ||
-                data.video.thumbnail.url,
+                video.thumbnail.largeUrl ||
+                video.thumbnail.middleUrl ||
+                video.thumbnail.url,
             },
           })
         }
@@ -300,16 +314,13 @@ export class NCOSearcher {
     }
 
     // dアニメ(分割)
-    if (
-      commentsChapter.length &&
-      commentsChapter.every((_, idx, ary) => ary.at(idx - 1))
-    ) {
+    if (commentsChapter.length && commentsChapter.every((v) => v)) {
       const result = searchResults!.chapter[0]
       const id = result.contentId
-      const data = commentsChapter[0]!.data
+      const { video } = commentsChapter[0]!.videoData
 
-      const matchSplit = result.title.match(REGEXP_DANIME_CHAPTER)
-      const title = matchSplit!.groups!.title.trim()
+      const { groups } = result.title.match(REGEXP_DANIME_CHAPTER)!
+      const title = groups!.title.trim()
       const chapterTitle = `${title} Chapter.1 〜 ${commentsChapter.length}`
 
       let tmpOffset = 0
@@ -320,7 +331,11 @@ export class NCOSearcher {
       let mergedThreads: V1Thread[] = []
 
       for (const comment of commentsChapter) {
-        const { data, threads, kawaiiCount } = comment!
+        const {
+          videoData: { video },
+          threads,
+          kawaiiCount,
+        } = comment!
 
         if (tmpOffset) {
           for (const thread of threads) {
@@ -330,21 +345,21 @@ export class NCOSearcher {
           }
         }
 
-        tmpOffset += data.video.duration * 1000
-        totalDuration += data.video.duration
-        totalCountView += data.video.count.view
-        totalCountComment += data.video.count.comment
+        tmpOffset += video.duration * 1000
+        totalDuration += video.duration
+        totalCountView += video.count.view
+        totalCountComment += video.count.comment
         totalCountKawaii += kawaiiCount
         mergedThreads.push(...threads)
       }
 
-      loadedSlots.push({
+      loadedSlotMap.set(id, {
         id,
         threads: mergedThreads,
         isAutoLoaded,
       })
 
-      updateSlotDetails.push({
+      updateSlotDetailMap.set(id, {
         id,
         status: 'ready',
         info: {
@@ -356,71 +371,73 @@ export class NCOSearcher {
             kawaii: totalCountKawaii,
           },
           thumbnail:
-            data.video.thumbnail.largeUrl ||
-            data.video.thumbnail.middleUrl ||
-            data.video.thumbnail.url,
+            video.thumbnail.largeUrl ||
+            video.thumbnail.middleUrl ||
+            video.thumbnail.url,
         },
       })
     }
 
     // ニコニコ実況
-    if (commentsJikkyo) {
-      for (const cmt of commentsJikkyo) {
-        if (!cmt) continue
+    for (const cmt of commentsJikkyo) {
+      if (!cmt) continue
 
-        const { thread, markers, kawaiiCount } = cmt
+      const { thread, markers, kawaiiCount } = cmt
+      const id = thread.id
 
-        loadedSlots.push({
-          id: thread.id as string,
-          threads: [thread],
-          isAutoLoaded,
-        })
+      loadedSlotMap.set(id, {
+        id,
+        threads: [thread],
+        isAutoLoaded,
+      })
 
-        updateSlotDetails.push({
-          id: thread.id as string,
-          status: 'ready',
-          markers,
-          info: {
-            count: {
-              comment: thread.commentCount,
-              kawaii: kawaiiCount,
-            },
+      updateSlotDetailMap.set(id, {
+        id,
+        status: 'ready',
+        markers,
+        info: {
+          count: {
+            comment: thread.commentCount,
+            kawaii: kawaiiCount,
           },
-        })
-      }
+        },
+      })
     }
 
     // nicolog
-    if (commentsNicolog) {
-      for (const cmt of commentsNicolog) {
-        if (!cmt) continue
+    for (const cmt of commentsNicolog) {
+      if (!cmt) continue
 
-        const { data, threads, commentCount, kawaiiCount } = cmt
+      const {
+        detail: { id },
+        threads,
+        commentCount,
+        kawaiiCount,
+      } = cmt
 
-        loadedSlots.push({
-          id: data.id,
-          threads,
-          isAutoLoaded,
-        })
+      loadedSlotMap.set(id, {
+        id,
+        threads,
+        isAutoLoaded,
+      })
 
-        updateSlotDetails.push({
-          id: data.id,
-          status: 'ready',
-          info: {
-            count: {
-              comment: commentCount,
-              kawaii: kawaiiCount,
-            },
+      updateSlotDetailMap.set(id, {
+        id,
+        status: 'ready',
+        info: {
+          count: {
+            comment: commentCount,
+            kawaii: kawaiiCount,
           },
-        })
-      }
+        },
+      })
     }
 
     const slots: StateSlot[] = []
 
-    for (const { id } of loadingSlotDetails) {
-      const slot = loadedSlots.find((v) => v.id === id)
-      const detail = updateSlotDetails.find((v) => v.id === id)
+    for (const { id } of loadingSlotDetailsArray) {
+      const slot = loadedSlotMap.get(id)
+      const detail = updateSlotDetailMap.get(id)
 
       if (slot && detail) {
         slots.push(slot)

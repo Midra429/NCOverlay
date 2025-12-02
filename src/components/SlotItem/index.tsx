@@ -9,8 +9,8 @@ import type { PanelItemProps } from '@/components/PanelItem'
 import { useState } from 'react'
 import { cn } from '@heroui/react'
 
-import { getNiconicoComments } from '@/utils/api/niconico/getNiconicoComments'
-import { getJikkyoKakologs } from '@/utils/api/jikkyo/getJikkyoKakologs'
+import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
+import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
 
 import { ncoState } from '@/hooks/useNco'
 
@@ -71,13 +71,11 @@ export function SlotItem({
       let slot: StateSlot | undefined
 
       if (type === 'jikkyo') {
-        const [comment] = await getJikkyoKakologs([
-          {
-            jkChId: id.split(':')[0] as JikkyoChannelId,
-            starttime: info.date[0] / 1000,
-            endtime: info.date[1] / 1000,
-          },
-        ])
+        const comment = await getJikkyoKakolog({
+          jkChId: id.split(':')[0] as JikkyoChannelId,
+          starttime: info.date[0] / 1000,
+          endtime: info.date[1] / 1000,
+        })
 
         if (comment) {
           const { thread, markers, kawaiiCount } = comment
@@ -97,24 +95,28 @@ export function SlotItem({
           slot = { id, threads: [thread] }
         }
       } else {
-        const [comment] = await getNiconicoComments([{ contentId: id }])
+        const comment = await getNiconicoComment(id)
 
         if (comment) {
-          const { data, threads, kawaiiCount } = comment
+          const {
+            videoData: { video },
+            threads,
+            kawaiiCount,
+          } = comment
 
           slotDetail = {
             id,
             status: 'ready',
             info: {
               count: {
-                view: data.video.count.view,
-                comment: data.video.count.comment,
+                view: video.count.view,
+                comment: video.count.comment,
                 kawaii: kawaiiCount,
               },
               thumbnail:
-                data.video.thumbnail.largeUrl ||
-                data.video.thumbnail.middleUrl ||
-                data.video.thumbnail.url,
+                video.thumbnail.largeUrl ||
+                video.thumbnail.middleUrl ||
+                video.thumbnail.url,
             },
           }
 

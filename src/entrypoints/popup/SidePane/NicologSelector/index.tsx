@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ChevronRightIcon, PlusIcon } from 'lucide-react'
 import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog'
 
-import { getNicologComments } from '@/utils/api/nicolog/getNicologComments'
+import { getNicologComment } from '@/utils/api/nicolog/getNicologComment'
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
 import { Modal } from '@/components/Modal'
@@ -65,18 +65,16 @@ export function NicologSelector({
 
     const { id } = slotDetail
 
-    const [comment] = await getNicologComments([
-      `${NICO_LIVE_ANIME_ROOT}/${id}`,
-    ])
+    const comment = await getNicologComment(`${NICO_LIVE_ANIME_ROOT}/${id}`)
 
     if (comment) {
-      const { data, threads, commentCount, kawaiiCount } = comment
+      const { detail, threads, commentCount, kawaiiCount } = comment
 
       await ncoState.update('slotDetails', ['id'], {
         id,
         status: 'ready',
         info: {
-          date: data.created,
+          date: detail.created,
           count: {
             comment: commentCount,
             kawaii: kawaiiCount,
