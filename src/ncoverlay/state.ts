@@ -174,9 +174,12 @@ export async function filterDisplayThreads(
       if (threadMap.has(key)) continue
 
       // コメントアシストと予想されるコメント
-      const assistedCommentIds = hideAssistedComments
-        ? findAssistedCommentIds(thread.comments)
-        : null
+      const assistedCommentIds =
+        hideAssistedComments &&
+        detail.type !== 'jikkyo' &&
+        (detail.type !== 'file' || detail.info.source !== 'nicolog')
+          ? findAssistedCommentIds(thread.comments)
+          : null
 
       cmtCnt += thread.comments.length
       assistedCmtCnt += assistedCommentIds?.length ?? 0
