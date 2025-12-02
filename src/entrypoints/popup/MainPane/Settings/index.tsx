@@ -13,7 +13,6 @@ import {
   InfoIcon,
   DatabaseIcon,
   CircleEllipsisIcon,
-  ClipboardListIcon,
   RotateCcwIcon,
   Trash2Icon,
 } from 'lucide-react'

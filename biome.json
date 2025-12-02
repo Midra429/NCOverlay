@@ -18,6 +18,13 @@
       "performance": {
         "useTopLevelRegex": "on"
       },
+      "correctness": {
+        "noUnusedFunctionParameters": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedLabels": "warn",
+        "noUnusedPrivateClassMembers": "warn",
+        "noUnusedVariables": "warn"
+      },
       "nursery": {
         "useSortedClasses": {
           "fix": "safe",

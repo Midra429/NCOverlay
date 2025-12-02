@@ -1,7 +1,4 @@
-import type {
-  DataComment,
-  NvComment,
-} from '@midra/nco-utils/types/api/niconico/video'
+import type { DataComment } from '@midra/nco-utils/types/api/niconico/video'
 
 export function filterNvComment(comment: DataComment) {
   // 除外

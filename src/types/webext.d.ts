@@ -1,4 +1,4 @@
-import {} from 'webextension-polyfill'
+import 'webextension-polyfill'
 
 declare module 'webextension-polyfill' {
   namespace Manifest {
