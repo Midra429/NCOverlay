@@ -29,6 +29,7 @@ export function videoDataToSlotDetail(
       status: 'pending',
       info: {
         id: data.video.id,
+        source: 'niconico',
         title: data.video.title,
         duration: data.video.duration,
         date: new Date(data.video.registeredAt).getTime(),

@@ -5,7 +5,9 @@ import type {
 } from '@midra/nco-utils/types/api/constants'
 import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search'
 import type { VodKey, PluginKey } from '@/types/constants'
-import type { NCOStateItems } from '@/ncoverlay/state'
+import type { NCOStateItems, StateSlotDetail } from '@/ncoverlay/state'
+
+export type AutoLoadTarget = Exclude<StateSlotDetail['type'], 'normal' | 'file'>
 
 export interface NgSettingsContent {
   content: string
@@ -124,14 +126,7 @@ export interface SettingItems {
    * 自動検索:検索対象
    * @default true
    */
-  'settings:comment:autoLoads': (
-    | 'official'
-    | 'danime'
-    | 'chapter'
-    | 'szbh'
-    | 'jikkyo'
-    | 'nicolog'
-  )[]
+  'settings:comment:autoLoads': AutoLoadTarget[]
 
   /**
    * 自動検索:実況チャンネル

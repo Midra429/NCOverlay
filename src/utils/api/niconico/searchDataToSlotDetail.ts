@@ -44,6 +44,7 @@ export function searchDataToSlotDetail(
       status: 'pending',
       info: {
         id: data.contentId,
+        source: 'niconico',
         title: data.title,
         duration: data.lengthSeconds,
         date: new Date(data.startTime).getTime(),

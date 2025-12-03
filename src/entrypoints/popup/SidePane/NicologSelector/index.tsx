@@ -1,4 +1,4 @@
-import type { StateSlotDetailFile } from '@/ncoverlay/state'
+import type { StateSlotDetailNicolog } from '@/ncoverlay/state'
 
 import { useState } from 'react'
 import { ChevronRightIcon, PlusIcon } from 'lucide-react'
@@ -12,9 +12,9 @@ import { Modal } from '@/components/Modal'
 import { Directories } from './Directories'
 import { Files } from './Files'
 
-function createSlotDetailFile(path: string): StateSlotDetailFile {
+function createSlotDetailFile(path: string): StateSlotDetailNicolog {
   return {
-    type: 'file',
+    type: 'nicolog',
     id: path,
     status: 'pending',
     info: {

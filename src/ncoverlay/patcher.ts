@@ -90,17 +90,15 @@ export class NCOPatcher {
           }
         }
 
-        const autoLoads = await settings.get('settings:comment:autoLoads')
+        const [autoLoads, jikkyoChannelIds] = await settings.get(
+          'settings:comment:autoLoads',
+          'settings:comment:jikkyoChannelIds'
+        )
 
         const args: NCOSearcherAutoLoadArgs = {
           input: parsed ?? '',
           duration: info ? Math.floor(info.duration) : 0,
-          targets: {
-            official: autoLoads.includes('official'),
-            danime: autoLoads.includes('danime'),
-            chapter: autoLoads.includes('chapter'),
-            szbh: autoLoads.includes('szbh'),
-          },
+          targets: autoLoads,
         }
 
         const stateInfo = { ...args }
@@ -113,11 +111,7 @@ export class NCOPatcher {
 
         // 自動検索
         if (autoLoads.length && args.input && args.duration) {
-          args.jikkyo = autoLoads.includes('jikkyo')
-          args.jikkyoChannelIds = await settings.get(
-            'settings:comment:jikkyoChannelIds'
-          )
-          args.nicolog = autoLoads.includes('nicolog')
+          args.jikkyoChannelIds = jikkyoChannelIds
 
           if (this.#autoLoad) {
             await this.#autoLoad(this.#nco, args)

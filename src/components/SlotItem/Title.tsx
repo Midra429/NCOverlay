@@ -1,8 +1,4 @@
-import type {
-  StateSlotDetail,
-  StateSlotDetailJikkyo,
-  StateSlotDetailFile,
-} from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { Link, cn } from '@heroui/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
@@ -13,15 +9,12 @@ const programIconsRegExp = /^(?:[🈟🈡🈞]\s?)+/
 
 export interface TitleProps {
   id: StateSlotDetail['info']['id']
-  source: (StateSlotDetailJikkyo | StateSlotDetailFile)['info']['source']
+  source: StateSlotDetail['info']['source']
   title: StateSlotDetail['info']['title']
   isSearch?: boolean
 }
 
-const BASE_URLS: Record<
-  'niconico' | NonNullable<TitleProps['source']>,
-  string
-> = {
+const BASE_URLS: Record<NonNullable<TitleProps['source']>, string> = {
   niconico: 'https://www.nicovideo.jp/watch/',
   syobocal: 'https://cal.syoboi.jp/tid/',
   tver: 'https://tver.jp/series/',

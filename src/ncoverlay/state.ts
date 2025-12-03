@@ -79,6 +79,7 @@ export interface StateSlotDetailDefault extends StateSlotDetailBase {
   type: 'normal' | 'official' | 'danime' | 'chapter' | 'szbh'
   info: {
     id: string
+    source: 'niconico'
     channelId?: number
     title: string
     duration: number
@@ -108,11 +109,26 @@ export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
   }
 }
 
+export interface StateSlotDetailNicolog extends StateSlotDetailBase {
+  type: 'nicolog'
+  info: {
+    id: string
+    source: 'nicolog'
+    title: string
+    duration: null
+    date: number
+    count: {
+      comment: number
+      kawaii?: number
+    }
+  }
+}
+
 export interface StateSlotDetailFile extends StateSlotDetailBase {
   type: 'file'
   info: {
-    id: string | null
-    source: 'nicolog' | null
+    id: null
+    source: null
     title: string
     duration: null
     date: number
@@ -126,6 +142,7 @@ export interface StateSlotDetailFile extends StateSlotDetailBase {
 export type StateSlotDetail =
   | StateSlotDetailDefault
   | StateSlotDetailJikkyo
+  | StateSlotDetailNicolog
   | StateSlotDetailFile
 
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
@@ -177,7 +194,8 @@ export async function filterDisplayThreads(
       const assistedCommentIds =
         hideAssistedComments &&
         detail.type !== 'jikkyo' &&
-        (detail.type !== 'file' || detail.info.source !== 'nicolog')
+        detail.type !== 'nicolog' &&
+        detail.type !== 'file'
           ? findAssistedCommentIds(thread.comments)
           : null
 

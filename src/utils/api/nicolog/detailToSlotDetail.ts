@@ -1,16 +1,16 @@
 import type { DeepPartial } from 'utility-types'
 import type { GetDataFormatted } from '@midra/nco-utils/types/api/nicolog/get'
-import type { StateSlotDetailFile } from '@/ncoverlay/state'
+import type { StateSlotDetailNicolog } from '@/ncoverlay/state'
 
 import { deepmerge } from '@/utils/deepmerge'
 
 export function detailToSlotDetail(
   data: GetDataFormatted,
-  detail?: DeepPartial<StateSlotDetailFile>
-): StateSlotDetailFile {
-  return deepmerge<StateSlotDetailFile, any>(
+  detail?: DeepPartial<StateSlotDetailNicolog>
+): StateSlotDetailNicolog {
+  return deepmerge<StateSlotDetailNicolog, any>(
     {
-      type: 'file',
+      type: 'nicolog',
       id: data.id,
       status: 'pending',
       info: {

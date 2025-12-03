@@ -1,20 +1,13 @@
-import type {
-  StateSlotDetail,
-  StateSlotDetailJikkyo,
-  StateSlotDetailFile,
-} from '@/ncoverlay/state'
+import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { cn } from '@heroui/react'
 
 export interface SourceTagProps {
   className?: string
   type: StateSlotDetail['type']
-  source: (StateSlotDetailJikkyo | StateSlotDetailFile)['info']['source']
 }
 
-type SourceBadgeKey =
-  | Exclude<SourceTagProps['type'], 'normal'>
-  | NonNullable<SourceTagProps['source']>
+type SourceBadgeKey = Exclude<SourceTagProps['type'], 'normal'>
 
 const SOURCE_BADGE_CLASSES: {
   [P in SourceBadgeKey]?: string
@@ -40,7 +33,7 @@ const SOURCE_BADGE_NAME: {
   file: 'ファイル',
 }
 
-export function SourceBadge({ className, type, source }: SourceTagProps) {
+export function SourceBadge({ className, type }: SourceTagProps) {
   if (type === 'normal') return
 
   return (
@@ -51,11 +44,11 @@ export function SourceBadge({ className, type, source }: SourceTagProps) {
         'rounded-md',
         'text-mini',
         'select-none',
-        (source && SOURCE_BADGE_CLASSES[source]) || SOURCE_BADGE_CLASSES[type],
+        SOURCE_BADGE_CLASSES[type],
         className
       )}
     >
-      {(source && SOURCE_BADGE_NAME[source]) || SOURCE_BADGE_NAME[type]}
+      {SOURCE_BADGE_NAME[type]}
     </div>
   )
 }

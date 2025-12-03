@@ -1,7 +1,8 @@
 import type { $Values } from 'utility-types'
+import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
-import type { BuildSearchQueryArgs } from '@midra/nco-utils/search/lib/buildSearchQuery'
+import type { AutoLoadTarget } from '@/types/storage'
 import type {
   NCOState,
   StateSlot,
@@ -26,23 +27,26 @@ import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
 const loadingSlotDetailsTemplate: Record<
-  StateSlotDetail['type'],
+  AutoLoadTarget,
   Map<string, StateSlotDetail>
 > = {
-  normal: new Map(),
   official: new Map(),
   danime: new Map(),
   chapter: new Map(),
   szbh: new Map(),
   jikkyo: new Map(),
-  file: new Map(),
+  nicolog: new Map(),
 }
 
-export interface NCOSearcherAutoLoadArgs
-  extends Omit<BuildSearchQueryArgs, 'userAgent'> {
-  jikkyo?: boolean
+export interface NCOSearcherAutoLoadArgs {
+  /** 動画タイトル or 解析結果 */
+  input: string | ParsedResult
+  /** 動画の長さ */
+  duration: number
+  /** 検索対象 */
+  targets: AutoLoadTarget[]
+  /** 実況チャンネル */
   jikkyoChannelIds?: JikkyoChannelId[]
-  nicolog?: boolean
 }
 
 /**
@@ -59,14 +63,7 @@ export class NCOSearcher {
     args.input = parse(args.input)
 
     const isAutoLoaded = true
-    const {
-      input: parsed,
-      duration,
-      targets,
-      jikkyo,
-      jikkyoChannelIds,
-      nicolog,
-    } = args
+    const { input, duration, targets, jikkyoChannelIds } = args
 
     const channelIds = jikkyoChannelIds
       ?.map(jikkyoToSyobocalChId)
@@ -80,23 +77,28 @@ export class NCOSearcher {
       await Promise.all([
         // ニコニコ動画 検索
         ncoSearchProxy.niconico({
-          input: parsed,
+          input,
           duration,
-          targets,
+          targets: {
+            official: targets.includes('official'),
+            danime: targets.includes('danime'),
+            chapter: targets.includes('chapter'),
+            szbh: targets.includes('szbh'),
+          },
           userAgent: EXT_USER_AGENT,
         }),
 
         // ニコニコ実況 過去ログ 検索
-        jikkyo
+        targets.includes('jikkyo')
           ? ncoSearchProxy.syobocal({
-              input: parsed,
+              input,
               channelIds,
               userAgent: EXT_USER_AGENT,
             })
           : null,
 
         // nicolog 検索
-        nicolog ? ncoSearchProxy.nicolog(parsed) : null,
+        targets.includes('nicolog') ? ncoSearchProxy.nicolog(input) : null,
       ])
 
     const currentTime = Date.now()
@@ -115,7 +117,7 @@ export class NCOSearcher {
     // ニコニコ動画
     if (searchResults) {
       function addLoadingSlotDetails(
-        type: StateSlotDetailDefault['type'],
+        type: Exclude<StateSlotDetailDefault['type'], 'normal'>,
         results: $Values<typeof searchResults>
       ) {
         for (const result of results) {
@@ -141,7 +143,7 @@ export class NCOSearcher {
             isAutoLoaded,
           })
 
-          loadingSlotDetails[slotDetail.type].set(slotDetail.id, slotDetail)
+          loadingSlotDetails[type].set(slotDetail.id, slotDetail)
         }
       }
 
@@ -175,7 +177,7 @@ export class NCOSearcher {
           isAutoLoaded,
         })
 
-        loadingSlotDetails[slotDetail.type].set(slotDetail.id, slotDetail)
+        loadingSlotDetails.jikkyo.set(slotDetail.id, slotDetail)
       }
     }
 
@@ -186,7 +188,7 @@ export class NCOSearcher {
         isAutoLoaded,
       })
 
-      loadingSlotDetails[slotDetail.type].set(slotDetail.id, slotDetail)
+      loadingSlotDetails.nicolog.set(slotDetail.id, slotDetail)
     }
 
     const loadingSlotDetailsArray = Object.values(loadingSlotDetails).flatMap(
@@ -249,7 +251,7 @@ export class NCOSearcher {
 
       // nicolog 取得
       Promise.all(
-        loadingSlotDetails.file
+        loadingSlotDetails.nicolog
           .values()
           .map((v) => getNicologComment(`${NICO_LIVE_ANIME_ROOT}/${v.id}`))
       ),

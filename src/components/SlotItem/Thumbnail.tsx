@@ -62,7 +62,7 @@ export function Thumbnail({
         </div>
       </div>
     )
-  } else if (type === 'file' && 'source' in info) {
+  } else if (type === 'file' || type === 'nicolog') {
     thumbnail = (
       <div className="h-full rounded-lg bg-content3 p-px">
         <div
@@ -75,7 +75,7 @@ export function Thumbnail({
             'select-none'
           )}
         >
-          {info.source === 'nicolog' ? (
+          {type === 'nicolog' ? (
             <span
               className={cn(
                 'line-clamp-1',
@@ -115,10 +115,7 @@ export function Thumbnail({
         )}
       >
         {/* ソース */}
-        <SourceBadge
-          type={type}
-          source={'source' in info ? info.source : null}
-        />
+        <SourceBadge type={type} />
 
         {/* 自動 / 手動 */}
         {!isSearch && <AutoLoadedBadge isAutoLoaded={isAutoLoaded} />}

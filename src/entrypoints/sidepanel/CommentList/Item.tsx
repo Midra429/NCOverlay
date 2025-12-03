@@ -31,6 +31,7 @@ const COMMENT_WRAPPER_TYPE_CLASSES: {
   chapter: cn('before:bg-danime-400 dark:before:bg-danime-500'),
   szbh: cn('before:bg-gray-500 dark:before:bg-gray-600'),
   jikkyo: cn('before:bg-jikkyo-600 dark:before:bg-jikkyo-700'),
+  nicolog: cn('before:bg-blue-500 dark:before:bg-blue-600'),
   file: cn('before:bg-blue-500 dark:before:bg-blue-600'),
 }
 

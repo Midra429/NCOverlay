@@ -70,13 +70,13 @@ async function main() {
 
       return { input, duration, disableParse: true }
     },
-    autoLoad: async (nco, { input, duration, jikkyo, jikkyoChannelIds }) => {
+    autoLoad: async (nco, { input, duration, targets, jikkyoChannelIds }) => {
       if (
         !jkChId ||
         !starttime ||
         !endtime ||
-        !jikkyo ||
-        (jikkyoChannelIds && !jikkyoChannelIds.includes(jkChId))
+        !targets.includes('jikkyo') ||
+        !jikkyoChannelIds?.includes(jkChId)
       ) {
         return
       }
