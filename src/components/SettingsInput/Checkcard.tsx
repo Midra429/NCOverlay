@@ -34,9 +34,9 @@ export function Input(props: Props) {
       value={value}
       onChange={setValue as any}
     >
-      {props.options.map(({ label, description, value }, idx) => (
+      {props.options.map(({ label, description, value }) => (
         <Checkbox
-          key={idx}
+          key={value}
           classNames={{
             base: [
               'gap-0.5',

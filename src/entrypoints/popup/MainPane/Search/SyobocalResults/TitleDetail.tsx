@@ -133,7 +133,7 @@ export function TitleDetail({
 
           {subtitleItems.map(({ subtitle, refCallbackFunction }, idx) => (
             <SubtitleItem
-              key={idx}
+              key={subtitle[0]}
               title={title}
               subtitle={subtitle}
               onClick={() => {

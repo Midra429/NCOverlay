@@ -13,17 +13,18 @@
 
   "linter": {
     "enabled": true,
+    "domains": {
+      "react": "recommended"
+    },
     "rules": {
       "recommended": false,
-      "performance": {
-        "useTopLevelRegex": "on"
-      },
       "correctness": {
         "noUnusedFunctionParameters": "warn",
         "noUnusedImports": "warn",
         "noUnusedLabels": "warn",
         "noUnusedPrivateClassMembers": "warn",
-        "noUnusedVariables": "warn"
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "off"
       },
       "nursery": {
         "useSortedClasses": {
@@ -34,6 +35,12 @@
             "functions": ["twMerge", "twJoin", "cn", "tv"]
           }
         }
+      },
+      "performance": {
+        "useTopLevelRegex": "on"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
       }
     }
   },

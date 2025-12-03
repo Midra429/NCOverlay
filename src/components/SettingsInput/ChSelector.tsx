@@ -63,9 +63,9 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
       value={chIds}
       onChange={setChIds as any}
     >
-      {CHANNEL.IDS.map((id, idx) => (
+      {CHANNEL.IDS.map((id) => (
         <Checkbox
-          key={idx}
+          key={id}
           classNames={{
             base: [
               'w-[calc(50%-0.375rem/2)] max-w-none',
@@ -130,7 +130,7 @@ export function Input(props: Props) {
       setDtvChIds([])
       setStvChIds([])
     }
-  }, [isOpen])
+  }, [isOpen, value])
 
   return (
     <>

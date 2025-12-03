@@ -70,7 +70,7 @@ export function SearchInput({ isDisabled, onSearch, ref }: SearchInputProps) {
         setValue(initValue)
       }
     })
-  }, [source])
+  }, [isNiconico, isSyobocal])
 
   useImperativeHandle(ref, () => {
     return { setSource, setValue }

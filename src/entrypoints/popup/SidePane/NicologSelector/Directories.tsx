@@ -115,6 +115,7 @@ export function Directories({
           {directoryItems.map(
             ({ directory: { name }, refCallbackFunction }) => (
               <Radio
+                key={name}
                 classNames={{
                   base: [
                     'flex flex-row items-center justify-between',

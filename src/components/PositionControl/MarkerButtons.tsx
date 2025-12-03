@@ -68,7 +68,7 @@ export function MarkerButtons() {
 
         {MARKERS.map(({ label, shortLabel }, idx) => (
           <MarkerButton
-            key={idx}
+            key={shortLabel}
             markerIdx={idx}
             label={label}
             shortLabel={shortLabel}

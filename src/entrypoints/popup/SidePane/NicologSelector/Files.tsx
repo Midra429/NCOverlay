@@ -71,6 +71,7 @@ export function Files({ directoryName, disabledIds, setFileName }: FilesProps) {
         >
           {files.map(({ created, name }) => (
             <Radio
+              key={name}
               classNames={{
                 base: [
                   'flex flex-row items-center justify-between',

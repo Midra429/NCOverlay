@@ -49,9 +49,9 @@ export function Input(props: Props) {
       value={value}
       onChange={setValue as any}
     >
-      {props.options.map(({ label, value }, idx) => (
+      {props.options.map(({ label, value }) => (
         <Checkbox
-          key={idx}
+          key={value}
           classNames={{
             base: [
               'flex-1',
