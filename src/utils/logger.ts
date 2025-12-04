@@ -1,4 +1,4 @@
-import * as utilsLogger from '@midra/nco-utils/utils/logger'
+import * as utilsLogger from '@midra/nco-utils/common/logger'
 
 import { displayName } from '@@/package.json'
 

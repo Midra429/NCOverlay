@@ -14,7 +14,7 @@ import {
   Tv2Icon,
   XIcon,
 } from 'lucide-react'
-import { zeroPadding } from '@midra/nco-utils/utils/zeroPadding'
+import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
 

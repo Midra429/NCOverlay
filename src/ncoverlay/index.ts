@@ -2,7 +2,7 @@ import type { Runtime } from 'webextension-polyfill'
 import type { Marker } from '@/constants/markers'
 
 import equal from 'fast-deep-equal'
-import { uid } from '@midra/nco-utils/utils/uid'
+import { uid } from '@midra/nco-utils/common/uid'
 
 import { MARKERS } from '@/constants/markers'
 

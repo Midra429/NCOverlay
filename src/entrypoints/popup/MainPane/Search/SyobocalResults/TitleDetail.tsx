@@ -4,7 +4,7 @@ import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
 
 import { useState, useRef, useImperativeHandle } from 'react'
 import { Spinner, cn } from '@heroui/react'
-import { zeroPadding } from '@midra/nco-utils/utils/zeroPadding'
+import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 

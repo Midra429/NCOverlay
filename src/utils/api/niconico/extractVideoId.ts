@@ -1,4 +1,5 @@
-const VIDEO_ID_REGEXP = /^[a-z]{2}\d+$/
+import { VIDEO_ID_REGEXP } from '@midra/nco-utils/api/constants'
+
 const HOST_LONG_REGEXP = /^((www|sp)\.)?nicovideo\.jp$/
 const PATH_LONG_REGEXP = /^\/watch\/[a-z]{2}\d+$/
 const HOST_SHORT_REGEXP = /^\.?nico\.ms$/

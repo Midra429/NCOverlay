@@ -1,7 +1,7 @@
 import type { UserManifest } from 'wxt'
 
 import { defineConfig } from 'wxt'
-import { uid } from '@midra/nco-utils/utils/uid'
+import { uid } from '@midra/nco-utils/common/uid'
 
 import { GITHUB_URL } from './src/constants'
 import { name, displayName, version, description } from './package.json'

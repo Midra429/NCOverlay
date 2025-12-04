@@ -2,11 +2,10 @@ import type { DeepPartial } from 'utility-types'
 import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
+import { TAG_SZBH_REGEXP } from '@midra/nco-utils/api/constants'
 import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 
 import { deepmerge } from '@/utils/deepmerge'
-
-const SZBH_TAG_REGEXP = /(^|\s)(コメント専用動画|SZBH方式)(\s|$)/i
 
 export function videoDataToSlotDetail(
   data: VideoData,
@@ -16,7 +15,7 @@ export function videoDataToSlotDetail(
 
   const isDAnime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
   const isOfficialAnime = !!data.channel?.isOfficialAnime
-  const isSzbh = !!(data.owner && SZBH_TAG_REGEXP.test(tags.join(' ')))
+  const isSzbh = !!(data.owner && TAG_SZBH_REGEXP.test(tags.join(' ')))
 
   return deepmerge<StateSlotDetailDefault, any>(
     {
