@@ -1,3 +1,5 @@
+export type Marker = (typeof MARKERS)[number]
+
 /**
  * マーカー
  */
@@ -6,7 +8,7 @@ export const MARKERS = [
     label: 'ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!!',
     shortLabel: 'ｷﾀ-',
     regexp: /^(ｷﾀ|キタ)[ｰー━].*[!！]$|^きたあ{0,}$|^(始|はじ)まっ?た$/i,
-    range: [0, 180], // 3分間待ってやる
+    range: [0, 180],
   },
   {
     label: 'オープニング',
@@ -29,7 +31,7 @@ export const MARKERS = [
   {
     label: 'エンディング',
     shortLabel: 'ED',
-    regexp: /^(ED|ＥＤ)$/,
+    regexp: /^(ED|ＥＤ)$/i,
     range: [null, null],
   },
   {

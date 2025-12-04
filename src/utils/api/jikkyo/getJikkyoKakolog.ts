@@ -3,7 +3,7 @@ import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 
 import { KAWAII_REGEXP } from '@/constants'
 
-import { findMarkers } from '@/utils/extension/findMarkers'
+import { findMarkers } from '@/utils/api/jikkyo/findMarkers'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface GetJikkyoKakologParams {

@@ -1,4 +1,5 @@
 import type { Runtime } from 'webextension-polyfill'
+import type { Marker } from '@/constants/markers'
 
 import equal from 'fast-deep-equal'
 import { uid } from '@midra/nco-utils/utils/uid'
@@ -94,9 +95,7 @@ export class NCOverlay {
   /**
    * 指定したマーカーの位置にジャンプ
    */
-  async jumpMarker(
-    marker: number | (typeof MARKERS)[number]['shortLabel'] | null
-  ) {
+  async jumpMarker(marker: number | Marker['shortLabel'] | null) {
     const oldDetails = await this.state.get('slotDetails')
     const newDetails = structuredClone(oldDetails)
 
