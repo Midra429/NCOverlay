@@ -64,7 +64,7 @@ jobs:
       - name: Chrome Web Storeへ提出
         if: ${{ github.event.inputs.submit_chrome == 'true' }}
         run: |
-          bun wxt submit \
+          bun run wxt submit \
             --chrome-zip ./dist/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
@@ -76,7 +76,7 @@ jobs:
       - name: Edge Add-onsへ提出
         if: ${{ github.event.inputs.submit_edge == 'true' }}
         run: |
-          bun wxt submit \
+          bun run wxt submit \
             --edge-zip ./dist/*-chrome.zip
         env:
           EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
@@ -87,7 +87,7 @@ jobs:
       - name: Firefox Add-onsへ提出
         if: ${{ github.event.inputs.submit_firefox == 'true' }}
         run: |
-          bun wxt submit \
+          bun run wxt submit \
             --firefox-zip ./dist/*-firefox.zip \
             --firefox-sources-zip ./dist/*-sources.zip
         env:

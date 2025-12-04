@@ -416,7 +416,7 @@
 
     "@lukeed/csprng": ["@lukeed/csprng@1.1.0", "", {}, "sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA=="],
 
-    "@midra/nco-utils": ["@midra/nco-utils@1.0.5", "", { "dependencies": { "@geolonia/japanese-numeral": "^1.0.2", "fast-xml-parser": "^5.3.2", "fastest-levenshtein": "^1.0.16", "nanoid": "^5.1.6", "nanoid-dictionary": "^5.0.0", "valibot": "^1.2.0" } }, "sha512-KiwFBO3ELRw9mzis1KMER3QVZhf8IsYPpkox70inWNZ8YCepKirB03do1Y+3/mmO67Dumi0oRFncJExcPXqA3A=="],
+    "@midra/nco-utils": ["@midra/nco-utils@1.0.6", "", { "dependencies": { "@geolonia/japanese-numeral": "^1.0.2", "fast-xml-parser": "^5.3.2", "fastest-levenshtein": "^1.0.16", "nanoid": "^5.1.6", "nanoid-dictionary": "^5.0.0", "valibot": "^1.2.0" } }, "sha512-qtAvVrAOBCrmCq09uL0lBdj7PQ5nDLEUKXB5JIyOYza9sBVn2cHDnwY2Buze6TArsyUMGMqNmDZRvI4lcIHftQ=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 

@@ -3,9 +3,10 @@
   "exclude": ["./node_modules", "./dist"],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "skipLibCheck": false,
+    "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
-    "noErrorTruncation": true
+    // "noErrorTruncation": true,
+    "skipLibCheck": false
   }
 }
