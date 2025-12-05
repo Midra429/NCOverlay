@@ -4,13 +4,13 @@ import { NICONICO_COLOR_COMMANDS, COLOR_CODE } from '@/constants'
 
 import { settings } from '@/utils/settings/extension'
 
-export interface NgSettingsConverted {
+export interface NgSettingsFormatted {
   words: (string | RegExp)[]
   commands: (string | RegExp)[]
   ids: (string | RegExp)[]
 }
 
-export function convertNgSettingsContent({
+export function formatNgSettingsContent({
   content,
   isRegExp,
 }: NgSettingsContent): string | RegExp | undefined {
@@ -23,7 +23,7 @@ export function convertNgSettingsContent({
   }
 }
 
-export async function getNgSettings(): Promise<NgSettingsConverted> {
+export async function getNgSettings(): Promise<NgSettingsFormatted> {
   const [largeComments, fixedComments, coloredComments, words, commands, ids] =
     await settings.get(
       'settings:ng:largeComments',
@@ -48,7 +48,7 @@ export async function getNgSettings(): Promise<NgSettingsConverted> {
   }
 
   if (coloredComments) {
-    for (const content of Object.keys(NICONICO_COLOR_COMMANDS)) {
+    for (const content in NICONICO_COLOR_COMMANDS) {
       ngCommands.add({ content })
     }
 
@@ -59,14 +59,20 @@ export async function getNgSettings(): Promise<NgSettingsConverted> {
   }
 
   return {
-    words: [...ngWords]
-      .map(convertNgSettingsContent)
-      .filter((v) => typeof v !== 'undefined'),
-    commands: [...ngCommands]
-      .map(convertNgSettingsContent)
-      .filter((v) => typeof v !== 'undefined'),
-    ids: [...ngIds]
-      .map(convertNgSettingsContent)
-      .filter((v) => typeof v !== 'undefined'),
+    words: ngWords
+      .values()
+      .toArray()
+      .map(formatNgSettingsContent)
+      .filter((v) => v != null),
+    commands: ngCommands
+      .values()
+      .toArray()
+      .map(formatNgSettingsContent)
+      .filter((v) => v != null),
+    ids: ngIds
+      .values()
+      .toArray()
+      .map(formatNgSettingsContent)
+      .filter((v) => v != null),
   }
 }

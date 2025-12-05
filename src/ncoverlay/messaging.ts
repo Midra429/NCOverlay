@@ -34,7 +34,7 @@ export async function sendNcoMessage<T extends keyof ProtocolMap>(
   data: GetDataType<ProtocolMap[T]>,
   tabId?: number
 ): Promise<GetReturnType<ProtocolMap[T]> | undefined> {
-  if (typeof tabId === 'undefined') {
+  if (typeof tabId === 'undefined' && !webext.isContentScript) {
     const tab = await webext.getCurrentActiveTab()
 
     tabId = tab?.id

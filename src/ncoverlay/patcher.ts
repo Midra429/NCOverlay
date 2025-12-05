@@ -8,7 +8,7 @@ import { logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/extension'
 
 import { NCOverlay } from '.'
-import { ncoMessenger } from './messaging'
+import { sendNcoMessage } from './messaging'
 
 export interface PlayingInfo {
   input: string | ParsedResult
@@ -175,12 +175,10 @@ export class NCOPatcher {
       if (intervalMs < delta) {
         lastTime = time - (delta % intervalMs)
 
-        ncoMessenger
-          .sendMessage('timeupdate', {
-            id: this.id,
-            time: this.renderer.video.currentTime * 1000,
-          })
-          .catch(() => {})
+        sendNcoMessage('timeupdate', {
+          id: this.id,
+          time: this.renderer.video.currentTime * 1000,
+        })
       }
     })
 

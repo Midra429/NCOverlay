@@ -2,11 +2,11 @@ import type {
   V1Thread,
   V1Comment,
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
-import type { NgSettingsConverted } from '@/utils/api/niconico/getNgSettings'
+import type { NgSettingsFormatted } from '@/utils/api/niconico/getNgSettings'
 
 export function isNgComment(
   { body, commands, userId }: V1Comment,
-  ngSettings: NgSettingsConverted
+  ngSettings: NgSettingsFormatted
 ): boolean {
   // 単語
   const isNgWord = ngSettings.words.some((val) => {
@@ -48,7 +48,7 @@ export function isNgComment(
 
 export function applyNgSettings(
   threads: V1Thread[],
-  ngSettings: NgSettingsConverted
+  ngSettings: NgSettingsFormatted
 ): V1Thread[] {
   if (!Object.values(ngSettings).flat().length) {
     return threads

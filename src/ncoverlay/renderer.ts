@@ -151,12 +151,12 @@ export class NCORenderer {
   }
 
   #startRequestAnimationFrame() {
-    this.#frameId = window.requestAnimationFrame(this.#animationFrameCallback)
+    this.#frameId = requestAnimationFrame(this.#animationFrameCallback)
   }
 
   #stopRequestAnimationFrame() {
     if (this.#frameId) {
-      window.cancelAnimationFrame(this.#frameId)
+      cancelAnimationFrame(this.#frameId)
 
       this.#frameId = 0
     }

@@ -18,11 +18,11 @@ export async function execPlugins<K extends PluginVodKey>(
 
   logger.log('plugin', vod)
 
-  const pluginIds = Object.keys(plugins) as PluginId<K>[]
   const disablePlugins = new Map<PluginId<K>, () => void>()
 
   settings.watch('settings:plugins', (keys) => {
-    for (const id of pluginIds) {
+    for (const key in plugins) {
+      const id = key as PluginId<K>
       const pluginKey = `${vod}:${id}` as PluginKey
 
       // プラグイン ON

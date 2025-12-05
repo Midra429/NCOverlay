@@ -1,8 +1,8 @@
 import type { Ng } from '@midra/nco-utils/types/api/niconico/video'
-import type { NgSettingsConverted } from '@/utils/api/niconico/getNgSettings'
+import type { NgSettingsFormatted } from '@/utils/api/niconico/getNgSettings'
 
-export function extractNgSettings(ng: Ng): NgSettingsConverted {
-  const ngSettings: NgSettingsConverted = {
+export function extractNgSettings(ng: Ng): NgSettingsFormatted {
+  const ngSettings: NgSettingsFormatted = {
     words: [],
     commands: [],
     ids: [],
