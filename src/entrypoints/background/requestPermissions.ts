@@ -1,4 +1,4 @@
-import type { Permissions } from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
 
 import { webext } from '@/utils/webext'
 
@@ -6,7 +6,7 @@ export default function () {
   // 権限を要求 (Firefoxのみ)
   if (webext.isFirefox) {
     const manifest = webext.runtime.getManifest()
-    const permissions: Permissions.Permissions = {
+    const permissions: Browser.permissions.Permissions = {
       origins: manifest.host_permissions,
     }
 

@@ -1,4 +1,4 @@
-import type { Runtime } from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
 import type {
   ExtractedResult,
   ExtractedResultSingleEpisode,
@@ -17,7 +17,7 @@ const CONTENTS = {
   other: 'その他',
 } as const
 
-const OS_NAMES: Partial<Record<Runtime.PlatformOs, string>> = {
+const OS_NAMES: Partial<Record<Browser.runtime.PlatformOs, string>> = {
   win: 'Windows',
   mac: 'macOS',
   linux: 'Linux',

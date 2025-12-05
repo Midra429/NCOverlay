@@ -1,10 +1,12 @@
+import type { Browser } from 'wxt/browser'
+
 import { utilsMessenger } from '@/utils/extension/messaging'
 import { setBadge } from '@/utils/extension/setBadge'
 import { captureTab } from '@/utils/extension/captureTab'
 
 export default function () {
   utilsMessenger.onMessage('getCurrentTab', ({ sender }) => {
-    return sender.tab
+    return sender.tab as Browser.tabs.Tab
   })
 
   utilsMessenger.onMessage('setBadge', ({ sender, data }) => {

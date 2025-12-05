@@ -1,87 +1,51 @@
-import 'webextension-polyfill'
+import 'wxt/browser'
 
-declare module 'webextension-polyfill' {
-  namespace Manifest {
-    interface WebExtensionManifest extends ManifestBase {
-      side_panel?: WebExtensionManifestSidePanelType
+declare module 'wxt/browser' {
+  namespace Browser {
+    export namespace runtime {
+      export interface ManifestSidePanel {
+        default_path?: string
+      }
+      export interface ManifestSidebarAction {
+        default_panel?: string
+      }
+
+      export interface ManifestV3 {
+        side_panel?: ManifestSidePanel
+        sidebar_action?: ManifestSidebarAction
+      }
+
+      export function getManifest(): ManifestV3
     }
 
-    interface WebExtensionManifestSidePanelType {
-      default_path: string
+    export namespace action {
+      export function getPopupPath(tabId?: number): string | undefined
     }
-  }
 
-  namespace Storage {
-    interface StorageArea {
-      /**
-       * 1 つ以上のアイテムで使用されているスペースの量（バイト単位）を取得します。
-       *
-       * @param keys 合計使用量を取得する単一のキーまたはキーのリスト。\
-       * リストが空の場合は 0 が返されます。\
-       * `null` を渡して、すべての保存容量の合計使用量を取得します。
-       * @returns ストレージで使用されている容量（バイト単位）。
-       */
-      getBytesInUse(keys?: string | string[] | null): Promise<number>
+    export namespace sidePanel {
+      export interface CloseOptions {
+        tabId?: number
+        windowId?: number
+      }
+
+      export function close(options: CloseOptions): Promise<void>
+
+      export var path: string | undefined
     }
-  }
 
-  namespace Action {
-    interface Static {
-      getPopupPath(tabId?: number): string | undefined
-    }
-  }
+    export var SEARCH_PARAM_TAB_ID: `_${string}_tabId`
 
-  namespace SidePanel {
-    interface OpenOptions {
-      tabId?: number
+    export var isChrome: boolean
+    export var isFirefox: boolean
+    export var isSafari: boolean
+
+    export var isBackground: boolean
+    export var isPopup: boolean
+    export var isSidePanel: boolean
+    export var isContentScript: boolean
+
+    export function getCurrentActiveTab(
       windowId?: number
-    }
-
-    interface CloseOptions {
-      tabId?: number
-      windowId?: number
-    }
-
-    interface GetPanelOptions {
-      tabId?: number
-    }
-
-    interface PanelOptions {
-      enabled?: boolean
-      path?: string
-      tabId?: number
-    }
-
-    // interface PanelBehavior {
-    //   openPanelOnActionClick?: boolean
-    // }
-
-    interface Static {
-      path?: string
-
-      open(options: OpenOptions): Promise<void>
-
-      close(options: CloseOptions): Promise<void>
-
-      getOptions(options: GetPanelOptions): Promise<PanelOptions>
-
-      setOptions(options: PanelOptions): Promise<void>
-
-      // getPanelBehavior(): Promise<PanelBehavior>
-
-      // setPanelBehavior(behavior: PanelBehavior): Promise<void>
-    }
-  }
-
-  interface WebExtBrowser extends Browser {
-    sidePanel: SidePanel.Static
-
-    SEARCH_PARAM_TAB_ID: `_${string}_tabId`
-
-    isChrome: boolean
-    isFirefox: boolean
-    isSafari: boolean
-
-    getCurrentActiveTab(windowId?: number): Promise<Tabs.Tab | null>
+    ): Promise<tabs.Tab | null>
   }
 }

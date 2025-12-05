@@ -20,7 +20,7 @@ export async function captureTab({
 }): Promise<number[]> {
   format ??= 'jpeg'
 
-  const url = await webext.tabs.captureVisibleTab(windowId, {
+  const url = await webext.tabs.captureVisibleTab(windowId!, {
     format,
     quality: 85,
   })

@@ -1,4 +1,4 @@
-import type { Runtime } from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
 import type { Marker } from '@/constants/markers'
 
 import equal from 'fast-deep-equal'
@@ -40,7 +40,7 @@ export class NCOverlay {
   readonly keyboard: NCOKeyboard
 
   readonly #storageOnChangeRemoveListeners: (() => void)[] = []
-  readonly #port: Runtime.Port
+  readonly #port: Browser.runtime.Port
 
   constructor(video: HTMLVideoElement) {
     this.id = `${Date.now()}.${uid()}`

@@ -1,5 +1,5 @@
+import type { Browser } from 'wxt/browser'
 import type { KbdKey } from '@heroui/react'
-import type { Runtime } from 'webextension-polyfill'
 import type { SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
@@ -16,7 +16,7 @@ import { ItemLabel } from '@/components/ItemLabel'
 import { Tooltip } from '@/components/Tooltip'
 
 const HEROUI_KBD_KEYS: Partial<
-  Record<'common' | Runtime.PlatformOs, string[]>
+  Record<'common' | Browser.runtime.PlatformInfo['os'], string[]>
 > = {
   common: [
     'shift',
@@ -41,7 +41,7 @@ const HEROUI_KBD_KEYS: Partial<
 }
 
 const OS_KEYS: Partial<
-  Record<'common' | Runtime.PlatformOs, Record<string, string>>
+  Record<'common' | Browser.runtime.PlatformInfo['os'], Record<string, string>>
 > = {
   common: {
     backquote: '`',
@@ -77,7 +77,10 @@ const OS_KEYS: Partial<
   },
 }
 
-function isHeroUiKbdKey(key: string, os?: Runtime.PlatformOs): key is KbdKey {
+function isHeroUiKbdKey(
+  key: string,
+  os?: Browser.runtime.PlatformInfo['os']
+): key is KbdKey {
   return !!(
     HEROUI_KBD_KEYS['common']?.includes(key) ||
     (os && HEROUI_KBD_KEYS[os]?.includes(key))
@@ -86,7 +89,7 @@ function isHeroUiKbdKey(key: string, os?: Runtime.PlatformOs): key is KbdKey {
 
 interface KeyboardKeyProps {
   kbdKey: string
-  os?: Runtime.PlatformOs
+  os?: Browser.runtime.PlatformInfo['os']
 }
 
 function KeyboardKey({ kbdKey, os }: KeyboardKeyProps) {
@@ -119,7 +122,7 @@ export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'kbd-shortcut'> {}
 
 export function Input(props: Props) {
-  const [os, setOs] = useState<Runtime.PlatformOs>()
+  const [os, setOs] = useState<Browser.runtime.PlatformInfo['os']>()
   const [value, setValue] = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()
 

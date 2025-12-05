@@ -1,8 +1,9 @@
-import type { WebExtBrowser, SidePanel } from 'webextension-polyfill'
+import type { Browser as WxtBrowser } from 'wxt/browser'
+import type { Browser } from 'webextension-polyfill'
 
-import { browser } from '@wxt-dev/webextension-polyfill/browser'
+import { browser as webext } from 'wxt/browser'
 
-const webext = browser as WebExtBrowser
+const browser = webext as unknown as Browser
 const manifest = webext.runtime.getManifest()
 
 webext.SEARCH_PARAM_TAB_ID = `_${EXT_BUILD_ID}_tabId`
@@ -11,6 +12,16 @@ webext.isChrome =
   import.meta.env.CHROME || import.meta.env.EDGE || import.meta.env.OPERA
 webext.isFirefox = import.meta.env.FIREFOX
 webext.isSafari = import.meta.env.SAFARI
+
+const { protocol, pathname } = location
+
+webext.isContentScript = /^https?:$/.test(protocol)
+webext.isBackground =
+  !webext.isContentScript &&
+  (pathname === '/background.js' ||
+    pathname === '/_generated_background_page.html')
+webext.isPopup = !webext.isContentScript && pathname === '/popup.html'
+webext.isSidePanel = !webext.isContentScript && pathname === '/sidepanel.html'
 
 webext.getCurrentActiveTab = async function (windowId) {
   const tabId = new URL(location.href).searchParams.get(
@@ -48,12 +59,12 @@ if (webext.isChrome) {
     webext.sidePanel.path = manifest.side_panel?.default_path
 
     webext.sidePanel.open = new Proxy(webext.sidePanel.open, {
-      apply(
+      async apply(
         target,
-        thisArg: SidePanel.Static,
-        argArray: Parameters<SidePanel.Static['open']>
+        thisArg: typeof WxtBrowser.sidePanel,
+        argArray: Parameters<typeof WxtBrowser.sidePanel.open>
       ) {
-        thisArg.setOptions({
+        await thisArg.setOptions({
           enabled: true,
           path: webext.sidePanel.path,
           tabId: argArray[0].tabId,
@@ -71,7 +82,8 @@ if (webext.isChrome) {
 
 // Firefox
 if (webext.isFirefox) {
-  webext.storage.local.getBytesInUse = async function (keys) {
+  // @ts-ignore
+  webext.storage.local.getBytesInUse = async function (keys: string) {
     const values = await this.get(keys)
 
     return Object.entries(values).reduce((prev, [key, value]) => {
@@ -84,16 +96,16 @@ if (webext.isFirefox) {
     }, 0)
   }
 
-  if (webext.sidebarAction) {
+  if (browser.sidebarAction) {
     webext.sidePanel = {
       path: manifest.sidebar_action?.default_panel,
 
       open() {
-        return webext.sidebarAction.open()
+        return browser.sidebarAction.open()
       },
 
       close() {
-        return webext.sidebarAction.close()
+        return browser.sidebarAction.close()
       },
 
       async getOptions(options) {
@@ -104,23 +116,29 @@ if (webext.isFirefox) {
         if (typeof tabId === 'number') {
           const { windowId } = await webext.tabs.get(tabId)
 
-          isOpen = await webext.sidebarAction.isOpen({ windowId })
+          isOpen = await browser.sidebarAction.isOpen({ windowId })
         }
 
-        const path = await webext.sidebarAction.getPanel({ tabId })
+        const path = await browser.sidebarAction.getPanel({ tabId })
         const enabled = !!path && isOpen
 
         return { enabled, path, tabId }
       },
 
       async setOptions({ enabled, path, tabId }) {
-        const currentPanel = await webext.sidebarAction.getPanel({ tabId })
+        const currentPanel = await browser.sidebarAction.getPanel({ tabId })
 
         const panel =
           enabled === false ? null : path || currentPanel || this.path || null
 
-        await webext.sidebarAction.setPanel({ panel, tabId })
+        await browser.sidebarAction.setPanel({ panel, tabId })
       },
+
+      async getPanelBehavior() {
+        return {}
+      },
+
+      async setPanelBehavior(_behavior) {},
     }
   }
 }

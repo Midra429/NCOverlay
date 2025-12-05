@@ -1,4 +1,4 @@
-import type { Tabs } from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
 import type { setBadge } from './setBadge'
 import type { captureTab } from './captureTab'
 
@@ -7,7 +7,7 @@ import { defineExtensionMessaging } from '@webext-core/messaging'
 // content -> background
 
 interface ProtocolMap {
-  getCurrentTab: (args?: null) => Tabs.Tab
+  getCurrentTab: (args?: null) => Browser.tabs.Tab
 
   setBadge: (
     args: Parameters<typeof setBadge>[0]

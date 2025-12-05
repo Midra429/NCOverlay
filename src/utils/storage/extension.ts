@@ -1,4 +1,4 @@
-import type { Storage as WxtStorage } from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
 import type { StorageKey } from '@/types/storage'
 
 import equal from 'fast-deep-equal'
@@ -32,13 +32,13 @@ export const storage = new WebExtStorage({
     if (value != null) {
       return extensionStorage.set({ [key]: value })
     } else {
-      return extensionStorage.remove(key)
+      return extensionStorage.remove(key as string)
     }
   },
 
   remove: async (...keys: StorageKey[]) => {
     if (keys.length) {
-      await extensionStorage.remove(keys)
+      await extensionStorage.remove(keys as string[])
     } else {
       await extensionStorage.clear()
     }
@@ -50,17 +50,17 @@ export const storage = new WebExtStorage({
         return extensionStorage.getBytesInUse(null)
 
       case 1:
-        return extensionStorage.getBytesInUse(keys[0])
+        return extensionStorage.getBytesInUse(keys[0] as string)
 
       default:
-        return extensionStorage.getBytesInUse(keys)
+        return extensionStorage.getBytesInUse(keys as string[])
     }
   },
 
   onChange(key, callback) {
-    const onChangeCallback = ({
-      [key]: change,
-    }: WxtStorage.StorageAreaOnChangedChangesType) => {
+    const onChangeCallback: Parameters<
+      Browser.storage.StorageAreaChangedEvent['addListener']
+    >[0] = ({ [key]: change }) => {
       if (!change) return
 
       const current: any = change.newValue ?? null

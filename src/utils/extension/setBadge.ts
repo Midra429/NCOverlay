@@ -17,6 +17,8 @@ export async function setBadge({
   color?: keyof typeof COLORS
   tabId?: number
 }) {
+  text ??= ''
+
   const bgColor = COLORS[color ?? 'primary']
   const textColor = '#ffffff'
 
