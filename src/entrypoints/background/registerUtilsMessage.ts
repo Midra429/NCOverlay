@@ -1,4 +1,4 @@
-import type { Browser } from 'wxt/browser'
+import type { Browser } from '@/utils/webext'
 
 import { utilsMessenger } from '@/utils/extension/messaging'
 import { setBadge } from '@/utils/extension/setBadge'

@@ -1,4 +1,4 @@
-import type { Browser } from 'wxt/browser'
+import type { Browser } from '@/utils/webext'
 import type { setBadge } from './setBadge'
 import type { captureTab } from './captureTab'
 

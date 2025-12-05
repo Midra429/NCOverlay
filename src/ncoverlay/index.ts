@@ -1,5 +1,5 @@
-import type { Browser } from 'wxt/browser'
 import type { Marker } from '@/constants/markers'
+import type { Browser } from '@/utils/webext'
 
 import equal from 'fast-deep-equal'
 import { uid } from '@midra/nco-utils/common/uid'

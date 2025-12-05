@@ -1,5 +1,5 @@
-import type { Browser as WxtBrowser } from 'wxt/browser'
-import type { Browser } from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
+import type browser from 'webextension-polyfill'
 
 import { browser as webext } from 'wxt/browser'
 
@@ -110,8 +110,8 @@ if (webext.isChrome) {
     webext.sidePanel.open = new Proxy(webext.sidePanel.open, {
       async apply(
         target,
-        thisArg: typeof WxtBrowser.sidePanel,
-        argArray: Parameters<typeof WxtBrowser.sidePanel.open>
+        thisArg: typeof Browser.sidePanel,
+        argArray: Parameters<typeof Browser.sidePanel.open>
       ) {
         await thisArg.setOptions({
           enabled: true,
@@ -146,7 +146,7 @@ if (webext.isFirefox) {
   }
 
   if ('sidebarAction' in webext) {
-    const { sidebarAction } = webext as unknown as Browser
+    const { sidebarAction } = webext as unknown as browser.Browser
 
     webext.sidePanel = {
       path: manifest.sidebar_action?.default_panel,
@@ -194,4 +194,5 @@ if (webext.isFirefox) {
   }
 }
 
+export type { Browser }
 export { webext }

@@ -1,4 +1,4 @@
-import type { Browser } from 'wxt/browser'
+import type { Browser } from '@/utils/webext'
 
 import { webext } from '@/utils/webext'
 

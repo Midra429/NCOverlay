@@ -1,5 +1,5 @@
-import type { Browser } from 'wxt/browser'
 import type { StorageKey } from '@/types/storage'
+import type { Browser } from '@/utils/webext'
 
 import equal from 'fast-deep-equal'
 

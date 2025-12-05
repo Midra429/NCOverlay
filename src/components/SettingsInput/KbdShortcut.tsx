@@ -1,6 +1,6 @@
-import type { Browser } from 'wxt/browser'
 import type { KbdKey } from '@heroui/react'
 import type { SettingsKey } from '@/types/storage'
+import type { Browser } from '@/utils/webext'
 import type { SettingsInputBaseProps } from '.'
 
 import { Fragment, useEffect, useState } from 'react'
