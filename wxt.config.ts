@@ -78,9 +78,5 @@ export default defineConfig({
       },
     },
   },
-  modules: [
-    '@wxt-dev/webextension-polyfill',
-    '@wxt-dev/auto-icons',
-    '@wxt-dev/module-react',
-  ],
+  modules: ['@wxt-dev/auto-icons', '@wxt-dev/module-react'],
 })

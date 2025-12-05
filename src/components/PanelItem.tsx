@@ -1,6 +1,6 @@
-import type { ClassValue } from 'clsx'
-
 import { cn } from '@heroui/react'
+
+type ClassValue = Parameters<typeof cn>[0]
 
 export interface PanelItemProps {
   className?: string
@@ -19,17 +19,10 @@ export function PanelItem(props: PanelItemProps) {
         'overflow-hidden rounded-medium',
         'border-1 border-foreground-200',
         'bg-content1 text-foreground',
-        // @ts-ignore
         props.classNames?.wrapper
       )}
     >
-      <div
-        className={cn(
-          props.className,
-          // @ts-ignore
-          props.classNames?.base
-        )}
-      >
+      <div className={cn(props.className, props.classNames?.base)}>
         {props.children}
       </div>
     </div>
