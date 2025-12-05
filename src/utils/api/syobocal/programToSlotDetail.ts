@@ -1,9 +1,10 @@
 import type { DeepPartial } from 'utility-types'
+import type { SyoboCalChannelId } from '@midra/nco-utils/types/api/constants'
 import type { SyoboCalProgram } from '@midra/nco-utils/types/api/syobocal/json'
 import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
-import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikkyoChId'
+import { syobocalJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 
 import { deepmerge } from '@/utils/deepmerge'
 
@@ -13,23 +14,41 @@ function isInteger(str: string) {
   return INT_REGEXP.test(str)
 }
 
+function getSlotId(
+  scChId: SyoboCalChannelId,
+  starttime: number,
+  endtime: number
+) {
+  return `${syobocalJikkyoChIdMap.get(scChId)}:${starttime / 1000}-${endtime / 1000}`
+}
+
+export function convertProgramTime(time: string): number {
+  if (isInteger(time)) {
+    return parseInt(time) * 1000
+  } else {
+    return new Date(time).getTime()
+  }
+}
+
+export function getSlotIdFromProgram(
+  program: SyoboCalProgram | SyoboCalProgramDb
+): string {
+  return getSlotId(
+    program.ChID,
+    convertProgramTime(program.StTime),
+    convertProgramTime(program.EdTime)
+  )
+}
+
 export function programToSlotDetail(
   title: string,
   program: SyoboCalProgram | SyoboCalProgramDb,
   detail?: DeepPartial<StateSlotDetailJikkyo>
 ): StateSlotDetailJikkyo {
-  let starttime: number
-  let endtime: number
+  const starttime = convertProgramTime(program.StTime)
+  const endtime = convertProgramTime(program.EdTime)
 
-  if (isInteger(program.StTime) && isInteger(program.EdTime)) {
-    starttime = parseInt(program.StTime) * 1000
-    endtime = parseInt(program.EdTime) * 1000
-  } else {
-    starttime = new Date(program.StTime).getTime()
-    endtime = new Date(program.EdTime).getTime()
-  }
-
-  const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime / 1000}-${endtime / 1000}`
+  const id = getSlotId(program.ChID, starttime, endtime)
 
   const flags: string[] = []
 

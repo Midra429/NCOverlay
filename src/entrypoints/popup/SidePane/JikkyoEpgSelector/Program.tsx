@@ -11,7 +11,7 @@ import {
 import { darken, saturate, toHex } from 'color2k'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
-import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
+import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 
 import { readableColor } from '@/utils/color'
 import { useNcoState } from '@/hooks/useNco'
@@ -111,7 +111,7 @@ export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
 
   const { title, description, startAt, endAt, icon } = program
 
-  const id = `${tverToJikkyoChId(tverChId)}:${startAt}-${endAt}`
+  const id = `${tverJikkyoChIdMap.get(tverChId)}:${startAt}-${endAt}`
 
   const slotTitle = [
     icon.revival && '🈞',

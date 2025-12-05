@@ -1,7 +1,7 @@
 import type { TVerChannelId } from '@midra/nco-utils/types/api/constants'
 
 import { cn } from '@heroui/react'
-import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
+import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { COLUMN_WIDTH } from './TverEpg'
@@ -11,8 +11,8 @@ export interface ChannelCellProps {
 }
 
 export function ChannelCell({ tverChId }: ChannelCellProps) {
-  const jkChId = tverToJikkyoChId(tverChId)
-  const chName = JIKKYO_CHANNELS[jkChId!]
+  const jkChId = tverJikkyoChIdMap.get(tverChId)!
+  const chName = JIKKYO_CHANNELS[jkChId]
 
   return (
     <div

@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
-import { tverToJikkyoChId } from '@midra/nco-utils/api/utils/tverToJikkyoChId'
+import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
@@ -91,7 +91,7 @@ export function JikkyoEpgSelector({
 
       const contents: EPGContent[] = result.contents
         .filter(({ broadcaster }) => {
-          return tverToJikkyoChId(broadcaster.id)
+          return tverJikkyoChIdMap.get(broadcaster.id)
         })
         .map(({ broadcaster, programs }) => {
           return {

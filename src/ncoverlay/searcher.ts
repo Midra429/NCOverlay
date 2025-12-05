@@ -15,15 +15,21 @@ import type {
 import { parse } from '@midra/nco-utils/parse'
 import { REGEXP_DANIME_CHAPTER } from '@midra/nco-utils/search/constants'
 import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog/list'
-import { jikkyoToSyobocalChId } from '@midra/nco-utils/api/utils/jikkyoToSyobocalChId'
-import { syobocalToJikkyoChId } from '@midra/nco-utils/api/utils/syobocalToJikkyoChId'
+import {
+  jikkyoSyobocalChIdMap,
+  syobocalJikkyoChIdMap,
+} from '@midra/nco-utils/api/constants'
 
 import { logger } from '@/utils/logger'
 import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
 import { getNicologComment } from '@/utils/api/nicolog/getNicologComment'
 import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDetail'
-import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
+import {
+  convertProgramTime,
+  getSlotIdFromProgram,
+  programToSlotDetail,
+} from '@/utils/api/syobocal/programToSlotDetail'
 import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
@@ -55,8 +61,8 @@ export class NCOSearcher {
     const { input, duration, targets, jikkyoChannelIds } = args
 
     const channelIds = jikkyoChannelIds
-      ?.map(jikkyoToSyobocalChId)
-      .filter((v) => v !== null)
+      ?.map((jkId) => jikkyoSyobocalChIdMap.get(jkId))
+      .filter((scId) => scId != null)
 
     // 読み込み済みのスロットID
     const slotDetails = await this.#state.get('slotDetails')
@@ -119,23 +125,21 @@ export class NCOSearcher {
       type: Exclude<StateSlotDetailDefault['type'], 'normal'>,
       results: SearchDataWithFields[]
     ) {
-      for (const result of results) {
-        if (!result || loadedIds.includes(result.contentId)) {
-          continue
-        }
+      for (const data of results) {
+        if (loadedIds.includes(data.contentId)) continue
 
         let offsetMs: number | undefined
 
         // オフセット調節
         if (type === 'szbh') {
-          const diff = result.lengthSeconds - duration
+          const diff = data.lengthSeconds - duration
 
           if (50 <= diff) {
             offsetMs = diff * -1000
           }
         }
 
-        const slotDetail = searchDataToSlotDetail(result, {
+        const slotDetail = searchDataToSlotDetail(data, {
           type,
           status: 'loading',
           offsetMs,
@@ -148,7 +152,7 @@ export class NCOSearcher {
 
     addLoadingSlotDetails('official', searchNiconicoResults.official)
     addLoadingSlotDetails('danime', searchNiconicoResults.danime)
-    addLoadingSlotDetails('chapter', [searchNiconicoResults.chapter[0]])
+    addLoadingSlotDetails('chapter', searchNiconicoResults.chapter.slice(0, 1))
     addLoadingSlotDetails('szbh', searchNiconicoResults.szbh)
 
     // ニコニコ実況 過去ログ
@@ -163,24 +167,19 @@ export class NCOSearcher {
         .trim()
 
       for (const program of syobocalPrograms) {
-        const starttime = new Date(program.StTime).getTime() / 1000
-        const endtime = new Date(program.EdTime).getTime() / 1000
-
-        const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime}-${endtime}`
-
-        if (loadedIds.includes(id)) continue
-
         const slotDetail = programToSlotDetail(slotTitle, program, {
           status: 'loading',
           isAutoLoaded,
         })
+
+        if (loadedIds.includes(slotDetail.id)) continue
 
         loadingSlotDetails.jikkyo.set(slotDetail.id, slotDetail)
       }
     }
 
     // nicolog
-    if (searchNicologResult) {
+    if (searchNicologResult && !loadedIds.includes(searchNicologResult.id)) {
       const slotDetail = detailToSlotDetail(searchNicologResult, {
         status: 'loading',
         isAutoLoaded,
@@ -203,13 +202,8 @@ export class NCOSearcher {
       .toArray()
       .map((v) => v.id)
 
-    const scPrograms = syobocalPrograms.filter((program) => {
-      const starttime = new Date(program.StTime).getTime() / 1000
-      const endtime = new Date(program.EdTime).getTime() / 1000
-
-      const id = `${syobocalToJikkyoChId(program.ChID)}:${starttime}-${endtime}`
-
-      return jikkyoIds.includes(id)
+    const scPrograms = syobocalPrograms.filter((prog) => {
+      return jikkyoIds.includes(getSlotIdFromProgram(prog))
     })
 
     const [
@@ -222,38 +216,42 @@ export class NCOSearcher {
     ] = await Promise.all([
       // ニコニコ動画 コメント 取得
       Promise.all(
-        loadingSlotDetails.official
-          .values()
-          .map((v) => getNiconicoComment(v.id))
+        loadingSlotDetails.official.values().map((detail) => {
+          return getNiconicoComment(detail.id)
+        })
       ),
       Promise.all(
-        loadingSlotDetails.danime.values().map((v) => getNiconicoComment(v.id))
+        loadingSlotDetails.danime.values().map((detail) => {
+          return getNiconicoComment(detail.id)
+        })
       ),
       Promise.all(
-        searchNiconicoResults.chapter.map((v) =>
-          getNiconicoComment(v.contentId)
-        )
+        searchNiconicoResults.chapter.map((data) => {
+          return getNiconicoComment(data.contentId)
+        })
       ),
       Promise.all(
-        loadingSlotDetails.szbh.values().map((v) => getNiconicoComment(v.id))
+        loadingSlotDetails.szbh.values().map((detail) => {
+          return getNiconicoComment(detail.id)
+        })
       ),
 
       // ニコニコ実況 過去ログ 取得
       Promise.all(
-        scPrograms.map((val) => {
+        scPrograms.map((prog) => {
           return getJikkyoKakolog({
-            jkChId: syobocalToJikkyoChId(val.ChID)!,
-            starttime: new Date(val.StTime).getTime() / 1000,
-            endtime: new Date(val.EdTime).getTime() / 1000,
+            jkChId: syobocalJikkyoChIdMap.get(prog.ChID)!,
+            starttime: convertProgramTime(prog.StTime) / 1000,
+            endtime: convertProgramTime(prog.EdTime) / 1000,
           })
         })
       ),
 
       // nicolog 取得
       Promise.all(
-        loadingSlotDetails.nicolog
-          .values()
-          .map((v) => getNicologComment(`${NICO_LIVE_ANIME_ROOT}/${v.id}`))
+        loadingSlotDetails.nicolog.values().map((detail) => {
+          return getNicologComment(`${NICO_LIVE_ANIME_ROOT}/${detail.id}`)
+        })
       ),
     ])
 
@@ -272,22 +270,26 @@ export class NCOSearcher {
       results: SearchDataWithFields[],
       comments: (GetNiconicoCommentResult | null)[]
     ) {
-      const len = comments.length
+      const len = results.length
 
       for (let i = 0; i < len; i++) {
-        const result = results[i]
         const cmt = comments[i]
 
         if (!cmt) continue
 
-        const id = result.contentId
+        const { contentId: id } = results[i]
+
         const {
           videoData: { video },
           threads,
           kawaiiCount,
         } = cmt
 
-        loadedSlotMap.set(id, { id, threads, isAutoLoaded })
+        loadedSlotMap.set(id, {
+          id,
+          threads,
+          isAutoLoaded,
+        })
 
         updateSlotDetailMap.set(id, {
           id,
