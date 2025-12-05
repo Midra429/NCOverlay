@@ -155,7 +155,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     Icon: SearchIcon,
     items: [
       {
-        settingsKey: 'settings:comment:autoLoads',
+        settingsKey: 'settings:autoSearch:targets',
         inputType: 'checkbox',
         label: '検索対象',
         description: `${VODS.nhkPlus}は「実況」のみ`,
@@ -169,13 +169,20 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
-        settingsKey: 'settings:comment:jikkyoChannelIds',
+        settingsKey: 'settings:autoSearch:jikkyoChannelIds',
         inputType: 'ch-selector',
         label: '実況チャンネル',
         options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
           label: `${id}: ${val}`,
           value: id as JikkyoChannelId,
         })),
+      },
+      {
+        settingsKey: 'settings:autoSearch:manual',
+        inputType: 'toggle',
+        label: '手動で実行',
+        description:
+          '再生時に自動検索を実行しないようにします。\nポップアップの自動検索(再読み込み)ボタンを押すと実行されます。',
       },
     ],
   },

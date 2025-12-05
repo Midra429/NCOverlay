@@ -30,7 +30,7 @@ import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
 import { Tooltip } from '@/components/Tooltip'
 
-export type Key = 'settings:comment:jikkyoChannelIds'
+export type Key = 'settings:autoSearch:jikkyoChannelIds'
 
 export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'ch-selector'> {

@@ -5,7 +5,7 @@ import type {
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { VodKey } from '@/types/constants'
 import type { StorageOnChangeCallback } from '@/utils/storage'
-import type { NCOSearcherAutoLoadArgs } from './searcher'
+import type { NCOSearcherAutoSearchArgs } from './searcher'
 
 import equal from 'fast-deep-equal'
 
@@ -49,7 +49,7 @@ export type StateStatus =
 
 export type StateVod = VodKey
 
-export type StateInfo = Partial<NCOSearcherAutoLoadArgs>
+export type StateInfo = Partial<NCOSearcherAutoSearchArgs>
 
 export type StateOffset = number
 

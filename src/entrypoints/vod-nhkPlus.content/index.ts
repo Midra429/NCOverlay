@@ -35,8 +35,7 @@ async function main() {
   let starttime: number | null = null
   let endtime: number | null = null
 
-  const patcher = new NCOPatcher({
-    vod,
+  const patcher = new NCOPatcher(vod, {
     getInfo: async () => {
       streamId = location.pathname.split('/').at(-1) ?? null
 
@@ -70,7 +69,7 @@ async function main() {
 
       return { input, duration, disableParse: true }
     },
-    autoLoad: async (nco, { input, duration, targets, jikkyoChannelIds }) => {
+    autoSearch: async (nco, { input, duration, targets, jikkyoChannelIds }) => {
       if (
         !jkChId ||
         !starttime ||

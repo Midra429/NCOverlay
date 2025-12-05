@@ -25,8 +25,7 @@ async function main() {
 
   logger.log('vod', vod)
 
-  const patcher = new NCOPatcher({
-    vod,
+  const patcher = new NCOPatcher(vod, {
     getInfo: async () => {
       const paths = location.pathname.split('/')
       const id = paths.at(-2)

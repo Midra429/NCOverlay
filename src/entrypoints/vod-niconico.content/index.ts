@@ -29,8 +29,7 @@ async function main() {
 
   let onChangeRemoveListener: (() => void) | null = null
 
-  const patcher = new NCOPatcher({
-    vod,
+  const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
       const wrapper = nco.renderer.video.closest('div[data-name="inner"]')
 

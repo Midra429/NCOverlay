@@ -54,8 +54,7 @@ async function main() {
     return programId ?? null
   }
 
-  const patcher = new NCOPatcher({
-    vod,
+  const patcher = new NCOPatcher(vod, {
     getInfo: async () => {
       const programId = await getProgramId()
       const token = localStorage.getItem('abm_token')

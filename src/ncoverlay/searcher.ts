@@ -2,7 +2,7 @@ import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { SearchDataWithFields } from '@midra/nco-utils/search/services/niconico'
-import type { AutoLoadTarget } from '@/types/storage'
+import type { AutoSearchTarget } from '@/types/storage'
 import type { GetNiconicoCommentResult } from '@/utils/api/niconico/getNiconicoComment'
 import type {
   NCOState,
@@ -33,13 +33,13 @@ import {
 import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
-export interface NCOSearcherAutoLoadArgs {
+export interface NCOSearcherAutoSearchArgs {
   /** 動画タイトル or 解析結果 */
   input: string | ParsedResult
   /** 動画の長さ */
   duration: number
   /** 検索対象 */
-  targets: AutoLoadTarget[]
+  targets: AutoSearchTarget[]
   /** 実況チャンネル */
   jikkyoChannelIds?: JikkyoChannelId[]
 }
@@ -54,7 +54,7 @@ export class NCOSearcher {
     this.#state = state
   }
 
-  async autoLoad(args: NCOSearcherAutoLoadArgs) {
+  async autoSearch(args: NCOSearcherAutoSearchArgs) {
     args.input = parse(args.input)
 
     const isAutoLoaded = true
@@ -109,7 +109,7 @@ export class NCOSearcher {
 
     // ロード中のデータ
     const loadingSlotDetails: Record<
-      AutoLoadTarget,
+      AutoSearchTarget,
       Map<string, StateSlotDetail>
     > = {
       official: new Map(),

@@ -24,8 +24,7 @@ async function main() {
 
   logger.log('vod', vod)
 
-  const patcher = new NCOPatcher({
-    vod,
+  const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
       if (
         document.querySelector(

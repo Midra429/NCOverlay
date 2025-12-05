@@ -23,10 +23,11 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:hideAssistedComments': false,
 
   // 自動検索
-  'settings:comment:autoLoads': ['official', 'danime', 'chapter'],
-  'settings:comment:jikkyoChannelIds': Object.keys(
+  'settings:autoSearch:targets': ['official', 'danime', 'chapter'],
+  'settings:autoSearch:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
+  'settings:autoSearch:manual': false,
 
   // NG設定
   'settings:ng:words': [],

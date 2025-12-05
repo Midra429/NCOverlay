@@ -23,7 +23,7 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:opacity',
   'settings:comment:scale',
   'settings:comment:amount',
-  'settings:comment:autoLoads',
+  'settings:autoSearch:targets',
 ]
 
 /**

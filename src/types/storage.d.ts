@@ -7,7 +7,10 @@ import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search
 import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems, StateSlotDetail } from '@/ncoverlay/state'
 
-export type AutoLoadTarget = Exclude<StateSlotDetail['type'], 'normal' | 'file'>
+export type AutoSearchTarget = Exclude<
+  StateSlotDetail['type'],
+  'normal' | 'file'
+>
 
 export interface NgSettingsContent {
   content: string
@@ -24,7 +27,6 @@ export interface InternalItems {
   _migrate_version: number
 }
 
-/** < v3.13.1 */
 export interface StorageItems_v2 {
   /**
    * コメント:自動検索
@@ -33,13 +35,26 @@ export interface StorageItems_v2 {
   'settings:comment:autoLoads': ('normal' | 'szbh' | 'chapter' | 'jikkyo')[]
 }
 
-/** v3.13.1 <= */
 export interface StorageItems_v3 {
   /**
    * NG設定:ニコニコ側のNG設定を使用
    * @default false
    */
   'settings:ng:useNiconicoAccount': boolean
+}
+
+export interface StorageItems_v4 {
+  /**
+   * 自動検索:検索対象
+   * @default true
+   */
+  'settings:comment:autoLoads': AutoSearchTarget[]
+
+  /**
+   * 自動検索:実況チャンネル
+   * @default []
+   */
+  'settings:comment:jikkyoChannelIds': JikkyoChannelId[]
 }
 
 export interface SettingItems {
@@ -124,15 +139,21 @@ export interface SettingItems {
   // 自動検索 //////////////////////////////////////////////////
   /**
    * 自動検索:検索対象
-   * @default true
+   * @default ['official', 'danime', 'chapter']
    */
-  'settings:comment:autoLoads': AutoLoadTarget[]
+  'settings:autoSearch:targets': AutoSearchTarget[]
 
   /**
    * 自動検索:実況チャンネル
-   * @default []
+   * @default Object.keys(JIKKYO_CHANNELS)
    */
-  'settings:comment:jikkyoChannelIds': JikkyoChannelId[]
+  'settings:autoSearch:jikkyoChannelIds': JikkyoChannelId[]
+
+  /**
+   * 自動検索:手動で実行
+   * @default false
+   */
+  'settings:autoSearch:manual': boolean
 
   // NG設定 //////////////////////////////////////////////////
   /**

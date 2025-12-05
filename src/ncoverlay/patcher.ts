@@ -1,6 +1,6 @@
 import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { VodKey } from '@/types/constants'
-import type { NCOSearcherAutoLoadArgs } from './searcher'
+import type { NCOSearcherAutoSearchArgs } from './searcher'
 
 import { parse } from '@midra/nco-utils/parse'
 
@@ -20,7 +20,7 @@ export class NCOPatcher {
   readonly #vod
   readonly #getInfo
   readonly #appendCanvas
-  readonly #autoLoad
+  readonly #autoSearch
 
   #video: HTMLVideoElement | null = null
   #nco: NCOverlay | null = null
@@ -29,16 +29,21 @@ export class NCOPatcher {
     return this.#nco
   }
 
-  constructor(init: {
-    vod: VodKey
-    getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
-    appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
-    autoLoad?: (nco: NCOverlay, args: NCOSearcherAutoLoadArgs) => Promise<void>
-  }) {
-    this.#vod = init.vod
+  constructor(
+    vod: VodKey,
+    init: {
+      getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
+      appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
+      autoSearch?: (
+        nco: NCOverlay,
+        args: NCOSearcherAutoSearchArgs
+      ) => Promise<void>
+    }
+  ) {
+    this.#vod = vod
     this.#getInfo = init.getInfo
     this.#appendCanvas = init.appendCanvas
-    this.#autoLoad = init.autoLoad
+    this.#autoSearch = init.autoSearch
   }
 
   dispose() {
@@ -56,16 +61,10 @@ export class NCOPatcher {
     this.#video = video
     this.#nco = new NCOverlay(this.#video)
 
-    const load = async () => {
+    this.#nco.state.set('vod', this.#vod)
+
+    const loadInfo = async () => {
       if (!this.#nco) return
-
-      const status = await this.#nco.state.get('status')
-
-      if (status === 'searching' || status === 'loading') {
-        return
-      }
-
-      await this.#nco.state.set('status', 'searching')
 
       try {
         const info = await this.#getInfo(this.#nco)
@@ -90,37 +89,56 @@ export class NCOPatcher {
           }
         }
 
-        const [autoLoads, jikkyoChannelIds] = await settings.get(
-          'settings:comment:autoLoads',
-          'settings:comment:jikkyoChannelIds'
-        )
-
-        const args: NCOSearcherAutoLoadArgs = {
+        const args: Partial<NCOSearcherAutoSearchArgs> = {
           input: parsed ?? '',
           duration: info ? Math.floor(info.duration) : 0,
-          targets: autoLoads,
         }
 
-        const stateInfo = { ...args }
+        await this.#nco.state.set('info', args)
 
-        await this.#nco.state.set('vod', this.#vod)
-        await this.#nco.state.set('info', stateInfo)
+        logger.log('state.info', args)
+      } catch (err) {
+        logger.error('patcher:loadInfo', err)
+      }
+    }
 
-        logger.log('state.vod', this.#vod)
-        logger.log('state.info', stateInfo)
+    const autoSearch = async () => {
+      if (!this.#nco) return
+
+      const status = await this.#nco.state.get('status')
+
+      if (status === 'searching' || status === 'loading') {
+        return
+      }
+
+      await this.#nco.state.set('status', 'searching')
+
+      try {
+        const info = await this.#nco.state.get('info')
+
+        const [targets, jikkyoChannelIds] = await settings.get(
+          'settings:autoSearch:targets',
+          'settings:autoSearch:jikkyoChannelIds'
+        )
+
+        const args: NCOSearcherAutoSearchArgs | null = {
+          input: '',
+          duration: 0,
+          targets,
+          jikkyoChannelIds,
+          ...info,
+        }
 
         // 自動検索
-        if (autoLoads.length && args.input && args.duration) {
-          args.jikkyoChannelIds = jikkyoChannelIds
-
-          if (this.#autoLoad) {
-            await this.#autoLoad(this.#nco, args)
+        if (targets.length && args.input && args.duration) {
+          if (this.#autoSearch) {
+            await this.#autoSearch(this.#nco, args)
           } else {
-            await this.#nco.searcher.autoLoad(args)
+            await this.#nco.searcher.autoSearch(args)
           }
         }
       } catch (err) {
-        logger.error('patcher:load', err)
+        logger.error('patcher:autoSearch', err)
       }
 
       await this.#nco.state.set('status', 'ready')
@@ -129,7 +147,11 @@ export class NCOPatcher {
     this.#nco.addEventListener('loadedmetadata', async function () {
       await this.clear()
 
-      load()
+      await loadInfo()
+
+      if (await settings.get('settings:autoSearch:manual')) return
+
+      await autoSearch()
     })
 
     this.#nco.addEventListener('reload', async function () {
@@ -139,7 +161,8 @@ export class NCOPatcher {
         this.state.remove('slotDetails', { isAutoLoaded: true }),
       ])
 
-      load()
+      await loadInfo()
+      await autoSearch()
     })
 
     const intervalMs = 250
