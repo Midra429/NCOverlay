@@ -257,6 +257,7 @@ export function SlotItem({
           </div>
         )}
       </div>
+
       {/* 設定 */}
       {!isError && !isSearch && (
         <Options

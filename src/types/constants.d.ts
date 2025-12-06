@@ -1,7 +1,7 @@
-import type { SettingsKey } from '@/types/storage'
-import type { VOD_KEYS } from '@/constants/vods'
-import type { PLUGINS } from '@/constants/plugins'
 import type { SettingsInputProps } from '@/components/SettingsInput'
+import type { PLUGINS } from '@/constants/plugins'
+import type { VOD_KEYS } from '@/constants/vods'
+import type { SettingsKey } from '@/types/storage'
 
 export type VodKey = (typeof VOD_KEYS)[number]
 
@@ -20,7 +20,6 @@ export type Plugins<K extends PluginVodKey> = {
 }
 
 export interface SettingsInitItem {
-  id: string
   title: string
   items: SettingsInputProps<SettingsKey>[]
   Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode

@@ -20,7 +20,6 @@ import { VODS } from '@/constants/vods'
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
-    id: 'general',
     title: '全般',
     Icon: SlidersHorizontalIcon,
     items: [
@@ -85,12 +84,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'toggle',
         label: 'かわいい率を表示',
         description:
-          'コメント数の右側にかわいい率（かわいいコメの出現率）を表示します。',
+          'コメント数の右側にかわいい率(かわいいの出現率)を表示します。',
       },
     ],
   },
+
   {
-    id: 'comment',
     title: 'コメント',
     Icon: MessageSquareTextIcon,
     items: [
@@ -127,7 +126,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'range',
         label: '表示量',
         description:
-          'コメント数の目安: 2倍(2,000) 〜 10倍(10,000)\n倍率が高くなるほど取得に時間がかかります。',
+          'コメント数の目安: 2倍(2,000) 〜 10倍(10,000)\n※倍率が高くなるほど取得に時間がかかったり、エラーが発生する可能性が高くなります。',
         min: 1,
         max: 10,
         step: 1,
@@ -149,8 +148,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       },
     ],
   },
+
   {
-    id: 'auto-search',
     title: '自動検索',
     Icon: SearchIcon,
     items: [
@@ -186,8 +185,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       },
     ],
   },
+
   {
-    id: 'ng',
     title: 'NG設定',
     Icon: MessageSquareOffIcon,
     items: [
@@ -226,8 +225,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       },
     ],
   },
+
   {
-    id: 'keyboard',
     title: 'キーボード',
     Icon: KeyboardIcon,
     items: [
@@ -283,8 +282,8 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       },
     ],
   },
+
   {
-    id: 'plugins',
     title: 'プラグイン',
     Icon: BlocksIcon,
     items: Object.entries(PLUGINS).map(([key, value]) => ({

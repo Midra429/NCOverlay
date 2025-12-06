@@ -38,7 +38,7 @@ export function SidePanelButton() {
 
   return (
     <PanelButton
-      label={`コメント一覧を${open ? '閉じる' : '開く'}`}
+      label={`コメントリストを${open ? '閉じる' : '開く'}`}
       startContent={open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
       onPress={onPress}
     />

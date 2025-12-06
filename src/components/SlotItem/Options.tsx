@@ -4,7 +4,7 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 import { useEffect, useState } from 'react'
 import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import { Button } from '@heroui/react'
-import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
+import { Settings2Icon, XIcon } from 'lucide-react'
 import {
   AnimatePresence,
   LazyMotion,
@@ -40,7 +40,7 @@ export function OptionsButton({ isOpen, onPress }: OptionsButtonProps) {
       {isOpen ? (
         <XIcon className="size-3.5" />
       ) : (
-        <SlidersHorizontalIcon className="size-3.5" />
+        <Settings2Icon className="size-3.5" />
       )}
     </Button>
   )

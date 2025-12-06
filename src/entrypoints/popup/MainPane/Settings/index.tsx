@@ -92,9 +92,9 @@ const accordionItemInfo = (
  * 各設定
  */
 const accordionItemSettings = SETTINGS_INIT_DATA.map(
-  ({ id, title, items, Icon }) => (
+  ({ title, items, Icon }) => (
     <AccordionItem
-      key={id}
+      key={title}
       classNames={accordionItemClassNames}
       title={title}
       startContent={Icon && <Icon />}
