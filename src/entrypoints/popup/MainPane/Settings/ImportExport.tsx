@@ -1,8 +1,8 @@
 import { useDisclosure } from '@heroui/react'
 import { DownloadIcon, UploadIcon } from 'lucide-react'
 
-import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 import { webext } from '@/utils/webext'
+import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 
 import { ExportSettingsModal } from '@/components/ExportSettingsModal'
 import { ImportSettingsModal } from '@/components/ImportSettingsModal'

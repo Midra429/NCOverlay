@@ -77,12 +77,13 @@
 
               [
                 ":ALIAS:",
+                "!@/components/**",
                 "!@/constants/**",
-                "!@/utils/**",
-                "!@/proxy/**",
-                "!@/ncoverlay/**",
+                "!@/entrypoints/**",
                 "!@/hooks/**",
-                "!@/components/**"
+                "!@/ncoverlay/**",
+                "!@/proxy/**",
+                "!@/utils/**"
               ],
               "@/constants/**",
               "@/utils/*",
@@ -90,6 +91,7 @@
               "@/proxy/**",
               "@/ncoverlay/**",
               "@/hooks/**",
+              "@/entrypoints/**",
 
               ":BLANK_LINE:",
 

@@ -16,8 +16,8 @@ import {
   Table2Icon,
 } from 'lucide-react'
 
-import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 import { webext } from '@/utils/webext'
+import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 
 import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
