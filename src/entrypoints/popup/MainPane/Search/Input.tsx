@@ -1,6 +1,6 @@
 import { useEffect, useImperativeHandle, useState } from 'react'
-import { Button, Input, cn } from '@heroui/react'
-import { ChevronDownIcon, SearchIcon, Table2Icon } from 'lucide-react'
+import { Button, Input } from '@heroui/react'
+import { SearchIcon, Settings2Icon, Table2Icon, XIcon } from 'lucide-react'
 import { SiNiconico } from '@icons-pack/react-simple-icons'
 
 import { ncoState } from '@/hooks/useNco'
@@ -165,14 +165,11 @@ export function SearchInput({ isDisabled, onSearch, ref }: SearchInputProps) {
             variant="light"
             disableRipple
             startContent={
-              <ChevronDownIcon
-                className={cn(
-                  'size-4',
-                  'rotate-0 data-[open=true]:rotate-180',
-                  'transition-transform'
-                )}
-                data-open={isNiconicoOptionsOpen}
-              />
+              isNiconicoOptionsOpen ? (
+                <XIcon className="size-4" />
+              ) : (
+                <Settings2Icon className="size-4" />
+              )
             }
             onPress={() => setIsNiconicoOptionsOpen((v) => !v)}
           />

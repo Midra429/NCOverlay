@@ -37,7 +37,7 @@ const { name, version } = webext.runtime.getManifest()
 const iconUrl = webext.runtime.getURL('/icons/128.png')
 
 const accordionItemClassNames: AccordionItemProps['classNames'] = {
-  indicator: cn('-rotate-90 data-open=true:rotate-90'),
+  indicator: cn('-rotate-90 data-[open=true]:rotate-90'),
 }
 
 /**
