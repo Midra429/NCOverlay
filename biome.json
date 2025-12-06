@@ -39,6 +39,9 @@
       "performance": {
         "useTopLevelRegex": "on"
       },
+      "style": {
+        "useImportType": "on"
+      },
       "suspicious": {
         "noArrayIndexKey": "off"
       }
@@ -50,6 +53,55 @@
     "actions": {
       "recommended": false,
       "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              { "type": true },
+
+              ":BLANK_LINE:",
+
+              [":NODE:", ":BUN:"],
+
+              ":BLANK_LINE:",
+
+              ["#imports", "wxt", "wxt/**"],
+              ["react", "react/**"],
+              "@heroui/**",
+              "*react*",
+              [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!@midra/**"],
+              "@midra/**",
+
+              ":BLANK_LINE:",
+
+              [
+                ":ALIAS:",
+                "!@/constants/**",
+                "!@/utils/**",
+                "!@/proxy/**",
+                "!@/ncoverlay/**",
+                "!@/hooks/**",
+                "!@/components/**"
+              ],
+              "@/constants/*",
+              "@/utils/*",
+              "@/utils/**/*",
+              "@/proxy/**",
+              "@/ncoverlay/**",
+              "@/hooks/**",
+
+              ":BLANK_LINE:",
+
+              "@/components/**",
+
+              ":BLANK_LINE:",
+
+              [":PATH:", "!**/*.json"],
+              "**/*.json"
+            ],
+            "identifierOrder": "lexicographic"
+          }
+        },
         "useSortedProperties": "on"
       }
     }
