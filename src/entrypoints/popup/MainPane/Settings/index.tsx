@@ -19,6 +19,7 @@ import {
 import { SiGithub } from '@icons-pack/react-simple-icons'
 
 import { GITHUB_URL, LINKS } from '@/constants'
+import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
 import { storage } from '@/utils/storage/extension'
@@ -31,7 +32,6 @@ import { SettingsInput } from '@/components/SettingsInput'
 import { FormsButton } from './FormsButton'
 import { ImportExport } from './ImportExport'
 import { StorageSizes } from './StorageSizes'
-import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
 const { name, version } = webext.runtime.getManifest()
 const iconUrl = webext.runtime.getURL('/icons/128.png')

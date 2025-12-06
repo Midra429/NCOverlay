@@ -69,8 +69,9 @@
               ["react", "react/**"],
               "@heroui/**",
               "*react*",
-              [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!@midra/**"],
-              "@midra/**",
+              [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!@midra/*/**"],
+              "@midra/*/*",
+              "@midra/*/**",
 
               ":BLANK_LINE:",
 
@@ -83,9 +84,9 @@
                 "!@/hooks/**",
                 "!@/components/**"
               ],
-              "@/constants/*",
+              "@/constants/**",
               "@/utils/*",
-              "@/utils/**/*",
+              "@/utils/**",
               "@/proxy/**",
               "@/ncoverlay/**",
               "@/hooks/**",
@@ -97,6 +98,9 @@
               ":BLANK_LINE:",
 
               [":PATH:", "!**/*.json"],
+
+              ":BLANK_LINE:",
+
               "**/*.json"
             ],
             "identifierOrder": "lexicographic"

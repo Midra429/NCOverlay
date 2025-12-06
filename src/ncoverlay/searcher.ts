@@ -12,12 +12,12 @@ import type {
   StateSlotDetailUpdate,
 } from './state'
 
+import { parse } from '@midra/nco-utils/parse'
 import {
   jikkyoSyobocalChIdMap,
   syobocalJikkyoChIdMap,
 } from '@midra/nco-utils/api/constants'
 import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog/list'
-import { parse } from '@midra/nco-utils/parse'
 import { REGEXP_DANIME_CHAPTER } from '@midra/nco-utils/search/constants'
 
 import { logger } from '@/utils/logger'

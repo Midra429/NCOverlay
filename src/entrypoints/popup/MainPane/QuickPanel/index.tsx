@@ -2,6 +2,8 @@ import type { SettingsKey } from '@/types/storage'
 
 import { Divider } from '@heroui/react'
 
+import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
+
 import { PanelItem } from '@/components/PanelItem'
 import { SettingsInput } from '@/components/SettingsInput'
 
@@ -10,7 +12,6 @@ import { ReloadButton } from './ReloadButton'
 import { ReportButton } from './ReportButton'
 import { ShowHideToggle } from './ShowHideToggle'
 import { SidePanelButton } from './SidePanelButton'
-import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
 const SETTINGS_INIT_ITEMS = Object.fromEntries(
   SETTINGS_INIT_DATA.flatMap(({ items }) => {
