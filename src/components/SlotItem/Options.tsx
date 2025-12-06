@@ -1,8 +1,6 @@
-import type { Variants } from 'framer-motion'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useEffect, useState } from 'react'
-import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import { Button } from '@heroui/react'
 import { Settings2Icon, XIcon } from 'lucide-react'
 import {
@@ -13,14 +11,10 @@ import {
   useWillChange,
 } from 'framer-motion'
 
+import { TRANSITION_VARIANTS_ACCORDION } from '@/constants/framer-motion'
 import { ncoState } from '@/hooks/useNco'
 
 import { OffsetControl } from '@/components/OffsetControl'
-
-const transitionVariants: Variants = {
-  exit: { ...TRANSITION_VARIANTS.collapse.exit, overflowY: 'hidden' },
-  enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
-}
 
 export interface OptionsButtonProps {
   isOpen: boolean
@@ -99,7 +93,7 @@ export function Options({ isOpen, id, offsetMs }: OptionsProps) {
             initial="exit"
             animate="enter"
             exit="exit"
-            variants={transitionVariants}
+            variants={TRANSITION_VARIANTS_ACCORDION}
           >
             <div className="border-foreground-200 border-t-1 p-2">
               <SlotOffsetControl id={id} offsetMs={offsetMs} />

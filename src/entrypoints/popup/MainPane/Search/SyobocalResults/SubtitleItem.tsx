@@ -1,22 +1,17 @@
-import type { Variants } from 'framer-motion'
 import type { SubtitleDetailHandle } from './SubtitleDetail'
 import type { ScTitleItem } from './TitleItem'
 
 import { useImperativeHandle, useRef, useState } from 'react'
-import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import { cn } from '@heroui/react'
 import { ChevronDownIcon } from 'lucide-react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 import { LazyMotion, domAnimation, m, useWillChange } from 'framer-motion'
 
+import { TRANSITION_VARIANTS_ACCORDION } from '@/constants/framer-motion'
+
 import { PanelItem } from '@/components/PanelItem'
 
 import { SubtitleDetail } from './SubtitleDetail'
-
-const transitionVariants: Variants = {
-  exit: { ...TRANSITION_VARIANTS.collapse.exit, overflowY: 'hidden' },
-  enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
-}
 
 export type ScSubtitleItem = [count: string, text: string]
 
@@ -103,7 +98,7 @@ export function SubtitleItem({
           initial="exit"
           animate={isOpen ? 'enter' : 'exit'}
           exit="exit"
-          variants={transitionVariants}
+          variants={TRANSITION_VARIANTS_ACCORDION}
         >
           <div className="border-foreground-200 border-t-1 p-1.5">
             <SubtitleDetail title={title} subtitle={subtitle} ref={detailRef} />

@@ -1,6 +1,3 @@
-import type { Variants } from 'framer-motion'
-
-import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
 import {
   AnimatePresence,
   LazyMotion,
@@ -9,15 +6,12 @@ import {
   useWillChange,
 } from 'framer-motion'
 
+import { TRANSITION_VARIANTS_ACCORDION } from '@/constants/framer-motion'
+
 import { DateRange } from './DateRange'
 import { Genre } from './Genre'
 import { LengthRange } from './LengthRange'
 import { Sort } from './Sort'
-
-const transitionVariants: Variants = {
-  exit: { ...TRANSITION_VARIANTS.collapse.exit, overflowY: 'hidden' },
-  enter: { ...TRANSITION_VARIANTS.collapse.enter, overflowY: 'unset' },
-}
 
 export interface NiconicoOptionsProps {
   isOpen: boolean
@@ -37,7 +31,7 @@ export function NiconicoOptions({ isOpen, isDisabled }: NiconicoOptionsProps) {
             initial="exit"
             animate="enter"
             exit="exit"
-            variants={transitionVariants}
+            variants={TRANSITION_VARIANTS_ACCORDION}
           >
             <div className="flex size-full flex-col gap-2 pt-2">
               <div className="flex flex-row gap-2">
