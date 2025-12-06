@@ -178,76 +178,72 @@ export function Item({ comment, offsetMs }: ItemProps) {
     (1 <= comment.nicoruCount && NICORU_COLORS[1]) ||
     undefined
 
-  function copyComment() {
-    navigator.clipboard
-      .writeText(comment.body)
-      .then(() => {
-        addToast({
-          color: 'success',
-          title: 'コメントをコピーしました',
-        })
+  async function copyComment() {
+    try {
+      await navigator.clipboard.writeText(comment.body)
+
+      addToast({
+        color: 'success',
+        title: 'コメントをコピーしました',
       })
-      .catch(() => {
-        addToast({
-          color: 'danger',
-          title: 'コメントのコピーに失敗しました',
-        })
+    } catch {
+      addToast({
+        color: 'danger',
+        title: 'コメントのコピーに失敗しました',
       })
+    }
   }
-  function copyId() {
-    navigator.clipboard
-      .writeText(comment.userId)
-      .then(() => {
-        addToast({
-          color: 'success',
-          title: 'ユーザーIDをコピーしました',
-        })
+  async function copyId() {
+    try {
+      await navigator.clipboard.writeText(comment.userId)
+
+      addToast({
+        color: 'success',
+        title: 'ユーザーIDをコピーしました',
       })
-      .catch(() => {
-        addToast({
-          color: 'danger',
-          title: 'ユーザーIDのコピーに失敗しました',
-        })
+    } catch {
+      addToast({
+        color: 'danger',
+        title: 'ユーザーIDのコピーに失敗しました',
       })
+    }
   }
 
   async function addNgComment() {
-    settings
-      .set('settings:ng:words', [
+    try {
+      await settings.set('settings:ng:words', [
         ...(await settings.get('settings:ng:words')),
         { content: comment.body },
       ])
-      .then(() => {
-        addToast({
-          color: 'success',
-          title: 'NG設定(コメント)に追加しました',
-        })
+
+      addToast({
+        color: 'success',
+        title: 'NG設定(コメント)に追加しました',
       })
-      .catch(() => {
-        addToast({
-          color: 'danger',
-          title: 'NG設定(コメント)の追加に失敗しました',
-        })
+    } catch {
+      addToast({
+        color: 'danger',
+        title: 'NG設定(コメント)の追加に失敗しました',
       })
+    }
   }
   async function addNgId() {
-    settings
-      .set('settings:ng:ids', [
+    try {
+      await settings.set('settings:ng:ids', [
         ...(await settings.get('settings:ng:ids')),
         { content: comment.userId },
       ])
-      .then(() => {
-        addToast({
-          color: 'success',
-          title: 'NG設定(ユーザーID)に追加しました',
-        })
+
+      addToast({
+        color: 'success',
+        title: 'NG設定(ユーザーID)に追加しました',
       })
-      .catch(() => {
-        addToast({
-          color: 'danger',
-          title: 'NG設定(ユーザーID)の追加に失敗しました',
-        })
+    } catch {
+      addToast({
+        color: 'danger',
+        title: 'NG設定(ユーザーID)の追加に失敗しました',
       })
+    }
   }
 
   const commentMenu = (
@@ -335,7 +331,10 @@ export function Item({ comment, offsetMs }: ItemProps) {
         classNames={{
           wrapper: [
             'relative',
-            'w-[calc(100%-5rem)]',
+            'side1:w-full',
+            'side2:w-[calc(100%-5rem)]',
+            'side3:w-[calc(100%-8rem)]',
+            'side4:w-[calc(100%-21rem)]',
             'before:absolute before:left-0',
             'before:block',
             'before:h-full before:w-1',

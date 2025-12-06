@@ -24,7 +24,16 @@ function HeaderCell({ className, ...props }: HeaderCellProps) {
 export function Header() {
   return (
     <div className="sticky top-0 z-10 flex flex-row">
-      <HeaderCell className="w-[calc(100%-5rem)]">コメント</HeaderCell>
+      <HeaderCell
+        className={cn(
+          'side1:w-full',
+          'side2:w-[calc(100%-5rem)]',
+          'side3:w-[calc(100%-8rem)]',
+          'side4:w-[calc(100%-21rem)]'
+        )}
+      >
+        コメント
+      </HeaderCell>
 
       <HeaderCell className="w-20">再生時間</HeaderCell>
 
