@@ -8,7 +8,7 @@ import type { Browser } from '@/utils/webext'
 
 import { GOOGLE_FORMS_IDS, GOOGLE_FORMS_URL } from '@/constants'
 import { VODS } from '@/constants/vods'
-import get from '@/utils/get-value'
+import { get } from '@/utils/get'
 import { webext } from '@/utils/webext'
 
 const CONTENTS = {

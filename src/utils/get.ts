@@ -1,4 +1,4 @@
-export default function <T extends unknown>(
+export function get<T extends unknown>(
   target: any,
   paths?: string | string[]
 ): T | undefined {
