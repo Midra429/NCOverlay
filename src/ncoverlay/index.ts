@@ -2,7 +2,6 @@ import type { Marker } from '@/constants/markers'
 import type { Browser } from '@/utils/webext'
 
 import equal from 'fast-deep-equal'
-import { uid } from '@midra/nco-utils/common/uid'
 
 import { MARKERS } from '@/constants/markers'
 import { logger } from '@/utils/logger'
@@ -32,7 +31,7 @@ export interface NCOverlayEventMap {
  * NCOverlay
  */
 export class NCOverlay {
-  readonly id: string
+  readonly id: number
   readonly state: NCOState
   readonly searcher: NCOSearcher
   readonly renderer: NCORenderer
@@ -41,8 +40,8 @@ export class NCOverlay {
   readonly #storageOnChangeRemoveListeners: (() => void)[] = []
   readonly #port: Browser.runtime.Port
 
-  constructor(video: HTMLVideoElement) {
-    this.id = `${Date.now()}.${uid()}`
+  constructor(tabId: number, video: HTMLVideoElement) {
+    this.id = tabId
     this.state = new NCOState(this.id)
     this.searcher = new NCOSearcher(this.state)
     this.renderer = new NCORenderer(video)
@@ -365,7 +364,7 @@ export class NCOverlay {
     callback: NCOverlayEventMap[T]
   ) {
     this.#listeners[type] ??= []
-    this.#listeners[type]!.push(callback)
+    this.#listeners[type].push(callback)
   }
 
   removeEventListener<T extends keyof NCOverlayEventMap>(

@@ -18,27 +18,27 @@ import { settings } from '@/utils/settings/extension'
 import { storage } from '@/utils/storage/extension'
 
 export interface NCOStateItems {
-  [key: `state:${string}:status`]: StateStatus | null
-  [key: `state:${string}:vod`]: StateVod | null
-  [key: `state:${string}:info`]: StateInfo | null
-  [key: `state:${string}:offset`]: StateOffset | null
-  [key: `state:${string}:slots`]: StateSlot[] | null
-  [key: `state:${string}:slotDetails`]: StateSlotDetail[] | null
+  [key: `state:${number}:status`]: StateStatus | null
+  [key: `state:${number}:vod`]: StateVod | null
+  [key: `state:${number}:info`]: StateInfo | null
+  [key: `state:${number}:offset`]: StateOffset | null
+  [key: `state:${number}:slots`]: StateSlot[] | null
+  [key: `state:${number}:slotDetails`]: StateSlotDetail[] | null
 }
 
 export type NCOStateItemKey =
-  keyof NCOStateItems extends `state:${string}:${infer K}` ? K : never
+  keyof NCOStateItems extends `state:${number}:${infer K}` ? K : never
 
 export type NCOStateArrayItemKey = {
   [K in keyof NCOStateItems]: NCOStateItems[K] extends unknown[] | null
     ? K
     : never
-}[keyof NCOStateItems] extends `state:${string}:${infer K}`
+}[keyof NCOStateItems] extends `state:${number}:${infer K}`
   ? K
   : never
 
 export type NCOStateItem<T extends NCOStateItemKey> =
-  NCOStateItems[`state:${string}:${T}`]
+  NCOStateItems[`state:${number}:${T}`]
 
 export type StateStatus =
   | 'pending'
@@ -255,10 +255,10 @@ export async function filterDisplayThreads(
  * NCOverlayのデータ管理担当
  */
 export class NCOState {
-  readonly ncoId: string
+  readonly id: number
 
-  constructor(ncoId: string) {
-    this.ncoId = ncoId
+  constructor(id: number) {
+    this.id = id
   }
 
   dispose() {
@@ -269,7 +269,7 @@ export class NCOState {
     key: K,
     target?: V extends unknown[] ? Partial<V[number]> : never
   ): Promise<NCOStateItem<K> | null> {
-    const value = await storage.get(`state:${this.ncoId}:${key}`)
+    const value = await storage.get(`state:${this.id}:${key}`)
 
     if (target) {
       if (Array.isArray(value)) {
@@ -297,7 +297,7 @@ export class NCOState {
   }
 
   set<K extends NCOStateItemKey>(key: K, value: NCOStateItem<K>) {
-    return storage.set(`state:${this.ncoId}:${key}`, value as any)
+    return storage.set(`state:${this.id}:${key}`, value as any)
   }
 
   async add<K extends NCOStateArrayItemKey>(
@@ -387,7 +387,7 @@ export class NCOState {
         }
       }
     } else {
-      return storage.remove(`state:${this.ncoId}:${key}`)
+      return storage.remove(`state:${this.id}:${key}`)
     }
   }
 
@@ -404,8 +404,8 @@ export class NCOState {
 
   onChange<K extends NCOStateItemKey>(
     key: K,
-    callback: StorageOnChangeCallback<`state:${string}:${K}`>
+    callback: StorageOnChangeCallback<`state:${number}:${K}`>
   ) {
-    return storage.onChange(`state:${this.ncoId}:${key}`, callback)
+    return storage.onChange(`state:${this.id}:${key}`, callback)
   }
 }

@@ -5,6 +5,7 @@ import type { NCOSearcherAutoSearchArgs } from './searcher'
 import { parse } from '@midra/nco-utils/parse'
 
 import { logger } from '@/utils/logger'
+import { sendUtilsMessage } from '@/utils/extension/messaging'
 import { settings } from '@/utils/settings/extension'
 
 import { NCOverlay } from '.'
@@ -53,13 +54,15 @@ export class NCOPatcher {
     this.#nco = null
   }
 
-  setVideo(video: HTMLVideoElement) {
+  async setVideo(video: HTMLVideoElement) {
     if (this.#video === video) return
 
     this.dispose()
 
+    const { id: tabId } = await sendUtilsMessage('getCurrentTab', null)
+
     this.#video = video
-    this.#nco = new NCOverlay(this.#video)
+    this.#nco = new NCOverlay(tabId!, this.#video)
 
     this.#nco.state.set('vod', this.#vod)
 

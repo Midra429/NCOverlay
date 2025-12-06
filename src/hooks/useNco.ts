@@ -3,53 +3,19 @@ import type { NCOStateItem, NCOStateItemKey } from '@/ncoverlay/state'
 import { useEffect, useState } from 'react'
 
 import { settings } from '@/utils/settings/extension'
-import { ncoMessenger, sendNcoMessage } from '@/ncoverlay/messaging'
+import { sendNcoMessage } from '@/ncoverlay/messaging'
 import { NCOState } from '@/ncoverlay/state'
 
-export let ncoId: string | undefined
+export let ncoId: number | undefined
 export let ncoState: NCOState | undefined
 
-const timeupdateEvent = {
-  _listeners: [] as Array<(time: number) => void>,
-  addEventListener(callback: (time: number) => void) {
-    this._listeners.push(callback)
-  },
-  removeEventListener(callback: (time: number) => void) {
-    this._listeners = this._listeners.filter((cb) => cb !== callback)
-  },
-}
-
-ncoMessenger.onMessage('timeupdate', ({ data }) => {
-  if (data.id !== ncoId) return
-
-  for (const listener of timeupdateEvent._listeners) {
-    listener(data.time)
-  }
-})
-
-export async function initializeNcoState(tabId?: number) {
-  const id = await sendNcoMessage('getId', null, tabId)
+export async function initializeNcoState() {
+  const id = await sendNcoMessage('getId', null)
 
   if (id) {
     ncoId = id
     ncoState = new NCOState(id)
   }
-}
-
-export function useNcoStateReady(tabId?: number) {
-  const [state, setState] = useState(false)
-
-  useEffect(() => {
-    if (ncoState) {
-      setState(true)
-    } else {
-      initializeNcoState(tabId).then(() => {
-        setState(!!ncoState)
-      })
-    }
-  }, [])
-
-  return state
 }
 
 export function useNcoState<K extends NCOStateItemKey>(
@@ -95,20 +61,4 @@ export function useNcoState<K extends NCOStateItemKey>(
   }, [])
 
   return state
-}
-
-export function useNcoTime(): number {
-  const [time, setTime] = useState<number>(0)
-
-  useEffect(() => {
-    if (!ncoId) return
-
-    timeupdateEvent.addEventListener(setTime)
-
-    return () => {
-      timeupdateEvent.removeEventListener(setTime)
-    }
-  }, [])
-
-  return time
 }

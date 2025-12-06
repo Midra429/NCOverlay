@@ -74,7 +74,7 @@ async function main() {
     switch (port.name) {
       // NCOverlayインスタンス作成時
       case 'instance':
-        let ncoId: string | undefined
+        let ncoId: number | undefined
 
         let intervalId: NodeJS.Timeout
         let timeoutId: NodeJS.Timeout
@@ -114,7 +114,7 @@ async function main() {
               case 'pong':
                 clearTimeout(timeoutId)
 
-                ncoId = data
+                ncoId = Number(data)
                 timeoutId = setTimeout(dispose, 15000)
 
                 break

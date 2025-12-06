@@ -9,7 +9,7 @@ import { webext } from '@/utils/webext'
 // popup, background -> content
 
 interface ProtocolMap {
-  getId: (args?: null) => string | null
+  getId: (args?: null) => number | null
 
   getCurrentTime: (args?: null) => number
 
@@ -24,7 +24,7 @@ interface ProtocolMap {
     data?: number[]
   }
 
-  timeupdate: (args: { id: string; time: number }) => void
+  timeupdate: (args: { id: number; time: number }) => void
 }
 
 export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()

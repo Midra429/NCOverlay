@@ -4,8 +4,9 @@ import type { NcoV1Comment } from '@/ncoverlay/state'
 import { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
+import { ncoMessenger } from '@/ncoverlay/messaging'
 import { filterDisplayThreads } from '@/ncoverlay/state'
-import { useNcoState, useNcoTime } from '@/hooks/useNco'
+import { ncoId, useNcoState } from '@/hooks/useNco'
 
 import { Header } from './Header'
 import { Item } from './Item'
@@ -37,7 +38,6 @@ export function CommentList() {
   const stateOffset = useNcoState('offset')
   const stateSlots = useNcoState('slots')
   const stateSlotDetails = useNcoState('slotDetails')
-  const time = useNcoTime()
 
   const offsetMs = (stateOffset ?? 0) * 1000
 
@@ -56,16 +56,20 @@ export function CommentList() {
   useEffect(() => {
     if (isHover) return
 
-    const currentTime = time - offsetMs
-    const index = comments.findLastIndex((cmt) => cmt.vposMs <= currentTime)
+    return ncoMessenger.onMessage('timeupdate', ({ data }) => {
+      if (data.id !== ncoId) return
 
-    if (index !== -1) {
-      virtuoso.current?.scrollToIndex({
-        index,
-        align: 'end',
-      })
-    }
-  }, [time])
+      const currentTime = data.time - offsetMs
+      const index = comments.findLastIndex((cmt) => cmt.vposMs <= currentTime)
+
+      if (index !== -1) {
+        virtuoso.current?.scrollToIndex({
+          index,
+          align: 'end',
+        })
+      }
+    })
+  }, [isHover, virtuoso.current])
 
   return (
     <Virtuoso
