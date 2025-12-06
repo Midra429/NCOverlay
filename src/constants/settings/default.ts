@@ -58,6 +58,9 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:search:dateRange': [null, null],
   'settings:search:genre': 'アニメ',
   'settings:search:lengthRange': [null, null],
+
+  // コメントリスト (設定には非表示)
+  'settings:commentList:showPositionControl': true,
 }
 
 export const SETTINGS_DEFAULT_KEYS = Object.keys(

@@ -287,6 +287,12 @@ export interface SettingItems {
    * @default [null, null]
    */
   'settings:search:lengthRange': [start: number | null, end: number | null]
+
+  // コメントリスト //////////////////////////////////////////////////
+  /**
+   * オフセット調節を表示
+   */
+  'settings:commentList:showPositionControl': boolean
 }
 
 export interface SettingsExportItems
