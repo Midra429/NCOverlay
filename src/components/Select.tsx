@@ -1,7 +1,7 @@
 import type {
-  SlotsToClasses,
   SelectProps as HeroUISelectProps,
   SelectSlots,
+  SlotsToClasses,
 } from '@heroui/react'
 
 import {

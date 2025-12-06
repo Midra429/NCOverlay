@@ -1,7 +1,7 @@
-import type { DeepPartial } from 'utility-types'
 import type { SyoboCalChannelId } from '@midra/nco-utils/types/api/constants'
-import type { SyoboCalProgram } from '@midra/nco-utils/types/api/syobocal/json'
 import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
+import type { SyoboCalProgram } from '@midra/nco-utils/types/api/syobocal/json'
+import type { DeepPartial } from 'utility-types'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { syobocalJikkyoChIdMap } from '@midra/nco-utils/api/constants'

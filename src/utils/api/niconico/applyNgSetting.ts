@@ -1,6 +1,6 @@
 import type {
-  V1Thread,
   V1Comment,
+  V1Thread,
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { NgSettingsFormatted } from '@/utils/api/niconico/getNgSettings'
 

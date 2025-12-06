@@ -8,17 +8,17 @@ import type { SettingsInputBaseProps } from '.'
 import { useEffect, useState } from 'react'
 import {
   Button,
-  Switch,
   Input as HeroUIInput,
-  useDisclosure,
+  Switch,
   cn,
+  useDisclosure,
 } from '@heroui/react'
 import {
-  PencilIcon,
   ChevronRightIcon,
+  PencilIcon,
   PlusIcon,
-  XIcon,
   SaveIcon,
+  XIcon,
 } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'

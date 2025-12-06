@@ -1,10 +1,10 @@
 import { RefreshCwIcon, SearchIcon } from 'lucide-react'
 
-import { useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { useNcoState } from '@/hooks/useNco'
+import { useSettings } from '@/hooks/useSettings'
 
 import { PanelButton } from '@/components/PanelButton'
-import { useSettings } from '@/hooks/useSettings'
 
 export function ReloadButton() {
   const [manual] = useSettings('settings:autoSearch:manual')

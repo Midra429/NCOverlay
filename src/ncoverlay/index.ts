@@ -5,17 +5,16 @@ import equal from 'fast-deep-equal'
 import { uid } from '@midra/nco-utils/common/uid'
 
 import { MARKERS } from '@/constants/markers'
-
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
-import { settings } from '@/utils/settings/extension'
 import { sendUtilsMessage } from '@/utils/extension/messaging'
+import { settings } from '@/utils/settings/extension'
 
-import { NCOState } from './state'
-import { NCOSearcher } from './searcher'
-import { NCORenderer } from './renderer'
 import { NCOKeyboard } from './keyboard'
 import { ncoMessenger } from './messaging'
+import { NCORenderer } from './renderer'
+import { NCOSearcher } from './searcher'
+import { NCOState } from './state'
 
 import './style.css'
 

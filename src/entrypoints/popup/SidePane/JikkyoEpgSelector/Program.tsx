@@ -1,23 +1,23 @@
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
-import type { EPGProgram, EPGContent, EPGData } from '.'
+import type { EPGContent, EPGData, EPGProgram } from '.'
 
 import {
   Divider,
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
   cn,
 } from '@heroui/react'
 import { darken, saturate, toHex } from 'color2k'
+import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
-import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 
 import { readableColor } from '@/utils/color'
 import { useNcoState } from '@/hooks/useNco'
 
-import { SlotItem } from '@/components/SlotItem'
 import { ProgramIcons } from '@/components/ProgramIcons'
+import { SlotItem } from '@/components/SlotItem'
 
 import { COLUMN_WIDTH, ROW_HEIGHT } from './TverEpg'
 

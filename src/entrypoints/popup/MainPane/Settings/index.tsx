@@ -3,36 +3,35 @@ import type { AccordionItemProps } from '@heroui/react'
 import {
   Accordion,
   AccordionItem,
-  Divider,
-  Link,
   Code,
+  Divider,
   Image,
+  Link,
   cn,
 } from '@heroui/react'
 import {
-  InfoIcon,
-  DatabaseIcon,
   CircleEllipsisIcon,
+  DatabaseIcon,
+  InfoIcon,
   RotateCcwIcon,
   Trash2Icon,
 } from 'lucide-react'
 import { SiGithub } from '@icons-pack/react-simple-icons'
 
 import { GITHUB_URL, LINKS } from '@/constants'
-import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
-
 import { webext } from '@/utils/webext'
-import { storage } from '@/utils/storage/extension'
 import { settings } from '@/utils/settings/extension'
+import { storage } from '@/utils/storage/extension'
 
 import { IconLink } from '@/components/IconLink'
-import { SettingsInput } from '@/components/SettingsInput'
-import { ItemLabel } from '@/components/ItemLabel'
 import { ItemButton } from '@/components/ItemButton'
+import { ItemLabel } from '@/components/ItemLabel'
+import { SettingsInput } from '@/components/SettingsInput'
 
 import { FormsButton } from './FormsButton'
-import { StorageSizes } from './StorageSizes'
 import { ImportExport } from './ImportExport'
+import { StorageSizes } from './StorageSizes'
+import { SETTINGS_INIT_DATA } from '@/constants/settings/init-data'
 
 const { name, version } = webext.runtime.getManifest()
 const iconUrl = webext.runtime.getURL('/icons/128.png')

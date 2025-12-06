@@ -1,10 +1,10 @@
-import type { NCOStateItemKey, NCOStateItem } from '@/ncoverlay/state'
+import type { NCOStateItem, NCOStateItemKey } from '@/ncoverlay/state'
 
 import { useEffect, useState } from 'react'
 
 import { settings } from '@/utils/settings/extension'
-import { NCOState } from '@/ncoverlay/state'
 import { ncoMessenger, sendNcoMessage } from '@/ncoverlay/messaging'
+import { NCOState } from '@/ncoverlay/state'
 
 export let ncoId: string | undefined
 export let ncoState: NCOState | undefined

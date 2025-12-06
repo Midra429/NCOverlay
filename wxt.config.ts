@@ -4,7 +4,7 @@ import { defineConfig } from 'wxt'
 import { uid } from '@midra/nco-utils/common/uid'
 
 import { GITHUB_URL } from './src/constants'
-import { name, displayName, version, description } from './package.json'
+import { description, displayName, name, version } from './package.json'
 
 const EXT_BUILD_ID = JSON.stringify(uid())
 const EXT_USER_AGENT = JSON.stringify(`${displayName}/${version}`)

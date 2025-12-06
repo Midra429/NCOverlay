@@ -1,13 +1,12 @@
 import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
-import type { ScTitleItem } from './TitleItem'
 import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
+import type { ScTitleItem } from './TitleItem'
 
-import { useState, useRef, useImperativeHandle } from 'react'
+import { useImperativeHandle, useRef, useState } from 'react'
 import { Spinner, cn } from '@heroui/react'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
-
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { useNcoState } from '@/hooks/useNco'
@@ -15,8 +14,8 @@ import { useNcoState } from '@/hooks/useNco'
 import { Modal } from '@/components/Modal'
 import { SlotItem } from '@/components/SlotItem'
 
-import { TitleItemInner } from './TitleItem'
 import { SubtitleItem } from './SubtitleItem'
+import { TitleItemInner } from './TitleItem'
 
 export interface TitleDetailHandle {
   initialize: () => void

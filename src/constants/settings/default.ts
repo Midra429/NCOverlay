@@ -1,7 +1,8 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
-import type { SettingsKey, SettingItems } from '@/types/storage'
+import type { SettingItems, SettingsKey } from '@/types/storage'
 
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
+
 import { VOD_KEYS } from '../vods'
 
 /** 設定のデフォルト値 */

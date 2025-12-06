@@ -1,17 +1,15 @@
 import type {
-  SettingsKey,
   SettingItems,
-  SettingsExportKey,
   SettingsExportItems,
+  SettingsExportKey,
+  SettingsKey,
 } from '@/types/storage'
-import type { StorageOnChangeCallback } from '@/utils/storage'
+import type { StorageOnChangeCallback, WebExtStorage } from '@/utils/storage'
 
 import {
   SETTINGS_DEFAULT,
   SETTINGS_DEFAULT_KEYS,
 } from '@/constants/settings/default'
-
-import { WebExtStorage } from '@/utils/storage'
 
 const SETTINGS_EXPORT_KEYS = [
   '_migrate_version',

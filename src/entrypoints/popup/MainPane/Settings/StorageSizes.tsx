@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Divider } from '@heroui/react'
 
-import { webext } from '@/utils/webext'
 import { filesize } from '@/utils/filesize'
-import { storage } from '@/utils/storage/extension'
+import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
+import { storage } from '@/utils/storage/extension'
 
 export function StorageSizes() {
   const [storageBytes, setStorageBytes] = useState<number>(0)

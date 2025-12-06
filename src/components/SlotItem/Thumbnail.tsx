@@ -3,13 +3,12 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { Image, cn } from '@heroui/react'
 import { FileTextIcon } from 'lucide-react'
-
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
-import { SourceBadge } from './SourceBadge'
 import { AutoLoadedBadge } from './AutoLoadedBadge'
-import { Offset } from './Offset'
 import { Duration } from './Duration'
+import { Offset } from './Offset'
+import { SourceBadge } from './SourceBadge'
 
 export interface ThumbnailProps {
   id: StateSlotDetail['id']

@@ -5,11 +5,10 @@ import type {
 import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
 
 import { KAWAII_REGEXP } from '@/constants'
-
-import { settings } from '@/utils/settings/extension'
-import { extractNgSettings } from '@/utils/api/niconico/extractNgSettings'
 import { applyNgSettings } from '@/utils/api/niconico/applyNgSetting'
+import { extractNgSettings } from '@/utils/api/niconico/extractNgSettings'
 import { filterNvComment } from '@/utils/api/niconico/filterNvComment'
+import { settings } from '@/utils/settings/extension'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface GetNiconicoCommentResult {

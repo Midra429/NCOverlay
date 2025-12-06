@@ -1,28 +1,28 @@
-import type { SearchNiconicoOptions } from '@/utils/api/niconico/searchNiconico'
 import type { StateSlotDetail } from '@/ncoverlay/state'
-import type { SearchSource, SearchInputHandle } from './Input'
+import type { SearchNiconicoOptions } from '@/utils/api/niconico/searchNiconico'
+import type { SearchInputHandle, SearchSource } from './Input'
 import type { ScTitleItem } from './SyobocalResults/TitleItem'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
 import { extractVideoId } from '@/utils/api/niconico/extractVideoId'
-import { extractSyobocalId } from '@/utils/api/syobocal/extractSyobocalId'
 import {
   searchNiconicoByIds,
   searchNiconicoByKeyword,
 } from '@/utils/api/niconico/searchNiconico'
+import { extractSyobocalId } from '@/utils/api/syobocal/extractSyobocalId'
 import {
   searchSyobocalByIds,
   searchSyobocalByKeyword,
 } from '@/utils/api/syobocal/searchSyobocal'
-import { useSettings } from '@/hooks/useSettings'
 import { useNcoState } from '@/hooks/useNco'
+import { useSettings } from '@/hooks/useSettings'
 
 import { SearchInput } from './Input'
 import { NiconicoResults } from './NiconicoResults'
-import { SyobocalResults } from './SyobocalResults'
 import { Pagination } from './Pagination'
+import { SyobocalResults } from './SyobocalResults'
 
 export function Search() {
   const inputRef = useRef<SearchInputHandle>(null)

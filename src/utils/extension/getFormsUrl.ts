@@ -1,15 +1,15 @@
 import type {
   ExtractedResult,
-  ExtractedResultSingleEpisode,
   ExtractedResultMultipleEpisodes,
+  ExtractedResultSingleEpisode,
 } from '@midra/nco-utils/parse/libs/extract'
+import type { StateInfo, StateVod } from '@/ncoverlay/state'
 import type { Browser } from '@/utils/webext'
-import type { StateVod, StateInfo } from '@/ncoverlay/state'
 
-import { GOOGLE_FORMS_URL, GOOGLE_FORMS_IDS } from '@/constants'
+import { GOOGLE_FORMS_IDS, GOOGLE_FORMS_URL } from '@/constants'
 import { VODS } from '@/constants/vods'
-import { webext } from '@/utils/webext'
 import get from '@/utils/get-value'
+import { webext } from '@/utils/webext'
 
 const CONTENTS = {
   bug: '不具合報告',

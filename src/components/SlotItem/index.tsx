@@ -1,31 +1,30 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
+import type { PanelItemProps } from '@/components/PanelItem'
 import type {
   StateSlot,
   StateSlotDetail,
   StateSlotDetailUpdate,
 } from '@/ncoverlay/state'
-import type { PanelItemProps } from '@/components/PanelItem'
 
 import { useState } from 'react'
 import { cn } from '@heroui/react'
 
-import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
-
+import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { ncoState } from '@/hooks/useNco'
 
 import { PanelItem } from '@/components/PanelItem'
 
-import { StatusOverlay } from './StatusOverlay'
-import { ButtonsOverlay } from './ButtonsOverlay'
 import { AddButton } from './AddButton'
-import { Thumbnail } from './Thumbnail'
-import { DateTime } from './DateTime'
-import { Title } from './Title'
+import { ButtonsOverlay } from './ButtonsOverlay'
 import { Counts } from './Counts'
+import { DateTime } from './DateTime'
 import { HideButton } from './HideButton'
-import { TranslucentButton } from './TranslucentButton'
 import { Options, OptionsButton } from './Options'
+import { StatusOverlay } from './StatusOverlay'
+import { Thumbnail } from './Thumbnail'
+import { Title } from './Title'
+import { TranslucentButton } from './TranslucentButton'
 
 export type SlotItemProps = {
   classNames?: PanelItemProps['classNames']

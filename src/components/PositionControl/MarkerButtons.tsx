@@ -2,9 +2,8 @@ import { Button, cn } from '@heroui/react'
 import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants/markers'
-
-import { useNcoState } from '@/hooks/useNco'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { useNcoState } from '@/hooks/useNco'
 
 import { Tooltip } from '@/components/Tooltip'
 

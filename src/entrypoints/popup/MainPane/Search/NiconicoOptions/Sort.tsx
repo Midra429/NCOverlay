@@ -4,7 +4,7 @@ import { ArrowDownUpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectSection, SelectItem } from '@/components/Select'
+import { Select, SelectItem, SelectSection } from '@/components/Select'
 
 const SORT_OPTIONS: {
   label: string

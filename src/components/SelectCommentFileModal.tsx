@@ -1,22 +1,21 @@
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
-import type { StateSlotDetailFile } from '@/ncoverlay/state'
 import type { ModalProps } from '@/components/Modal'
+import type { StateSlotDetailFile } from '@/ncoverlay/state'
 
-import { useState, useRef } from 'react'
-import { addToast, Button, Textarea } from '@heroui/react'
-import { ChevronRightIcon, PlusIcon, FileInputIcon } from 'lucide-react'
-import { parseV1Threads } from '@midra/nco-utils/api/utils/niconico/v1/threads'
+import { useRef, useState } from 'react'
+import { Button, Textarea, addToast } from '@heroui/react'
+import { ChevronRightIcon, FileInputIcon, PlusIcon } from 'lucide-react'
 import {
-  parseLegacyJson,
   legacyJsonToV1Threads,
+  parseLegacyJson,
 } from '@midra/nco-utils/api/utils/niconico/legacy/json'
 import {
-  parseLegacyXml,
   legacyXmlToV1Threads,
+  parseLegacyXml,
 } from '@midra/nco-utils/api/utils/niconico/legacy/xml'
+import { parseV1Threads } from '@midra/nco-utils/api/utils/niconico/v1/threads'
 
 import { KAWAII_REGEXP } from '@/constants'
-
 import { validateJsonString } from '@/utils/validateJsonString'
 import { ncoState, useNcoState } from '@/hooks/useNco'
 

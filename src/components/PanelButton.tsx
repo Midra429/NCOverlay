@@ -1,6 +1,7 @@
 import type { ButtonProps } from '@heroui/react'
 
 import { Button, cn } from '@heroui/react'
+
 import { Tooltip } from './Tooltip'
 
 export interface PanelButtonProps extends ButtonProps {

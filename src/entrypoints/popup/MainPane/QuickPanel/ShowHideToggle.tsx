@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Switch } from '@heroui/react'
 
-import { useStorage } from '@/hooks/useStorage'
 import { useSettings } from '@/hooks/useSettings'
+import { useStorage } from '@/hooks/useStorage'
 
 import { PanelItem } from '@/components/PanelItem'
 

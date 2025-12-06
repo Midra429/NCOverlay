@@ -1,7 +1,7 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { Skeleton, cn } from '@heroui/react'
-import { PlayIcon, MessageSquareTextIcon, HeartIcon } from 'lucide-react'
+import { HeartIcon, MessageSquareTextIcon, PlayIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 

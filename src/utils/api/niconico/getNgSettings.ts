@@ -1,7 +1,6 @@
 import type { NgSettingsContent } from '@/types/storage'
 
-import { NICONICO_COLOR_COMMANDS, COLOR_CODE } from '@/constants'
-
+import { COLOR_CODE, NICONICO_COLOR_COMMANDS } from '@/constants'
 import { settings } from '@/utils/settings/extension'
 
 export interface NgSettingsFormatted {

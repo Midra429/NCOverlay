@@ -2,7 +2,6 @@ import { ClipboardPenIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
-
 import { useNcoState } from '@/hooks/useNco'
 
 import { PanelButton } from '@/components/PanelButton'

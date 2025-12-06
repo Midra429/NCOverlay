@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Tabs, Tab } from '@heroui/react'
-import { SearchIcon, LayoutGridIcon, SettingsIcon } from 'lucide-react'
+import { Tab, Tabs } from '@heroui/react'
+import { LayoutGridIcon, SearchIcon, SettingsIcon } from 'lucide-react'
 
-import { Search } from './Search'
 import { QuickPanel } from './QuickPanel'
+import { Search } from './Search'
 import { Settings } from './Settings'
 
 const tabItems: {

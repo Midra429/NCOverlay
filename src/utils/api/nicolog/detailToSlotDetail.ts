@@ -1,5 +1,5 @@
-import type { DeepPartial } from 'utility-types'
 import type { GetDataFormatted } from '@midra/nco-utils/types/api/nicolog/get'
+import type { DeepPartial } from 'utility-types'
 import type { StateSlotDetailNicolog } from '@/ncoverlay/state'
 
 import { deepmerge } from '@/utils/deepmerge'

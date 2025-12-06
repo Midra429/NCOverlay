@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react'
+import { PanelRightCloseIcon, PanelRightOpenIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
 

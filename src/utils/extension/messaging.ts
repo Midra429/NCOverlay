@@ -1,6 +1,6 @@
 import type { Browser } from '@/utils/webext'
-import type { setBadge } from './setBadge'
 import type { captureTab } from './captureTab'
+import type { setBadge } from './setBadge'
 
 import { defineExtensionMessaging } from '@webext-core/messaging'
 

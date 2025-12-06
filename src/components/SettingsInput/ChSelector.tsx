@@ -1,29 +1,28 @@
 import type {
-  JikkyoDtvChannelId,
   JikkyoBsCsChannelId,
   JikkyoChannelId,
+  JikkyoDtvChannelId,
 } from '@midra/nco-utils/types/api/constants'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import {
   Button,
-  Tabs,
-  Tab,
-  CheckboxGroup,
   Checkbox,
+  CheckboxGroup,
+  Tab,
+  Tabs,
   useDisclosure,
 } from '@heroui/react'
 import {
-  PencilIcon,
   ChevronRightIcon,
+  PencilIcon,
   RotateCcwIcon,
   SaveIcon,
 } from 'lucide-react'
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
-
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemButton } from '@/components/ItemButton'

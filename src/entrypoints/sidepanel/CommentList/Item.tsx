@@ -1,25 +1,23 @@
 import type { SlotsToClasses } from '@heroui/react'
-import type { StateSlotDetail, NcoV1Comment } from '@/ncoverlay/state'
+import type { NcoV1Comment, StateSlotDetail } from '@/ncoverlay/state'
 
 import {
   Dropdown,
-  DropdownTrigger,
+  DropdownItem,
   DropdownMenu,
   DropdownSection,
-  DropdownItem,
+  DropdownTrigger,
   cn,
 } from '@heroui/react'
 import { addToast } from '@heroui/toast'
-import { CopyIcon, PlusIcon, ClockIcon } from 'lucide-react'
+import { ClockIcon, CopyIcon, PlusIcon } from 'lucide-react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 
-import { NICONICO_COLOR_COMMANDS, COLOR_CODE_REGEXP } from '@/constants'
-
-import { formatDuration, formatDate } from '@/utils/format'
+import { COLOR_CODE_REGEXP, NICONICO_COLOR_COMMANDS } from '@/constants'
 import { readableColor } from '@/utils/color'
+import { formatDate, formatDuration } from '@/utils/format'
 import { settings } from '@/utils/settings/extension'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
-
 import { ncoState } from '@/hooks/useNco'
 
 const COMMENT_WRAPPER_TYPE_CLASSES: {

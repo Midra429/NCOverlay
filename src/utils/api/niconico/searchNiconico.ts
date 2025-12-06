@@ -1,13 +1,13 @@
 import type { SearchQueryFilters } from '@midra/nco-utils/types/api/niconico/search'
 import type { SettingItems } from '@/types/storage'
 
-import { now, getLocalTimeZone } from '@internationalized/date'
+import { getLocalTimeZone, now } from '@internationalized/date'
 
 import { settings } from '@/utils/settings/extension'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
-import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 import { searchDataToSlotDetail } from './searchDataToSlotDetail'
+import { videoDataToSlotDetail } from './videoDataToSlotDetail'
 
 const TIMEZONE_SUFFIX_REGEXP = /\[.+\]$/
 

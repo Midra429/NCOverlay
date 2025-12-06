@@ -1,12 +1,12 @@
 import type {
-  JikkyoDtvChannelId,
   JikkyoBsCsChannelId,
+  JikkyoDtvChannelId,
 } from '@midra/nco-utils/types/api/constants'
 
 import {
-  JIKKYO_CHANNELS_DTV,
-  JIKKYO_CHANNELS_BS_CS,
   CHANNEL_IDS_JIKKYO_SYOBOCAL,
+  JIKKYO_CHANNELS_BS_CS,
+  JIKKYO_CHANNELS_DTV,
 } from '@midra/nco-utils/api/constants'
 
 export const JIKKYO_CHANNEL_GROUPS = {

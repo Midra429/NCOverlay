@@ -1,11 +1,11 @@
-import type { ScTitleItem } from './TitleItem'
 import type { TitleDetailHandle } from './TitleDetail'
+import type { ScTitleItem } from './TitleItem'
 
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useDisclosure } from '@heroui/react'
 
-import { TitleItem } from './TitleItem'
 import { TitleDetail } from './TitleDetail'
+import { TitleItem } from './TitleItem'
 
 export interface SyobocalResultsProps {
   titles: ScTitleItem[]

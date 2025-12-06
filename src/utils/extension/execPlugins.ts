@@ -1,7 +1,7 @@
 import type {
+  PluginId,
   PluginKey,
   PluginVodKey,
-  PluginId,
   Plugins,
 } from '@/types/constants'
 

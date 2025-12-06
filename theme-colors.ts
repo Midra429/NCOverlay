@@ -1,4 +1,4 @@
-import type { SemanticBaseColors, ThemeColors, ColorScale } from '@heroui/react'
+import type { ColorScale, SemanticBaseColors, ThemeColors } from '@heroui/react'
 
 import { semanticColors } from '@heroui/theme/colors'
 import { readableColor } from 'color2k'

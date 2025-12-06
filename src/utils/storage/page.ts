@@ -1,9 +1,9 @@
 import type { StorageItems } from '@/types/storage'
 import type {
-  StorageGetFunction,
-  StorageSetFunction,
-  StorageRemoveFunction,
   StorageGetBytesInUseFunction,
+  StorageGetFunction,
+  StorageRemoveFunction,
+  StorageSetFunction,
 } from '.'
 
 import { WebExtStorage } from '.'

@@ -5,12 +5,10 @@ import { parse } from '@midra/nco-utils/parse'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
-
-import { logger } from '@/utils/logger'
-import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { formatedToSeconds } from '@/utils/format'
-
+import { logger } from '@/utils/logger'
+import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
+import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'

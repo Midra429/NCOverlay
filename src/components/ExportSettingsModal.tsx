@@ -13,7 +13,6 @@ import { settings } from '@/utils/settings/extension'
 
 import { Modal } from './Modal'
 import { Tooltip } from './Tooltip'
-
 import { name } from '@@/package.json'
 
 const { version } = webext.runtime.getManifest()

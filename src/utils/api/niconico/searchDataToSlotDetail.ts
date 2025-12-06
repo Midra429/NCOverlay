@@ -1,5 +1,5 @@
-import type { DeepPartial } from 'utility-types'
 import type { SearchData } from '@midra/nco-utils/types/api/niconico/search'
+import type { DeepPartial } from 'utility-types'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
 import {

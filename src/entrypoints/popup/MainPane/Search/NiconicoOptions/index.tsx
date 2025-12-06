@@ -5,14 +5,14 @@ import {
   AnimatePresence,
   LazyMotion,
   domAnimation,
-  useWillChange,
   m,
+  useWillChange,
 } from 'framer-motion'
 
-import { Sort } from './Sort'
 import { DateRange } from './DateRange'
 import { Genre } from './Genre'
 import { LengthRange } from './LengthRange'
+import { Sort } from './Sort'
 
 const transitionVariants: Variants = {
   exit: { ...TRANSITION_VARIANTS.collapse.exit, overflowY: 'hidden' },

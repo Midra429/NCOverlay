@@ -4,7 +4,7 @@ import { ClockIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
-import { Select, SelectSection, SelectItem } from '@/components/Select'
+import { Select, SelectItem, SelectSection } from '@/components/Select'
 
 const LENGTH_RANGE_OPTIONS: {
   label: string

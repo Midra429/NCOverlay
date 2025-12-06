@@ -1,10 +1,10 @@
 import type { StorageKey } from '@/types/storage'
 import type {
-  StorageGetFunction,
-  StorageSetFunction,
-  StorageRemoveFunction,
   StorageGetBytesInUseFunction,
+  StorageGetFunction,
   StorageOnChangeCallback,
+  StorageRemoveFunction,
+  StorageSetFunction,
   StorageWatchCallback,
 } from '.'
 

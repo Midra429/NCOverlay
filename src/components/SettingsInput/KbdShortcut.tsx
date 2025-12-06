@@ -4,12 +4,11 @@ import type { Browser } from '@/utils/webext'
 import type { SettingsInputBaseProps } from '.'
 
 import { Fragment, useEffect, useState } from 'react'
-import { ScrollShadow, Button, Kbd, cn } from '@heroui/react'
-import { PencilIcon, CheckIcon, PlusIcon } from 'lucide-react'
+import { Button, Kbd, ScrollShadow, cn } from '@heroui/react'
+import { CheckIcon, PencilIcon, PlusIcon } from 'lucide-react'
 import { useRecordHotkeys } from 'react-hotkeys-hook'
 
 import { webext } from '@/utils/webext'
-
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemLabel } from '@/components/ItemLabel'

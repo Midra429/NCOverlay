@@ -1,7 +1,7 @@
 // @ts-check
 import { heroui } from '@heroui/react'
 
-import { themeColorsLight, themeColorsDark, brandColors } from './theme-colors'
+import { brandColors, themeColorsDark, themeColorsLight } from './theme-colors'
 
 const fontSize = {
   mini: ['0.6875rem', '0.875rem'],

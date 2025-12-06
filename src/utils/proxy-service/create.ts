@@ -1,6 +1,6 @@
 import type { ExtensionMessenger } from '@webext-core/messaging'
 import type { WindowMessenger } from '@webext-core/messaging/page'
-import type { Service, ProtocolMap } from '.'
+import type { ProtocolMap, Service } from '.'
 
 type PromisifyFunction<T> = T extends (...args: infer P) => infer R
   ? R extends Promise<any>

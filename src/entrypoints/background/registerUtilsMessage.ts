@@ -1,8 +1,8 @@
 import type { Browser } from '@/utils/webext'
 
+import { captureTab } from '@/utils/extension/captureTab'
 import { utilsMessenger } from '@/utils/extension/messaging'
 import { setBadge } from '@/utils/extension/setBadge'
-import { captureTab } from '@/utils/extension/captureTab'
 
 export default function () {
   utilsMessenger.onMessage('getCurrentTab', ({ sender }) => {

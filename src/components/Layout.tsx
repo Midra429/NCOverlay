@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { HeroUIProvider, twMergeConfig, cn } from '@heroui/react'
+import { HeroUIProvider, cn, twMergeConfig } from '@heroui/react'
 import { ToastProvider } from '@heroui/toast'
 
 import { useTheme } from '@/hooks/useTheme'

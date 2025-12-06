@@ -1,21 +1,21 @@
-import type { VodKey, PluginKey, SettingsInitData } from '@/types/constants'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
+import type { PluginKey, SettingsInitData, VodKey } from '@/types/constants'
 
 import {
-  SunMoonIcon,
-  SunIcon,
-  MoonIcon,
-  SlidersHorizontalIcon,
-  MessageSquareTextIcon,
-  SearchIcon,
-  MessageSquareOffIcon,
   BlocksIcon,
   KeyboardIcon,
+  MessageSquareOffIcon,
+  MessageSquareTextIcon,
+  MoonIcon,
+  SearchIcon,
+  SlidersHorizontalIcon,
+  SunIcon,
+  SunMoonIcon,
 } from 'lucide-react'
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
-import { VODS } from '@/constants/vods'
 import { PLUGINS } from '@/constants/plugins'
+import { VODS } from '@/constants/vods'
 
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [

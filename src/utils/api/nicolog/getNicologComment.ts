@@ -1,8 +1,7 @@
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { GetDataFormatted } from '@midra/nco-utils/types/api/nicolog/get'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 
 import { KAWAII_REGEXP } from '@/constants'
-
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface GetNicologCommentResult {

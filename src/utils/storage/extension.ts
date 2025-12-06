@@ -4,6 +4,7 @@ import type { Browser } from '@/utils/webext'
 import equal from 'fast-deep-equal'
 
 import { webext } from '@/utils/webext'
+
 import { WebExtStorage } from '.'
 
 const extensionStorage = webext.storage.local

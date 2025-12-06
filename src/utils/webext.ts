@@ -1,5 +1,5 @@
-import type { Browser } from 'wxt/browser'
 import type browser from 'webextension-polyfill'
+import type { Browser } from 'wxt/browser'
 
 import { browser as webext } from 'wxt/browser'
 

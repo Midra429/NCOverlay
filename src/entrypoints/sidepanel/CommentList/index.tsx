@@ -1,11 +1,11 @@
-import type { VirtuosoProps, VirtuosoHandle } from 'react-virtuoso'
+import type { VirtuosoHandle, VirtuosoProps } from 'react-virtuoso'
 import type { NcoV1Comment } from '@/ncoverlay/state'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
-import { useNcoState, useNcoTime } from '@/hooks/useNco'
 import { filterDisplayThreads } from '@/ncoverlay/state'
+import { useNcoState, useNcoTime } from '@/hooks/useNco'
 
 import { Header } from './Header'
 import { Item } from './Item'

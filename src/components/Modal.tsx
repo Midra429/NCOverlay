@@ -4,10 +4,10 @@ import { useEffect } from 'react'
 import {
   Button,
   Modal as HeroUIModal,
-  ModalContent as HeroUIModalContent,
-  ModalHeader as HeroUIModalHeader,
   ModalBody as HeroUIModalBody,
+  ModalContent as HeroUIModalContent,
   ModalFooter as HeroUIModalFooter,
+  ModalHeader as HeroUIModalHeader,
 } from '@heroui/react'
 import { XIcon } from 'lucide-react'
 

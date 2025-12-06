@@ -1,5 +1,5 @@
-import type { DeepPartial } from 'utility-types'
 import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
+import type { DeepPartial } from 'utility-types'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
 import { TAG_SZBH_REGEXP } from '@midra/nco-utils/api/constants'

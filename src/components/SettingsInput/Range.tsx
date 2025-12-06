@@ -1,12 +1,12 @@
-import type { StorageItems, SettingsKey } from '@/types/storage'
+import type { SettingsKey, StorageItems } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { Slider, cn } from '@heroui/react'
 
-import { SETTINGS_DEFAULT } from '@/constants/settings/default'
-
 import { useSettings } from '@/hooks/useSettings'
+
+import { SETTINGS_DEFAULT } from '@/constants/settings/default'
 
 export type Key = {
   [P in SettingsKey]: StorageItems[P] extends number ? P : never

@@ -4,24 +4,26 @@ import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import { useState } from 'react'
 import { Button, ButtonGroup, cn } from '@heroui/react'
 import {
-  ChevronRightIcon,
   CalendarDaysIcon,
+  ChevronRightIcon,
   ChevronsDownIcon,
   PlusIcon,
 } from 'lucide-react'
-import { now, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
+import {
+  type ZonedDateTime,
+  getLocalTimeZone,
+  now,
+} from '@internationalized/date'
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'
-
 import { formatDate } from '@/utils/format'
 import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
-
 import { ncoState, useNcoState } from '@/hooks/useNco'
 
-import { Modal } from '@/components/Modal'
-import { Select, SelectSection, SelectItem } from '@/components/Select'
 import { DatePicker } from '@/components/DatePicker'
+import { Modal } from '@/components/Modal'
+import { Select, SelectItem, SelectSection } from '@/components/Select'
 import { SlotItem } from '@/components/SlotItem'
 
 const MAX_DURATION = 6 * 60 * 60 * 1000

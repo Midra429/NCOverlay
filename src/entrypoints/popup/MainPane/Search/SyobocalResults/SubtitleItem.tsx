@@ -1,13 +1,13 @@
 import type { Variants } from 'framer-motion'
-import type { ScTitleItem } from './TitleItem'
 import type { SubtitleDetailHandle } from './SubtitleDetail'
+import type { ScTitleItem } from './TitleItem'
 
-import { useState, useImperativeHandle, useRef } from 'react'
-import { cn } from '@heroui/react'
+import { useImperativeHandle, useRef, useState } from 'react'
 import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
-import { LazyMotion, domAnimation, useWillChange, m } from 'framer-motion'
-import { useOverflowDetector } from 'react-detectable-overflow'
+import { cn } from '@heroui/react'
 import { ChevronDownIcon } from 'lucide-react'
+import { useOverflowDetector } from 'react-detectable-overflow'
+import { LazyMotion, domAnimation, m, useWillChange } from 'framer-motion'
 
 import { PanelItem } from '@/components/PanelItem'
 

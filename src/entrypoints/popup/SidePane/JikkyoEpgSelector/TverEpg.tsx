@@ -1,6 +1,6 @@
-import type { EPGData, EPGContent, EPGProgram } from '.'
+import type { EPGContent, EPGData, EPGProgram } from '.'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Spinner, cn } from '@heroui/react'
 
 import { Channels } from './Channel'

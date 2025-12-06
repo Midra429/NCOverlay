@@ -1,9 +1,9 @@
 import type { ModalProps } from '@/components/Modal'
 import type { OpenAction } from './open'
 
-import { Layout } from '@/components/Layout'
-import { ImportSettingsModal } from '@/components/ImportSettingsModal'
 import { ExportSettingsModal } from '@/components/ExportSettingsModal'
+import { ImportSettingsModal } from '@/components/ImportSettingsModal'
+import { Layout } from '@/components/Layout'
 import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
 const action = new URL(location.href).searchParams.get('action') as OpenAction

@@ -3,13 +3,11 @@ import type { VodKey } from '@/types/constants'
 import { defineContentScript } from '#imports'
 
 import { MATCHES } from '@/constants/matches'
-
 import { logger } from '@/utils/logger'
-import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { videoDataToSlotDetail } from '@/utils/api/niconico/videoDataToSlotDetail'
+import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
-
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'

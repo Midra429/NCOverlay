@@ -1,7 +1,7 @@
 import type { ParsedResult } from '@midra/nco-utils/parse'
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
-import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { SearchDataWithFields } from '@midra/nco-utils/search/services/niconico'
+import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
+import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { AutoSearchTarget } from '@/types/storage'
 import type { GetNiconicoCommentResult } from '@/utils/api/niconico/getNiconicoComment'
 import type {
@@ -12,25 +12,25 @@ import type {
   StateSlotDetailUpdate,
 } from './state'
 
-import { parse } from '@midra/nco-utils/parse'
-import { REGEXP_DANIME_CHAPTER } from '@midra/nco-utils/search/constants'
-import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog/list'
 import {
   jikkyoSyobocalChIdMap,
   syobocalJikkyoChIdMap,
 } from '@midra/nco-utils/api/constants'
+import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog/list'
+import { parse } from '@midra/nco-utils/parse'
+import { REGEXP_DANIME_CHAPTER } from '@midra/nco-utils/search/constants'
 
 import { logger } from '@/utils/logger'
-import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
+import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { getNicologComment } from '@/utils/api/nicolog/getNicologComment'
+import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
 import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDetail'
 import {
   convertProgramTime,
   getSlotIdFromProgram,
   programToSlotDetail,
 } from '@/utils/api/syobocal/programToSlotDetail'
-import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { ncoSearchProxy } from '@/proxy/nco-utils/search/extension'
 
 export interface NCOSearcherAutoSearchArgs {

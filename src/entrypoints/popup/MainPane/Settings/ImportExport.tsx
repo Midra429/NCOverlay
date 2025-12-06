@@ -1,13 +1,12 @@
 import { useDisclosure } from '@heroui/react'
 import { DownloadIcon, UploadIcon } from 'lucide-react'
 
+import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 import { webext } from '@/utils/webext'
 
-import { ItemButton } from '@/components/ItemButton'
-import { ImportSettingsModal } from '@/components/ImportSettingsModal'
 import { ExportSettingsModal } from '@/components/ExportSettingsModal'
-
-import { openPopupWindow } from '@/entrypoints/popup-windows/open'
+import { ImportSettingsModal } from '@/components/ImportSettingsModal'
+import { ItemButton } from '@/components/ItemButton'
 
 const popupWindowOptions = {
   width: 370,

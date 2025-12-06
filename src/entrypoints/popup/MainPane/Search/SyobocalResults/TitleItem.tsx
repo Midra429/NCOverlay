@@ -4,8 +4,8 @@ import type {
 } from '@midra/nco-utils/types/api/syobocal/json'
 
 import { cn } from '@heroui/react'
+import { CalendarDaysIcon, ChevronRightIcon, ShapesIcon } from 'lucide-react'
 import { useOverflowDetector } from 'react-detectable-overflow'
-import { CalendarDaysIcon, ShapesIcon, ChevronRightIcon } from 'lucide-react'
 import { SYOBOCAL_CATEGORIES } from '@midra/nco-utils/api/constants'
 
 export type ScTitleItem = SyoboCalTitleMedium | SyoboCalTitleSearch

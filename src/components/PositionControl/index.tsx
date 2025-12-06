@@ -1,7 +1,7 @@
 import { cn } from '@heroui/react'
 
-import { MarkerButtons } from './MarkerButtons'
 import { GlobalOffsetControl } from './GlobalOffsetControl'
+import { MarkerButtons } from './MarkerButtons'
 
 export interface PositionControlProps
   extends React.DetailedHTMLProps<

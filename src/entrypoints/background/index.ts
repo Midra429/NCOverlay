@@ -5,20 +5,19 @@ import { ncoApi } from '@midra/nco-utils/api'
 import { ncoSearch } from '@midra/nco-utils/search'
 
 import { GITHUB_URL } from '@/constants'
-
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
-import { storage } from '@/utils/storage/extension'
-import { settings } from '@/utils/settings/extension'
-import { setBadge } from '@/utils/extension/setBadge'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
-import { registerProxy } from '@/utils/proxy-service/register'
+import { setBadge } from '@/utils/extension/setBadge'
 import { onMessage } from '@/utils/proxy-service/messaging/extension'
+import { registerProxy } from '@/utils/proxy-service/register'
+import { settings } from '@/utils/settings/extension'
+import { storage } from '@/utils/storage/extension'
 import { sendNcoMessage } from '@/ncoverlay/messaging'
 
+import clearTemporaryData from './clearTemporaryData'
 import migration from './migration'
 import registerUtilsMessage from './registerUtilsMessage'
-import clearTemporaryData from './clearTemporaryData'
 import requestPermissions from './requestPermissions'
 
 export default defineBackground({

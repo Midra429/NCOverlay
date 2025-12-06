@@ -2,16 +2,16 @@ import type { Variants } from 'framer-motion'
 import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { useEffect, useState } from 'react'
-import { Button } from '@heroui/react'
 import { TRANSITION_VARIANTS } from '@heroui/framer-utils'
+import { Button } from '@heroui/react'
+import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 import {
   AnimatePresence,
   LazyMotion,
   domAnimation,
-  useWillChange,
   m,
+  useWillChange,
 } from 'framer-motion'
-import { SlidersHorizontalIcon, XIcon } from 'lucide-react'
 
 import { ncoState } from '@/hooks/useNco'
 

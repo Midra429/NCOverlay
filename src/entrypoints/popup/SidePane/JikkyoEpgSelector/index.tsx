@@ -1,22 +1,22 @@
+import type { CallEPGv2Params } from '@midra/nco-utils/api/services/tver/callEPGv2'
 import type { TVerChannelId } from '@midra/nco-utils/types/api/constants'
 import type {
-  EPGv2Result,
-  Program as EPGv2Program,
   GenreColor as EPGv2GenreColor,
+  Program as EPGv2Program,
+  EPGv2Result,
 } from '@midra/nco-utils/types/api/tver/callEPGv2'
-import type { CallEPGv2Params } from '@midra/nco-utils/api/services/tver/callEPGv2'
 
 import { useEffect, useState } from 'react'
 import { Button, Divider } from '@heroui/react'
 import {
-  ChevronRightIcon,
   CalendarDaysIcon,
+  ChevronRightIcon,
   Tv2Icon,
   XIcon,
 } from 'lucide-react'
+import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 import { normalize } from '@midra/nco-utils/parse/libs/normalize'
-import { tverJikkyoChIdMap } from '@midra/nco-utils/api/constants'
 
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 

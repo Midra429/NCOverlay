@@ -4,11 +4,9 @@ import { defineContentScript } from '#imports'
 import { parse } from '@midra/nco-utils/parse'
 
 import { MATCHES } from '@/constants/matches'
-
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
-
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'

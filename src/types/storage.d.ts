@@ -1,11 +1,11 @@
 import type { DateTimeDuration } from '@internationalized/date'
 import type {
-  NiconicoGenre,
   JikkyoChannelId,
+  NiconicoGenre,
 } from '@midra/nco-utils/types/api/constants'
 import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search'
-import type { VodKey, PluginKey } from '@/types/constants'
 import type { NCOStateItems, StateSlotDetail } from '@/ncoverlay/state'
+import type { PluginKey, VodKey } from '@/types/constants'
 
 export type AutoSearchTarget = Exclude<
   StateSlotDetail['type'],

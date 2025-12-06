@@ -1,4 +1,4 @@
-import type { StorageItems, SettingsKey } from '@/types/storage'
+import type { SettingsKey, StorageItems } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { Input as HeroUIInput } from '@heroui/react'

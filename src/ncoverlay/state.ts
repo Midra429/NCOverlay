@@ -1,21 +1,21 @@
-import type { DeepPartial } from 'utility-types'
 import type {
-  V1Thread,
   V1Comment,
+  V1Thread,
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type { DeepPartial } from 'utility-types'
 import type { VodKey } from '@/types/constants'
 import type { StorageOnChangeCallback } from '@/utils/storage'
 import type { NCOSearcherAutoSearchArgs } from './searcher'
 
 import equal from 'fast-deep-equal'
 
-import { logger } from '@/utils/logger'
-import { storage } from '@/utils/storage/extension'
-import { settings } from '@/utils/settings/extension'
 import { deepmerge } from '@/utils/deepmerge'
-import { getNgSettings } from '@/utils/api/niconico/getNgSettings'
+import { logger } from '@/utils/logger'
 import { isNgComment } from '@/utils/api/niconico/applyNgSetting'
 import { findAssistedCommentIds } from '@/utils/api/niconico/findAssistedCommentIds'
+import { getNgSettings } from '@/utils/api/niconico/getNgSettings'
+import { settings } from '@/utils/settings/extension'
+import { storage } from '@/utils/storage/extension'
 
 export interface NCOStateItems {
   [key: `state:${string}:status`]: StateStatus | null
