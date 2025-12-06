@@ -246,7 +246,7 @@ export async function filterDisplayThreads(
     logger.log('assistedComment', `${assistedCmtCnt} / ${cmtCnt}`)
   }
 
-  const threads = threadMap.values().toArray()
+  const threads = [...threadMap.values()]
 
   return threads.length ? threads : null
 }

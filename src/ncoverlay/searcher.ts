@@ -189,7 +189,7 @@ export class NCOSearcher {
     }
 
     const loadingSlotDetailsArray = Object.values(loadingSlotDetails).flatMap(
-      (v) => v.values().toArray()
+      (v) => [...v.values()]
     )
 
     await this.#state.add('slotDetails', ...loadingSlotDetailsArray)
@@ -197,10 +197,7 @@ export class NCOSearcher {
     // コメント取得
     await this.#state.set('status', 'loading')
 
-    const jikkyoIds = loadingSlotDetails.jikkyo
-      .values()
-      .toArray()
-      .map((v) => v.id)
+    const jikkyoIds = [...loadingSlotDetails.jikkyo.values()].map((v) => v.id)
 
     const scPrograms = syobocalPrograms.filter((prog) => {
       return jikkyoIds.includes(getSlotIdFromProgram(prog))

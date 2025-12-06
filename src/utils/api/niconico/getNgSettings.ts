@@ -58,19 +58,13 @@ export async function getNgSettings(): Promise<NgSettingsFormatted> {
   }
 
   return {
-    words: ngWords
-      .values()
-      .toArray()
+    words: [...ngWords.values()]
       .map(formatNgSettingsContent)
       .filter((v) => v != null),
-    commands: ngCommands
-      .values()
-      .toArray()
+    commands: [...ngCommands.values()]
       .map(formatNgSettingsContent)
       .filter((v) => v != null),
-    ids: ngIds
-      .values()
-      .toArray()
+    ids: [...ngIds.values()]
       .map(formatNgSettingsContent)
       .filter((v) => v != null),
   }
