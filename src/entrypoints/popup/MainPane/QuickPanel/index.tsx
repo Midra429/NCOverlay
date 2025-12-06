@@ -52,14 +52,12 @@ export function QuickPanel() {
         <ShowHideToggle />
 
         {QUICKPANEL_ITEM_KEYS.map((key) => {
-          const item = { ...SETTINGS_INIT_ITEMS[key] }
+          const item = SETTINGS_INIT_ITEMS[key]
           const Input = SettingsInput[item.inputType]
-
-          delete item.description
 
           return (
             <PanelItem key={key} className="px-2.5 py-0.5">
-              <Input {...(item as any)} />
+              <Input {...(item as any)} description={undefined} />
             </PanelItem>
           )
         })}

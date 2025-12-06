@@ -170,17 +170,14 @@ if (webext.isFirefox) {
           isOpen = await sidebarAction.isOpen({ windowId })
         }
 
-        const path = await sidebarAction.getPanel({ tabId })
+        const path = this.path
         const enabled = !!path && isOpen
 
         return { enabled, path, tabId }
       },
 
       async setOptions({ enabled, path, tabId }) {
-        const currentPanel = await sidebarAction.getPanel({ tabId })
-
-        const panel =
-          enabled === false ? null : path || currentPanel || this.path || null
+        const panel = enabled ? path || this.path || null : null
 
         await sidebarAction.setPanel({ panel, tabId })
       },

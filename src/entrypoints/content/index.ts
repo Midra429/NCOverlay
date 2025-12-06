@@ -1,9 +1,5 @@
 import { defineContentScript } from '#imports'
 
-// import { registerProxy } from '@/utils/proxy-service/register'
-// import { onMessage } from '@/utils/proxy-service/messaging/page'
-// import { ncoApiProxy } from '@/proxy/nco-api/extension'
-
 import registerStorageMessage from './registerStorageMessage'
 
 export default defineContentScript({
@@ -13,6 +9,5 @@ export default defineContentScript({
 })
 
 function main() {
-  // registerProxy('ncoApi', ncoApiProxy, onMessage)
   registerStorageMessage()
 }

@@ -3,9 +3,7 @@ import { uid } from '@midra/nco-utils/common/uid'
 import { storage } from '@/utils/storage/extension'
 import { storageMessenger } from '@/utils/storage/messaging'
 
-const removeListeners: {
-  [id: string]: (() => void) | undefined
-} = {}
+const removeListenerMap = new Map<string, () => void>()
 
 export default function () {
   storageMessenger.onMessage('get', ({ data }) => {
@@ -27,32 +25,36 @@ export default function () {
   storageMessenger.onMessage('onChange:register', ({ data: key }) => {
     const id = `${key}:${uid()}`
 
-    removeListeners[id] = storage.onChange(key, (...args) => {
-      storageMessenger
-        .sendMessage('onChange:changed', [id, ...args])
-        .catch(() => {})
+    const removeListener = storage.onChange(key, async (...args) => {
+      try {
+        await storageMessenger.sendMessage('onChange:changed', [id, ...args])
+      } catch {}
     })
+
+    removeListenerMap.set(id, removeListener)
 
     return id
   })
 
   storageMessenger.onMessage('onChange:unregister', ({ data: id }) => {
-    removeListeners[id]?.()
+    removeListenerMap.get(id)?.()
   })
 
   storageMessenger.onMessage('watch:register', ({ data: key }) => {
     const id = `${key}:${uid()}`
 
-    removeListeners[id] = storage.watch(key, (...args) => {
-      storageMessenger
-        .sendMessage('watch:changed', [id, ...args])
-        .catch(() => {})
+    const removeListener = storage.watch(key, async (...args) => {
+      try {
+        await storageMessenger.sendMessage('watch:changed', [id, ...args])
+      } catch {}
     })
+
+    removeListenerMap.set(id, removeListener)
 
     return id
   })
 
   storageMessenger.onMessage('watch:unregister', ({ data: id }) => {
-    removeListeners[id]?.()
+    removeListenerMap.get(id)?.()
   })
 }
