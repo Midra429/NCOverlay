@@ -22,7 +22,15 @@ declare module 'wxt/browser' {
     }
 
     export namespace action {
-      export function getPopupPath(tabId?: number): string | undefined
+      export var path: string | undefined
+
+      /**
+       * ポップアップをポップアップウィンドウで開く
+       * @param tabId リンクするタブのID
+       */
+      export function openPopupWindow(
+        createData: OpenPopupWindowCreateData
+      ): Promise<windows.Window | undefined>
     }
 
     export namespace sidePanel {
@@ -31,10 +39,25 @@ declare module 'wxt/browser' {
         windowId?: number
       }
 
+      export var path: string | undefined
+
       export function close(options: CloseOptions): Promise<void>
 
-      export var path: string | undefined
+      /**
+       * サイドパネルをポップアップウィンドウで開く
+       * @param tabId リンクするタブのID
+       */
+      export function openPopupWindow(
+        createData: OpenPopupWindowCreateData
+      ): Promise<windows.Window | undefined>
     }
+
+    export type OpenPopupWindowThisArg = typeof action | typeof sidePanel
+    export type OpenPopupWindow = OpenPopupWindowThisArg['openPopupWindow']
+    export type OpenPopupWindowCreateData = Omit<
+      windows.CreateData,
+      'type' | 'url'
+    >
 
     export var SEARCH_PARAM_TAB_ID: `_${string}_tabId`
 
@@ -46,6 +69,7 @@ declare module 'wxt/browser' {
     export var isBackground: boolean
     export var isPopup: boolean
     export var isSidePanel: boolean
+    export var isPopupWindow: boolean
 
     export function getCurrentActiveTab(
       windowId?: number
@@ -62,7 +86,7 @@ webext.isChrome =
 webext.isFirefox = import.meta.env.FIREFOX
 webext.isSafari = import.meta.env.SAFARI
 
-const { protocol, pathname } = location
+const { protocol, pathname, search } = location
 
 webext.isContentScript = /^https?:$/.test(protocol)
 webext.isBackground =
@@ -71,6 +95,9 @@ webext.isBackground =
     pathname === '/_generated_background_page.html')
 webext.isPopup = !webext.isContentScript && pathname === '/popup.html'
 webext.isSidePanel = !webext.isContentScript && pathname === '/sidepanel.html'
+webext.isPopupWindow = new URLSearchParams(search).has(
+  webext.SEARCH_PARAM_TAB_ID
+)
 
 webext.getCurrentActiveTab = async function (windowId) {
   const tabId = new URL(location.href).searchParams.get(
@@ -94,12 +121,32 @@ webext.getCurrentActiveTab = async function (windowId) {
   return null
 }
 
-if (webext.action) {
-  webext.action.getPopupPath = function (tabId) {
-    return typeof tabId === 'number' && tabId !== webext.tabs.TAB_ID_NONE
-      ? `${manifest.action?.default_popup}?${webext.SEARCH_PARAM_TAB_ID}=${tabId}`
-      : manifest.action?.default_popup
+async function openPopupWindow(
+  this: Browser.OpenPopupWindowThisArg,
+  { tabId, ...createData }: Browser.OpenPopupWindowCreateData
+): ReturnType<Browser.OpenPopupWindow> {
+  if (typeof tabId !== 'number' || tabId === webext.tabs.TAB_ID_NONE) {
+    const tab = await webext.getCurrentActiveTab()
+
+    tabId = tab?.id
   }
+
+  const url =
+    typeof tabId === 'number' && tabId !== webext.tabs.TAB_ID_NONE
+      ? `${this.path}?${webext.SEARCH_PARAM_TAB_ID}=${tabId}`
+      : this.path
+
+  return webext.windows.create({
+    ...createData,
+    type: 'popup',
+    url,
+  })
+}
+
+if (webext.action) {
+  webext.action.path = manifest.action?.default_popup
+
+  webext.action.openPopupWindow = openPopupWindow
 }
 
 // Chrome
@@ -126,6 +173,8 @@ if (webext.isChrome) {
     webext.sidePanel.close = function ({ tabId }) {
       return this.setOptions({ enabled: false, tabId })
     }
+
+    webext.sidePanel.openPopupWindow = openPopupWindow
   }
 }
 
@@ -158,6 +207,8 @@ if (webext.isFirefox) {
       close() {
         return sidebarAction.close()
       },
+
+      openPopupWindow,
 
       async getOptions(options) {
         const { tabId } = options ?? {}
