@@ -168,20 +168,21 @@ export async function filterDisplayThreads(
   }
 
   const threadMap = new Map<string, NcoV1Thread>()
-  const ngSettings = await getNgSettings()
-  const hideAssistedComments = await settings.get(
-    'settings:comment:hideAssistedComments'
-  )
+
+  const [ngSettings, hideAssistedComments] = await Promise.all([
+    getNgSettings(),
+    settings.get('settings:comment:hideAssistedComments'),
+  ])
 
   let cmtCnt = 0
   let assistedCmtCnt = 0
 
-  for (const detail of details) {
-    if (detail.hidden || detail.status !== 'ready') {
+  for (const { id, status, offsetMs, translucent, hidden, type } of details) {
+    if (hidden || status !== 'ready') {
       continue
     }
 
-    const slot = slots.find((slot) => slot.id === detail.id)
+    const slot = slots.find((slot) => slot.id === id)
 
     if (!slot) continue
 
@@ -193,40 +194,40 @@ export async function filterDisplayThreads(
       // コメントアシストと予想されるコメント
       const assistedCommentIds =
         hideAssistedComments &&
-        detail.type !== 'jikkyo' &&
-        detail.type !== 'nicolog' &&
-        detail.type !== 'file'
+        type !== 'jikkyo' &&
+        type !== 'nicolog' &&
+        type !== 'file'
           ? findAssistedCommentIds(thread.comments)
           : null
 
       cmtCnt += thread.comments.length
       assistedCmtCnt += assistedCommentIds?.length ?? 0
 
-      const comments = thread.comments
-        .filter((cmt) => {
-          const isNg = isNgComment(cmt, ngSettings)
-          const isAssisted = assistedCommentIds?.includes(cmt.id)
+      const comments: NcoV1Comment[] = []
 
-          return !(isNg || isAssisted)
+      for (const cmt of thread.comments) {
+        const isNg = isNgComment(cmt, ngSettings)
+        const isAssisted = assistedCommentIds?.includes(cmt.id)
+
+        if (isNg || isAssisted) continue
+
+        // オフセット
+        const vposMs = cmt.vposMs + (offsetMs ?? 0)
+
+        // 半透明
+        const commands = translucent
+          ? [...new Set([...cmt.commands, 'nico:opacity:0.5'])]
+          : cmt.commands
+
+        comments.push({
+          ...cmt,
+          vposMs,
+          commands,
+          _nco: {
+            slotType: type,
+          },
         })
-        .map<NcoV1Comment>((cmt) => {
-          // オフセット
-          const vposMs = cmt.vposMs + (detail.offsetMs ?? 0)
-
-          // 半透明
-          const commands = detail.translucent
-            ? [...new Set([...cmt.commands, 'nico:opacity:0.5'])]
-            : cmt.commands
-
-          return {
-            ...cmt,
-            vposMs,
-            commands,
-            _nco: {
-              slotType: detail.type,
-            },
-          }
-        })
+      }
 
       const commentCount = comments.length
 
@@ -245,7 +246,7 @@ export async function filterDisplayThreads(
     logger.log('assistedComment', `${assistedCmtCnt} / ${cmtCnt}`)
   }
 
-  const threads = [...threadMap.values()]
+  const threads = threadMap.values().toArray()
 
   return threads.length ? threads : null
 }
