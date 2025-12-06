@@ -1,3 +1,4 @@
+import type { ZonedDateTime } from '@internationalized/date'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
@@ -9,11 +10,7 @@ import {
   ChevronsDownIcon,
   PlusIcon,
 } from 'lucide-react'
-import {
-  type ZonedDateTime,
-  getLocalTimeZone,
-  now,
-} from '@internationalized/date'
+import { getLocalTimeZone, now } from '@internationalized/date'
 import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { JIKKYO_CHANNEL_GROUPS } from '@/constants/channels'

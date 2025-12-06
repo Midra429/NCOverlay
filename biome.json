@@ -40,7 +40,12 @@
         "useTopLevelRegex": "on"
       },
       "style": {
-        "useImportType": "on"
+        "useImportType": {
+          "level": "on",
+          "options": {
+            "style": "separatedType"
+          }
+        }
       },
       "suspicious": {
         "noArrayIndexKey": "off"
