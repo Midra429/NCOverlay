@@ -1,3 +1,5 @@
+import type { ButtonProps } from '@heroui/react'
+
 import { useState } from 'react'
 import { Button, cn } from '@heroui/react'
 import { Settings2Icon, SquareArrowOutUpRight, XIcon } from 'lucide-react'
@@ -10,12 +12,14 @@ import { Options } from './Options'
 export function Header() {
   const [isOptionOpen, setIsOptionOpen] = useState(false)
 
-  function openPopupWindow() {
+  const openPopupWindow: ButtonProps['onClick'] = (evt) => {
     sendUtilsMessage('openPopupWindow', {
       type: 'sidePanel',
       createData: {
-        width: 360,
-        height: 720,
+        top: evt.screenY - evt.pageY,
+        left: evt.screenX - evt.pageX,
+        width: window.innerWidth,
+        height: window.innerHeight,
       },
     })
 
@@ -44,7 +48,7 @@ export function Header() {
               isIconOnly
               disableRipple
               startContent={<SquareArrowOutUpRight className="size-4" />}
-              onPress={openPopupWindow}
+              onClick={openPopupWindow}
             />
           )}
 
