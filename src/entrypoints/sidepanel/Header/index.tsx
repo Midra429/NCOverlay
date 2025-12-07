@@ -3,23 +3,23 @@ import { Button, cn } from '@heroui/react'
 import { Settings2Icon, SquareArrowOutUpRight, XIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
+import { sendUtilsMessage } from '@/utils/extension/messaging'
 
 import { Options } from './Options'
 
 export function Header() {
   const [isOptionOpen, setIsOptionOpen] = useState(false)
 
-  async function openPopupWindow() {
-    const tab = await webext.getCurrentActiveTab()
-    const tabId = tab?.id
-
-    await webext.sidePanel.openPopupWindow({
-      tabId,
-      width: 360,
-      height: 720,
+  function openPopupWindow() {
+    sendUtilsMessage('openPopupWindow', {
+      type: 'sidePanel',
+      createData: {
+        width: 360,
+        height: 720,
+      },
     })
 
-    await webext.sidePanel.close({ tabId })
+    webext.sidePanel.close()
   }
 
   return (

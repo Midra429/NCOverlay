@@ -16,6 +16,11 @@ interface ProtocolMap {
   captureTab: (
     args: Parameters<typeof captureTab>[0]
   ) => Awaited<ReturnType<typeof captureTab>>
+
+  openPopupWindow: (args: {
+    type: 'action' | 'sidePanel'
+    createData: Browser.OpenPopupWindowCreateData
+  }) => void
 }
 
 export const { onMessage: onUtilsMessage, sendMessage: sendUtilsMessage } =

@@ -34,14 +34,23 @@ declare module 'wxt/browser' {
     }
 
     export namespace sidePanel {
-      export interface CloseOptions {
+      export type CloseOptions = {
         tabId?: number
         windowId?: number
-      }
+      } & (
+        | {
+            tabId: number
+          }
+        | {
+            windowId: number
+          }
+      )
 
       export var path: string | undefined
 
-      export function close(options: CloseOptions): Promise<void>
+      export function open(options?: OpenOptions): Promise<void>
+
+      export function close(options?: CloseOptions): Promise<void>
 
       /**
        * サイドパネルをポップアップウィンドウで開く
@@ -158,20 +167,47 @@ if (webext.isChrome) {
       async apply(
         target,
         thisArg: typeof Browser.sidePanel,
-        argArray: Parameters<typeof Browser.sidePanel.open>
+        [options]: Parameters<typeof Browser.sidePanel.open>
       ) {
+        if (typeof options?.tabId !== 'number') {
+          const tab = await webext.getCurrentActiveTab()
+
+          if (typeof tab?.id === 'number') {
+            if (options) {
+              options.tabId = tab.id
+            } else {
+              options = { tabId: tab.id }
+            }
+          }
+        }
+
         await thisArg.setOptions({
           enabled: true,
           path: webext.sidePanel.path,
-          tabId: argArray[0].tabId,
+          tabId: options?.tabId,
         })
 
-        return Reflect.apply(target, thisArg, argArray)
+        return Reflect.apply(target, thisArg, [options])
       },
     })
 
-    webext.sidePanel.close = function ({ tabId }) {
-      return this.setOptions({ enabled: false, tabId })
+    webext.sidePanel.close = async function (options) {
+      if (typeof options?.tabId !== 'number') {
+        const tab = await webext.getCurrentActiveTab()
+
+        if (typeof tab?.id === 'number') {
+          if (options) {
+            options.tabId = tab.id
+          } else {
+            options = { tabId: tab.id }
+          }
+        }
+      }
+
+      return this.setOptions({
+        enabled: false,
+        tabId: options?.tabId,
+      })
     }
 
     webext.sidePanel.openPopupWindow = openPopupWindow

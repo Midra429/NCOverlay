@@ -1,5 +1,6 @@
 import type { Browser } from '@/utils/webext'
 
+import { webext } from '@/utils/webext'
 import { captureTab } from '@/utils/extension/captureTab'
 import { onUtilsMessage } from '@/utils/extension/messaging'
 import { setBadge } from '@/utils/extension/setBadge'
@@ -20,6 +21,13 @@ export default function () {
     return captureTab({
       windowId: sender.tab?.windowId,
       ...data,
+    })
+  })
+
+  onUtilsMessage('openPopupWindow', async ({ sender, data }) => {
+    await webext[data.type].openPopupWindow({
+      tabId: sender.tab?.id,
+      ...data.createData,
     })
   })
 }
