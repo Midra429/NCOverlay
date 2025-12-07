@@ -18,7 +18,7 @@ export interface Props<K extends Key = Key>
   }[]
 }
 
-export function Input(props: Props) {
+export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   return (

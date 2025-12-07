@@ -175,7 +175,7 @@ function Item({ init, onValueChange }: ItemProps) {
   )
 }
 
-export function Input(props: Props) {
+export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])

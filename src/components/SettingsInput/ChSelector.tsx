@@ -97,7 +97,7 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
   )
 }
 
-export function Input(props: Props) {
+export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
 
   const [dtvChIds, setDtvChIds] = useState<JikkyoDtvChannelId[]>([])

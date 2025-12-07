@@ -120,7 +120,7 @@ export type Key = Extract<SettingsKey, `settings:kbd:${string}`>
 export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'kbd-shortcut'> {}
 
-export function Input(props: Props) {
+export function Input(props: Omit<Props, 'inputType'>) {
   const [os, setOs] = useState<Browser.runtime.PlatformInfo['os']>()
   const [value, setValue] = useSettings(props.settingsKey)
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()

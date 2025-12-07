@@ -20,7 +20,7 @@ export interface Props<K extends Key = Key>
   suffix?: string
 }
 
-export function Input(props: Props) {
+export function Input(props: Omit<Props, 'inputType'>) {
   const [state, setState] = useState<number>(
     SETTINGS_DEFAULT[props.settingsKey]
   )
