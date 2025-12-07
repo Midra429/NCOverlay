@@ -10,7 +10,7 @@ import { sendUtilsMessage } from '@/utils/extension/messaging'
 import { settings } from '@/utils/settings/extension'
 
 import { NCOKeyboard } from './keyboard'
-import { ncoMessenger } from './messaging'
+import { onNcoMessage, removeNcoListeners } from './messaging'
 import { NCORenderer } from './renderer'
 import { NCOSearcher } from './searcher'
 import { NCOState } from './state'
@@ -300,27 +300,27 @@ export class NCOverlay {
     )
 
     // メッセージ (インスタンスのID取得)
-    ncoMessenger.onMessage('getId', () => {
+    onNcoMessage('getId', () => {
       return this.id
     })
 
     // メッセージ (現在の再生時間を取得)
-    ncoMessenger.onMessage('getCurrentTime', () => {
+    onNcoMessage('getCurrentTime', () => {
       return this.renderer.video.currentTime
     })
 
     // メッセージ (再読み込み)
-    ncoMessenger.onMessage('reload', () => {
+    onNcoMessage('reload', () => {
       this.#trigger('reload')
     })
 
     // メッセージ (マーカー)
-    ncoMessenger.onMessage('jumpMarker', ({ data }) => {
+    onNcoMessage('jumpMarker', ({ data }) => {
       return this.jumpMarker(data)
     })
 
     // メッセージ (スクリーンショット)
-    ncoMessenger.onMessage('capture', ({ data }) => {
+    onNcoMessage('capture', ({ data }) => {
       return this.renderer.capture(data)
     })
   }
@@ -340,7 +340,7 @@ export class NCOverlay {
       this.#storageOnChangeRemoveListeners.pop()?.()
     }
 
-    ncoMessenger.removeAllListeners()
+    removeNcoListeners()
   }
 
   #listeners: {

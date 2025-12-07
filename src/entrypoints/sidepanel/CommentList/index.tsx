@@ -4,7 +4,7 @@ import type { NcoV1Comment } from '@/ncoverlay/state'
 import { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
-import { ncoMessenger } from '@/ncoverlay/messaging'
+import { onNcoMessage } from '@/ncoverlay/messaging'
 import { filterDisplayThreads } from '@/ncoverlay/state'
 import { ncoId, useNcoState } from '@/hooks/useNco'
 
@@ -56,7 +56,7 @@ export function CommentList() {
   useEffect(() => {
     if (isHover) return
 
-    return ncoMessenger.onMessage('timeupdate', ({ data }) => {
+    return onNcoMessage('timeupdate', ({ data }) => {
       if (data.id !== ncoId) return
 
       const currentTime = data.time - offsetMs

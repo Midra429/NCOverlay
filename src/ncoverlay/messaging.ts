@@ -1,4 +1,3 @@
-import type { GetDataType, GetReturnType } from '@webext-core/messaging'
 import type { StorageItems } from '@/types/storage'
 import type { NCOverlay } from '.'
 
@@ -27,20 +26,28 @@ interface ProtocolMap {
   timeupdate: (args: { id: number; time: number }) => void
 }
 
-export const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
+const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
 
-export async function sendNcoMessage<T extends keyof ProtocolMap>(
-  type: T,
-  data: GetDataType<ProtocolMap[T]>,
-  tabId?: number
-): Promise<GetReturnType<ProtocolMap[T]> | undefined> {
-  if (typeof tabId === 'undefined' && !webext.isContentScript) {
-    const tab = await webext.getCurrentActiveTab()
+ncoMessenger.sendMessage = new Proxy(ncoMessenger.sendMessage, {
+  async apply(
+    target,
+    thisArg,
+    argArray: Parameters<typeof ncoMessenger.sendMessage>
+  ) {
+    if (typeof argArray[2] === 'undefined' && !webext.isContentScript) {
+      const tab = await webext.getCurrentActiveTab()
 
-    tabId = tab?.id
-  }
+      argArray[2] = tab?.id
+    }
 
-  try {
-    return await ncoMessenger.sendMessage(type, data, tabId)
-  } catch {}
-}
+    try {
+      return await Reflect.apply(target, thisArg, argArray)
+    } catch {}
+  },
+})
+
+export const {
+  onMessage: onNcoMessage,
+  sendMessage: sendNcoMessage,
+  removeAllListeners: removeNcoListeners,
+} = ncoMessenger

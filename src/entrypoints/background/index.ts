@@ -9,7 +9,7 @@ import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { getFormsUrl } from '@/utils/extension/getFormsUrl'
 import { setBadge } from '@/utils/extension/setBadge'
-import { onMessage } from '@/utils/proxy-service/messaging/extension'
+import { onProxyMessage } from '@/utils/proxy-service/messaging/extension'
 import { registerProxy } from '@/utils/proxy-service/register'
 import { settings } from '@/utils/settings/extension'
 import { storage } from '@/utils/storage/extension'
@@ -28,8 +28,8 @@ export default defineBackground({
 async function main() {
   logger.log('background.js')
 
-  registerProxy('ncoApi', ncoApi, onMessage)
-  registerProxy('ncoSearch', ncoSearch, onMessage)
+  registerProxy('ncoApi', ncoApi, onProxyMessage)
+  registerProxy('ncoSearch', ncoSearch, onProxyMessage)
   registerUtilsMessage()
 
   // 権限をリクエスト

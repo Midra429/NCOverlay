@@ -42,6 +42,7 @@ interface ProtocolMap {
   ) => void
 }
 
-export const storageMessenger = defineWindowMessaging<ProtocolMap>({
-  namespace: `${EXT_BUILD_ID}:storage/messaging`,
-})
+export const { onMessage: onStorageMessage, sendMessage: sendStorageMessage } =
+  defineWindowMessaging<ProtocolMap>({
+    namespace: `${EXT_BUILD_ID}:storage/messaging`,
+  })

@@ -7,34 +7,34 @@ import type {
 } from '.'
 
 import { WebExtStorage } from '.'
-import { storageMessenger } from './messaging'
+import { onStorageMessage, sendStorageMessage } from './messaging'
 
 export const storage = new WebExtStorage({
   get: (...args: Parameters<StorageGetFunction>) => {
-    return storageMessenger.sendMessage('get', args) as any
+    return sendStorageMessage('get', args) as any
   },
 
   set: (...args: Parameters<StorageSetFunction>) => {
-    return storageMessenger.sendMessage('set', args) as any
+    return sendStorageMessage('set', args) as any
   },
 
   remove: (...args: Parameters<StorageRemoveFunction>) => {
-    return storageMessenger.sendMessage('remove', args) as any
+    return sendStorageMessage('remove', args) as any
   },
 
   getBytesInUse: (...args: Parameters<StorageGetBytesInUseFunction>) => {
-    return storageMessenger.sendMessage('getBytesInUse', args) as any
+    return sendStorageMessage('getBytesInUse', args) as any
   },
 
   onChange: (key, callback) => {
     let unregister = () => {}
 
-    storageMessenger.sendMessage('onChange:register', key).then((id) => {
+    sendStorageMessage('onChange:register', key).then((id) => {
       unregister = () => {
-        storageMessenger.sendMessage('onChange:unregister', id)
+        sendStorageMessage('onChange:unregister', id)
       }
 
-      storageMessenger.onMessage(
+      onStorageMessage(
         'onChange:changed',
         ({ data: [changedId, ...changedValues] }) => {
           if (id !== changedId) return
@@ -55,12 +55,12 @@ export const storage = new WebExtStorage({
   watch: (key, callback) => {
     let unregister = () => {}
 
-    storageMessenger.sendMessage('watch:register', key).then((id) => {
+    sendStorageMessage('watch:register', key).then((id) => {
       unregister = () => {
-        storageMessenger.sendMessage('watch:unregister', id)
+        sendStorageMessage('watch:unregister', id)
       }
 
-      storageMessenger.onMessage(
+      onStorageMessage(
         'watch:changed',
         ({ data: [changedId, ...changedValues] }) => {
           if (id !== changedId) return

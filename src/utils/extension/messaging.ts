@@ -18,6 +18,5 @@ interface ProtocolMap {
   ) => Awaited<ReturnType<typeof captureTab>>
 }
 
-export const utilsMessenger = defineExtensionMessaging<ProtocolMap>()
-
-export const sendUtilsMessage = utilsMessenger.sendMessage
+export const { onMessage: onUtilsMessage, sendMessage: sendUtilsMessage } =
+  defineExtensionMessaging<ProtocolMap>()
