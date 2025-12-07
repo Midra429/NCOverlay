@@ -7,6 +7,8 @@ import { Settings2Icon, SquareArrowOutUpRight, XIcon } from 'lucide-react'
 import { webext } from '@/utils/webext'
 import { sendUtilsMessage } from '@/utils/extension/messaging'
 
+import { Tooltip } from '@/components/Tooltip'
+
 import { Options } from './Options'
 
 export function Header() {
@@ -41,15 +43,17 @@ export function Header() {
 
         <div className="flex shrink-0 flex-row gap-1">
           {!webext.isPopupWindow && (
-            <Button
-              className="shrink-0 p-0"
-              size="sm"
-              variant="light"
-              isIconOnly
-              disableRipple
-              startContent={<SquareArrowOutUpRight className="size-4" />}
-              onClick={openPopupWindow}
-            />
+            <Tooltip placement="left" content="ポップアップウィンドウで開く">
+              <Button
+                className="shrink-0 p-0"
+                size="sm"
+                variant="light"
+                isIconOnly
+                disableRipple
+                startContent={<SquareArrowOutUpRight className="size-4" />}
+                onClick={openPopupWindow}
+              />
+            </Tooltip>
           )}
 
           <Button
