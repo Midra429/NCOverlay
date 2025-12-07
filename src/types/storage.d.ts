@@ -290,7 +290,14 @@ export interface SettingItems {
 
   // コメントリスト //////////////////////////////////////////////////
   /**
+   * スムーズなスクロール
+   * @default false
+   */
+  'settings:commentList:smoothScrolling': boolean
+
+  /**
    * オフセット調節を表示
+   * @default true
    */
   'settings:commentList:showPositionControl': boolean
 }

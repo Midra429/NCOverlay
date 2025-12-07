@@ -60,6 +60,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:search:lengthRange': [null, null],
 
   // コメントリスト (設定には非表示)
+  'settings:commentList:smoothScrolling': false,
   'settings:commentList:showPositionControl': true,
 }
 

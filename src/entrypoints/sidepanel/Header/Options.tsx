@@ -9,7 +9,7 @@ import {
 
 import { TRANSITION_VARIANTS_ACCORDION } from '@/constants/framer-motion'
 
-import { ShowPositionControl } from './ShowPositionControl'
+import { Input as SettingsInputToggle } from '@/components/SettingsInput/Toggle'
 
 export interface OptionsProps {
   isOpen: boolean
@@ -36,7 +36,15 @@ export function Options({ isOpen }: OptionsProps) {
                 'border-foreground-200 border-t-1'
               )}
             >
-              <ShowPositionControl />
+              <SettingsInputToggle
+                settingsKey="settings:commentList:smoothScrolling"
+                label="スムーズなスクロール"
+              />
+
+              <SettingsInputToggle
+                settingsKey="settings:commentList:showPositionControl"
+                label="オフセット調節を表示"
+              />
             </div>
           </m.div>
         </LazyMotion>

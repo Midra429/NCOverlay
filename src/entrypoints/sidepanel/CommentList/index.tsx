@@ -7,6 +7,7 @@ import { Virtuoso } from 'react-virtuoso'
 import { onNcoMessage } from '@/ncoverlay/messaging'
 import { filterDisplayThreads } from '@/ncoverlay/state'
 import { ncoId, useNcoState } from '@/hooks/useNco'
+import { useSettings } from '@/hooks/useSettings'
 
 import { Header } from './Header'
 import { Item } from './Item'
@@ -32,6 +33,8 @@ const components: VirtuosoProps<NcoV1Comment, any>['components'] = {
 }
 
 export function CommentList() {
+  const virtuoso = useRef<VirtuosoHandle>(null)
+
   const [isHover, setIsHover] = useState(false)
   const [comments, setComments] = useState<NcoV1Comment[]>([])
 
@@ -39,9 +42,10 @@ export function CommentList() {
   const stateSlots = useNcoState('slots')
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const offsetMs = (stateOffset ?? 0) * 1000
+  const [smoothScrolling] = useSettings('settings:commentList:smoothScrolling')
 
-  const virtuoso = useRef<VirtuosoHandle>(null)
+  const offsetMs = (stateOffset ?? 0) * 1000
+  const behavior = smoothScrolling ? 'smooth' : 'auto'
 
   useEffect(() => {
     filterDisplayThreads(stateSlots, stateSlotDetails).then((threads) => {
@@ -66,10 +70,11 @@ export function CommentList() {
         virtuoso.current?.scrollToIndex({
           index,
           align: 'end',
+          behavior,
         })
       }
     })
-  }, [isHover, virtuoso.current])
+  }, [virtuoso.current, isHover, behavior])
 
   return (
     <Virtuoso
