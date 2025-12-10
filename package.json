@@ -10,20 +10,20 @@
     "pre": "wxt prepare",
     "dev:chrome": "wxt -b chrome",
     "dev:firefox": "wxt -b firefox",
-    "build": "conc bun:build:*",
+    "build": "conc bun:build:* --max-processes 1",
     "build:chrome": "wxt build -b chrome",
     "build:firefox": "wxt build -b firefox",
-    "zip": "conc bun:zip:*",
+    "zip": "conc bun:zip:* --max-processes 1",
     "zip:chrome": "wxt zip -b chrome",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit --skipLibCheck",
     "check": "biome check --write"
   },
   "dependencies": {
-    "@heroui/react": "2.8.5",
+    "@heroui/react": "^2.8.5",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@internationalized/date": "^3.10.0",
-    "@midra/nco-utils": "1.0.10",
+    "@midra/nco-utils": "^1.0.10",
     "@webext-core/messaging": "^2.3.0",
     "@xpadev-net/niconicomments": "^0.2.76",
     "color2k": "^2.0.3",
@@ -42,7 +42,7 @@
     "react-virtuoso": "^4.17.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.8",
+    "@biomejs/biome": "^2.3.8",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/nanoid-dictionary": "^4.2.3",
     "@types/react": "^19.2.7",
