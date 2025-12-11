@@ -1,9 +1,12 @@
 import { ncoState } from '@/hooks/useNco'
 
 import { Layout } from '@/components/Layout'
+import { PositionControl } from '@/components/PositionControl'
 
-import { MainPane } from './MainPane'
-import { SidePane } from './SidePane'
+import { Comments } from './Comments'
+import { Header } from './Header'
+import { MainTabs } from './MainTabs'
+import { Settings } from './MainTabs/Settings'
 
 function App() {
   const isActive = !!ncoState
@@ -20,17 +23,33 @@ function App() {
               height,
             }}
           >
-            <SidePane />
+            <div className="flex h-full flex-col">
+              <Header />
+
+              <Comments />
+
+              <PositionControl
+                className="border-foreground-200 border-t-1"
+                compact
+              />
+            </div>
           </div>
         )}
 
         <div
+          className="flex size-full flex-col"
           style={{
             width: 370,
             height,
           }}
         >
-          <MainPane quickpanel={isActive} />
+          {isActive ? (
+            <MainTabs />
+          ) : (
+            <div className="h-full overflow-y-auto">
+              <Settings />
+            </div>
+          )}
         </div>
       </div>
     </Layout>

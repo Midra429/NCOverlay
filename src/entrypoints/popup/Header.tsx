@@ -21,9 +21,9 @@ import { openPopupWindow } from '@/entrypoints/popup-windows/open'
 
 import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
-import { JikkyoEpgSelector } from './JikkyoEpgSelector'
-import { JikkyoSelector } from './JikkyoSelector'
-import { NicologSelector } from './NicologSelector'
+import { JikkyoEpgSelector } from './Modals/JikkyoEpgSelector'
+import { JikkyoSelector } from './Modals/JikkyoSelector'
+import { NicologSelector } from './Modals/NicologSelector'
 
 export function Header() {
   const jkModalDc = useDisclosure()
