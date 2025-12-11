@@ -29,9 +29,9 @@ interface ProtocolMap {
 const ncoMessenger = defineExtensionMessaging<ProtocolMap>()
 
 ncoMessenger.onMessage = new Proxy(ncoMessenger.onMessage, {
-  async apply(target, thisArg, argArray) {
+  apply(target, thisArg, argArray) {
     try {
-      return await Reflect.apply(target, thisArg, argArray)
+      return Reflect.apply(target, thisArg, argArray)
     } catch {}
   },
 })
