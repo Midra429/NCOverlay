@@ -27,5 +27,3 @@ export const {
   sendMessage: sendMessageToBackground,
   onMessage: onMessageInBackground,
 } = defineToBackgroundMessaging<ProtocolMap>()
-
-sendMessageToBackground('getCurrentTab', null)
