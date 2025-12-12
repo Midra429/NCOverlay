@@ -8,8 +8,8 @@ import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
-import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { useNcoState } from '@/hooks/useNco'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { Modal } from '@/components/Modal'
 import { SlotItem } from '@/components/SlotItem'

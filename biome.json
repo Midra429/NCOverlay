@@ -86,6 +86,7 @@
                 "!@/constants/**",
                 "!@/entrypoints/**",
                 "!@/hooks/**",
+                "!@/messaging/**",
                 "!@/ncoverlay/**",
                 "!@/proxy/**",
                 "!@/utils/**"
@@ -93,9 +94,10 @@
               "@/constants/**",
               "@/utils/*",
               "@/utils/**",
+              "@/hooks/**",
+              "@/messaging/**",
               "@/proxy/**",
               "@/ncoverlay/**",
-              "@/hooks/**",
               "@/entrypoints/**",
 
               ":BLANK_LINE:",

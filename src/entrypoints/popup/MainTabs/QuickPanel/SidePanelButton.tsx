@@ -10,14 +10,12 @@ export function SidePanelButton() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    webext.getCurrentActiveTab().then(async (tab) => {
-      if (!tab) return
+    webext.getCurrentActiveTabId().then(async (tabId) => {
+      if (tabId == null) return
 
-      const { enabled } = await webext.sidePanel.getOptions({
-        tabId: tab.id,
-      })
+      const { enabled } = await webext.sidePanel.getOptions({ tabId })
 
-      setTabId(tab.id)
+      setTabId(tabId)
       setOpen(!!enabled)
     })
   }, [])
@@ -25,7 +23,7 @@ export function SidePanelButton() {
   function onPress() {
     const enabled = !open
 
-    if (typeof tabId === 'number') {
+    if (tabId != null) {
       if (enabled) {
         webext.sidePanel.open({ tabId })
       } else {

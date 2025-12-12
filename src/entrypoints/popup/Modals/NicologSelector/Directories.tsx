@@ -7,8 +7,8 @@ import { compare } from '@midra/nco-utils/compare'
 import { parse } from '@midra/nco-utils/parse'
 import { NICO_LIVE_ANIME_ROOT } from '@midra/nco-utils/api/services/nicolog'
 
-import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { ncoState } from '@/hooks/useNco'
+import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface DirectoriesProps {
   directoryName: string | null
