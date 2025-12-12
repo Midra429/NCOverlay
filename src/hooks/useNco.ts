@@ -3,14 +3,14 @@ import type { NCOStateItem, NCOStateItemKey } from '@/ncoverlay/state'
 import { useEffect, useState } from 'react'
 
 import { settings } from '@/utils/settings/extension'
-import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { sendMessageToContent } from '@/messaging/to-content'
 import { NCOState } from '@/ncoverlay/state'
 
 export let ncoId: number | undefined
 export let ncoState: NCOState | undefined
 
 export async function initializeNcoState() {
-  const id = await sendNcoMessage('getId', null)
+  const id = await sendMessageToContent('getNcoId', null)
 
   if (id) {
     ncoId = id

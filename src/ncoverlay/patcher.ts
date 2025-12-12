@@ -5,11 +5,10 @@ import type { NCOSearcherAutoSearchArgs } from './searcher'
 import { parse } from '@midra/nco-utils/parse'
 
 import { logger } from '@/utils/logger'
-import { sendUtilsMessage } from '@/utils/extension/messaging'
 import { settings } from '@/utils/settings/extension'
+import { sendMessageToBackground } from '@/messaging/to-background'
 
 import { NCOverlay } from '.'
-import { sendNcoMessage } from './messaging'
 
 export interface PlayingInfo {
   input: string | ParsedResult
@@ -59,7 +58,8 @@ export class NCOPatcher {
 
     this.dispose()
 
-    const { id: tabId } = await sendUtilsMessage('getCurrentTab', null)
+    const tab = await sendMessageToBackground('getCurrentTab', null)
+    const tabId = tab?.id
 
     this.#video = video
     this.#nco = new NCOverlay(tabId!, this.#video)
@@ -178,7 +178,7 @@ export class NCOPatcher {
       if (intervalMs < delta) {
         lastTime = time - (delta % intervalMs)
 
-        sendNcoMessage('timeupdate', {
+        sendMessageToBackground('timeupdate', {
           id: this.id,
           time: this.renderer.video.currentTime * 1000,
         })

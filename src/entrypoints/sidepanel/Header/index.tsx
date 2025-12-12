@@ -5,7 +5,7 @@ import { Button, cn } from '@heroui/react'
 import { Settings2Icon, SquareArrowOutUpRight, XIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
-import { sendUtilsMessage } from '@/utils/extension/messaging'
+import { sendMessageToBackground } from '@/messaging/to-background'
 
 import { Tooltip } from '@/components/Tooltip'
 
@@ -15,7 +15,7 @@ export function Header() {
   const [isOptionOpen, setIsOptionOpen] = useState(false)
 
   const openPopupWindow: ButtonProps['onClick'] = (evt) => {
-    sendUtilsMessage('openPopupWindow', {
+    sendMessageToBackground('openPopupWindow', {
       type: 'sidePanel',
       createData: {
         top: evt.screenY - evt.pageY,

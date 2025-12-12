@@ -1,8 +1,8 @@
 import { RefreshCwIcon, SearchIcon } from 'lucide-react'
 
-import { sendNcoMessage } from '@/ncoverlay/messaging'
 import { useNcoState } from '@/hooks/useNco'
 import { useSettings } from '@/hooks/useSettings'
+import { sendMessageToContent } from '@/messaging/to-content'
 
 import { PanelButton } from '@/components/PanelButton'
 
@@ -13,7 +13,7 @@ export function ReloadButton() {
   const isLoading = stateStatus === 'searching' || stateStatus === 'loading'
 
   function onPress() {
-    sendNcoMessage('reload', null)
+    sendMessageToContent('reload', null)
   }
 
   return (

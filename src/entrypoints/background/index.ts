@@ -13,11 +13,11 @@ import { onProxyMessage } from '@/utils/proxy-service/messaging/extension'
 import { registerProxy } from '@/utils/proxy-service/register'
 import { settings } from '@/utils/settings/extension'
 import { storage } from '@/utils/storage/extension'
-import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { sendMessageToContent } from '@/messaging/to-content'
 
 import clearTemporaryData from './clearTemporaryData'
 import migration from './migration'
-import registerUtilsMessage from './registerUtilsMessage'
+import registerMessaging from './registerMessaging'
 import requestPermissions from './requestPermissions'
 
 export default defineBackground({
@@ -30,7 +30,7 @@ async function main() {
 
   registerProxy('ncoApi', ncoApi, onProxyMessage)
   registerProxy('ncoSearch', ncoSearch, onProxyMessage)
-  registerUtilsMessage()
+  registerMessaging()
 
   // 権限をリクエスト
   requestPermissions()
@@ -147,7 +147,7 @@ async function main() {
   webext.tabs.onUpdated.addListener(async (tabId) => {
     if (tabId === webext.tabs.TAB_ID_NONE) return
 
-    if (!(await sendNcoMessage('getId', null, tabId))) {
+    if (!(await sendMessageToContent('getNcoId', null, tabId))) {
       webext.sidePanel.setOptions({
         enabled: false,
         path: webext.sidePanel.path,

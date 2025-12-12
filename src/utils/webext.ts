@@ -80,9 +80,9 @@ declare module 'wxt/browser' {
     export var isSidePanel: boolean
     export var isPopupWindow: boolean
 
-    export function getCurrentActiveTab(
-      windowId?: number
-    ): Promise<tabs.Tab | null>
+    export function getCurrentActiveTab(): Promise<tabs.Tab | undefined>
+
+    export function getCurrentActiveTabId(): Promise<number | undefined>
   }
 }
 
@@ -97,6 +97,10 @@ webext.isSafari = import.meta.env.SAFARI
 
 const { protocol, pathname, search } = location
 
+const searchParamTabId = new URLSearchParams(search).get(
+  webext.SEARCH_PARAM_TAB_ID
+)
+
 webext.isContentScript = /^https?:$/.test(protocol)
 webext.isBackground =
   !webext.isContentScript &&
@@ -104,44 +108,46 @@ webext.isBackground =
     pathname === '/_generated_background_page.html')
 webext.isPopup = !webext.isContentScript && pathname === '/popup.html'
 webext.isSidePanel = !webext.isContentScript && pathname === '/sidepanel.html'
-webext.isPopupWindow = new URLSearchParams(search).has(
-  webext.SEARCH_PARAM_TAB_ID
-)
+webext.isPopupWindow = !!searchParamTabId
 
-webext.getCurrentActiveTab = async function (windowId) {
-  const tabId = new URL(location.href).searchParams.get(
-    webext.SEARCH_PARAM_TAB_ID
-  )
+webext.getCurrentActiveTab = async function () {
+  const tabId = searchParamTabId
+    ? Number(searchParamTabId)
+    : webext.tabs.TAB_ID_NONE
 
-  const [tab] = tabId
-    ? [await this.tabs.get(Number(tabId))]
-    : await this.tabs.query({
-        active: true,
-        ...(typeof windowId === 'number' &&
-        windowId !== this.windows.WINDOW_ID_NONE
-          ? { windowId }
-          : { currentWindow: true }),
-      })
+  try {
+    const [tab] =
+      tabId !== webext.tabs.TAB_ID_NONE
+        ? [await this.tabs.get(tabId)]
+        : await this.tabs.query({
+            active: true,
+            currentWindow: true,
+          })
 
-  if (typeof tab?.id === 'number' && tab.id !== this.tabs.TAB_ID_NONE) {
-    return tab
-  }
+    if (tab?.id != null && tab.id !== this.tabs.TAB_ID_NONE) {
+      return tab
+    }
+  } catch {}
+}
 
-  return null
+webext.getCurrentActiveTabId = async function () {
+  const tab = await this.getCurrentActiveTab()
+
+  return tab?.id
 }
 
 async function openPopupWindow(
   this: Browser.OpenPopupWindowThisArg,
   { tabId, ...createData }: Browser.OpenPopupWindowCreateData
 ): ReturnType<Browser.OpenPopupWindow> {
-  if (typeof tabId !== 'number' || tabId === webext.tabs.TAB_ID_NONE) {
+  if (tabId == null || tabId === webext.tabs.TAB_ID_NONE) {
     const tab = await webext.getCurrentActiveTab()
 
     tabId = tab?.id
   }
 
   const url =
-    typeof tabId === 'number' && tabId !== webext.tabs.TAB_ID_NONE
+    tabId != null && tabId !== webext.tabs.TAB_ID_NONE
       ? `${this.path}?${webext.SEARCH_PARAM_TAB_ID}=${tabId}`
       : this.path
 
@@ -169,14 +175,14 @@ if (webext.isChrome) {
         thisArg: typeof Browser.sidePanel,
         [options]: Parameters<typeof Browser.sidePanel.open>
       ) {
-        if (typeof options?.tabId !== 'number') {
-          const tab = await webext.getCurrentActiveTab()
+        if (options?.tabId == null) {
+          const tabId = await webext.getCurrentActiveTabId()
 
-          if (typeof tab?.id === 'number') {
+          if (tabId != null) {
             if (options) {
-              options.tabId = tab.id
+              options.tabId = tabId
             } else {
-              options = { tabId: tab.id }
+              options = { tabId }
             }
           }
         }
@@ -192,14 +198,14 @@ if (webext.isChrome) {
     })
 
     webext.sidePanel.close = async function (options) {
-      if (typeof options?.tabId !== 'number') {
-        const tab = await webext.getCurrentActiveTab()
+      if (options?.tabId == null) {
+        const tabId = await webext.getCurrentActiveTabId()
 
-        if (typeof tab?.id === 'number') {
+        if (tabId != null) {
           if (options) {
-            options.tabId = tab.id
+            options.tabId = tabId
           } else {
-            options = { tabId: tab.id }
+            options = { tabId }
           }
         }
       }
@@ -251,7 +257,7 @@ if (webext.isFirefox) {
 
         let isOpen = false
 
-        if (typeof tabId === 'number') {
+        if (tabId != null) {
           const { windowId } = await webext.tabs.get(tabId)
 
           isOpen = await sidebarAction.isOpen({ windowId })
@@ -273,7 +279,7 @@ if (webext.isFirefox) {
         return {}
       },
 
-      async setPanelBehavior(_behavior) {},
+      async setPanelBehavior() {},
     }
   }
 }

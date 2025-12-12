@@ -17,8 +17,8 @@ import { COLOR_CODE_REGEXP, NICONICO_COLOR_COMMANDS } from '@/constants'
 import { readableColor } from '@/utils/color'
 import { formatDate, formatDuration } from '@/utils/format'
 import { settings } from '@/utils/settings/extension'
-import { sendNcoMessage } from '@/ncoverlay/messaging'
 import { ncoState } from '@/hooks/useNco'
+import { sendMessageToContent } from '@/messaging/to-content'
 
 const COMMENT_WRAPPER_TYPE_CLASSES: {
   [P in StateSlotDetail['type']]: string
@@ -304,7 +304,8 @@ export function Item({ comment, offsetMs }: ItemProps) {
 
   // メニュー (再生時間)
   async function adjustGlobalOffset() {
-    const currentTime = (await sendNcoMessage('getCurrentTime', null)) ?? 0
+    const currentTime =
+      (await sendMessageToContent('getCurrentTime', null)) ?? 0
 
     ncoState?.set(
       'offset',

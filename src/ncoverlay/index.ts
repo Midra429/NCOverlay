@@ -6,11 +6,11 @@ import equal from 'fast-deep-equal'
 import { MARKERS } from '@/constants/markers'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
-import { sendUtilsMessage } from '@/utils/extension/messaging'
 import { settings } from '@/utils/settings/extension'
+import { sendMessageToBackground } from '@/messaging/to-background'
+import { onMessageInContent } from '@/messaging/to-content'
 
 import { NCOKeyboard } from './keyboard'
-import { onNcoMessage, removeNcoListeners } from './messaging'
 import { NCORenderer } from './renderer'
 import { NCOSearcher } from './searcher'
 import { NCOState } from './state'
@@ -37,7 +37,7 @@ export class NCOverlay {
   readonly renderer: NCORenderer
   readonly keyboard: NCOKeyboard
 
-  readonly #storageOnChangeRemoveListeners: (() => void)[] = []
+  readonly #removeListenerCallbacks: (() => void)[] = []
   readonly #port: Browser.runtime.Port
 
   constructor(tabId: number, video: HTMLVideoElement) {
@@ -58,7 +58,7 @@ export class NCOverlay {
 
     this.#registerEventListener()
 
-    sendUtilsMessage('setBadge', { text: null })
+    sendMessageToBackground('setBadge', { text: null })
 
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
@@ -80,14 +80,14 @@ export class NCOverlay {
     this.#unregisterEventListener()
     this.removeAllEventListeners()
 
-    sendUtilsMessage('setBadge', { text: null })
+    sendMessageToBackground('setBadge', { text: null })
   }
 
   async clear() {
     await this.state.clear()
     this.renderer.clear()
 
-    await sendUtilsMessage('setBadge', { text: null })
+    await sendMessageToBackground('setBadge', { text: null })
   }
 
   /**
@@ -188,7 +188,7 @@ export class NCOverlay {
     }
 
     // ストレージの監視
-    this.#storageOnChangeRemoveListeners.push(
+    this.#removeListenerCallbacks.push(
       // 設定 (コメント:表示サイズ)
       settings.watch('settings:comment:scale', (scale) => {
         this.renderer.setOptions({
@@ -246,7 +246,7 @@ export class NCOverlay {
           (detail) => detail.status === 'error'
         ).length
 
-        sendUtilsMessage('setBadge', {
+        sendMessageToBackground('setBadge', {
           text:
             (loadingCounts && loadingCounts.toString()) ||
             (successCounts && successCounts.toString()) ||
@@ -296,33 +296,33 @@ export class NCOverlay {
         if (!equal(newVal, oldVal)) {
           this.#updateRendererThreads()
         }
+      }),
+
+      // メッセージ (インスタンスのID取得)
+      onMessageInContent('getNcoId', () => {
+        return this.id
+      }),
+
+      // メッセージ (現在の再生時間を取得)
+      onMessageInContent('getCurrentTime', () => {
+        return this.renderer.video.currentTime
+      }),
+
+      // メッセージ (再読み込み)
+      onMessageInContent('reload', () => {
+        this.#trigger('reload')
+      }),
+
+      // メッセージ (マーカー)
+      onMessageInContent('jumpMarker', ({ data }) => {
+        return this.jumpMarker(data)
+      }),
+
+      // メッセージ (スクリーンショット)
+      onMessageInContent('capture', ({ data }) => {
+        return this.renderer.capture(data)
       })
     )
-
-    // メッセージ (インスタンスのID取得)
-    onNcoMessage('getId', () => {
-      return this.id
-    })
-
-    // メッセージ (現在の再生時間を取得)
-    onNcoMessage('getCurrentTime', () => {
-      return this.renderer.video.currentTime
-    })
-
-    // メッセージ (再読み込み)
-    onNcoMessage('reload', () => {
-      this.#trigger('reload')
-    })
-
-    // メッセージ (マーカー)
-    onNcoMessage('jumpMarker', ({ data }) => {
-      return this.jumpMarker(data)
-    })
-
-    // メッセージ (スクリーンショット)
-    onNcoMessage('capture', ({ data }) => {
-      return this.renderer.capture(data)
-    })
   }
 
   /**
@@ -336,11 +336,9 @@ export class NCOverlay {
       this.renderer.video.removeEventListener(type, listener)
     }
 
-    while (this.#storageOnChangeRemoveListeners.length) {
-      this.#storageOnChangeRemoveListeners.pop()?.()
+    while (this.#removeListenerCallbacks.length) {
+      this.#removeListenerCallbacks.pop()?.()
     }
-
-    removeNcoListeners()
   }
 
   #listeners: {

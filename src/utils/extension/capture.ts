@@ -3,7 +3,7 @@ import type { StorageItems } from '@/types/storage'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
-import { sendNcoMessage } from '@/ncoverlay/messaging'
+import { sendMessageToContent } from '@/messaging/to-content'
 
 export async function capture(): Promise<
   StorageItems['settings:capture:method'] | false
@@ -13,7 +13,7 @@ export async function capture(): Promise<
     'settings:capture:method'
   )
 
-  const response = await sendNcoMessage(
+  const response = await sendMessageToContent(
     'capture',
     method === 'copy' ? 'png' : format
   )

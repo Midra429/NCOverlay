@@ -2,8 +2,8 @@ import { Button, cn } from '@heroui/react'
 import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants/markers'
-import { sendNcoMessage } from '@/ncoverlay/messaging'
 import { useNcoState } from '@/hooks/useNco'
+import { sendMessageToContent } from '@/messaging/to-content'
 
 import { Tooltip } from '@/components/Tooltip'
 
@@ -21,7 +21,7 @@ export function MarkerButton({
   disabled,
 }: MarkerButtonProps) {
   function onPress() {
-    sendNcoMessage('jumpMarker', markerIdx)
+    sendMessageToContent('jumpMarker', markerIdx)
   }
 
   return (

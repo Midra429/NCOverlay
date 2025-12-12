@@ -17,12 +17,12 @@ export async function openPopupWindow(
     height: 400,
   }
 ) {
-  const tab = await webext.getCurrentActiveTab()
+  const tabId = await webext.getCurrentActiveTabId()
 
-  if (tab) {
+  if (tabId != null) {
     const url = new URL(webext.runtime.getURL('/popup-windows.html'))
 
-    url.searchParams.set(webext.SEARCH_PARAM_TAB_ID, tab.id!.toString())
+    url.searchParams.set(webext.SEARCH_PARAM_TAB_ID, tabId.toString())
     url.searchParams.set('action', action)
 
     await webext.windows.create({
