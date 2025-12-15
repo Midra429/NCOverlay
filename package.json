@@ -20,7 +20,7 @@
     "check": "biome check --write"
   },
   "dependencies": {
-    "@heroui/react": "^2.8.5",
+    "@heroui/react": "^2.8.6",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@internationalized/date": "^3.10.0",
     "@midra/nco-utils": "^1.0.10",
@@ -32,7 +32,7 @@
     "filesize": "^11.0.13",
     "framer-motion": "^12.23.26",
     "hotkeys-js": "^4.0.0-beta.7",
-    "lucide-react": "^0.560.0",
+    "lucide-react": "^0.561.0",
     "nanoid": "^5.1.6",
     "nanoid-dictionary": "^5.0.0",
     "react": "^19.2.3",
