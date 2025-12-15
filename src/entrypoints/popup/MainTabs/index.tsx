@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Tab, Tabs } from '@heroui/react'
 import { LayoutGridIcon, SearchIcon, SettingsIcon } from 'lucide-react'
 
@@ -37,15 +37,6 @@ const tabItems: {
  */
 export function MainTabs() {
   const [selectedKey, setSelectedKey] = useState('quickpanel')
-  const [disableAnimation, setDisableAnimation] = useState(true)
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setDisableAnimation(false)
-    }, 50)
-
-    return () => clearInterval(timeoutId)
-  }, [])
 
   return (
     <Tabs
@@ -59,7 +50,6 @@ export function MainTabs() {
       radius="none"
       fullWidth
       destroyInactiveTabPanel={false}
-      disableAnimation={disableAnimation}
       selectedKey={selectedKey}
       onSelectionChange={(key) => setSelectedKey(key as string)}
       items={tabItems}
