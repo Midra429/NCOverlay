@@ -21,7 +21,7 @@ export function Layout(props: LayoutProps) {
     document.body.className = cn(
       theme || 'hidden',
       'bg-background text-foreground'
-    )
+    )!
   }, [theme])
 
   return (

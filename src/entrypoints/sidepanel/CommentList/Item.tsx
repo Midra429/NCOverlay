@@ -1,4 +1,5 @@
 import type { SlotsToClasses } from '@heroui/react'
+import type { CnReturn } from 'tailwind-variants'
 import type { NcoV1Comment, StateSlotDetail } from '@/ncoverlay/state'
 
 import {
@@ -21,7 +22,7 @@ import { ncoState } from '@/hooks/useNco'
 import { sendMessageToContent } from '@/messaging/to-content'
 
 const COMMENT_WRAPPER_TYPE_CLASSES: {
-  [P in StateSlotDetail['type']]: string
+  [P in StateSlotDetail['type']]: CnReturn
 } = {
   normal: cn('before:bg-transparent'),
   official: cn('before:bg-[#ffe248] dark:before:bg-[#ffd700]'),
@@ -33,14 +34,14 @@ const COMMENT_WRAPPER_TYPE_CLASSES: {
   file: cn('before:bg-blue-500 dark:before:bg-blue-600'),
 }
 
-const COMMENT_CELL_COMMAND_CLASSES: Record<string, string> = {
+const COMMENT_CELL_COMMAND_CLASSES: Record<string, CnReturn> = {
   // 位置: 上
   ue: cn('justify-center pt-0.5 pb-5'),
   // 位置: 下
   shita: cn('justify-center pt-5 pb-0.5'),
 }
 
-const COMMENT_COMMAND_CLASSES: Record<string, string> = {
+const COMMENT_COMMAND_CLASSES: Record<string, CnReturn> = {
   // サイズ: 大
   big: cn('font-bold text-[110%]'),
   // サイズ: 小
@@ -124,8 +125,8 @@ function ItemCellWithMenu({
 }
 
 function getCmtClassAndColor(commands: string[]) {
-  const cmtCellCmdClass: string[] = []
-  const cmtCmdClass: string[] = []
+  const cmtCellCmdClass: CnReturn[] = []
+  const cmtCmdClass: CnReturn[] = []
   let cmtBgColor: string | undefined
   let cmtFgColor: string | undefined
 
