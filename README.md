@@ -26,18 +26,25 @@
 
 ※ 増減する可能性あり
 
-<!-- ## 使い方 -->
-<!-- 整備中... -->
-
-## インストール
-### Chrome Web Store
+## 拡張機能をインストール
+### Google Chrome (v116以降)
+- Chrome ウェブストア\
 https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 
-### Edge Add-ons
+### Microsoft Edge (v116以降)
+- Chrome ウェブストア\
+https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
+
+- Microsoft Edge アドオン\
 https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl
 
-### Firefox Add-ons
+### Firefox (v142以降)
+- Firefox アドオン\
 https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
+
+### Chromium
+上記のブラウザ以外のChromiumベースのブラウザでも基本的には動作しますが、\
+サイドパネル（コメントリスト）の表示ができない可能性があります。
 
 ## 不具合報告・機能提案など
 - [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)<br>
@@ -57,7 +64,7 @@ https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 ### 開発サーバー
 ```sh
 # Chrome
-bun run dev
+bun run dev:chrome
 ```
 ```sh
 # Firefox
@@ -67,7 +74,12 @@ bun run dev:firefox
 ### 出力
 ```sh
 # dist/chrome-mv3
+# dist/firefox-mv3
 bun run build
+```
+```sh
+# dist/chrome-mv3
+bun run build:chrome
 ```
 ```sh
 # dist/firefox-mv3
@@ -77,7 +89,13 @@ bun run build:firefox
 ### 出力 (ZIP)
 ```sh
 # dist/ncoverlay-0.0.0-chrome.zip
+# dist/ncoverlay-0.0.0-firefox.zip
+# dist/ncoverlay-0.0.0-sources.zip
 bun run zip
+```
+```sh
+# dist/ncoverlay-0.0.0-chrome.zip
+bun run zip:chrome
 ```
 ```sh
 # dist/ncoverlay-0.0.0-firefox.zip
