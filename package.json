@@ -23,7 +23,7 @@
     "@heroui/react": "^2.8.6",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@internationalized/date": "^3.10.1",
-    "@midra/nco-utils": "^1.0.11",
+    "@midra/nco-utils": "^1.0.12",
     "@webext-core/messaging": "^2.3.0",
     "@xpadev-net/niconicomments": "^0.2.76",
     "color2k": "^2.0.3",
@@ -42,7 +42,7 @@
     "react-virtuoso": "^4.17.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.9",
+    "@biomejs/biome": "^2.3.10",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/nanoid-dictionary": "^4.2.3",
     "@types/react": "^19.2.7",
