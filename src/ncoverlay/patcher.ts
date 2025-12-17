@@ -64,8 +64,6 @@ export class NCOPatcher {
     this.#video = video
     this.#nco = new NCOverlay(tabId!, this.#video)
 
-    this.#nco.state.set('vod', this.#vod)
-
     const loadInfo = async () => {
       if (!this.#nco) return
 
@@ -97,6 +95,7 @@ export class NCOPatcher {
           duration: info ? Math.floor(info.duration) : 0,
         }
 
+        await this.#nco.state.set('vod', this.#vod)
         await this.#nco.state.set('info', args)
 
         logger.log('state.info', args)
