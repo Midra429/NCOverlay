@@ -8,10 +8,7 @@ on:
         required: true
         type: choice
         default: 'patch'
-        options:
-          - major
-          - minor
-          - patch
+        options: [major, minor, patch]
       submit_chrome:
         description: 'Chrome Web Store'
         type: boolean
@@ -31,6 +28,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
+
     steps:
       - uses: actions/checkout@v6
 
@@ -45,11 +43,11 @@ jobs:
       - name: バージョンを更新
         run: |
           bunx bumpp ${{ github.event.inputs.bump_type }} --commit "v%s" --yes
-          echo VERSION="$(cat ./package.json | jq -r '.version')" >> "${GITHUB_ENV}"
+          echo VERSION=$(bun -e "console.log(require('./package.json').version)") >> $GITHUB_ENV
 
       - name: 拡張機能をビルド
         run: |
-          bun install
+          bun install --frozen-lockfile
           bun run zip
 
       - name: GitHubへリリース
