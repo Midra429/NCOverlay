@@ -23,11 +23,14 @@ export default defineConfig({
       'downloads',
     ]
 
+    let minimum_chrome_version: UserManifest['minimum_chrome_version']
     let browser_specific_settings: UserManifest['browser_specific_settings']
 
     switch (browser) {
       case 'chrome':
         permissions.push('sidePanel')
+
+        minimum_chrome_version = '116'
 
         break
 
@@ -53,6 +56,7 @@ export default defineConfig({
       homepage_url: GITHUB_URL,
       permissions,
       host_permissions: ['<all_urls>'],
+      minimum_chrome_version,
       browser_specific_settings,
     }
   },
