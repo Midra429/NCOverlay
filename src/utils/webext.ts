@@ -34,18 +34,6 @@ declare module 'wxt/browser' {
     }
 
     export namespace sidePanel {
-      export type CloseOptions = {
-        tabId?: number
-        windowId?: number
-      } & (
-        | {
-            tabId: number
-          }
-        | {
-            windowId: number
-          }
-      )
-
       export var path: string | undefined
 
       export function open(options?: OpenOptions): Promise<void>
@@ -239,7 +227,14 @@ if (webext.isFirefox) {
   if ('sidebarAction' in webext) {
     const { sidebarAction } = webext as unknown as browser.Browser
 
+    enum Side {
+      LEFT = 'left',
+      RIGHT = 'right',
+    }
+
     webext.sidePanel = {
+      Side,
+
       path: manifest.sidebar_action?.default_panel,
 
       open() {
@@ -280,6 +275,26 @@ if (webext.isFirefox) {
       },
 
       async setPanelBehavior() {},
+
+      async getLayout() {
+        return {
+          side: this.Side.RIGHT,
+        }
+      },
+
+      onOpened: {
+        addListener() {},
+        getRules() {},
+        hasListener() {
+          return false
+        },
+        removeRules() {},
+        addRules() {},
+        removeListener() {},
+        hasListeners() {
+          return false
+        },
+      },
     }
   }
 }

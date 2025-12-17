@@ -59,9 +59,9 @@ export const storage = new WebExtStorage({
   },
 
   onChange(key, callback) {
-    const onChangeCallback: Parameters<
-      Browser.storage.StorageAreaChangedEvent['addListener']
-    >[0] = ({ [key]: change }) => {
+    const onChangeCallback: (changes: {
+      [key: string]: Browser.storage.StorageChange
+    }) => void = ({ [key]: change }) => {
       if (!change) return
 
       const current: any = change.newValue ?? null
