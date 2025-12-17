@@ -36,6 +36,10 @@ export default defineConfig({
           gecko: {
             id: `${name}@midra.me`,
             strict_min_version: '113.0',
+            // @ts-expect-error
+            data_collection_permissions: {
+              required: ['none'],
+            },
           },
         }
 
