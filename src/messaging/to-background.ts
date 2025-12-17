@@ -15,9 +15,9 @@ export interface ProtocolMap {
     args: Parameters<typeof captureTab>[0]
   ) => Awaited<ReturnType<typeof captureTab>>
 
-  openPopupWindow: (args: {
+  openPopout: (args: {
     type: 'action' | 'sidePanel'
-    createData: Browser.OpenPopupWindowCreateData
+    createData: Browser.OpenPopoutCreateData
   }) => void
 
   timeupdate: (args: { id: number; time: number }) => void

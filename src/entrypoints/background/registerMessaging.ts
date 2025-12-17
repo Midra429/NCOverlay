@@ -24,8 +24,8 @@ export default function () {
     })
   })
 
-  onMessageInBackground('openPopupWindow', async ({ sender, data }) => {
-    await webext[data.type].openPopupWindow({
+  onMessageInBackground('openPopout', async ({ sender, data }) => {
+    await webext[data.type].openPopout({
       tabId: sender.tab?.id,
       ...data.createData,
     })

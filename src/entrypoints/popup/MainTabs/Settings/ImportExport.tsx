@@ -1,23 +1,25 @@
+import type { Browser } from '@/utils/webext'
+
 import { useDisclosure } from '@heroui/react'
 import { DownloadIcon, UploadIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
-import { openPopupWindow } from '@/entrypoints/popup-windows/open'
+import { openPopout } from '@/entrypoints/popout/open'
 
 import { ExportSettingsModal } from '@/components/ExportSettingsModal'
 import { ImportSettingsModal } from '@/components/ImportSettingsModal'
 import { ItemButton } from '@/components/ItemButton'
 
-const popupWindowOptions = {
-  width: 370,
-  height: 470,
+const createData: Browser.OpenPopoutCreateData = {
+  width: 400,
+  height: 500,
 }
 
 function ImportSettings() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onPress = webext.isFirefox
-    ? () => openPopupWindow('import-settings', popupWindowOptions)
+    ? () => openPopout('import-settings', createData)
     : onOpen
 
   return (
@@ -43,7 +45,7 @@ function ExportSettings() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const onPress = webext.isFirefox
-    ? () => openPopupWindow('export-settings', popupWindowOptions)
+    ? () => openPopout('export-settings', createData)
     : onOpen
 
   return (

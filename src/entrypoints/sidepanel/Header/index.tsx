@@ -14,8 +14,8 @@ import { Options } from './Options'
 export function Header() {
   const [isOptionOpen, setIsOptionOpen] = useState(false)
 
-  const openPopupWindow: ButtonProps['onClick'] = (evt) => {
-    sendMessageToBackground('openPopupWindow', {
+  const openPopout: ButtonProps['onClick'] = (evt) => {
+    sendMessageToBackground('openPopout', {
       type: 'sidePanel',
       createData: {
         top: evt.screenY - evt.pageY,
@@ -43,7 +43,7 @@ export function Header() {
 
         <div className="flex shrink-0 flex-row gap-1">
           {!webext.inPopupWindow && (
-            <Tooltip placement="left" content="ポップアップウィンドウで開く">
+            <Tooltip placement="left" content="新しいウィンドウで開く">
               <Button
                 className="shrink-0 p-0"
                 size="sm"
@@ -51,7 +51,7 @@ export function Header() {
                 isIconOnly
                 disableRipple
                 startContent={<SquareArrowOutUpRight className="size-4" />}
-                onClick={openPopupWindow}
+                onClick={openPopout}
               />
             </Tooltip>
           )}

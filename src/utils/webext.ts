@@ -25,11 +25,11 @@ declare module 'wxt/browser' {
       export var path: string | undefined
 
       /**
-       * ポップアップをポップアップウィンドウで開く
+       * ポップアップを新しいウィンドウで開く
        * @param tabId リンクするタブのID
        */
-      export function openPopupWindow(
-        createData: OpenPopupWindowCreateData
+      export function openPopout(
+        createData: OpenPopoutCreateData
       ): Promise<windows.Window | undefined>
     }
 
@@ -41,20 +41,17 @@ declare module 'wxt/browser' {
       export function close(options?: CloseOptions): Promise<void>
 
       /**
-       * サイドパネルをポップアップウィンドウで開く
+       * サイドパネルを新しいウィンドウで開く
        * @param tabId リンクするタブのID
        */
-      export function openPopupWindow(
-        createData: OpenPopupWindowCreateData
+      export function openPopout(
+        createData: OpenPopoutCreateData
       ): Promise<windows.Window | undefined>
     }
 
-    export type OpenPopupWindowThisArg = typeof action | typeof sidePanel
-    export type OpenPopupWindow = OpenPopupWindowThisArg['openPopupWindow']
-    export type OpenPopupWindowCreateData = Omit<
-      windows.CreateData,
-      'type' | 'url'
-    >
+    export type OpenPopoutThisArg = typeof action | typeof sidePanel
+    export type OpenPopout = OpenPopoutThisArg['openPopout']
+    export type OpenPopoutCreateData = Omit<windows.CreateData, 'type' | 'url'>
 
     export var SEARCH_PARAM_TAB_ID: `_${string}_tabId`
 
@@ -124,10 +121,10 @@ webext.getCurrentActiveTabId = async function () {
   return tab?.id
 }
 
-async function openPopupWindow(
-  this: Browser.OpenPopupWindowThisArg,
-  { tabId, ...createData }: Browser.OpenPopupWindowCreateData
-): ReturnType<Browser.OpenPopupWindow> {
+async function openPopout(
+  this: Browser.OpenPopoutThisArg,
+  { tabId, ...createData }: Browser.OpenPopoutCreateData
+): ReturnType<Browser.OpenPopout> {
   if (tabId == null || tabId === webext.tabs.TAB_ID_NONE) {
     const tab = await webext.getCurrentActiveTab()
 
@@ -149,7 +146,7 @@ async function openPopupWindow(
 if (webext.action) {
   webext.action.path = manifest.action?.default_popup
 
-  webext.action.openPopupWindow = openPopupWindow
+  webext.action.openPopout = openPopout
 }
 
 // Chrome
@@ -204,7 +201,7 @@ if (webext.isChrome) {
       })
     }
 
-    webext.sidePanel.openPopupWindow = openPopupWindow
+    webext.sidePanel.openPopout = openPopout
   }
 }
 
@@ -245,7 +242,7 @@ if (webext.isFirefox) {
         return sidebarAction.close()
       },
 
-      openPopupWindow,
+      openPopout,
 
       async getOptions(options) {
         const { tabId } = options ?? {}

@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
-import { openPopupWindow } from '@/entrypoints/popup-windows/open'
+import { openPopout } from '@/entrypoints/popout/open'
 
 import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
@@ -33,7 +33,7 @@ export function Header() {
 
   const onPressFile = webext.isFirefox
     ? () => {
-        openPopupWindow('select-comment-file', {
+        openPopout('select-comment-file', {
           width: 500,
           height: 600,
         })

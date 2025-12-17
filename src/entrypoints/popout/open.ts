@@ -7,16 +7,16 @@ export type OpenAction =
   | 'export-settings'
   | 'select-comment-file'
 
-export async function openPopupWindow(
+export async function openPopout(
   action: OpenAction,
-  createData?: Browser.OpenPopupWindowCreateData
+  createData?: Browser.OpenPopoutCreateData
 ) {
   const tab = await webext.getCurrentActiveTab()
 
   if (tab?.id != null) {
     const windowInfo = await webext.windows.get(tab.windowId)
 
-    const url = new URL(webext.runtime.getURL('/popup-windows.html'))
+    const url = new URL(webext.runtime.getURL('/popout.html'))
 
     url.searchParams.set(webext.SEARCH_PARAM_TAB_ID, tab.id.toString())
     url.searchParams.set('action', action)
