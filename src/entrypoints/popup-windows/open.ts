@@ -1,3 +1,5 @@
+import type { Browser } from '@/utils/webext'
+
 import { webext } from '@/utils/webext'
 
 export type OpenAction =
@@ -5,31 +7,34 @@ export type OpenAction =
   | 'export-settings'
   | 'select-comment-file'
 
-export interface OpenOptions {
-  width?: number
-  height?: number
-}
-
 export async function openPopupWindow(
   action: OpenAction,
-  options: OpenOptions = {
-    width: 500,
-    height: 400,
-  }
+  createData?: Browser.OpenPopupWindowCreateData
 ) {
-  const tabId = await webext.getCurrentActiveTabId()
+  const tab = await webext.getCurrentActiveTab()
 
-  if (tabId != null) {
+  if (tab?.id != null) {
+    const windowInfo = await webext.windows.get(tab.windowId)
+
     const url = new URL(webext.runtime.getURL('/popup-windows.html'))
 
-    url.searchParams.set(webext.SEARCH_PARAM_TAB_ID, tabId.toString())
+    url.searchParams.set(webext.SEARCH_PARAM_TAB_ID, tab.id.toString())
     url.searchParams.set('action', action)
 
+    const width = createData?.width ?? window.innerWidth
+    const height = createData?.height ?? window.innerHeight
+    const top = createData?.top ?? windowInfo.top! + 90
+    const left =
+      createData?.left ?? windowInfo.left! + (windowInfo.width! - width) - 15
+
     await webext.windows.create({
+      ...createData,
       type: 'popup',
-      width: options.width,
-      height: options.height,
       url: url.href,
+      top,
+      left,
+      width,
+      height,
     })
 
     window.close()
