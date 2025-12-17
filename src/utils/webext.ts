@@ -62,11 +62,11 @@ declare module 'wxt/browser' {
     export var isFirefox: boolean
     export var isSafari: boolean
 
-    export var isContentScript: boolean
-    export var isBackground: boolean
-    export var isPopup: boolean
-    export var isSidePanel: boolean
-    export var isPopupWindow: boolean
+    export var inContentScript: boolean
+    export var inBackground: boolean
+    export var inPopup: boolean
+    export var inSidePanel: boolean
+    export var inPopupWindow: boolean
 
     export function getCurrentActiveTab(): Promise<tabs.Tab | undefined>
 
@@ -89,14 +89,14 @@ const searchParamTabId = new URLSearchParams(search).get(
   webext.SEARCH_PARAM_TAB_ID
 )
 
-webext.isContentScript = /^https?:$/.test(protocol)
-webext.isBackground =
-  !webext.isContentScript &&
+webext.inContentScript = /^https?:$/.test(protocol)
+webext.inBackground =
+  !webext.inContentScript &&
   (pathname === '/background.js' ||
     pathname === '/_generated_background_page.html')
-webext.isPopup = !webext.isContentScript && pathname === '/popup.html'
-webext.isSidePanel = !webext.isContentScript && pathname === '/sidepanel.html'
-webext.isPopupWindow = !!searchParamTabId
+webext.inPopup = !webext.inContentScript && pathname === '/popup.html'
+webext.inSidePanel = !webext.inContentScript && pathname === '/sidepanel.html'
+webext.inPopupWindow = !!searchParamTabId
 
 webext.getCurrentActiveTab = async function () {
   const tabId = searchParamTabId

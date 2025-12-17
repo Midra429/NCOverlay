@@ -42,7 +42,7 @@ export function Header() {
         </div>
 
         <div className="flex shrink-0 flex-row gap-1">
-          {!webext.isPopupWindow && (
+          {!webext.inPopupWindow && (
             <Tooltip placement="left" content="ポップアップウィンドウで開く">
               <Button
                 className="shrink-0 p-0"
