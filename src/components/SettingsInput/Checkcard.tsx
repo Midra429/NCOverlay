@@ -1,9 +1,12 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsInputBaseProps } from '.'
+import type { SettingsConditional, SettingsInputBaseProps } from '.'
 
+import { useEffect, useState } from 'react'
 import { Checkbox, CheckboxGroup, cn } from '@heroui/react'
 
 import { useSettings } from '@/hooks/useSettings'
+
+import { initConditional } from '.'
 
 export type Key = {
   [P in SettingsKey]: StorageItems[P] extends (string | number)[] ? P : never
@@ -16,10 +19,14 @@ export interface Props<K extends Key = Key>
     value: StorageItems[K][number]
     description?: string
   }[]
+  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   return (
     <CheckboxGroup
@@ -31,6 +38,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
       size="sm"
       orientation="vertical"
       label={props.label}
+      isDisabled={isDisabled}
       value={value}
       onChange={setValue as any}
     >

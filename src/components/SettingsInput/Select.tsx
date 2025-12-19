@@ -1,11 +1,14 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsInputBaseProps } from '.'
+import type { SettingsConditional, SettingsInputBaseProps } from '.'
 
+import { useEffect, useState } from 'react'
 import { cn } from '@heroui/react'
 
 import { useSettings } from '@/hooks/useSettings'
 
 import { Select, SelectItem } from '@/components/Select'
+
+import { initConditional } from '.'
 
 export type Key = {
   [P in SettingsKey]: StorageItems[P] extends string | number | boolean
@@ -20,10 +23,14 @@ export interface Props<K extends Key = Key>
     value: StorageItems[K]
     Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
   }[]
+  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   return (
     <div className="flex flex-col">
@@ -35,6 +42,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
         size="sm"
         label={props.label}
         labelPlacement="outside-left"
+        isDisabled={isDisabled}
         selectedKeys={[JSON.stringify(value)]}
         onSelectionChange={([key]) =>
           setValue(key && JSON.parse(key as string))

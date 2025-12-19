@@ -1,11 +1,13 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsInputBaseProps } from '.'
+import type { SettingsConditional, SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { Slider, cn } from '@heroui/react'
 
 import { SETTINGS_DEFAULT } from '@/constants/settings/default'
 import { useSettings } from '@/hooks/useSettings'
+
+import { initConditional } from '.'
 
 export type Key = {
   [P in SettingsKey]: StorageItems[P] extends number ? P : never
@@ -18,6 +20,7 @@ export interface Props<K extends Key = Key>
   step: number
   prefix?: string
   suffix?: string
+  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {
@@ -25,13 +28,9 @@ export function Input(props: Omit<Props, 'inputType'>) {
     SETTINGS_DEFAULT[props.settingsKey]
   )
   const [value, setValue] = useSettings(props.settingsKey)
+  const [isDisabled, setIsDisabled] = useState(false)
 
-  const [useNiconicoCredentials] = useSettings(
-    'settings:comment:useNiconicoCredentials'
-  )
-
-  const isDisabled =
-    props.settingsKey === 'settings:comment:amount' && !useNiconicoCredentials
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   useEffect(() => {
     setState(value)

@@ -1,12 +1,15 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsInputBaseProps } from '.'
+import type { SettingsConditional, SettingsInputBaseProps } from '.'
 
+import { useEffect, useState } from 'react'
 import { Checkbox, CheckboxGroup } from '@heroui/react'
 import { CircleHelpIcon } from 'lucide-react'
 
 import { useSettings } from '@/hooks/useSettings'
 
 import { Tooltip } from '@/components/Tooltip'
+
+import { initConditional } from '.'
 
 export type Key = {
   [P in SettingsKey]: StorageItems[P] extends (string | number)[] ? P : never
@@ -18,17 +21,21 @@ export interface Props<K extends Key = Key>
     label: string
     value: StorageItems[K][number]
   }[]
+  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   return (
     <CheckboxGroup
       classNames={{
         base: 'gap-2 py-2',
         label: 'text-foreground text-small',
-        wrapper: 'gap-x-[5px] gap-y-1.5',
+        wrapper: 'gap-x-1.25 gap-y-1.5',
       }}
       size="sm"
       orientation="horizontal"
@@ -46,6 +53,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
           )}
         </div>
       }
+      isDisabled={isDisabled}
       value={value}
       onChange={setValue as any}
     >

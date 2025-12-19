@@ -1,21 +1,29 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsInputBaseProps } from '.'
+import type { SettingsConditional, SettingsInputBaseProps } from '.'
 
+import { useEffect, useState } from 'react'
 import { Switch } from '@heroui/react'
 
 import { useSettings } from '@/hooks/useSettings'
 
 import { ItemLabel } from '@/components/ItemLabel'
 
+import { initConditional } from '.'
+
 export type Key = {
   [P in SettingsKey]: StorageItems[P] extends boolean ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>
-  extends SettingsInputBaseProps<K, 'toggle'> {}
+  extends SettingsInputBaseProps<K, 'toggle'> {
+  disable?: SettingsConditional
+}
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   return (
     <Switch
@@ -29,6 +37,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
         label: 'm-0',
       }}
       size="sm"
+      isDisabled={isDisabled}
       isSelected={value}
       onValueChange={setValue}
     >

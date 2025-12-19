@@ -1,4 +1,6 @@
-import type { SettingsKey } from '@/types/storage'
+import type { SettingItems, SettingsKey } from '@/types/storage'
+
+import { settings } from '@/utils/settings/extension'
 
 import * as Checkbox from './Checkbox'
 import * as Checkcard from './Checkcard'
@@ -20,6 +22,18 @@ export interface SettingsInputBaseProps<
   description?: string
 }
 
+export type SettingsKeyValue = {
+  [K in SettingsKey]: {
+    key: K
+    value: SettingItems[K]
+  }
+}[SettingsKey]
+
+export interface SettingsConditional {
+  operator?: 'and' | 'or'
+  when: SettingsKeyValue[]
+}
+
 export type SettingsInputType = keyof typeof SettingsInput
 
 export type SettingsInputProps<K extends SettingsKey> =
@@ -32,6 +46,37 @@ export type SettingsInputProps<K extends SettingsKey> =
   | (K extends KbdShortcut.Key ? KbdShortcut.Props<K> : never)
   | (K extends NgList.Key ? NgList.Props<K> : never)
   | (K extends ChSelector.Key ? ChSelector.Props<K> : never)
+
+export function initConditional(
+  disable: SettingsConditional | undefined,
+  setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>
+): (() => void) | undefined {
+  if (!disable) return
+
+  const { operator, when } = disable
+
+  const conditionMap = new Map<SettingsKey, boolean>(
+    when.map((v) => [v.key, false])
+  )
+
+  const removeListenerCallbacks = when.map(({ key, value }) => {
+    return settings.watch(key, (val) => {
+      conditionMap.set(key, val === value)
+
+      if (operator === 'and') {
+        setIsDisabled(conditionMap.values().every((v) => v))
+      } else {
+        setIsDisabled(conditionMap.values().some((v) => v))
+      }
+    })
+  })
+
+  return () => {
+    while (removeListenerCallbacks.length) {
+      removeListenerCallbacks.pop()?.()
+    }
+  }
+}
 
 export const SettingsInput = {
   select: Select.Input,
