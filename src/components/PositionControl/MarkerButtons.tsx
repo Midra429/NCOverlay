@@ -1,3 +1,5 @@
+import type { MarkerKey } from '@/constants/markers'
+
 import { Button, cn } from '@heroui/react'
 import { RotateCcwIcon } from 'lucide-react'
 
@@ -8,20 +10,20 @@ import { sendMessageToContent } from '@/messaging/to-content'
 import { Tooltip } from '@/components/Tooltip'
 
 export interface MarkerButtonProps {
-  markerIdx: number | null
+  markerKey: MarkerKey | null
   label: React.ReactNode
   shortLabel: React.ReactNode
   disabled?: boolean
 }
 
 export function MarkerButton({
-  markerIdx,
+  markerKey,
   label,
   shortLabel,
   disabled,
 }: MarkerButtonProps) {
   function onPress() {
-    sendMessageToContent('jumpMarker', markerIdx)
+    sendMessageToContent('jumpMarker', markerKey)
   }
 
   return (
@@ -59,16 +61,16 @@ export function MarkerButtons() {
         )}
       >
         <MarkerButton
-          markerIdx={null}
+          markerKey={null}
           label="オフセットをリセット"
           shortLabel={<RotateCcwIcon className="size-4" />}
           disabled={resetButtonDisabled}
         />
 
-        {MARKERS.map(({ label, shortLabel }, idx) => (
+        {MARKERS.map(({ key, label, shortLabel }, idx) => (
           <MarkerButton
-            key={shortLabel}
-            markerIdx={idx}
+            key={key}
+            markerKey={key}
             label={label}
             shortLabel={shortLabel}
             disabled={!markerEnableFlags[idx]}

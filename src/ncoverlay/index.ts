@@ -1,4 +1,4 @@
-import type { Marker } from '@/constants/markers'
+import type { MarkerKey } from '@/constants/markers'
 import type { Browser } from '@/utils/webext'
 
 import equal from 'fast-deep-equal'
@@ -93,21 +93,18 @@ export class NCOverlay {
   /**
    * 指定したマーカーの位置にジャンプ
    */
-  async jumpMarker(marker: number | Marker['shortLabel'] | null) {
+  async jumpMarker(key: MarkerKey | null) {
     const oldDetails = await this.state.get('slotDetails')
     const newDetails = structuredClone(oldDetails)
 
-    if (marker === null) {
+    if (key === null) {
       if (newDetails) {
         for (const detail of newDetails) {
           delete detail.offsetMs
         }
       }
     } else {
-      const markerIdx =
-        typeof marker === 'string'
-          ? MARKERS.findIndex((v) => v.shortLabel === marker)
-          : marker
+      const markerIdx = MARKERS.findIndex((v) => v.key === key)
 
       const currentTimeMs = this.renderer.video.currentTime * 1000
 

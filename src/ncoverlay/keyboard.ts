@@ -76,27 +76,27 @@ export class NCOKeyboard {
       }),
 
       register('settings:kbd:jumpMarkerToStart', () => {
-        this.#functions.jumpMarker('ｷﾀ-')
+        this.#functions.jumpMarker('start')
       }),
 
       register('settings:kbd:jumpMarkerToOP', () => {
-        this.#functions.jumpMarker('OP')
+        this.#functions.jumpMarker('op')
       }),
 
       register('settings:kbd:jumpMarkerToA', () => {
-        this.#functions.jumpMarker('A')
+        this.#functions.jumpMarker('a-part')
       }),
 
       register('settings:kbd:jumpMarkerToB', () => {
-        this.#functions.jumpMarker('B')
+        this.#functions.jumpMarker('b-part')
       }),
 
       register('settings:kbd:jumpMarkerToED', () => {
-        this.#functions.jumpMarker('ED')
+        this.#functions.jumpMarker('ed')
       }),
 
       register('settings:kbd:jumpMarkerToC', () => {
-        this.#functions.jumpMarker('C')
+        this.#functions.jumpMarker('c-part')
       }),
 
       register('settings:kbd:resetMarker', () => {
