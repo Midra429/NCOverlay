@@ -110,7 +110,7 @@ export function Header() {
               startContent={<FileTextIcon className="size-4" />}
               onPress={onPressFile}
             >
-              ローカルファイル (β)
+              ローカルファイル
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
