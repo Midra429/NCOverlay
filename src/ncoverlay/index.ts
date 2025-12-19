@@ -110,7 +110,9 @@ export class NCOverlay {
 
       if (newDetails) {
         for (const detail of newDetails) {
-          const marker = detail.markers?.[markerIdx]
+          if (detail.type !== 'jikkyo') continue
+
+          const marker = detail.markers[markerIdx]
 
           if (marker) {
             detail.offsetMs = marker * -1 + currentTimeMs

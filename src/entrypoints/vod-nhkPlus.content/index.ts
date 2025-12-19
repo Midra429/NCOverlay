@@ -95,6 +95,7 @@ async function main() {
             comment: 0,
           },
         },
+        markers: [],
       })
 
       const comment = await getJikkyoKakolog({ jkChId, starttime, endtime })
@@ -105,13 +106,13 @@ async function main() {
         await nco.state.update('slotDetails', ['id'], {
           id,
           status: 'ready',
-          markers,
           info: {
             count: {
               comment: thread.commentCount,
               kawaii: kawaiiCount,
             },
           },
+          markers,
         })
 
         await nco.state.add('slots', {

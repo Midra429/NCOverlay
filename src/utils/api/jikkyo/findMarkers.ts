@@ -1,11 +1,14 @@
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
 
 import { MARKERS } from '@/constants/markers'
 
 /**
  * マーカーの位置を探す
  */
-export function findMarkers(...threads: V1Thread[]): (number | null)[] {
+export function findMarkers(
+  ...threads: V1Thread[]
+): StateSlotDetailJikkyo['markers'] {
   const comments = threads
     .flatMap((thread) => thread.comments)
     .sort((a, b) => a.vposMs - b.vposMs)

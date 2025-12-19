@@ -82,13 +82,13 @@ export function SlotItem({
           slotDetail = {
             id,
             status: 'ready',
-            markers,
             info: {
               count: {
                 comment: thread.commentCount,
                 kawaii: kawaiiCount,
               },
             },
+            markers,
           }
 
           slot = { id, threads: [thread] }

@@ -84,6 +84,7 @@ export function programToSlotDetail(
           comment: 0,
         },
       },
+      markers: [],
     },
     detail
   )

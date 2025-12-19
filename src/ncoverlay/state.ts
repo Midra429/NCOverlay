@@ -68,7 +68,6 @@ export interface StateSlotDetailBase {
    */
   id: string
   status: 'pending' | 'loading' | 'ready' | 'error'
-  markers?: (number | null)[]
   offsetMs?: number
   translucent?: boolean
   hidden?: boolean
@@ -107,6 +106,7 @@ export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
       kawaii?: number
     }
   }
+  markers: (number | null)[]
 }
 
 export interface StateSlotDetailNicolog extends StateSlotDetailBase {

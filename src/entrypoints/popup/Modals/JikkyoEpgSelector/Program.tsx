@@ -140,6 +140,7 @@ export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
         comment: 0,
       },
     },
+    markers: [],
   }
 
   return (

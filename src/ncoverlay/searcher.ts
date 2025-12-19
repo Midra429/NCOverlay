@@ -390,13 +390,13 @@ export class NCOSearcher {
       updateSlotDetailMap.set(id, {
         id,
         status: 'ready',
-        markers,
         info: {
           count: {
             comment: thread.commentCount,
             kawaii: kawaiiCount,
           },
         },
+        markers,
       })
     }
 

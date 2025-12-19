@@ -47,7 +47,11 @@ export function MarkerButtons() {
 
   const markerEnableFlags = Array(MARKERS.length)
     .fill(false)
-    .map((_, i) => !!stateSlotDetails?.some((v) => !v.hidden && v.markers?.[i]))
+    .map((_, idx) => {
+      return stateSlotDetails?.some(
+        (v) => !v.hidden && v.type === 'jikkyo' && v.markers[idx]
+      )
+    })
   const hasMarker = markerEnableFlags.some((v) => v)
   const resetButtonDisabled = !stateSlotDetails?.some((v) => v.offsetMs)
 

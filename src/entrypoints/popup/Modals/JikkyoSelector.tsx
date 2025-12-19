@@ -70,6 +70,7 @@ function createSlotDetailJikkyo({
         comment: 0,
       },
     },
+    markers: [],
   }
 }
 
@@ -146,13 +147,13 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
       await ncoState.update('slotDetails', ['id'], {
         id,
         status: 'ready',
-        markers,
         info: {
           count: {
             comment: thread.commentCount,
             kawaii: kawaiiCount,
           },
         },
+        markers,
       })
 
       await ncoState.add('slots', {
