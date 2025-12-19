@@ -75,7 +75,7 @@ export function programToSlotDetail(
       id,
       status: 'pending',
       info: {
-        id: program.TID,
+        id: `${program.TID}/time?Filter=${program.ChID}#${program.PID}`,
         source: 'syobocal',
         title: [...flags, title].join(' ').trim(),
         duration: (endtime - starttime) / 1000,
