@@ -99,7 +99,7 @@ async function main() {
     } else {
       if (location.pathname.startsWith('/episodes/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          'div[class*="_videoContainer_"] .video-js > video.vjs-tech'
+          'div[class*="_videoContainer_"] .video-js > video.vjs-tech[src]'
         )
 
         if (video) {

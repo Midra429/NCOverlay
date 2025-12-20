@@ -119,7 +119,7 @@ async function main() {
     } else {
       if (location.pathname.startsWith('/watch/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          'div[data-name="content"] > video[data-name="video-content"]'
+          'div[data-name="content"] > video[data-name="video-content"][src]'
         )
 
         if (video) {

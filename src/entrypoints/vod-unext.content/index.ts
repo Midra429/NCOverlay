@@ -82,7 +82,7 @@ async function main() {
     } else {
       if (location.pathname.startsWith('/play/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          ':is(#videoTagWrapper, div[data-ucn="fullscreenContextWrapper"]) video'
+          ':is(#videoTagWrapper, div[data-ucn="fullscreenContextWrapper"]) video[src]'
         )
 
         if (video) {

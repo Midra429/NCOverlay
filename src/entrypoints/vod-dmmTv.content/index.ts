@@ -86,7 +86,7 @@ async function main() {
     } else {
       if (location.pathname.startsWith('/vod/playback/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          '#vodWrapper > div > video'
+          '#vodWrapper > div > video:has(source)'
         )
 
         if (video) {
