@@ -26,10 +26,10 @@ async function main() {
   const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
       const seriesTitleElem = document.body.querySelector<HTMLElement>(
-        'h2[class^="titles_seriesTitle"]'
+        'h2[class^="EpisodeDescription_seriesTitle_"]'
       )
       const titleElem = document.body.querySelector<HTMLElement>(
-        'h1[class^="titles_title"]'
+        'h1[class^="EpisodeDescription_title_"]'
       )
 
       const seriesTitleText = seriesTitleElem?.textContent
