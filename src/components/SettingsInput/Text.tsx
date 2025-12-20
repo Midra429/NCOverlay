@@ -1,5 +1,5 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsConditional, SettingsInputBaseProps } from '.'
+import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { Input as HeroUIInput } from '@heroui/react'
@@ -13,9 +13,7 @@ export type Key = {
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>
-  extends SettingsInputBaseProps<K, 'text'> {
-  disable?: SettingsConditional
-}
+  extends SettingsInputBaseProps<K, 'text'> {}
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)

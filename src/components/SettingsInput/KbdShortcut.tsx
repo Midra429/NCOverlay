@@ -14,6 +14,8 @@ import { useSettings } from '@/hooks/useSettings'
 import { ItemLabel } from '@/components/ItemLabel'
 import { Tooltip } from '@/components/Tooltip'
 
+import { initConditional } from '.'
+
 const HEROUI_KBD_KEYS: Partial<
   Record<'common' | Browser.runtime.PlatformInfo['os'], string[]>
 > = {
@@ -121,8 +123,9 @@ export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'kbd-shortcut'> {}
 
 export function Input(props: Omit<Props, 'inputType'>) {
-  const [os, setOs] = useState<Browser.runtime.PlatformInfo['os']>()
   const [value, setValue] = useSettings(props.settingsKey)
+  const [isDisabled, setIsDisabled] = useState(false)
+  const [os, setOs] = useState<Browser.runtime.PlatformInfo['os']>()
   const [keys, { start, stop, isRecording }] = useRecordHotkeys()
 
   function onClick(evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -137,12 +140,18 @@ export function Input(props: Omit<Props, 'inputType'>) {
   }
 
   useEffect(() => {
+    initConditional(props.disable, setIsDisabled)
+
     webext.runtime.getPlatformInfo().then((v) => setOs(v.os))
   }, [])
 
   return (
     <div className="flex flex-col justify-between gap-2 py-2">
-      <ItemLabel title={props.label} description={props.description} />
+      <ItemLabel
+        title={props.label}
+        description={props.description}
+        isDisabled={isDisabled}
+      />
 
       <div className="flex flex-row items-center gap-1">
         <div
@@ -154,9 +163,11 @@ export function Input(props: Omit<Props, 'inputType'>) {
             'bg-default-100',
             'data-[recording=true]:bg-primary/15 dark:data-[recording=true]:bg-primary/20',
             'overflow-x-hidden',
-            'transition-colors duration-150!'
+            'transition-colors duration-150!',
+            'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-disabled'
           )}
           data-recording={isRecording}
+          data-disabled={isDisabled}
         >
           <ScrollShadow
             className="size-full"
@@ -194,6 +205,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
             variant="light"
             radius="full"
             isIconOnly
+            isDisabled={isDisabled}
             // @ts-ignore
             onClick={onClick}
           >

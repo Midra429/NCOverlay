@@ -27,6 +27,8 @@ import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
 import { Tooltip } from '@/components/Tooltip'
 
+import { initConditional } from '.'
+
 type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
 
 export type Key = {
@@ -177,8 +179,8 @@ function Item({ init, onValueChange }: ItemProps) {
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
-
   const [tmpValue, setTmpValue] = useState<(NgSettingsContent | null)[]>([])
+  const [isDisabled, setIsDisabled] = useState(false)
 
   function onAdd() {
     setTmpValue((val) => [...val, { content: '' }])
@@ -189,6 +191,8 @@ export function Input(props: Omit<Props, 'inputType'>) {
   }
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   useEffect(() => {
     setTmpValue(isOpen ? value : [])
@@ -206,6 +210,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
             text: '編集',
             onPress: onOpen,
           }}
+          isDisabled={isDisabled}
         />
       </div>
 

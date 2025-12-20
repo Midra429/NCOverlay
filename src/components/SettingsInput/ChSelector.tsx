@@ -29,6 +29,8 @@ import { ItemButton } from '@/components/ItemButton'
 import { Modal } from '@/components/Modal'
 import { Tooltip } from '@/components/Tooltip'
 
+import { initConditional } from '.'
+
 export type Key = 'settings:autoSearch:jikkyoChannelIds'
 
 export interface Props<K extends Key = Key>
@@ -99,7 +101,7 @@ function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
 
 export function Input(props: Omit<Props, 'inputType'>) {
   const [value, setValue] = useSettings(props.settingsKey)
-
+  const [isDisabled, setIsDisabled] = useState(false)
   const [dtvChIds, setDtvChIds] = useState<JikkyoDtvChannelId[]>([])
   const [stvChIds, setStvChIds] = useState<JikkyoBsCsChannelId[]>([])
 
@@ -113,6 +115,8 @@ export function Input(props: Omit<Props, 'inputType'>) {
   }
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  useEffect(() => initConditional(props.disable, setIsDisabled), [])
 
   useEffect(() => {
     if (isOpen) {
@@ -143,6 +147,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
             text: '編集',
             onPress: onOpen,
           }}
+          isDisabled={isDisabled}
         />
       </div>
 

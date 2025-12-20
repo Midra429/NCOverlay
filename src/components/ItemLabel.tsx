@@ -3,12 +3,20 @@ import { cn } from '@heroui/react'
 export interface ItemLabelProps {
   title: React.ReactNode
   description?: React.ReactNode
+  isDisabled?: boolean
 }
 
 export function ItemLabel(props: ItemLabelProps) {
   return (
-    <div className="flex flex-col gap-0.5">
+    <div
+      className={cn(
+        'flex flex-col gap-0.5',
+        'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-disabled'
+      )}
+      data-disabled={props.isDisabled}
+    >
       <span className="text-foreground text-small">{props.title}</span>
+
       {props.description && (
         <span
           className={cn(

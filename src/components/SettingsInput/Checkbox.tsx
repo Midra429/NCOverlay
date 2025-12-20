@@ -1,5 +1,5 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsConditional, SettingsInputBaseProps } from '.'
+import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { Checkbox, CheckboxGroup } from '@heroui/react'
@@ -21,7 +21,6 @@ export interface Props<K extends Key = Key>
     label: string
     value: StorageItems[K][number]
   }[]
-  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {

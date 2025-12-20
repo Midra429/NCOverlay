@@ -20,6 +20,7 @@ export interface SettingsInputBaseProps<
   inputType: T
   label: string
   description?: string
+  disable?: SettingsConditional
 }
 
 export type SettingsKeyValue = {

@@ -1,5 +1,5 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsConditional, SettingsInputBaseProps } from '.'
+import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { cn } from '@heroui/react'
@@ -23,7 +23,6 @@ export interface Props<K extends Key = Key>
     value: StorageItems[K]
     Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
   }[]
-  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {

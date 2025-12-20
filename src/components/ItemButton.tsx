@@ -22,6 +22,7 @@ export interface ItemButtonProps {
     title: React.ReactNode
     description?: React.ReactNode
   }
+  isDisabled?: boolean
 }
 
 export function ItemButton(props: ItemButtonProps) {
@@ -37,6 +38,7 @@ export function ItemButton(props: ItemButtonProps) {
       size="sm"
       variant={props.button.variant}
       color={props.button.color}
+      isDisabled={props.isDisabled}
       startContent={props.button.startContent}
       endContent={props.button.endContent}
       onPress={props.button.onPress}
@@ -47,7 +49,11 @@ export function ItemButton(props: ItemButtonProps) {
 
   return (
     <div className="flex flex-row items-center justify-between gap-1">
-      <ItemLabel title={props.title} description={props.description} />
+      <ItemLabel
+        title={props.title}
+        description={props.description}
+        isDisabled={props.isDisabled}
+      />
 
       {props.confirm ? (
         <Popconfirm

@@ -1,5 +1,5 @@
 import type { SettingsKey, StorageItems } from '@/types/storage'
-import type { SettingsConditional, SettingsInputBaseProps } from '.'
+import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
 import { Slider, cn } from '@heroui/react'
@@ -20,7 +20,6 @@ export interface Props<K extends Key = Key>
   step: number
   prefix?: string
   suffix?: string
-  disable?: SettingsConditional
 }
 
 export function Input(props: Omit<Props, 'inputType'>) {
