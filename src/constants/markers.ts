@@ -10,7 +10,7 @@ export const MARKERS = [
     label: 'ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!!',
     shortLabel: 'ｷﾀ-',
     regexp: /^(ｷﾀ|キタ)[ｰー━].*[!！]$|^きたあ{0,}$|^(始|はじ)まっ?た$/i,
-    range: [0, 180],
+    range: [0, 300000],
   },
   {
     key: 'op',
@@ -20,14 +20,14 @@ export const MARKERS = [
     range: [null, null],
   },
   {
-    key: 'a-part',
+    key: 'aPart',
     label: 'Aパート',
     shortLabel: 'A',
     regexp: /^(A|Ａ)$/,
     range: [null, null],
   },
   {
-    key: 'b-part',
+    key: 'bPart',
     label: 'Bパート',
     shortLabel: 'B',
     regexp: /^(B|Ｂ)$/,
@@ -41,7 +41,7 @@ export const MARKERS = [
     range: [null, null],
   },
   {
-    key: 'c-part',
+    key: 'cPart',
     label: 'Cパート',
     shortLabel: 'C',
     regexp: /^(C|Ｃ)$/,
