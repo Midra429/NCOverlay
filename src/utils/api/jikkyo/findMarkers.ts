@@ -49,7 +49,7 @@ export function findMarkers(threads: V1Thread[]): JikkyoMarker[] {
       }
     }
 
-    if (tmpCount && tmpVposMs) {
+    if (tmpCount) {
       return tmpVposMs
     }
 
