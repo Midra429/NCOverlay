@@ -38,7 +38,7 @@ export default defineConfig({
         browser_specific_settings = {
           gecko: {
             id: `${name}@midra.me`,
-            strict_min_version: '142',
+            strict_min_version: '142.0',
             // @ts-expect-error
             data_collection_permissions: {
               required: ['none'],
