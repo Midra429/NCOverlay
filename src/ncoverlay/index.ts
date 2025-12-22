@@ -4,6 +4,7 @@ import type { Browser } from '@/utils/webext'
 import equal from 'fast-deep-equal'
 
 import { MARKERS } from '@/constants/markers'
+import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
@@ -109,13 +110,22 @@ export class NCOverlay {
       const currentTimeMs = this.renderer.video.currentTime * 1000
 
       if (newDetails) {
+        const adjustJikkyoOffset = await settings.get(
+          'settings:comment:adjustJikkyoOffset'
+        )
+
         for (const detail of newDetails) {
-          if (detail.type !== 'jikkyo') continue
+          if (
+            detail.type !== 'jikkyo' ||
+            (adjustJikkyoOffset && detail.chapters.length)
+          ) {
+            continue
+          }
 
           const marker = detail.markers[markerIdx]
 
           if (marker) {
-            detail.offsetMs = marker * -1 + currentTimeMs
+            detail.offsetMs = currentTimeMs - marker
           }
         }
       }
@@ -186,6 +196,12 @@ export class NCOverlay {
       this.renderer.video.addEventListener(type, listener)
     }
 
+    for (const key of SLOTS_REFRESH_SETTINGS_KEYS) {
+      this.#removeListenerCallbacks.push(
+        settings.onChange(key, this.#updateRendererThreads)
+      )
+    }
+
     // ストレージの監視
     this.#removeListenerCallbacks.push(
       // 設定 (コメント:表示サイズ)
@@ -207,29 +223,6 @@ export class NCOverlay {
       settings.watch('settings:comment:fps', (fps) => {
         this.renderer.setFps(fps)
       }),
-
-      // 設定（コメント:コメントアシストの表示を抑制）
-      settings.onChange(
-        'settings:comment:hideAssistedComments',
-        this.#updateRendererThreads
-      ),
-
-      // 設定 (NG設定)
-      settings.onChange('settings:ng:words', this.#updateRendererThreads),
-      settings.onChange('settings:ng:commands', this.#updateRendererThreads),
-      settings.onChange('settings:ng:ids', this.#updateRendererThreads),
-      settings.onChange(
-        'settings:ng:largeComments',
-        this.#updateRendererThreads
-      ),
-      settings.onChange(
-        'settings:ng:fixedComments',
-        this.#updateRendererThreads
-      ),
-      settings.onChange(
-        'settings:ng:coloredComments',
-        this.#updateRendererThreads
-      ),
 
       // 検索ステータス
       this.state.onChange('status', async (status) => {

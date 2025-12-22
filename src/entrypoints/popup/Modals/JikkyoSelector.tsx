@@ -71,6 +71,7 @@ function createSlotDetailJikkyo({
       },
     },
     markers: [],
+    chapters: [],
   }
 }
 
@@ -135,14 +136,14 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
 
     const { id } = slotDetail
 
-    const comment = await getJikkyoKakolog({
+    const comment = await getJikkyoKakolog(ncoState, {
       jkChId,
       starttime: startDateTime.toDate().getTime() / 1000,
       endtime: endDateTime.toDate().getTime() / 1000,
     })
 
     if (comment) {
-      const { thread, markers, kawaiiCount } = comment
+      const { thread, markers, chapters, kawaiiCount } = comment
 
       await ncoState.update('slotDetails', ['id'], {
         id,
@@ -154,6 +155,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
           },
         },
         markers,
+        chapters,
       })
 
       await ncoState.add('slots', {

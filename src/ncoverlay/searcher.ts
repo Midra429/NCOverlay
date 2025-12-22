@@ -236,7 +236,7 @@ export class NCOSearcher {
       // ニコニコ実況 過去ログ 取得
       Promise.all(
         scPrograms.map((prog) => {
-          return getJikkyoKakolog({
+          return getJikkyoKakolog(this.#state, {
             jkChId: syobocalJikkyoChIdMap.get(prog.ChID)!,
             starttime: convertProgramTime(prog.StTime) / 1000,
             endtime: convertProgramTime(prog.EdTime) / 1000,
@@ -378,7 +378,7 @@ export class NCOSearcher {
     for (const cmt of commentsJikkyo) {
       if (!cmt) continue
 
-      const { thread, markers, kawaiiCount } = cmt
+      const { thread, markers, chapters, kawaiiCount } = cmt
       const id = thread.id
 
       loadedSlotMap.set(id, {
@@ -397,6 +397,7 @@ export class NCOSearcher {
           },
         },
         markers,
+        chapters,
       })
     }
 

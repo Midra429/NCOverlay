@@ -131,10 +131,16 @@ export interface SettingItems {
   'settings:comment:useNiconicoCredentials': boolean
 
   /**
-   * コメント:コメントアシストを非表示
+   * コメント:コメントアシストの表示を抑制
    * @default false
    */
   'settings:comment:hideAssistedComments': boolean
+
+  /**
+   * コメント:実況: オフセット自動調節
+   * @default false
+   */
+  'settings:comment:adjustJikkyoOffset': boolean
 
   // 自動検索 //////////////////////////////////////////////////
   /**
@@ -144,10 +150,16 @@ export interface SettingItems {
   'settings:autoSearch:targets': AutoSearchTarget[]
 
   /**
-   * 自動検索:実況チャンネル
+   * 自動検索:実況: チャンネル
    * @default Object.keys(JIKKYO_CHANNELS)
    */
   'settings:autoSearch:jikkyoChannelIds': JikkyoChannelId[]
+
+  /**
+   * 自動検索:実況: オフセット自動調節可のみ
+   * @default false
+   */
+  'settings:autoSearch:jikkyoOnlyAdjustable': boolean
 
   /**
    * 自動検索:手動で実行

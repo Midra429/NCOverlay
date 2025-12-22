@@ -1,9 +1,14 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type { NCOState } from '@/ncoverlay/state'
+import type { JikkyoChapter } from '@/utils/api/jikkyo/findChapters'
+import type { JikkyoMarker } from '@/utils/api/jikkyo/findMarkers'
 
 import { KAWAII_REGEXP } from '@/constants'
 import { findMarkers } from '@/utils/api/jikkyo/findMarkers'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
+
+import { findChapters } from './findChapters'
 
 export interface GetJikkyoKakologParams {
   jkChId: JikkyoChannelId
@@ -13,18 +18,18 @@ export interface GetJikkyoKakologParams {
 
 export interface GetJikkyoKakologResult {
   thread: V1Thread
-  markers: (number | null)[]
+  markers: JikkyoMarker[]
+  chapters: JikkyoChapter[]
   kawaiiCount: number
 }
 
 /**
  * ニコニコ実況 過去ログを取得
  */
-export async function getJikkyoKakolog({
-  jkChId,
-  starttime,
-  endtime,
-}: GetJikkyoKakologParams): Promise<GetJikkyoKakologResult | null> {
+export async function getJikkyoKakolog(
+  state: NCOState,
+  { jkChId, starttime, endtime }: GetJikkyoKakologParams
+): Promise<GetJikkyoKakologResult | null> {
   // 過去ログ取得
   const thread = await ncoApiProxy.jikkyo.kakolog(
     jkChId,
@@ -43,11 +48,14 @@ export async function getJikkyoKakolog({
     return null
   }
 
-  const markers = findMarkers(thread)
+  const info = await state.get('info')
+
+  const markers = findMarkers([thread], info)
+  const chapters = findChapters(markers, info)
 
   const kawaiiCount = thread.comments.filter((cmt) => {
     return KAWAII_REGEXP.test(cmt.body)
   }).length
 
-  return { thread, markers, kawaiiCount }
+  return { thread, markers, chapters, kawaiiCount }
 }

@@ -70,14 +70,14 @@ export function SlotItem({
       let slot: StateSlot | undefined
 
       if (type === 'jikkyo') {
-        const comment = await getJikkyoKakolog({
+        const comment = await getJikkyoKakolog(ncoState, {
           jkChId: id.split(':')[0] as JikkyoChannelId,
           starttime: info.date[0] / 1000,
           endtime: info.date[1] / 1000,
         })
 
         if (comment) {
-          const { thread, markers, kawaiiCount } = comment
+          const { thread, markers, chapters, kawaiiCount } = comment
 
           slotDetail = {
             id,
@@ -89,6 +89,7 @@ export function SlotItem({
               },
             },
             markers,
+            chapters,
           }
 
           slot = { id, threads: [thread] }
@@ -175,7 +176,7 @@ export function SlotItem({
         <div
           className={cn(
             'relative h-full shrink-0',
-            detail.hidden && 'opacity-50'
+            (detail.hidden || detail.skip) && 'opacity-50'
           )}
         >
           {/* サムネイル */}
@@ -205,7 +206,7 @@ export function SlotItem({
         <div
           className={cn(
             'flex size-full flex-col gap-0.5',
-            detail.hidden && 'opacity-50'
+            (detail.hidden || detail.skip) && 'opacity-50'
           )}
         >
           {/* 日付 */}
@@ -239,13 +240,18 @@ export function SlotItem({
           >
             <div className="flex shrink-0 flex-col gap-1">
               {/* 非表示 */}
-              <HideButton id={detail.id} hidden={detail.hidden} />
+              <HideButton
+                id={detail.id}
+                hidden={detail.hidden}
+                skip={detail.skip}
+              />
 
               {/* 半透明 */}
               <TranslucentButton
                 id={detail.id}
-                hidden={detail.hidden}
                 translucent={detail.translucent}
+                hidden={detail.hidden}
+                skip={detail.skip}
               />
             </div>
 

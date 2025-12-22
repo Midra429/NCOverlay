@@ -85,6 +85,7 @@ export function programToSlotDetail(
         },
       },
       markers: [],
+      chapters: [],
     },
     detail
   )

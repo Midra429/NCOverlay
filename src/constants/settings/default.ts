@@ -22,12 +22,14 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:amount': 1,
   'settings:comment:useNiconicoCredentials': true,
   'settings:comment:hideAssistedComments': false,
+  'settings:comment:adjustJikkyoOffset': false,
 
   // 自動検索
   'settings:autoSearch:targets': ['official', 'danime', 'chapter'],
   'settings:autoSearch:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
+  'settings:autoSearch:jikkyoOnlyAdjustable': true,
   'settings:autoSearch:manual': false,
 
   // NG設定

@@ -141,6 +141,7 @@ export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
       },
     },
     markers: [],
+    chapters: [],
   }
 
   return (

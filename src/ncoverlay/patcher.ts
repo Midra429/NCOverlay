@@ -1,6 +1,8 @@
 import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { VodKey } from '@/types/constants'
+import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 import type { NCOSearcherAutoSearchArgs } from './searcher'
+import type { StateInfo } from './state'
 
 import { parse } from '@midra/nco-utils/parse'
 
@@ -13,6 +15,7 @@ import { NCOverlay } from '.'
 export interface PlayingInfo {
   input: string | ParsedResult
   duration: number
+  chapters?: VideoChapter[]
   disableParse?: boolean
 }
 
@@ -58,10 +61,11 @@ export class NCOPatcher {
 
     this.dispose()
 
+    this.#video = video
+
     const tab = await sendMessageToBackground('getCurrentTab', null)
     const tabId = tab?.id
 
-    this.#video = video
     this.#nco = new NCOverlay(tabId!, this.#video)
 
     const loadInfo = async () => {
@@ -90,9 +94,10 @@ export class NCOPatcher {
           }
         }
 
-        const args: Partial<NCOSearcherAutoSearchArgs> = {
+        const args: StateInfo = {
           input: parsed ?? '',
           duration: info ? Math.floor(info.duration) : 0,
+          chapters: info?.chapters,
         }
 
         await this.#nco.state.set('vod', this.#vod)

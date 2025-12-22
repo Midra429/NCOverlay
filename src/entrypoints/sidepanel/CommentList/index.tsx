@@ -4,7 +4,7 @@ import type { NcoV1Comment } from '@/ncoverlay/state'
 import { useEffect, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
-import { ncoId, useNcoState } from '@/hooks/useNco'
+import { ncoId, ncoState, useNcoState } from '@/hooks/useNco'
 import { useSettings } from '@/hooks/useSettings'
 import { onMessageInBackground } from '@/messaging/to-background'
 import { filterDisplayThreads } from '@/ncoverlay/state'
@@ -48,7 +48,9 @@ export function CommentList() {
   const behavior = smoothScrolling ? 'smooth' : 'auto'
 
   useEffect(() => {
-    filterDisplayThreads(stateSlots, stateSlotDetails).then((threads) => {
+    if (!ncoState) return
+
+    filterDisplayThreads(ncoState).then((threads) => {
       const comments: NcoV1Comment[] | undefined = threads
         ?.flatMap((thread) => thread.comments)
         .sort((a, b) => a.vposMs - b.vposMs)

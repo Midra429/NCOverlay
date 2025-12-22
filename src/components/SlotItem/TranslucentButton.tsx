@@ -10,14 +10,16 @@ import { Tooltip } from '@/components/Tooltip'
 
 export interface TranslucentButton {
   id: StateSlotDetail['id']
-  hidden: StateSlotDetail['hidden']
   translucent: StateSlotDetail['translucent']
+  hidden: StateSlotDetail['hidden']
+  skip: StateSlotDetail['skip']
 }
 
 export function TranslucentButton({
   id,
-  hidden,
   translucent,
+  hidden,
+  skip,
 }: TranslucentButton) {
   const [tmpTranslucent, setTmpTranslucent] = useState(false)
 
@@ -49,7 +51,7 @@ export function TranslucentButton({
         variant={tmpTranslucent ? 'solid' : 'light'}
         color={tmpTranslucent ? 'primary' : 'default'}
         isIconOnly
-        isDisabled={hidden}
+        isDisabled={hidden || skip}
         onPress={onPress}
       >
         <BlendIcon className="size-3.5" />

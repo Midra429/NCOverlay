@@ -4,6 +4,11 @@ import type {
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { DeepPartial } from 'utility-types'
 import type { VodKey } from '@/types/constants'
+import type {
+  JikkyoChapter,
+  VideoChapter,
+} from '@/utils/api/jikkyo/findChapters'
+import type { JikkyoMarker } from '@/utils/api/jikkyo/findMarkers'
 import type { StorageOnChangeCallback } from '@/utils/storage'
 import type { NCOSearcherAutoSearchArgs } from './searcher'
 
@@ -11,6 +16,7 @@ import equal from 'fast-deep-equal'
 
 import { deepmerge } from '@/utils/deepmerge'
 import { logger } from '@/utils/logger'
+import { filterThreadsByJikkyoChapters } from '@/utils/api/jikkyo/findChapters'
 import { isNgComment } from '@/utils/api/niconico/applyNgSetting'
 import { findAssistedCommentIds } from '@/utils/api/niconico/findAssistedCommentIds'
 import { getNgSettings } from '@/utils/api/niconico/getNgSettings'
@@ -49,7 +55,9 @@ export type StateStatus =
 
 export type StateVod = VodKey
 
-export type StateInfo = Partial<NCOSearcherAutoSearchArgs>
+export type StateInfo = Partial<NCOSearcherAutoSearchArgs> & {
+  chapters?: VideoChapter[]
+}
 
 export type StateOffset = number
 
@@ -71,6 +79,7 @@ export interface StateSlotDetailBase {
   offsetMs?: number
   translucent?: boolean
   hidden?: boolean
+  skip?: boolean
   isAutoLoaded?: boolean
 }
 
@@ -106,7 +115,8 @@ export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
       kawaii?: number
     }
   }
-  markers: (number | null)[]
+  markers: JikkyoMarker[]
+  chapters: JikkyoChapter[]
 }
 
 export interface StateSlotDetailNicolog extends StateSlotDetailBase {
@@ -160,24 +170,46 @@ export interface NcoV1Thread extends Omit<V1Thread, 'comments'> {
 }
 
 export async function filterDisplayThreads(
-  slots: StateSlot[] | null,
-  details: StateSlotDetail[] | null
+  ncoState: NCOState
 ): Promise<NcoV1Thread[] | null> {
+  const [slots, details] = await Promise.all([
+    ncoState.get('slots'),
+    ncoState.get('slotDetails'),
+  ])
+
   if (!slots?.length || !details?.length) {
     return null
   }
 
   const threadMap = new Map<string, NcoV1Thread>()
 
-  const [ngSettings, hideAssistedComments] = await Promise.all([
+  const [
+    ngSettings,
+    [hideAssistedComments, adjustJikkyoOffset, jikkyoOnlyAdjustable],
+  ] = await Promise.all([
     getNgSettings(),
-    settings.get('settings:comment:hideAssistedComments'),
+    settings.get(
+      'settings:comment:hideAssistedComments',
+      'settings:comment:adjustJikkyoOffset',
+      'settings:autoSearch:jikkyoOnlyAdjustable'
+    ),
   ])
 
   let cmtCnt = 0
   let assistedCmtCnt = 0
 
-  for (const { id, status, offsetMs, translucent, hidden, type } of details) {
+  for (const detail of details) {
+    const {
+      id,
+      status,
+      offsetMs,
+      translucent,
+      hidden,
+      skip,
+      type,
+      isAutoLoaded,
+    } = detail
+
     if (hidden || status !== 'ready') {
       continue
     }
@@ -185,6 +217,34 @@ export async function filterDisplayThreads(
     const slot = slots.find((slot) => slot.id === id)
 
     if (!slot) continue
+
+    // 実況: オフセット自動調節
+    if (type === 'jikkyo') {
+      if (adjustJikkyoOffset) {
+        if (detail.chapters.length) {
+          slot.threads = filterThreadsByJikkyoChapters(
+            slot.threads,
+            detail.chapters
+          )
+        } else if (isAutoLoaded && jikkyoOnlyAdjustable) {
+          if (!skip) {
+            await ncoState.update('slotDetails', ['id'], {
+              id,
+              skip: true,
+            })
+          }
+
+          continue
+        }
+      }
+
+      if (skip) {
+        await ncoState.update('slotDetails', ['id'], {
+          id,
+          skip: false,
+        })
+      }
+    }
 
     for (const thread of slot.threads) {
       const key = `${thread.fork}:${thread.id}`
@@ -206,10 +266,14 @@ export async function filterDisplayThreads(
       const comments: NcoV1Comment[] = []
 
       for (const cmt of thread.comments) {
-        const isNg = isNgComment(cmt, ngSettings)
-        const isAssisted = assistedCommentIds?.includes(cmt.id)
-
-        if (isNg || isAssisted) continue
+        if (
+          // コメントアシスト
+          assistedCommentIds?.includes(cmt.id) ||
+          // NG
+          isNgComment(cmt, ngSettings)
+        ) {
+          continue
+        }
 
         // オフセット
         const vposMs = cmt.vposMs + (offsetMs ?? 0)
@@ -291,9 +355,7 @@ export class NCOState {
   }
 
   async getThreads() {
-    return filterDisplayThreads(
-      ...(await Promise.all([this.get('slots'), this.get('slotDetails')]))
-    )
+    return filterDisplayThreads(this)
   }
 
   set<K extends NCOStateItemKey>(key: K, value: NCOStateItem<K>) {

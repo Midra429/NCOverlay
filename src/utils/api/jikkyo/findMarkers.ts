@@ -1,4 +1,5 @@
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type { StateInfo } from '@/ncoverlay/state'
 
 import { MARKERS } from '@/constants/markers'
 
@@ -7,7 +8,10 @@ export type JikkyoMarker = number | null
 /**
  * マーカーの位置を探す
  */
-export function findMarkers(threads: V1Thread[]): JikkyoMarker[] {
+export function findMarkers(
+  threads: V1Thread[],
+  info?: StateInfo | null
+): JikkyoMarker[] {
   const comments = threads
     .flatMap((thread) => thread.comments)
     .sort((a, b) => a.vposMs - b.vposMs)
@@ -17,13 +21,24 @@ export function findMarkers(threads: V1Thread[]): JikkyoMarker[] {
   }
 
   const lastCmt = comments.at(-1)!
+  const mainChapter = info?.chapters?.find((v) => v.type === 'main')
+  const mainChapterEndMs = mainChapter?.endMs ?? 0
 
-  return MARKERS.map(({ regexp, range }) => {
-    const rangeStart = range[0] ? range[0] : 0
-    const rangeEnd = range[1] ? range[1] : lastCmt.vposMs
+  let prevVposMs = 0
+
+  return MARKERS.map(({ key, regexp, range }) => {
+    const rangeStart = range[0] ?? -Infinity
+    const rangeEnd = range[1] ?? Infinity
+
+    const minVposMs = Math.max(
+      prevVposMs,
+      rangeStart,
+      key === 'ed' || key === 'cPart' ? mainChapterEndMs : 0
+    )
+    const maxVposMs = Math.min(lastCmt.vposMs, rangeEnd)
 
     const filtered = comments.filter(({ vposMs, body }) => {
-      return rangeStart <= vposMs && vposMs <= rangeEnd && regexp.test(body)
+      return minVposMs <= vposMs && vposMs <= maxVposMs && regexp.test(body)
     })
     const len = filtered.length
 
@@ -50,6 +65,8 @@ export function findMarkers(threads: V1Thread[]): JikkyoMarker[] {
     }
 
     if (tmpCount) {
+      prevVposMs = tmpVposMs
+
       return tmpVposMs
     }
 

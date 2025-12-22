@@ -16,6 +16,7 @@ import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { PLUGINS } from '@/constants/plugins'
 import { VODS } from '@/constants/vods'
+import { SUPPORTED_VOD_KEYS } from '@/utils/api/jikkyo/findChapters'
 
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
@@ -125,26 +126,53 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:comment:amount',
         inputType: 'range',
         label: '表示量',
-        description:
-          'コメント数の目安: 2倍(2,000) 〜 10倍(10,000)\n※倍率が高くなるほど取得に時間がかかったり、エラーが発生する可能性が高くなります。',
+        description: [
+          'コメント数の目安: 2倍(2,000) 〜 10倍(10,000)',
+          '※倍率が高くなるほど取得に時間がかかったり、エラーが発生する可能性が高くなります。',
+        ].join('\n'),
         min: 1,
         max: 10,
         step: 1,
         suffix: '倍',
+        disable: {
+          when: [
+            {
+              key: 'settings:comment:useNiconicoCredentials',
+              value: false,
+            },
+          ],
+        },
       },
       {
         settingsKey: 'settings:comment:useNiconicoCredentials',
         inputType: 'toggle',
         label: 'ニコニコのログイン情報を使用',
-        description:
-          'ON: ニコニコのNG設定が反映される\nOFF: ニコニコに視聴履歴を反映させない',
+        description: [
+          'ON: ニコニコのNG設定が反映される',
+          'OFF: ニコニコに視聴履歴を反映させない',
+        ].join('\n'),
       },
       {
         settingsKey: 'settings:comment:hideAssistedComments',
         inputType: 'toggle',
         label: 'コメントアシストの表示を抑制',
-        description:
-          'コメントアシスト機能を使用したと予想されるコメントの表示を抑制します。\n※正確には判定できないので、テンプレコメントも対象になる可能性があります',
+        description: [
+          'コメントアシスト機能を使用したと予想されるコメントの表示を抑制します。',
+          '※正確には判定できないので、テンプレコメントも対象になる可能性があります',
+        ].join('\n'),
+      },
+      {
+        settingsKey: 'settings:comment:adjustJikkyoOffset',
+        inputType: 'toggle',
+        label: '実況: オフセット自動調節 (β)',
+        description: [
+          'OP/EDスキップ機能のデータとコメントを元に、自動で提供やCM部分をカットします。',
+          '※EDと次回予告の間のCMはカットできません',
+          '※コメントの内容や数に依存するため、不正確な可能性があります',
+          '',
+          '[対応動画配信サービス]',
+          SUPPORTED_VOD_KEYS.map((v) => VODS[v]).join(', '),
+        ].join('\n'),
       },
     ],
   },
@@ -170,18 +198,34 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
       {
         settingsKey: 'settings:autoSearch:jikkyoChannelIds',
         inputType: 'ch-selector',
-        label: '実況チャンネル',
+        label: '実況: チャンネル',
         options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
           label: `${id}: ${val}`,
           value: id as JikkyoChannelId,
         })),
       },
       {
+        settingsKey: 'settings:autoSearch:jikkyoOnlyAdjustable',
+        inputType: 'toggle',
+        label: '実況: オフセット自動調節可のみ',
+        description: 'オフセット自動調節ができる過去ログのみを表示します。',
+        disable: {
+          when: [
+            {
+              key: 'settings:comment:adjustJikkyoOffset',
+              value: false,
+            },
+          ],
+        },
+      },
+      {
         settingsKey: 'settings:autoSearch:manual',
         inputType: 'toggle',
         label: '手動で実行',
-        description:
-          '再生時に自動検索を実行しないようにします。\nポップアップの自動検索(再読み込み)ボタンを押すと実行されます。',
+        description: [
+          '再生時に自動検索を実行しないようにします。',
+          'ポップアップの自動検索(再読み込み)ボタンを押すと実行されます。',
+        ].join('\n'),
       },
     ],
   },

@@ -2,6 +2,7 @@ import type { NCOStateItem, NCOStateItemKey } from '@/ncoverlay/state'
 
 import { useEffect, useState } from 'react'
 
+import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
 import { settings } from '@/utils/settings/extension'
 import { sendMessageToContent } from '@/messaging/to-content'
 import { NCOState } from '@/ncoverlay/state'
@@ -28,25 +29,16 @@ export function useNcoState<K extends NCOStateItemKey>(
 
     ncoState.get(key).then(setState)
 
-    let ngOnChangeRemoveListeners: (() => void)[] | undefined
+    const removeListenerCallbacks: (() => void)[] = []
 
     if (key === 'slots') {
       async function ngChangedCallback() {
         setState(await ncoState!.get(key))
       }
 
-      ngOnChangeRemoveListeners = [
-        settings.onChange(
-          'settings:comment:hideAssistedComments',
-          ngChangedCallback
-        ),
-        settings.onChange('settings:ng:words', ngChangedCallback),
-        settings.onChange('settings:ng:commands', ngChangedCallback),
-        settings.onChange('settings:ng:ids', ngChangedCallback),
-        settings.onChange('settings:ng:largeComments', ngChangedCallback),
-        settings.onChange('settings:ng:fixedComments', ngChangedCallback),
-        settings.onChange('settings:ng:coloredComments', ngChangedCallback),
-      ]
+      for (const key of SLOTS_REFRESH_SETTINGS_KEYS) {
+        removeListenerCallbacks.push(settings.onChange(key, ngChangedCallback))
+      }
     }
 
     const onChangeRemoveListener = ncoState.onChange(key, setState)
@@ -54,8 +46,8 @@ export function useNcoState<K extends NCOStateItemKey>(
     return () => {
       onChangeRemoveListener()
 
-      while (ngOnChangeRemoveListeners?.length) {
-        ngOnChangeRemoveListeners.pop()?.()
+      while (removeListenerCallbacks.length) {
+        removeListenerCallbacks.pop()?.()
       }
     }
   }, [])

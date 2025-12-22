@@ -49,7 +49,7 @@ export function MarkerButtons() {
     .fill(false)
     .map((_, idx) => {
       return stateSlotDetails?.some(
-        (v) => !v.hidden && v.type === 'jikkyo' && v.markers[idx]
+        (v) => !v.hidden && !v.skip && v.type === 'jikkyo' && v.markers[idx]
       )
     })
   const hasMarker = markerEnableFlags.some((v) => v)

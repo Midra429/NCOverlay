@@ -11,9 +11,10 @@ import { Tooltip } from '@/components/Tooltip'
 export interface HideButtonProps {
   id: StateSlotDetail['id']
   hidden: StateSlotDetail['hidden']
+  skip: StateSlotDetail['skip']
 }
 
-export function HideButton({ id, hidden }: HideButtonProps) {
+export function HideButton({ id, hidden, skip }: HideButtonProps) {
   const [tmpHidden, setTmpHidden] = useState(false)
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export function HideButton({ id, hidden }: HideButtonProps) {
         variant={tmpHidden ? 'solid' : 'light'}
         color={tmpHidden ? 'primary' : 'default'}
         isIconOnly
+        isDisabled={skip}
         onPress={onPress}
       >
         <EyeOffIcon className="size-3.5" />
