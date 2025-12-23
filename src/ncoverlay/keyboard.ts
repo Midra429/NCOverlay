@@ -84,11 +84,11 @@ export class NCOKeyboard {
       }),
 
       register('settings:kbd:jumpMarkerToA', () => {
-        this.#functions.jumpMarker('a-part')
+        this.#functions.jumpMarker('aPart')
       }),
 
       register('settings:kbd:jumpMarkerToB', () => {
-        this.#functions.jumpMarker('b-part')
+        this.#functions.jumpMarker('bPart')
       }),
 
       register('settings:kbd:jumpMarkerToED', () => {
@@ -96,7 +96,7 @@ export class NCOKeyboard {
       }),
 
       register('settings:kbd:jumpMarkerToC', () => {
-        this.#functions.jumpMarker('c-part')
+        this.#functions.jumpMarker('cPart')
       }),
 
       register('settings:kbd:resetMarker', () => {
