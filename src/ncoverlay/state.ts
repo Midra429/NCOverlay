@@ -253,7 +253,7 @@ export async function filterDisplayThreads(
       }
     }
 
-    const customizeData = type !== 'chapter' ? commentCustomize[type] : null
+    const customizeData = commentCustomize[type === 'chapter' ? 'danime' : type]
     const customColor = customizeData?.color
     const customOpacity = customizeData?.opacity
     const customCommands: string[] = []
