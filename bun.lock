@@ -1022,7 +1022,7 @@
 
     "hookable": ["hookable@5.5.3", "", {}, "sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ=="],
 
-    "hotkeys-js": ["hotkeys-js@4.0.0-beta.7", "", {}, "sha512-mP3wFr733DydlwbnxOjNP/U75bKxw+Bp2i2jqw+OiME2DecyE0Eqzb+spkrV4xCkw5USYIJfKznSwKqaPMG0sw=="],
+    "hotkeys-js": ["hotkeys-js@4.0.0", "", {}, "sha512-gIoeqMWYqPIItc4HaseVbtTRpEpBbeufZMUcoWtN62JZdDq3KadS1ijN6wpaDjTzRK7PjT3QOPUcx+yNT0rrZQ=="],
 
     "html-escaper": ["html-escaper@3.0.3", "", {}, "sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ=="],
 
