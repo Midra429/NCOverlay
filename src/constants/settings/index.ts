@@ -1,4 +1,25 @@
-import type { SettingsKey } from '@/types/storage'
+import type { StateSlotDetail } from '@/ncoverlay/state'
+import type { AutoSearchTarget, SettingsKey } from '@/types/storage'
+
+export const SOURCE_NAMES: Record<StateSlotDetail['type'], string> = {
+  normal: '通常',
+  official: '公式',
+  danime: 'dアニメ',
+  chapter: 'dアニメ(分割)',
+  szbh: 'コメント専用',
+  jikkyo: '実況',
+  nicolog: '生放送',
+  file: 'ファイル',
+}
+
+export const AUTO_SEARCH_TARGET_KEYS: AutoSearchTarget[] = [
+  'official',
+  'danime',
+  'chapter',
+  'szbh',
+  'jikkyo',
+  'nicolog',
+]
 
 export const SLOTS_REFRESH_SETTINGS_KEYS: SettingsKey[] = [
   'settings:comment:hideAssistedComments',

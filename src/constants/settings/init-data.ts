@@ -18,6 +18,8 @@ import { PLUGINS } from '@/constants/plugins'
 import { VODS } from '@/constants/vods'
 import { SUPPORTED_VOD_KEYS } from '@/utils/api/jikkyo/findChapters'
 
+import { AUTO_SEARCH_TARGET_KEYS, SOURCE_NAMES } from '.'
+
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
@@ -186,14 +188,10 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'checkbox',
         label: '検索対象',
         description: `${VODS.nhkPlus}は「実況」のみ`,
-        options: [
-          { label: '公式', value: 'official' },
-          { label: 'dアニメ', value: 'danime' },
-          { label: 'dアニメ(分割)', value: 'chapter' },
-          { label: 'コメント専用', value: 'szbh' },
-          { label: '実況', value: 'jikkyo' },
-          { label: '生放送', value: 'nicolog' },
-        ],
+        options: AUTO_SEARCH_TARGET_KEYS.map((key) => ({
+          label: SOURCE_NAMES[key],
+          value: key,
+        })),
       },
       {
         settingsKey: 'settings:autoSearch:jikkyoChannelIds',

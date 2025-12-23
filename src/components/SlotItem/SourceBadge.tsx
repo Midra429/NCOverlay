@@ -2,6 +2,8 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 
 import { cn } from '@heroui/react'
 
+import { SOURCE_NAMES } from '@/constants/settings'
+
 export interface SourceTagProps {
   className?: string
   type: StateSlotDetail['type']
@@ -21,18 +23,6 @@ const SOURCE_BADGE_CLASSES: {
   file: cn('bg-blue-500 text-white dark:bg-blue-600'),
 }
 
-const SOURCE_BADGE_NAME: {
-  [P in SourceBadgeKey]?: string
-} = {
-  official: '公式',
-  danime: 'dアニメ',
-  chapter: 'dアニメ(分割)',
-  szbh: 'コメント専用',
-  jikkyo: '実況',
-  nicolog: '生放送',
-  file: 'ファイル',
-}
-
 export function SourceBadge({ className, type }: SourceTagProps) {
   if (type === 'normal') return
 
@@ -48,7 +38,7 @@ export function SourceBadge({ className, type }: SourceTagProps) {
         className
       )}
     >
-      {SOURCE_BADGE_NAME[type]}
+      {SOURCE_NAMES[type]}
     </div>
   )
 }
