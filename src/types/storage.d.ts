@@ -7,6 +7,17 @@ import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search
 import type { NCOStateItems, StateSlotDetail } from '@/ncoverlay/state'
 import type { PluginKey, VodKey } from '@/types/constants'
 
+export type CommentCustomizeTarget = Exclude<StateSlotDetail['type'], 'chapter'>
+
+export interface CommentCustomizeData {
+  color?: string
+  opacity?: number
+}
+
+export type CommentCustomize = {
+  [K in CommentCustomizeTarget]?: CommentCustomizeData
+}
+
 export type AutoSearchTarget = Exclude<
   StateSlotDetail['type'],
   'normal' | 'file'
@@ -116,6 +127,11 @@ export interface SettingItems {
    * @default 100
    */
   'settings:comment:scale': number
+
+  /**
+   * コメント:カスタマイズ
+   */
+  'settings:comment:customize': CommentCustomize
 
   /**
    * コメント:表示量

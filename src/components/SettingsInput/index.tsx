@@ -5,6 +5,7 @@ import { settings } from '@/utils/settings/extension'
 import * as Checkbox from './Checkbox'
 import * as Checkcard from './Checkcard'
 import * as ChSelector from './ChSelector'
+import * as CommentCustomizer from './CommentCustomizer'
 import * as KbdShortcut from './KbdShortcut'
 import * as NgList from './NgList'
 import * as Range from './Range'
@@ -47,6 +48,7 @@ export type SettingsInputProps<K extends SettingsKey> =
   | (K extends KbdShortcut.Key ? KbdShortcut.Props<K> : never)
   | (K extends NgList.Key ? NgList.Props<K> : never)
   | (K extends ChSelector.Key ? ChSelector.Props<K> : never)
+  | (K extends CommentCustomizer.Key ? CommentCustomizer.Props<K> : never)
 
 export function initConditional(
   disable: SettingsConditional | undefined,
@@ -89,4 +91,5 @@ export const SettingsInput = {
   'kbd-shortcut': KbdShortcut.Input,
   'ng-list': NgList.Input,
   'ch-selector': ChSelector.Input,
+  'comment-customizer': CommentCustomizer.Input,
 }

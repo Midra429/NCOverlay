@@ -14,7 +14,7 @@ import { addToast } from '@heroui/toast'
 import { ClockIcon, CopyIcon, PlusIcon } from 'lucide-react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 
-import { COLOR_CODE_REGEXP, NICONICO_COLOR_COMMANDS } from '@/constants'
+import { COLOR_CODE_REGEXP, NICONICO_COLORS } from '@/constants'
 import { readableColor } from '@/utils/color'
 import { formatDate, formatDuration } from '@/utils/format'
 import { settings } from '@/utils/settings/extension'
@@ -50,7 +50,6 @@ const COMMENT_COMMAND_CLASSES: Record<string, CnReturn> = {
   mincho: cn('font-serif'),
   // 半透明
   _live: cn('opacity-50'),
-  'nico:opacity:0.5': cn('opacity-50'),
 }
 
 const NICORU_COLORS: Record<number, string> = {
@@ -124,25 +123,35 @@ function ItemCellWithMenu({
   )
 }
 
-function getCmtClassAndColor(commands: string[]) {
+function getCmtClassAndColor(commands: string[], ignoreColorCommand?: boolean) {
   const cmtCellCmdClass: CnReturn[] = []
   const cmtCmdClass: CnReturn[] = []
-  let cmtBgColor: string | undefined
-  let cmtFgColor: string | undefined
+  let cmtStyle: React.CSSProperties = {}
 
   for (const command of commands) {
     if (command === 'white') continue
 
+    // セル
     if (command in COMMENT_CELL_COMMAND_CLASSES) {
       cmtCellCmdClass.push(COMMENT_CELL_COMMAND_CLASSES[command])
-    } else if (command in COMMENT_COMMAND_CLASSES) {
+    }
+    // 文字
+    else if (command in COMMENT_COMMAND_CLASSES) {
       cmtCmdClass.push(COMMENT_COMMAND_CLASSES[command])
+    }
+    // 不透明度
+    else if (command.startsWith('nico:opacity:')) {
+      const opacity = Number(command.split(':')[2])
+
+      if (Number.isFinite(opacity)) {
+        cmtStyle.opacity = opacity
+      }
     } else if (
-      command in NICONICO_COLOR_COMMANDS ||
-      COLOR_CODE_REGEXP.test(command)
+      !ignoreColorCommand &&
+      (command in NICONICO_COLORS || COLOR_CODE_REGEXP.test(command))
     ) {
-      cmtBgColor = NICONICO_COLOR_COMMANDS[command] ?? command
-      cmtFgColor = readableColor(cmtBgColor)
+      cmtStyle.backgroundColor = NICONICO_COLORS[command] ?? command
+      cmtStyle.color = readableColor(cmtStyle.backgroundColor)
 
       cmtCmdClass.push(
         cn('-m-px rounded-[5px] border-1 border-foreground-300 px-1')
@@ -150,7 +159,7 @@ function getCmtClassAndColor(commands: string[]) {
     }
   }
 
-  return { cmtCellCmdClass, cmtCmdClass, cmtBgColor, cmtFgColor }
+  return { cmtCellCmdClass, cmtCmdClass, cmtStyle }
 }
 
 export interface ItemProps {
@@ -161,12 +170,18 @@ export interface ItemProps {
 export function Item({ comment, offsetMs }: ItemProps) {
   const { ref, overflow } = useOverflowDetector()
 
-  const { cmtCellCmdClass, cmtCmdClass, cmtBgColor, cmtFgColor } =
-    getCmtClassAndColor(comment.commands)
+  const hasCustomColor = comment.commands.includes('nco:customize:color')
 
-  const displayCommands = comment.commands.filter(
-    (cmd) => !cmd.startsWith('nico:')
+  const { cmtCellCmdClass, cmtCmdClass, cmtStyle } = getCmtClassAndColor(
+    comment.commands,
+    hasCustomColor
   )
+
+  const displayCommands = comment.commands.filter((cmd) => {
+    if (cmd.startsWith('nico:') || cmd.startsWith('nco:')) return
+    if (hasCustomColor && COLOR_CODE_REGEXP.test(cmd)) return
+    return true
+  })
 
   const formattedDuration = formatDuration((comment.vposMs + offsetMs) / 1000)
 
@@ -354,10 +369,7 @@ export function Item({ comment, offsetMs }: ItemProps) {
       >
         <span
           className={cn('line-clamp-2 break-all', cmtCmdClass)}
-          style={{
-            backgroundColor: cmtBgColor,
-            color: cmtFgColor,
-          }}
+          style={cmtStyle}
           title={overflow ? comment.body : undefined}
           ref={ref}
         >

@@ -1,5 +1,9 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
-import type { AutoSearchTarget, SettingsKey } from '@/types/storage'
+import type {
+  AutoSearchTarget,
+  CommentCustomizeTarget,
+  SettingsKey,
+} from '@/types/storage'
 
 export const SOURCE_NAMES: Record<StateSlotDetail['type'], string> = {
   normal: '通常',
@@ -12,6 +16,16 @@ export const SOURCE_NAMES: Record<StateSlotDetail['type'], string> = {
   file: 'ファイル',
 }
 
+export const COMMENT_CUSTOMIZE_TARGET_KEYS: CommentCustomizeTarget[] = [
+  'normal',
+  'official',
+  'danime',
+  'szbh',
+  'jikkyo',
+  'nicolog',
+  'file',
+]
+
 export const AUTO_SEARCH_TARGET_KEYS: AutoSearchTarget[] = [
   'official',
   'danime',
@@ -22,6 +36,7 @@ export const AUTO_SEARCH_TARGET_KEYS: AutoSearchTarget[] = [
 ]
 
 export const SLOTS_REFRESH_SETTINGS_KEYS: SettingsKey[] = [
+  'settings:comment:customize',
   'settings:comment:hideAssistedComments',
   'settings:comment:adjustJikkyoOffset',
   'settings:autoSearch:jikkyoOnlyAdjustable',

@@ -19,6 +19,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:comment:fps': 60,
   'settings:comment:opacity': 100,
   'settings:comment:scale': 100,
+  'settings:comment:customize': {},
   'settings:comment:amount': 1,
   'settings:comment:useNiconicoCredentials': true,
   'settings:comment:hideAssistedComments': false,

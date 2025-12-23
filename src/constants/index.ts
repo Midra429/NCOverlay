@@ -39,7 +39,7 @@ export const GOOGLE_FORMS_IDS = {
 } as const
 
 /** ニコニコ コメント コマンド (色) */
-export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
+export const NICONICO_COLORS: Record<string, string> = {
   // white: '#FFFFFF',
   red: '#FF0000',
   pink: '#FF8080',
@@ -68,6 +68,11 @@ export const NICONICO_COLOR_COMMANDS: Record<string, string> = {
   nobleviolet: '#6633CC',
   black2: '#666666',
 }
+
+export const NICONICO_COLOR_COMMANDS = [
+  'white',
+  ...Object.keys(NICONICO_COLORS),
+]
 
 export const COLOR_CODE = '^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$'
 

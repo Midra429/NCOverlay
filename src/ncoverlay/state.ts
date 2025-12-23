@@ -14,6 +14,7 @@ import type { NCOSearcherAutoSearchArgs } from './searcher'
 
 import equal from 'fast-deep-equal'
 
+import { COLOR_CODE_REGEXP, NICONICO_COLOR_COMMANDS } from '@/constants'
 import { deepmerge } from '@/utils/deepmerge'
 import { logger } from '@/utils/logger'
 import { filterThreadsByJikkyoChapters } from '@/utils/api/jikkyo/findChapters'
@@ -185,10 +186,16 @@ export async function filterDisplayThreads(
 
   const [
     ngSettings,
-    [hideAssistedComments, adjustJikkyoOffset, jikkyoOnlyAdjustable],
+    [
+      commentCustomize,
+      hideAssistedComments,
+      adjustJikkyoOffset,
+      jikkyoOnlyAdjustable,
+    ],
   ] = await Promise.all([
     getNgSettings(),
     settings.get(
+      'settings:comment:customize',
       'settings:comment:hideAssistedComments',
       'settings:comment:adjustJikkyoOffset',
       'settings:autoSearch:jikkyoOnlyAdjustable'
@@ -246,6 +253,41 @@ export async function filterDisplayThreads(
       }
     }
 
+    const customizeData = type !== 'chapter' ? commentCustomize[type] : null
+    const customColor = customizeData?.color
+    const customOpacity = customizeData?.opacity
+    const customCommands: string[] = []
+
+    let hasCustomColor = false
+    let opacity = 1
+
+    // 色
+    if (
+      customColor != null &&
+      COLOR_CODE_REGEXP.test(customColor) &&
+      customColor !== '#FFFFFF'
+    ) {
+      customCommands.push(customColor)
+      hasCustomColor = true
+    }
+
+    // 不透明度
+    if (customOpacity != null) {
+      opacity *= customOpacity / 100
+    }
+
+    // 半透明
+    if (translucent) {
+      opacity *= 0.5
+    }
+
+    if (opacity !== 1) {
+      customCommands.push(`nico:opacity:${opacity}`)
+      customCommands.push('nco:customize:opacity')
+    }
+
+    const hasCustomCommands = !!customCommands.length
+
     for (const thread of slot.threads) {
       const key = `${thread.fork}:${thread.id}`
 
@@ -278,15 +320,42 @@ export async function filterDisplayThreads(
         // オフセット
         const vposMs = cmt.vposMs + (offsetMs ?? 0)
 
-        // 半透明
-        const commands = translucent
-          ? [...new Set([...cmt.commands, 'nico:opacity:0.5'])]
-          : cmt.commands
+        let commands = cmt.commands
+        let isPremium = cmt.isPremium
+
+        // カスタムコマンド
+        if (hasCustomCommands) {
+          let tmpCommands = customCommands
+
+          if (hasCustomColor) {
+            const existsColorCommand = commands.some((command) => {
+              return (
+                NICONICO_COLOR_COMMANDS.includes(command) ||
+                COLOR_CODE_REGEXP.test(command)
+              )
+            })
+
+            if (existsColorCommand) {
+              // カラーコマンド優先
+              tmpCommands = customCommands.filter((command) => {
+                return command !== customColor
+              })
+            } else {
+              // isPremiumじゃないと一部カラーコマンドが使えない
+              isPremium = true
+
+              tmpCommands.push('nco:customize:color')
+            }
+          }
+
+          commands = [...new Set([...commands, ...tmpCommands])]
+        }
 
         comments.push({
           ...cmt,
           vposMs,
           commands,
+          isPremium,
           _nco: {
             slotType: type,
           },

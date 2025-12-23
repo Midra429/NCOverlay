@@ -125,6 +125,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         suffix: '%',
       },
       {
+        settingsKey: 'settings:comment:customize',
+        inputType: 'comment-customizer',
+        label: 'カスタマイズ',
+        description: '種類別にコメントの色と不透明度を設定します。',
+      },
+      {
         settingsKey: 'settings:comment:amount',
         inputType: 'range',
         label: '表示量',

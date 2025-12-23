@@ -1,6 +1,6 @@
 import type { NgSettingsContent } from '@/types/storage'
 
-import { COLOR_CODE, NICONICO_COLOR_COMMANDS } from '@/constants'
+import { COLOR_CODE, NICONICO_COLORS } from '@/constants'
 import { settings } from '@/utils/settings/extension'
 
 export interface NgSettingsFormatted {
@@ -47,7 +47,7 @@ export async function getNgSettings(): Promise<NgSettingsFormatted> {
   }
 
   if (coloredComments) {
-    for (const content in NICONICO_COLOR_COMMANDS) {
+    for (const content in NICONICO_COLORS) {
       ngCommands.add({ content })
     }
 
