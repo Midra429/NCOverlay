@@ -38,6 +38,7 @@ export interface JikkyoChapter {
   type: JikkyoChapterType
   startMs: number
   endMs: number
+  isAdd?: boolean
   isRemove?: boolean
 }
 
@@ -86,7 +87,7 @@ export function findChapters(
   let edJkChapter: JikkyoChapter | undefined
   let cPartJkChapter: JikkyoChapter | undefined
   const cmJkChapters: JikkyoChapter[] = []
-  // const otherJkChapters: JikkyoChapter[] = []
+  const otherJkChapters: JikkyoChapter[] = []
 
   if (!mainChapter) {
     return []
@@ -94,9 +95,34 @@ export function findChapters(
 
   // アバン
   if (avantChapter) {
-    const avantDuration = avantChapter.endMs - avantChapter.startMs
-    const startMs = marker.start ?? avantChapter.startMs
-    const endMs = startMs + avantDuration
+    const avantDurationByChapter = avantChapter.endMs - avantChapter.startMs
+
+    let startMs: number | undefined
+    let endMs: number | undefined
+
+    if (marker.start !== null && marker.op !== null) {
+      const avantDurationByMarker = marker.op - marker.start
+      const durationDiff = avantDurationByChapter - avantDurationByMarker
+
+      // アバン手前のクレジット部分の調節
+      if (5000 <= durationDiff) {
+        startMs = marker.start
+        endMs = marker.op
+
+        const otherStartMs = startMs - durationDiff
+        const otherEndMs = startMs
+
+        otherJkChapters.push({
+          type: 'other',
+          startMs: otherStartMs,
+          endMs: otherEndMs,
+          isAdd: true,
+        })
+      }
+    }
+
+    startMs ??= marker.start ?? avantChapter.startMs
+    endMs ??= startMs + avantDurationByChapter
 
     avantJkChapter = {
       type: 'avant',
@@ -299,7 +325,7 @@ export function findChapters(
     edJkChapter,
     cPartJkChapter,
     ...cmJkChapters,
-    // ...otherJkChapters,
+    ...otherJkChapters,
   ]
     .filter((v) => v != null)
     .sort((a, b) => a.startMs - b.startMs)
@@ -348,18 +374,18 @@ export function filterThreadsByJikkyoChapters(
 ): V1Thread[] {
   threads = structuredClone(threads)
 
-  const removalChapters = chapters.filter((v) => v.isRemove)
+  const adjustChapters = chapters.filter((v) => v.isAdd || v.isRemove)
 
   for (const thread of threads) {
     const comments = thread.comments
     const commentCount = comments.length
 
-    let chapterOffsetMs = 0
+    let totalOffsetMs = 0
 
-    for (const chapter of removalChapters) {
-      const startMs = chapter.startMs - chapterOffsetMs
-      const endMs = chapter.endMs - chapterOffsetMs
-      const removedMs = endMs - startMs
+    for (const chapter of adjustChapters) {
+      const startMs = chapter.startMs - totalOffsetMs
+      const endMs = chapter.endMs - totalOffsetMs
+      const offsetMs = chapter.isRemove ? endMs - startMs : startMs - endMs
 
       for (let i = 0; i < commentCount; i++) {
         const cmt = comments[i]
@@ -376,10 +402,10 @@ export function filterThreadsByJikkyoChapters(
           continue
         }
 
-        cmt.vposMs -= removedMs
+        cmt.vposMs -= offsetMs
       }
 
-      chapterOffsetMs += removedMs
+      totalOffsetMs += offsetMs
     }
 
     thread.comments = thread.comments.filter((v) => v != null)
