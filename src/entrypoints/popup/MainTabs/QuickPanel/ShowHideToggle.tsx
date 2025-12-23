@@ -4,10 +4,11 @@ import { Switch } from '@heroui/react'
 import { useSettings } from '@/hooks/useSettings'
 import { useStorage } from '@/hooks/useStorage'
 
+import { ItemLabel } from '@/components/ItemLabel'
 import { PanelItem } from '@/components/PanelItem'
 
 /**
- * 表示 / 非表示
+ * コメントを表示
  */
 export function ShowHideToggle() {
   const [show, setShow] = useState(true)
@@ -25,10 +26,11 @@ export function ShowHideToggle() {
         classNames={{
           base: [
             'flex flex-row-reverse justify-between gap-2',
-            'w-full max-w-full p-2.5',
+            'w-full max-w-full px-2 py-2.5',
             'overflow-hidden',
           ],
           wrapper: 'm-0',
+          label: 'm-0',
         }}
         size="sm"
         isSelected={show}
@@ -43,7 +45,7 @@ export function ShowHideToggle() {
           }
         }}
       >
-        <span>表示 / 非表示</span>
+        <ItemLabel title="コメントを表示" />
       </Switch>
     </PanelItem>
   )
