@@ -23,7 +23,7 @@
     "@heroui/react": "^2.8.7",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@internationalized/date": "^3.10.1",
-    "@midra/nco-utils": "^1.0.12",
+    "@midra/nco-utils": "^1.1.2",
     "@webext-core/messaging": "^2.3.0",
     "@xpadev-net/niconicomments": "^0.2.76",
     "color2k": "^2.0.3",
