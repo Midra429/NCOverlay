@@ -65,10 +65,7 @@ export function findChapters(
   chapters.sort((a, b) => a.startMs - b.startMs)
 
   const marker = Object.fromEntries(
-    MARKERS.map((val, idx) => {
-      const ms = markers[idx]
-      return [val.key, ms !== null ? ms - 500 : null]
-    })
+    MARKERS.map((v, i) => [v.key, markers[i]])
   ) as Record<MarkerKey, number | null>
 
   const avantChapter = chapters.find((v) => v.type === 'avant')
@@ -343,6 +340,8 @@ export function findChapters(
 
     let startMs: number | undefined
     let endMs: number | undefined
+    let isAdd: boolean | undefined
+    let isRemove: boolean | undefined
 
     if (prev) {
       if (prev.endMs < current.startMs) {
@@ -350,10 +349,12 @@ export function findChapters(
 
         startMs = prev.endMs
         endMs = startMs + duration
+        isRemove = true
       }
     } else if (0 < current.startMs) {
       startMs = 0
       endMs = current.startMs
+      isAdd = true
     }
 
     if (startMs != null && endMs != null) {
@@ -361,7 +362,8 @@ export function findChapters(
         type: 'other',
         startMs,
         endMs,
-        isRemove: true,
+        isAdd,
+        isRemove,
       })
     }
 

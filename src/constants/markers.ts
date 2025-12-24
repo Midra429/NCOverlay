@@ -16,7 +16,7 @@ export const MARKERS = [
     key: 'op',
     label: 'オープニング',
     shortLabel: 'OP',
-    regexp: /^(OP|ＯＰ)$/i,
+    regexp: /^出?(OP|ＯＰ)$/i,
     range: [null, null],
   },
   {
