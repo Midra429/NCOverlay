@@ -1,4 +1,5 @@
 import type { VodKey } from '@/types/constants'
+import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 
 import { defineContentScript } from '#imports'
 
@@ -29,12 +30,15 @@ async function main() {
       const seasonId = url.searchParams.get('season')
       const contentId = url.searchParams.get('content')
 
-      const dataVideo =
-        seasonId && contentId
-          ? await ncoApiProxy.dmmTv.video({ seasonId, contentId })
-          : null
+      if (!seasonId || !contentId) {
+        return null
+      }
+
+      const dataVideo = await ncoApiProxy.dmmTv.video({ seasonId, contentId })
+      const dataStream = await ncoApiProxy.dmmTv.stream({ id: contentId })
 
       logger.log('dmmTv.video', dataVideo)
+      logger.log('dmmTv.stream', dataStream)
 
       if (!dataVideo?.categories.some((v) => v.id === '15' || v.id === '17')) {
         return null
@@ -56,14 +60,72 @@ async function main() {
       const duration =
         dataVideo.episode?.playInfo.duration ?? nco.renderer.video.duration ?? 0
 
+      const streamChapters = dataStream?.chapter
+
+      let avantChapter: VideoChapter | undefined
+      let opChapter: VideoChapter | undefined
+      let mainChapter: VideoChapter | undefined
+      let edChapter: VideoChapter | undefined
+      // let cPartChapter: VideoChapter | undefined
+
+      if (streamChapters) {
+        if (streamChapters.op) {
+          const startMs = streamChapters.op.start * 1000
+          const endMs = streamChapters.op.end * 1000
+
+          opChapter = {
+            type: 'op',
+            startMs,
+            endMs,
+          }
+
+          if (0 < opChapter.startMs) {
+            avantChapter = {
+              type: 'avant',
+              startMs: 0,
+              endMs: opChapter.startMs,
+            }
+          }
+        }
+
+        if (streamChapters.ed) {
+          const startMs = streamChapters.ed.start * 1000
+          const endMs = streamChapters.ed.end * 1000
+
+          edChapter = {
+            type: 'ed',
+            startMs,
+            endMs,
+          }
+        }
+
+        mainChapter = {
+          type: 'main',
+          startMs: opChapter?.endMs ?? 0,
+          endMs: edChapter?.startMs ?? duration * 1000,
+        }
+      }
+
+      const chapters = [
+        avantChapter,
+        opChapter,
+        mainChapter,
+        edChapter,
+        // cPartChapter,
+      ]
+        .filter((v) => v != null)
+        .sort((a, b) => a.startMs - b.startMs)
+
       logger.log('workTitle', workTitle)
       logger.log('episodeTitle', episodeTitle)
       logger.log('duration', duration)
+      logger.log('chapters', chapters)
 
       return workTitle
         ? {
             input: `${workTitle} ${episodeTitle}`,
             duration,
+            chapters,
           }
         : null
     },

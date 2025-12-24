@@ -179,7 +179,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           '※コメントの内容や数に依存するため、不正確な可能性があります',
           '',
           '[対応動画配信サービス]',
-          SUPPORTED_VOD_KEYS.map((v) => VODS[v]).join(', '),
+          SUPPORTED_VOD_KEYS.map((v) => VODS[v]).join(' / '),
         ].join('\n'),
       },
     ],

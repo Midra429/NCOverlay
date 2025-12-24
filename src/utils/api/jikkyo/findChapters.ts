@@ -6,7 +6,7 @@ import type { JikkyoMarker } from './findMarkers'
 
 import { MARKERS } from '@/constants/markers'
 
-export const SUPPORTED_VOD_KEYS: VodKey[] = ['dAnime']
+export const SUPPORTED_VOD_KEYS: VodKey[] = ['dAnime', 'dmmTv']
 
 export type VideoChapterType =
   | 'avant'
@@ -195,6 +195,9 @@ export function findChapters(
     } else if (marker.cPart !== null) {
       endMs = marker.cPart
       startMs = endMs - edDuration
+    } else if (marker.op !== null && halfDuration < marker.op) {
+      startMs = marker.op
+      endMs = startMs + edDuration
     }
 
     if (startMs != null && endMs != null) {
@@ -215,7 +218,7 @@ export function findChapters(
       let startMs: number | undefined
       let endMs: number | undefined
 
-      if ((marker.ed ?? marker.op) !== null) {
+      if (marker.op !== null || marker.ed !== null) {
         startMs = (marker.ed ?? marker.op)!
         endMs = startMs + opEdDuration
       } else if (marker.cPart !== null) {
@@ -267,8 +270,8 @@ export function findChapters(
 
   // 本編
   if (edJkChapter) {
-    if (marker.aPart !== null) {
-      const aPartStartMs = marker.aPart
+    if (marker.start !== null || marker.aPart !== null) {
+      const aPartStartMs = (marker.aPart ?? marker.start)!
       const bPartStartMs = marker.bPart
 
       const mainDuration = mainChapter.endMs - mainChapter.startMs
@@ -335,7 +338,7 @@ export function findChapters(
 
   // 間を埋める
   for (let i = 0; i < jikkyoChapterCount; i++) {
-    const prev = jikkyoChapters.at(i - 1)
+    const prev = jikkyoChapters[i - 1]
     const current = jikkyoChapters[i]
 
     let startMs: number | undefined
