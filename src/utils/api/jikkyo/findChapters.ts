@@ -380,12 +380,10 @@ export function filterThreadsByJikkyoChapters(
   threads: V1Thread[],
   chapters: JikkyoChapter[]
 ): V1Thread[] {
-  threads = structuredClone(threads)
-
   const adjustChapters = chapters.filter((v) => v.isAdd || v.isRemove)
 
-  for (const thread of threads) {
-    const comments = thread.comments
+  return threads.map<V1Thread>((thread) => {
+    const comments = [...thread.comments]
     const commentCount = comments.length
 
     let totalOffsetMs = 0
@@ -400,24 +398,30 @@ export function filterThreadsByJikkyoChapters(
 
         if (!cmt) continue
 
-        if (cmt.vposMs < startMs) {
+        const { vposMs } = cmt
+
+        if (vposMs < startMs) {
           continue
         }
 
-        if (cmt.vposMs <= endMs) {
+        if (vposMs <= endMs) {
           delete comments[i]
 
           continue
         }
 
-        cmt.vposMs -= offsetMs
+        comments[i] = {
+          ...cmt,
+          vposMs: vposMs - offsetMs,
+        }
       }
 
       totalOffsetMs += offsetMs
     }
 
-    thread.comments = thread.comments.filter((v) => v != null)
-  }
-
-  return threads
+    return {
+      ...thread,
+      comments: comments.filter((v) => v != null),
+    }
+  })
 }

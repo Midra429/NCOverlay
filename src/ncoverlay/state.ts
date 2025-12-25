@@ -256,9 +256,9 @@ export async function filterDisplayThreads(
     const customizeData = commentCustomize[type === 'chapter' ? 'danime' : type]
     const customColor = customizeData?.color
     const customOpacity = customizeData?.opacity
-    const customCommands: string[] = []
 
-    let hasCustomColor = false
+    let customColorCommand: string | undefined
+    let customOpacityCommand: string | undefined
     let opacity = 1
 
     // 色
@@ -267,8 +267,7 @@ export async function filterDisplayThreads(
       COLOR_CODE_REGEXP.test(customColor) &&
       customColor !== '#FFFFFF'
     ) {
-      customCommands.push(customColor)
-      hasCustomColor = true
+      customColorCommand = customColor
     }
 
     // 不透明度
@@ -282,11 +281,8 @@ export async function filterDisplayThreads(
     }
 
     if (opacity !== 1) {
-      customCommands.push(`nico:opacity:${opacity}`)
-      customCommands.push('nco:customize:opacity')
+      customOpacityCommand = `nico:opacity:${opacity}`
     }
-
-    const hasCustomCommands = !!customCommands.length
 
     for (const thread of slot.threads) {
       const key = `${thread.fork}:${thread.id}`
@@ -320,35 +316,29 @@ export async function filterDisplayThreads(
         // オフセット
         const vposMs = cmt.vposMs + (offsetMs ?? 0)
 
-        let commands = cmt.commands
+        let commands = [...cmt.commands]
         let isPremium = cmt.isPremium
 
-        // カスタムコマンド
-        if (hasCustomCommands) {
-          let tmpCommands = customCommands
+        // 色
+        if (customColorCommand) {
+          const existsColorCommand = commands.some((command) => {
+            return (
+              NICONICO_COLOR_COMMANDS.includes(command) ||
+              COLOR_CODE_REGEXP.test(command)
+            )
+          })
 
-          if (hasCustomColor) {
-            const existsColorCommand = commands.some((command) => {
-              return (
-                NICONICO_COLOR_COMMANDS.includes(command) ||
-                COLOR_CODE_REGEXP.test(command)
-              )
-            })
+          if (!existsColorCommand) {
+            // isPremiumじゃないと一部カラーコマンドが使えない
+            isPremium = true
 
-            if (existsColorCommand) {
-              // カラーコマンド優先
-              tmpCommands = customCommands.filter((command) => {
-                return command !== customColor
-              })
-            } else {
-              // isPremiumじゃないと一部カラーコマンドが使えない
-              isPremium = true
-
-              tmpCommands.push('nco:customize:color')
-            }
+            commands.push(customColorCommand, 'nco:customize:color')
           }
+        }
 
-          commands = [...new Set([...commands, ...tmpCommands])]
+        // 不透明度
+        if (customOpacityCommand) {
+          commands.push(customOpacityCommand, 'nco:customize:opacity')
         }
 
         comments.push({
