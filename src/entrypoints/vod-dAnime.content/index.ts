@@ -1,3 +1,4 @@
+import type { Chapter } from '@midra/nco-utils/types/api/danime/part'
 import type { VodKey } from '@/types/constants'
 import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 
@@ -5,13 +6,13 @@ import { defineContentScript } from '#imports'
 import { parse } from '@midra/nco-utils/parse'
 
 import { MATCHES } from '@/constants/matches'
+import { clone } from '@/utils/clone'
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
-import type { Chapter } from '@midra/nco-utils/types/api/danime/part'
 
 const EP_TITLE_LAST_REGEXP = /最終(?:回|話)/
 
@@ -66,7 +67,7 @@ async function main() {
 
       const duration = partData.partMeasureSecond
 
-      const partChapters = structuredClone(partData.chapters)
+      const partChapters = clone(partData.chapters)
       const chapters: VideoChapter[] = []
 
       // アバンの手前の部分(多分あらすじ)をアバンに統合する
