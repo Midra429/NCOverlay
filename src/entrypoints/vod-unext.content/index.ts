@@ -45,10 +45,10 @@ async function main() {
       }
 
       const workTitle = titleStage.titleName
-      const episodeTitle = [
-        titleStage.episode.displayNo,
-        titleStage.episode.episodeName,
-      ].join(' ')
+      const episodeTitle =
+        [titleStage.episode.displayNo, titleStage.episode.episodeName].join(
+          ' '
+        ) || null
 
       const duration = titleStage.episode.duration
 
@@ -58,7 +58,7 @@ async function main() {
 
       return workTitle
         ? {
-            input: `${workTitle} ${episodeTitle}`,
+            input: `${workTitle} ${episodeTitle ?? ''}`,
             duration,
           }
         : null

@@ -88,7 +88,7 @@ async function main() {
         }
       }
 
-      let episodeTitle: string | undefined
+      let episodeTitle: string | null = null
 
       if (workTitle !== program.episode.title) {
         episodeTitle = program.episode.title.replace(
@@ -105,7 +105,7 @@ async function main() {
 
       return workTitle
         ? {
-            input: `${workTitle} ${episodeTitle}`,
+            input: `${workTitle} ${episodeTitle ?? ''}`,
             duration,
           }
         : null
