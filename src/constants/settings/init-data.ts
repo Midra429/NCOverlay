@@ -156,8 +156,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'toggle',
         label: 'ニコニコのログイン情報を使用',
         description: [
-          'ON: ニコニコのNG設定が反映される',
-          'OFF: ニコニコに視聴履歴を反映させない',
+          'ONにするとニコニコのNG設定が適用されますが、視聴履歴に反映されるようになります。',
         ].join('\n'),
       },
       {
@@ -212,7 +211,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:autoSearch:jikkyoOnlyAdjustable',
         inputType: 'toggle',
         label: '実況: オフセット自動調節可のみ',
-        description: 'オフセット自動調節ができる過去ログのみを表示します。',
+        description: 'オフセット自動調節ができる実況過去ログのみを表示します。',
         disable: {
           when: [
             {
