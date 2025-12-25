@@ -52,10 +52,15 @@ async function main() {
             .trim()
 
       const episodeTitle =
-        [dataVideo.episode?.episodeNumberName, dataVideo.episode?.episodeTitle]
-          .filter(Boolean)
-          .join(' ')
-          .trim() || null
+        dataVideo.episode?.episodeTitle !== workTitle
+          ? [
+              dataVideo.episode?.episodeNumberName,
+              dataVideo.episode?.episodeTitle,
+            ]
+              .filter(Boolean)
+              .join(' ')
+              .trim()
+          : null
 
       const duration =
         dataVideo.episode?.playInfo.duration ?? nco.renderer.video.duration ?? 0
@@ -123,7 +128,7 @@ async function main() {
 
       return workTitle
         ? {
-            input: `${workTitle} ${episodeTitle}`,
+            input: `${workTitle} ${episodeTitle ?? ''}`,
             duration,
             chapters,
           }
