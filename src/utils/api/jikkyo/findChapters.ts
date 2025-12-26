@@ -67,7 +67,7 @@ export function findChapters(
   const marker = Object.fromEntries(
     MARKERS.map((val, idx) => {
       const marker = markers[idx]
-      return [val.key, marker !== null ? marker - 1000 : null]
+      return [val.key, marker !== null ? marker - 800 : null]
     })
   ) as Record<MarkerKey, number | null>
 
