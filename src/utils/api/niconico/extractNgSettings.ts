@@ -10,7 +10,7 @@ export function extractNgSettings(ng: Ng): NgSettingsFormatted {
 
   if (ng.viewer) {
     for (const item of ng.viewer.items) {
-      ngSettings[`${item.type}s` as const]?.push(item.source)
+      ngSettings[`${item.type}s`]?.push(item.source)
     }
   }
 

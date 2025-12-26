@@ -1,6 +1,13 @@
+import type {
+  SyoboCalTitleMedium,
+  SyoboCalTitleSearch,
+} from '@midra/nco-utils/types/api/syobocal/json'
+
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
-export async function searchSyobocalByIds(...tids: string[]) {
+export async function searchSyobocalByIds(
+  ...tids: string[]
+): Promise<SyoboCalTitleMedium[] | null> {
   const response = await ncoApiProxy.syobocal.json(['TitleMedium'], {
     TID: tids,
   })
@@ -12,7 +19,9 @@ export async function searchSyobocalByIds(...tids: string[]) {
   return null
 }
 
-export async function searchSyobocalByKeyword(keyword: string) {
+export async function searchSyobocalByKeyword(
+  keyword: string
+): Promise<SyoboCalTitleSearch[] | null> {
   const limit = 20
 
   const response = await ncoApiProxy.syobocal.json(['TitleSearch'], {

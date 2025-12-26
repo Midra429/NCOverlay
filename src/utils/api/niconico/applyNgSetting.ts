@@ -54,9 +54,7 @@ export function applyNgSettings(
     return threads
   }
 
-  const applied: V1Thread[] = []
-
-  for (const thread of threads) {
+  return threads.map<V1Thread>((thread) => {
     let commentCount = thread.commentCount
 
     const comments = thread.comments.filter(
@@ -65,8 +63,6 @@ export function applyNgSettings(
 
     commentCount -= thread.comments.length - comments.length
 
-    applied.push({ ...thread, commentCount, comments })
-  }
-
-  return applied
+    return { ...thread, commentCount, comments }
+  })
 }
