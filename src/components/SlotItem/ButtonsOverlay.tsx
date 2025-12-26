@@ -15,7 +15,7 @@ export function ButtonsOverlay({ status, onRemove }: ButtonsOverlayProps) {
     <div
       className={cn(
         'absolute inset-px z-10',
-        'opacity-0 hover:opacity-100',
+        'opacity-0! hover:opacity-100!',
         'transition-opacity'
       )}
     >

@@ -41,6 +41,91 @@ export type SlotItemProps = {
     }
 )
 
+function getAddFunction(detail: StateSlotDetail) {
+  return async () => {
+    if (!ncoState) return
+
+    await ncoState.set('status', 'loading')
+
+    await ncoState.add('slotDetails', {
+      ...detail,
+      status: 'loading',
+    })
+
+    const { type, id, info } = detail
+
+    let slotDetail: StateSlotDetailUpdate | undefined
+    let slot: StateSlot | undefined
+
+    if (type === 'jikkyo') {
+      const comment = await getJikkyoKakolog(ncoState, {
+        jkChId: id.split(':')[0] as JikkyoChannelId,
+        starttime: info.date[0] / 1000,
+        endtime: info.date[1] / 1000,
+      })
+
+      if (comment) {
+        const { thread, markers, chapters, kawaiiCount } = comment
+
+        slotDetail = {
+          id,
+          status: 'ready',
+          info: {
+            count: {
+              comment: thread.commentCount,
+              kawaii: kawaiiCount,
+            },
+          },
+          markers,
+          chapters,
+        }
+
+        slot = { id, threads: [thread] }
+      }
+    } else {
+      const comment = await getNiconicoComment(id)
+
+      if (comment) {
+        const {
+          videoData: { video },
+          threads,
+          kawaiiCount,
+        } = comment
+
+        slotDetail = {
+          id,
+          status: 'ready',
+          info: {
+            count: {
+              view: video.count.view,
+              comment: video.count.comment,
+              kawaii: kawaiiCount,
+            },
+            thumbnail:
+              video.thumbnail.largeUrl ||
+              video.thumbnail.middleUrl ||
+              video.thumbnail.url,
+          },
+        }
+
+        slot = { id, threads }
+      }
+    }
+
+    if (slotDetail && slot) {
+      await ncoState.update('slotDetails', ['id'], slotDetail)
+      await ncoState.add('slots', slot)
+    } else {
+      await ncoState.update('slotDetails', ['id'], {
+        id,
+        status: 'error',
+      })
+    }
+
+    await ncoState.set('status', 'ready')
+  }
+}
+
 export function SlotItem({
   classNames,
   detail,
@@ -52,90 +137,7 @@ export function SlotItem({
 
   const isError = detail.status === 'error'
 
-  const onPressAdd =
-    onAdd ??
-    (async () => {
-      if (!ncoState) return
-
-      await ncoState.set('status', 'loading')
-
-      await ncoState.add('slotDetails', {
-        ...detail,
-        status: 'loading',
-      })
-
-      const { type, id, info } = detail
-
-      let slotDetail: StateSlotDetailUpdate | undefined
-      let slot: StateSlot | undefined
-
-      if (type === 'jikkyo') {
-        const comment = await getJikkyoKakolog(ncoState, {
-          jkChId: id.split(':')[0] as JikkyoChannelId,
-          starttime: info.date[0] / 1000,
-          endtime: info.date[1] / 1000,
-        })
-
-        if (comment) {
-          const { thread, markers, chapters, kawaiiCount } = comment
-
-          slotDetail = {
-            id,
-            status: 'ready',
-            info: {
-              count: {
-                comment: thread.commentCount,
-                kawaii: kawaiiCount,
-              },
-            },
-            markers,
-            chapters,
-          }
-
-          slot = { id, threads: [thread] }
-        }
-      } else {
-        const comment = await getNiconicoComment(id)
-
-        if (comment) {
-          const {
-            videoData: { video },
-            threads,
-            kawaiiCount,
-          } = comment
-
-          slotDetail = {
-            id,
-            status: 'ready',
-            info: {
-              count: {
-                view: video.count.view,
-                comment: video.count.comment,
-                kawaii: kawaiiCount,
-              },
-              thumbnail:
-                video.thumbnail.largeUrl ||
-                video.thumbnail.middleUrl ||
-                video.thumbnail.url,
-            },
-          }
-
-          slot = { id, threads }
-        }
-      }
-
-      if (slotDetail && slot) {
-        await ncoState.update('slotDetails', ['id'], slotDetail)
-        await ncoState.add('slots', slot)
-      } else {
-        await ncoState.update('slotDetails', ['id'], {
-          id,
-          status: 'error',
-        })
-      }
-
-      await ncoState.set('status', 'ready')
-    })
+  const onPressAdd = isSearch ? (onAdd ?? getAddFunction(detail)) : null
 
   async function onPressRemove() {
     if (!ncoState) return
@@ -176,7 +178,7 @@ export function SlotItem({
         <div
           className={cn(
             'relative h-full shrink-0',
-            (detail.hidden || detail.skip) && 'opacity-50'
+            (detail.hidden || detail.skip) && '*:opacity-50'
           )}
         >
           {/* サムネイル */}
@@ -189,7 +191,7 @@ export function SlotItem({
             isSearch={isSearch}
           />
 
-          {isSearch ? (
+          {onPressAdd ? (
             // 追加
             <AddButton onPress={onPressAdd} />
           ) : (
