@@ -5,6 +5,7 @@ import { RotateCcwIcon } from 'lucide-react'
 
 import { MARKERS } from '@/constants/markers'
 import { useNcoState } from '@/hooks/useNco'
+import { useSettings } from '@/hooks/useSettings'
 import { sendMessageToContent } from '@/messaging/to-content'
 
 import { Tooltip } from '@/components/Tooltip'
@@ -44,13 +45,22 @@ export function MarkerButton({
 
 export function MarkerButtons() {
   const stateSlotDetails = useNcoState('slotDetails')
+  const [adjustJikkyoOffset] = useSettings(
+    'settings:comment:adjustJikkyoOffset'
+  )
 
   const markerEnableFlags = Array(MARKERS.length)
     .fill(false)
     .map((_, idx) => {
-      return stateSlotDetails?.some(
-        (v) => !v.hidden && !v.skip && v.type === 'jikkyo' && v.markers[idx]
-      )
+      return stateSlotDetails?.some((detail) => {
+        return (
+          !detail.hidden &&
+          !detail.skip &&
+          detail.type === 'jikkyo' &&
+          (!adjustJikkyoOffset || !detail.chapters.length) &&
+          detail.markers[idx] !== null
+        )
+      })
     })
   const hasMarker = markerEnableFlags.some((v) => v)
   const resetButtonDisabled = !stateSlotDetails?.some((v) => v.offsetMs)
