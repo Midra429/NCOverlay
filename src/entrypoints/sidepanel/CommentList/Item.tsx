@@ -1,5 +1,4 @@
 import type { SlotsToClasses } from '@heroui/react'
-import type { CnReturn } from 'tailwind-variants'
 import type { NcoV1Comment, StateSlotDetail } from '@/ncoverlay/state'
 
 import {
@@ -21,18 +20,19 @@ import { settings } from '@/utils/settings/extension'
 import { ncoState } from '@/hooks/useNco'
 import { sendMessageToContent } from '@/messaging/to-content'
 
-const COMMENT_WRAPPER_TYPE_CLASSES: {
-  [P in StateSlotDetail['type']]: CnReturn
-} = {
-  normal: cn('before:bg-transparent'),
-  official: cn('before:bg-[#ffe248] dark:before:bg-[#ffd700]'),
-  danime: cn('before:bg-danime-400 dark:before:bg-danime-500'),
-  chapter: cn('before:bg-danime-400 dark:before:bg-danime-500'),
-  szbh: cn('before:bg-gray-500 dark:before:bg-gray-600'),
-  jikkyo: cn('before:bg-jikkyo-600 dark:before:bg-jikkyo-700'),
-  nicolog: cn('before:bg-blue-500 dark:before:bg-blue-600'),
-  file: cn('before:bg-blue-500 dark:before:bg-blue-600'),
-}
+type CnReturn = ReturnType<typeof cn>
+
+const COMMENT_WRAPPER_TYPE_CLASSES: Record<StateSlotDetail['type'], CnReturn> =
+  {
+    normal: cn('before:bg-transparent'),
+    official: cn('before:bg-[#ffe248] dark:before:bg-[#ffd700]'),
+    danime: cn('before:bg-danime-400 dark:before:bg-danime-500'),
+    chapter: cn('before:bg-danime-400 dark:before:bg-danime-500'),
+    szbh: cn('before:bg-gray-500 dark:before:bg-gray-600'),
+    jikkyo: cn('before:bg-jikkyo-600 dark:before:bg-jikkyo-700'),
+    nicolog: cn('before:bg-blue-500 dark:before:bg-blue-600'),
+    file: cn('before:bg-blue-500 dark:before:bg-blue-600'),
+  }
 
 const COMMENT_CELL_COMMAND_CLASSES: Record<string, CnReturn> = {
   // 位置: 上
@@ -126,7 +126,7 @@ function ItemCellWithMenu({
 function getCmtClassAndColor(commands: string[], ignoreColorCommand?: boolean) {
   const cmtCellCmdClass: CnReturn[] = []
   const cmtCmdClass: CnReturn[] = []
-  let cmtStyle: React.CSSProperties = {}
+  const cmtStyle: React.CSSProperties = {}
 
   for (const command of commands) {
     if (command === 'white') continue
