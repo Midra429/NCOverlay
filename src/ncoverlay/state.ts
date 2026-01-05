@@ -14,7 +14,11 @@ import type { NCOSearcherAutoSearchArgs } from './searcher'
 
 import equal from 'fast-deep-equal'
 
-import { COLOR_CODE_REGEXP, NICONICO_COLOR_COMMANDS } from '@/constants'
+import {
+  COLOR_CODE_REGEXP,
+  NICONICO_COLOR_COMMANDS,
+  NICONICO_DEFAULT_DURATION,
+} from '@/constants'
 import { deepmerge } from '@/utils/deepmerge'
 import { logger } from '@/utils/logger'
 import { filterThreadsByJikkyoChapters } from '@/utils/api/jikkyo/findChapters'
@@ -160,6 +164,9 @@ export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
 
 export interface NcoV1Comment extends V1Comment {
+  _raw: {
+    commands: string[]
+  }
   _nco: {
     slotType: StateSlotDetail['type']
   }
@@ -169,6 +176,8 @@ export interface NcoV1Thread extends Omit<V1Thread, 'comments'> {
   comments: NcoV1Comment[]
   _nco: {}
 }
+
+const DURATION_COMMAND_REGEXP = /(?<=^@)[\d\.]+$/
 
 export async function filterDisplayThreads(
   ncoState: NCOState
@@ -187,6 +196,7 @@ export async function filterDisplayThreads(
   const [
     ngSettings,
     [
+      speed,
       commentCustomize,
       hideAssistedComments,
       adjustJikkyoOffset,
@@ -195,6 +205,7 @@ export async function filterDisplayThreads(
   ] = await Promise.all([
     getNgSettings(),
     settings.get(
+      'settings:comment:speed',
       'settings:comment:customize',
       'settings:comment:hideAssistedComments',
       'settings:comment:adjustJikkyoOffset',
@@ -259,6 +270,7 @@ export async function filterDisplayThreads(
 
     let customColorCommand: string | undefined
     let customOpacityCommand: string | undefined
+    let customDurationCommand: string | undefined
     let opacity = 1
 
     // 色
@@ -282,6 +294,11 @@ export async function filterDisplayThreads(
 
     if (opacity !== 1) {
       customOpacityCommand = `nico:opacity:${opacity}`
+    }
+
+    // 速度
+    if (speed !== 1) {
+      customDurationCommand = `@${Math.round((NICONICO_DEFAULT_DURATION / speed) * 100) / 100}`
     }
 
     for (const thread of slot.threads) {
@@ -332,13 +349,40 @@ export async function filterDisplayThreads(
             // isPremiumじゃないと一部カラーコマンドが使えない
             isPremium = true
 
-            commands.push(customColorCommand, 'nco:customize:color')
+            commands.push(customColorCommand)
+            commands.push('nco:customize:color')
           }
         }
 
         // 不透明度
         if (customOpacityCommand) {
-          commands.push(customOpacityCommand, 'nco:customize:opacity')
+          commands.push(customOpacityCommand)
+          commands.push('nco:customize:opacity')
+        }
+
+        // 速度
+        if (
+          customDurationCommand &&
+          !commands.includes('ue') &&
+          !commands.includes('shita')
+        ) {
+          const durationCommand = commands.find((cmd) => {
+            return DURATION_COMMAND_REGEXP.test(cmd)
+          })
+
+          if (durationCommand) {
+            const customDuration = Number(
+              durationCommand.match(DURATION_COMMAND_REGEXP)![0]
+            )
+
+            commands.push(
+              `@${Math.round((customDuration / speed) * 100) / 100}`
+            )
+          } else {
+            commands.push(customDurationCommand)
+          }
+
+          commands.push('nco:customize:speed')
         }
 
         comments.push({
@@ -346,6 +390,9 @@ export async function filterDisplayThreads(
           vposMs,
           commands,
           isPremium,
+          _raw: {
+            commands: cmt.commands,
+          },
           _nco: {
             slotType: type,
           },

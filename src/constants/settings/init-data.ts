@@ -125,6 +125,15 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         suffix: '%',
       },
       {
+        settingsKey: 'settings:comment:speed',
+        inputType: 'range',
+        label: '速度',
+        min: 0.25,
+        max: 2,
+        step: 0.25,
+        prefix: 'x',
+      },
+      {
         settingsKey: 'settings:comment:customize',
         inputType: 'comment-customizer',
         label: 'カスタマイズ',

@@ -74,6 +74,8 @@ export const NICONICO_COLOR_COMMANDS = [
   ...Object.keys(NICONICO_COLORS),
 ]
 
+export const NICONICO_DEFAULT_DURATION = 3
+
 export const COLOR_CODE = '^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$'
 
 export const COLOR_CODE_REGEXP = new RegExp(COLOR_CODE)

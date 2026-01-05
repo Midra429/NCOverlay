@@ -129,6 +129,13 @@ export interface SettingItems {
   'settings:comment:scale': number
 
   /**
+   * コメント:速度
+   * @description 0.25 〜 x2
+   * @default 1
+   */
+  'settings:comment:speed': number
+
+  /**
    * コメント:カスタマイズ
    */
   'settings:comment:customize': CommentCustomize

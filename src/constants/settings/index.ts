@@ -36,6 +36,7 @@ export const AUTO_SEARCH_TARGET_KEYS: AutoSearchTarget[] = [
 ]
 
 export const SLOTS_REFRESH_SETTINGS_KEYS: SettingsKey[] = [
+  'settings:comment:speed',
   'settings:comment:customize',
   'settings:comment:hideAssistedComments',
   'settings:comment:adjustJikkyoOffset',
