@@ -226,32 +226,7 @@ export class NCOverlay {
       }),
 
       // 検索ステータス
-      this.state.onChange('status', async (status) => {
-        const slotDetails = (await this.state.get('slotDetails')) ?? []
-
-        const loadingCounts = slotDetails.filter(
-          (detail) => detail.status === 'loading'
-        ).length
-        const successCounts = slotDetails.filter(
-          (detail) => detail.status === 'ready'
-        ).length
-        const errorCounts = slotDetails.filter(
-          (detail) => detail.status === 'error'
-        ).length
-
-        sendMessageToBackground('setBadge', {
-          text:
-            (loadingCounts && loadingCounts.toString()) ||
-            (successCounts && successCounts.toString()) ||
-            (errorCounts && errorCounts.toString()) ||
-            null,
-          color:
-            (loadingCounts && 'yellow') ||
-            (successCounts && 'green') ||
-            (errorCounts && 'red') ||
-            undefined,
-        })
-
+      this.state.onChange('status', (status) => {
         if (
           (status === 'ready' || status === 'error') &&
           !this.renderer.video.paused
@@ -270,24 +245,52 @@ export class NCOverlay {
 
       // スロットの情報
       this.state.onChange('slotDetails', (newValue, oldValue) => {
-        const newVal = newValue?.map((v) => ({
-          id: v.id,
-          status: v.status,
-          offsetMs: v.offsetMs,
-          translucent: v.translucent,
-          hidden: v.hidden,
+        const newVal = newValue?.map((val) => ({
+          id: val.id,
+          status: val.status,
+          offsetMs: val.offsetMs,
+          translucent: val.translucent,
+          hidden: val.hidden,
+          skip: val.skip,
         }))
-
-        const oldVal = oldValue?.map((v) => ({
-          id: v.id,
-          status: v.status,
-          offsetMs: v.offsetMs,
-          translucent: v.translucent,
-          hidden: v.hidden,
+        const oldVal = oldValue?.map((val) => ({
+          id: val.id,
+          status: val.status,
+          offsetMs: val.offsetMs,
+          translucent: val.translucent,
+          hidden: val.hidden,
+          skip: val.skip,
         }))
 
         if (!equal(newVal, oldVal)) {
           this.#updateRendererThreads()
+
+          // バッジ
+          const displayedSlotDetails =
+            newVal?.filter((v) => !v.hidden && !v.skip) ?? []
+
+          const loadingCounts = displayedSlotDetails.filter(
+            (detail) => detail.status === 'loading'
+          ).length
+          const successCounts = displayedSlotDetails.filter(
+            (detail) => detail.status === 'ready'
+          ).length
+          const errorCounts = displayedSlotDetails.filter(
+            (detail) => detail.status === 'error'
+          ).length
+
+          sendMessageToBackground('setBadge', {
+            text:
+              (loadingCounts && loadingCounts.toString()) ||
+              (successCounts && successCounts.toString()) ||
+              (errorCounts && errorCounts.toString()) ||
+              null,
+            color:
+              (loadingCounts && 'yellow') ||
+              (successCounts && 'green') ||
+              (errorCounts && 'red') ||
+              undefined,
+          })
         }
       }),
 
