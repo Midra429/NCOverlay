@@ -123,10 +123,12 @@ function ItemCellWithMenu({
   )
 }
 
-function getCmtClassAndColor(commands: string[], ignoreColorCommand?: boolean) {
+function getCmtClassAndColor(commands: string[]) {
   const cmtCellCmdClass: CnReturn[] = []
   const cmtCmdClass: CnReturn[] = []
   const cmtStyle: React.CSSProperties = {}
+
+  const hasCustomColor = commands.includes('nco:customize:color')
 
   for (const command of commands) {
     if (command === 'white') continue
@@ -146,8 +148,10 @@ function getCmtClassAndColor(commands: string[], ignoreColorCommand?: boolean) {
       if (Number.isFinite(opacity)) {
         cmtStyle.opacity = opacity
       }
-    } else if (
-      !ignoreColorCommand &&
+    }
+    // 色
+    else if (
+      !hasCustomColor &&
       (command in NICONICO_COLORS || COLOR_CODE_REGEXP.test(command))
     ) {
       cmtStyle.backgroundColor = NICONICO_COLORS[command] ?? command
@@ -170,18 +174,9 @@ export interface ItemProps {
 export function Item({ comment, offsetMs }: ItemProps) {
   const { ref, overflow } = useOverflowDetector()
 
-  const hasCustomColor = comment.commands.includes('nco:customize:color')
-
   const { cmtCellCmdClass, cmtCmdClass, cmtStyle } = getCmtClassAndColor(
-    comment.commands,
-    hasCustomColor
+    comment.commands
   )
-
-  const displayCommands = comment.commands.filter((cmd) => {
-    if (cmd.startsWith('nico:') || cmd.startsWith('nco:')) return
-    if (hasCustomColor && COLOR_CODE_REGEXP.test(cmd)) return
-    return true
-  })
 
   const formattedDuration = formatDuration((comment.vposMs + offsetMs) / 1000)
 
@@ -410,7 +405,7 @@ export function Item({ comment, offsetMs }: ItemProps) {
         className="w-full font-mono"
         style={{ backgroundColor: nicoruColor }}
       >
-        <span className="line-clamp-1">{displayCommands.join(' ')}</span>
+        <span className="line-clamp-1">{comment._raw.commands.join(' ')}</span>
       </ItemCell>
     </div>
   )
