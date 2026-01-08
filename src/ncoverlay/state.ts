@@ -366,18 +366,17 @@ export async function filterDisplayThreads(
           !commands.includes('ue') &&
           !commands.includes('shita')
         ) {
-          const durationCommand = commands.find((cmd) => {
+          const durationCommandIdx = commands.findIndex((cmd) => {
             return DURATION_COMMAND_REGEXP.test(cmd)
           })
 
-          if (durationCommand) {
+          if (durationCommandIdx !== -1) {
             const customDuration = Number(
-              durationCommand.match(DURATION_COMMAND_REGEXP)![0]
+              commands[durationCommandIdx].match(DURATION_COMMAND_REGEXP)![0]
             )
 
-            commands.push(
+            commands[durationCommandIdx] =
               `@${Math.round((customDuration / speed) * 100) / 100}`
-            )
           } else {
             commands.push(customDurationCommand)
           }
