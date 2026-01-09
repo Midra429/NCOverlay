@@ -63,6 +63,22 @@ export class NCOKeyboard {
 
   async #registerEventListener() {
     this.#storageOnChangeRemoveListeners.push(
+      register('settings:kbd:toggleDisplayComment', async () => {
+        const opacity = await storage.get('settings:comment:opacity')
+
+        // 非表示
+        if (opacity) {
+          await storage.set('tmp:comment:opacity', opacity)
+          await storage.set('settings:comment:opacity', 0)
+        }
+        // 表示
+        else {
+          const tmpOpacity = await storage.get('tmp:comment:opacity')
+
+          await storage.set('settings:comment:opacity', tmpOpacity || 100)
+        }
+      }),
+
       register('settings:kbd:increaseGlobalOffset', async () => {
         this.setOffset((await this.getOffset()) + 1)
       }),

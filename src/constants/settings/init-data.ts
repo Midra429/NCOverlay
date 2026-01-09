@@ -298,6 +298,11 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     Icon: KeyboardIcon,
     items: [
       {
+        settingsKey: 'settings:kbd:toggleDisplayComment',
+        inputType: 'kbd-shortcut',
+        label: 'コメントの表示を切り替える',
+      },
+      {
         settingsKey: 'settings:kbd:increaseGlobalOffset',
         inputType: 'kbd-shortcut',
         label: '全体のオフセットを増やす (+1s)',

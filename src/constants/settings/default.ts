@@ -44,6 +44,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:ng:sharingLevel': 'none',
 
   // キーボード
+  'settings:kbd:toggleDisplayComment': '',
   'settings:kbd:increaseGlobalOffset': '',
   'settings:kbd:decreaseGlobalOffset': '',
   'settings:kbd:resetGlobalOffset': '',

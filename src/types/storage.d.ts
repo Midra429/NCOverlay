@@ -237,6 +237,11 @@ export interface SettingItems {
 
   // キーボード //////////////////////////////////////////////////
   /**
+   * キーボード:コメントの表示を切り替える
+   * @default ''
+   */
+  'settings:kbd:toggleDisplayComment': string
+  /**
    * キーボード:全体のオフセットを増やす
    * @default ''
    */
