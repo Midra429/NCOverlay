@@ -34,6 +34,8 @@ export interface NgSettings {
   ids: NgSettingsContent[]
 }
 
+export type NgSharingLevel = 'none' | 'low' | 'middle' | 'high'
+
 export interface InternalItems {
   _migrate_version: number
 }
@@ -226,6 +228,12 @@ export interface SettingItems {
    * @default false
    */
   'settings:ng:coloredComments': boolean
+
+  /**
+   * NG設定:NG共有レベル
+   * @default 'none'
+   */
+  'settings:ng:sharingLevel': NgSharingLevel
 
   // キーボード //////////////////////////////////////////////////
   /**

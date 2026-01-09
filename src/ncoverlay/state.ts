@@ -22,7 +22,10 @@ import {
 import { deepmerge } from '@/utils/deepmerge'
 import { logger } from '@/utils/logger'
 import { filterThreadsByJikkyoChapters } from '@/utils/api/jikkyo/findChapters'
-import { isNgComment } from '@/utils/api/niconico/applyNgSetting'
+import {
+  isNgComment,
+  isNgCommentByScore,
+} from '@/utils/api/niconico/applyNgSetting'
 import { findAssistedCommentIds } from '@/utils/api/niconico/findAssistedCommentIds'
 import { getNgSettings } from '@/utils/api/niconico/getNgSettings'
 import { settings } from '@/utils/settings/extension'
@@ -201,6 +204,7 @@ export async function filterDisplayThreads(
       hideAssistedComments,
       adjustJikkyoOffset,
       jikkyoOnlyAdjustable,
+      sharingLevel,
     ],
   ] = await Promise.all([
     getNgSettings(),
@@ -209,7 +213,8 @@ export async function filterDisplayThreads(
       'settings:comment:customize',
       'settings:comment:hideAssistedComments',
       'settings:comment:adjustJikkyoOffset',
-      'settings:autoSearch:jikkyoOnlyAdjustable'
+      'settings:autoSearch:jikkyoOnlyAdjustable',
+      'settings:ng:sharingLevel'
     ),
   ])
 
@@ -325,7 +330,9 @@ export async function filterDisplayThreads(
           // コメントアシスト
           assistedCommentIds?.includes(cmt.id) ||
           // NG
-          isNgComment(cmt, ngSettings)
+          isNgComment(cmt, ngSettings) ||
+          // NG共有レベル
+          isNgCommentByScore(cmt.score, sharingLevel)
         ) {
           continue
         }

@@ -41,6 +41,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:ng:largeComments': false,
   'settings:ng:fixedComments': false,
   'settings:ng:coloredComments': false,
+  'settings:ng:sharingLevel': 'none',
 
   // キーボード
   'settings:kbd:increaseGlobalOffset': '',

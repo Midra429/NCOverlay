@@ -247,6 +247,17 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
     Icon: MessageSquareOffIcon,
     items: [
       {
+        settingsKey: 'settings:ng:sharingLevel',
+        inputType: 'select',
+        label: 'NG共有レベル',
+        options: [
+          { label: '無', value: 'none' },
+          { label: '弱', value: 'low' },
+          { label: '中', value: 'middle' },
+          { label: '強', value: 'high' },
+        ],
+      },
+      {
         settingsKey: 'settings:ng:words',
         inputType: 'ng-list',
         label: 'コメント',

@@ -2,6 +2,7 @@ import type {
   V1Comment,
   V1Thread,
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type { NgSharingLevel } from '@/types/storage'
 import type { NgSettingsFormatted } from '@/utils/api/niconico/getNgSettings'
 
 export function isNgComment(
@@ -44,6 +45,25 @@ export function isNgComment(
   if (isNgId) return true
 
   return false
+}
+
+export function isNgCommentByScore(
+  score: number,
+  level: NgSharingLevel
+): boolean {
+  switch (level) {
+    case 'low':
+      return score <= -10000
+
+    case 'middle':
+      return score <= -4800
+
+    case 'high':
+      return score <= -1000
+
+    default:
+      return false
+  }
 }
 
 export function applyNgSettings(
