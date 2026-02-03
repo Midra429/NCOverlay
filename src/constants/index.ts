@@ -69,10 +69,7 @@ export const NICONICO_COLORS: Record<string, string> = {
   black2: '#666666',
 }
 
-export const NICONICO_COLOR_COMMANDS = [
-  'white',
-  ...Object.keys(NICONICO_COLORS),
-]
+export const NICONICO_COLOR_COMMANDS = Object.keys(NICONICO_COLORS)
 
 export const NICONICO_DEFAULT_DURATION = 3
 

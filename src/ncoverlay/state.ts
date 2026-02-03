@@ -114,7 +114,7 @@ export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
   type: 'jikkyo'
   info: {
     id: string | null
-    source: 'syobocal' | 'tver' | 'nhkPlus' | null
+    source: 'syobocal' | 'tver' | 'nhk_one' | 'nhk_chronicle' | null
     title: string
     duration: number
     date: [start: number, end: number]
@@ -169,6 +169,7 @@ export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
 export interface NcoV1Comment extends V1Comment {
   _raw: {
     commands: string[]
+    isPremium: boolean
   }
   _nco: {
     slotType: StateSlotDetail['type']
@@ -356,6 +357,7 @@ export async function filterDisplayThreads(
             // isPremiumじゃないと一部カラーコマンドが使えない
             isPremium = true
 
+            commands = commands.filter((v) => v !== 'white')
             commands.push(customColorCommand)
             commands.push('nco:customize:color')
           }
@@ -398,6 +400,7 @@ export async function filterDisplayThreads(
           isPremium,
           _raw: {
             commands: cmt.commands,
+            isPremium: cmt.isPremium,
           },
           _nco: {
             slotType: type,
