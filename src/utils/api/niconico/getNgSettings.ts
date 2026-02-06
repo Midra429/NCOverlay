@@ -15,7 +15,7 @@ export function formatNgSettingsContent({
 }: NgSettingsContent): string | RegExp | undefined {
   if (isRegExp) {
     try {
-      return new RegExp(content)
+      return new RegExp(content, 'u')
     } catch {}
   } else {
     return content
