@@ -10,7 +10,7 @@ export type JikkyoMarker = number | null
  */
 export function findMarkers(
   threads: V1Thread[],
-  info?: StateInfo | null
+  info: StateInfo | null
 ): JikkyoMarker[] {
   const comments = threads
     .flatMap((thread) => thread.comments)
@@ -27,8 +27,18 @@ export function findMarkers(
   let prevVposMs = 0
 
   return MARKERS.map(({ key, regexp, range }) => {
-    const rangeStart = range[0] ?? -Infinity
-    const rangeEnd = range[1] ?? Infinity
+    let rangeStart: number
+    let rangeEnd: number
+
+    if (typeof range === 'function') {
+      const [start, end] = range(lastCmt.vposMs)
+
+      rangeStart = start ?? -Infinity
+      rangeEnd = end ?? Infinity
+    } else {
+      rangeStart = range[0] ?? -Infinity
+      rangeEnd = range[1] ?? Infinity
+    }
 
     const minVposMs = Math.max(
       prevVposMs,
@@ -57,7 +67,7 @@ export function findMarkers(
         const first = commentsInRange[0]
         const last = commentsInRange.at(-1)!
 
-        const adjustOffset = Math.trunc((last.vposMs - first.vposMs) / 8)
+        const adjustOffset = Math.trunc((last.vposMs - first.vposMs) / 10)
 
         tmpCount = count
         tmpVposMs = first.vposMs + adjustOffset

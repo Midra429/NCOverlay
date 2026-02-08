@@ -9,7 +9,8 @@ export const MARKERS = [
     key: 'start',
     label: 'ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!!',
     shortLabel: 'ｷﾀ-',
-    regexp: /^(ｷﾀ|キタ)[ｰー━].*[!！]$|^きたあ{0,}$|^(始|はじ)まっ?た$/i,
+    regexp:
+      /^(ｷﾀ|キタ)[ｰー━].*[!！]$|^きたあ{0,}$|^(始|はじ)まっ?た|hjmt|ｈｊｍｔ$/i,
     range: [0, 300000],
   },
   {
@@ -17,7 +18,7 @@ export const MARKERS = [
     label: 'オープニング',
     shortLabel: 'OP',
     regexp: /^出?(OP|ＯＰ)$/i,
-    range: [null, null],
+    range: (duration) => [null, duration / 2],
   },
   {
     key: 'aPart',
@@ -38,7 +39,7 @@ export const MARKERS = [
     label: 'エンディング',
     shortLabel: 'ED',
     regexp: /^(ED|ＥＤ)$/i,
-    range: [null, null],
+    range: (duration) => [duration / 2, null],
   },
   {
     key: 'cPart',
@@ -52,5 +53,7 @@ export const MARKERS = [
   label: string
   shortLabel: string
   regexp: RegExp
-  range: [start: number | null, end: number | null]
+  range:
+    | [start: number | null, end: number | null]
+    | ((duration: number) => [start: number | null, end: number | null])
 }[]
