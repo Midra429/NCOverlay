@@ -292,6 +292,20 @@ if (webext.isFirefox) {
           return false
         },
       },
+
+      onClosed: {
+        addListener() {},
+        getRules() {},
+        hasListener() {
+          return false
+        },
+        removeRules() {},
+        addRules() {},
+        removeListener() {},
+        hasListeners() {
+          return false
+        },
+      },
     }
   }
 }
