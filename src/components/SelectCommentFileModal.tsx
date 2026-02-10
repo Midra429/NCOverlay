@@ -193,10 +193,14 @@ export function SelectCommentFileModal(props: SelectCommentFileModalProps) {
             base: 'size-full',
             label: 'hidden',
             inputWrapper: [
-              'h-full! w-full!',
+              'h-full! w-full! overflow-hidden p-0',
               'border-1 border-divider shadow-none',
             ],
-            input: 'size-full cursor-pointer font-mono text-tiny',
+            input: [
+              'size-full px-3 py-2',
+              'font-mono text-tiny',
+              'cursor-pointer',
+            ],
           }}
           disableAutosize
           isReadOnly

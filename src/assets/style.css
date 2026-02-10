@@ -20,3 +20,7 @@
 :before {
   outline: none !important;
 } */
+
+textarea {
+  scrollbar-color: hsl(var(--heroui-default-200)) hsl(var(--heroui-content1));
+}

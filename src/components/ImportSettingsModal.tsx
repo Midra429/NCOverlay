@@ -99,10 +99,10 @@ export function ImportSettingsModal(props: ImportSettingsModalProps) {
             base: 'size-full',
             label: 'hidden',
             inputWrapper: [
-              'h-full! w-full!',
+              'h-full! w-full! overflow-hidden p-0',
               'border-1 border-divider shadow-none',
             ],
-            input: 'size-full font-mono text-tiny',
+            input: ['size-full px-3 py-2', 'font-mono text-tiny'],
           }}
           disableAutosize
           label="入力"
