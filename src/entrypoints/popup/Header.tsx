@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   Button,
   Dropdown,
@@ -16,8 +17,7 @@ import {
   Table2Icon,
 } from 'lucide-react'
 
-import { webext } from '@/utils/webext'
-import { openPopout } from '@/entrypoints/popout/open'
+import { openPopout, shouldOpenPopout } from '@/entrypoints/popout/open'
 
 import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
@@ -26,12 +26,17 @@ import { JikkyoSelector } from './Modals/JikkyoSelector'
 import { NicologSelector } from './Modals/NicologSelector'
 
 export function Header() {
+  const [isOpenPopout, setIsOpenPopout] = useState(false)
   const jkModalDc = useDisclosure()
   const jkEpgModalDc = useDisclosure()
   const nicologModalDc = useDisclosure()
   const fileModalDc = useDisclosure()
 
-  const onPressFile = webext.isFirefox
+  useEffect(() => {
+    shouldOpenPopout().then(setIsOpenPopout)
+  }, [])
+
+  const onPressFile = isOpenPopout
     ? () => {
         openPopout('select-comment-file', {
           width: 500,
@@ -131,7 +136,7 @@ export function Header() {
         onOpenChange={nicologModalDc.onOpenChange}
       />
 
-      {!webext.isFirefox && (
+      {!isOpenPopout && (
         <SelectCommentFileModal
           isOpen={fileModalDc.isOpen}
           onOpenChange={fileModalDc.onOpenChange}

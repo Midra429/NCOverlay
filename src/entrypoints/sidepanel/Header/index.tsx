@@ -1,6 +1,6 @@
 import type { ButtonProps } from '@heroui/react'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, cn } from '@heroui/react'
 import { Settings2Icon, SquareArrowOutUpRight, XIcon } from 'lucide-react'
 
@@ -13,6 +13,13 @@ import { Options } from './Options'
 
 export function Header() {
   const [isOptionOpen, setIsOptionOpen] = useState(false)
+  const [isShownNewWindowButton, setIsShownNewWindowButton] = useState(false)
+
+  useEffect(() => {
+    webext.runtime.getPlatformInfo().then(({ os }) => {
+      setIsShownNewWindowButton(!webext.inPopupWindow && os !== 'android')
+    })
+  }, [])
 
   const openPopout: ButtonProps['onClick'] = (evt) => {
     sendMessageToBackground('openPopout', {
@@ -42,7 +49,7 @@ export function Header() {
         </div>
 
         <div className="flex shrink-0 flex-row gap-1">
-          {!webext.inPopupWindow && (
+          {isShownNewWindowButton && (
             <Tooltip placement="left" content="新しいウィンドウで開く">
               <Button
                 className="shrink-0 p-0"

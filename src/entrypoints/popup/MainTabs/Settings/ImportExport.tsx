@@ -1,10 +1,10 @@
 import type { Browser } from '@/utils/webext'
 
+import { useEffect, useState } from 'react'
 import { useDisclosure } from '@heroui/react'
 import { DownloadIcon, UploadIcon } from 'lucide-react'
 
-import { webext } from '@/utils/webext'
-import { openPopout } from '@/entrypoints/popout/open'
+import { openPopout, shouldOpenPopout } from '@/entrypoints/popout/open'
 
 import { ExportSettingsModal } from '@/components/ExportSettingsModal'
 import { ImportSettingsModal } from '@/components/ImportSettingsModal'
@@ -16,9 +16,14 @@ const createData: Browser.OpenPopoutCreateData = {
 }
 
 function ImportSettings() {
+  const [isOpenPopout, setIsOpenPopout] = useState(false)
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-  const onPress = webext.isFirefox
+  useEffect(() => {
+    shouldOpenPopout().then(setIsOpenPopout)
+  }, [])
+
+  const onPress = isOpenPopout
     ? () => openPopout('import-settings', createData)
     : onOpen
 
@@ -34,7 +39,7 @@ function ImportSettings() {
         }}
       />
 
-      {!webext.isFirefox && (
+      {!isOpenPopout && (
         <ImportSettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
       )}
     </>
@@ -42,9 +47,14 @@ function ImportSettings() {
 }
 
 function ExportSettings() {
+  const [isOpenPopout, setIsOpenPopout] = useState(false)
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
-  const onPress = webext.isFirefox
+  useEffect(() => {
+    shouldOpenPopout().then(setIsOpenPopout)
+  }, [])
+
+  const onPress = isOpenPopout
     ? () => openPopout('export-settings', createData)
     : onOpen
 
@@ -60,7 +70,7 @@ function ExportSettings() {
         }}
       />
 
-      {!webext.isFirefox && (
+      {!isOpenPopout && (
         <ExportSettingsModal isOpen={isOpen} onOpenChange={onOpenChange} />
       )}
     </>

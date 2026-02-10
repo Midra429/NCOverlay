@@ -7,6 +7,12 @@ export type OpenAction =
   | 'export-settings'
   | 'select-comment-file'
 
+export async function shouldOpenPopout() {
+  const { os } = await webext.runtime.getPlatformInfo()
+
+  return webext.isFirefox && os !== 'android'
+}
+
 export async function openPopout(
   action: OpenAction,
   createData?: Browser.OpenPopoutCreateData
