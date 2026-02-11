@@ -20,7 +20,7 @@ export function HourCell({ hour }: HourCellProps) {
         height: ROW_HEIGHT,
       }}
     >
-      <span className={cn('sticky top-[21px]', 'py-1')}>{hour}</span>
+      <span className={cn('sticky top-5.25', 'py-1')}>{hour}</span>
     </div>
   )
 }

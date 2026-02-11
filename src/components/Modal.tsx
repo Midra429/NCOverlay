@@ -49,7 +49,7 @@ export function Modal(props: ModalProps) {
     <HeroUIModal
       classNames={{
         wrapper: 'justify-end',
-        base: !props.fullWidth && 'max-w-[370px]',
+        base: !props.fullWidth && 'max-w-93',
         header: 'border-foreground-200 border-b-1 p-2 text-medium',
         body: 'p-0',
         footer: 'border-foreground-200 border-t-1 p-2',

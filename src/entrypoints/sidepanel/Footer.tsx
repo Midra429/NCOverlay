@@ -8,7 +8,7 @@ export function Footer() {
   )
 
   return (
-    <div className="ml-auto max-w-[450px]">
+    <div className="ml-auto max-w-112.5">
       {showPositionControl && <PositionControl />}
     </div>
   )
