@@ -318,10 +318,12 @@ export function Item({ comment, offsetMs }: ItemProps) {
     const currentTime =
       (await sendMessageToContent('getCurrentTime', null)) ?? 0
 
-    ncoState?.set(
+    await ncoState?.set(
       'offset',
       Math.floor((comment.vposMs / 1000) * -1 + currentTime)
     )
+
+    sendMessageToContent('rerender', null)
   }
 
   const timeMenu = (

@@ -8,6 +8,8 @@ export interface ProtocolMap {
 
   getCurrentTime: (args?: null) => number
 
+  rerender: (args?: null) => void
+
   reload: (args?: null) => void
 
   jumpMarker: (

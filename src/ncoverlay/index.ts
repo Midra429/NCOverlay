@@ -170,8 +170,7 @@ export class NCOverlay {
     },
 
     seeked: () => {
-      this.renderer.updateTime()
-      this.renderer.render()
+      this.renderer.rerender()
 
       this.#trigger('seeked')
     },
@@ -302,6 +301,11 @@ export class NCOverlay {
       // メッセージ (現在の再生時間を取得)
       onMessageInContent('getCurrentTime', () => {
         return this.renderer.video.currentTime
+      }),
+
+      // メッセージ (再描画)
+      onMessageInContent('rerender', () => {
+        this.renderer.rerender()
       }),
 
       // メッセージ (再読み込み)

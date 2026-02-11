@@ -125,8 +125,7 @@ export class NCORenderer {
         ...this.#options,
       })
 
-      this.updateTime()
-      this.render()
+      this.rerender()
     }
   }
 
@@ -136,6 +135,11 @@ export class NCORenderer {
       ((performance.now() - this.#startTimestamp) * this.#playbackRate) / 10
 
     this.#niconicomments?.drawCanvas(vpos)
+  }
+
+  rerender() {
+    this.updateTime()
+    this.render()
   }
 
   start() {
