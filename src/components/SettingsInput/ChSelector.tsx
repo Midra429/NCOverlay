@@ -41,7 +41,7 @@ export interface Props<K extends Key = Key>
   }[]
 }
 
-interface ChSelectorProps {
+interface ChannelCheckboxGroupProps {
   type: keyof typeof JIKKYO_CHANNEL_GROUPS
   chIds: JikkyoDtvChannelId[] | JikkyoBsCsChannelId[]
   setChIds:
@@ -49,7 +49,11 @@ interface ChSelectorProps {
     | ((ids: JikkyoBsCsChannelId[]) => void)
 }
 
-function ChSelector({ type, chIds, setChIds }: ChSelectorProps) {
+function ChannelCheckboxGroup({
+  type,
+  chIds,
+  setChIds,
+}: ChannelCheckboxGroupProps) {
   const CHANNEL = JIKKYO_CHANNEL_GROUPS[type]
 
   return (
@@ -183,7 +187,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
             base: 'border-foreground-200 border-b-1 bg-content1',
             tabList: 'p-0',
             tab: 'h-10 p-0',
-            panel: 'overflow-y-auto overflow-x-hidden bg-content1 p-0',
+            panel: 'h-full overflow-y-auto overflow-x-hidden bg-content1 p-0',
           }}
           variant="underlined"
           color="primary"
@@ -191,11 +195,19 @@ export function Input(props: Omit<Props, 'inputType'>) {
           destroyInactiveTabPanel={false}
         >
           <Tab key="DTV" title="地デジ">
-            <ChSelector type="DTV" chIds={dtvChIds} setChIds={setDtvChIds} />
+            <ChannelCheckboxGroup
+              type="DTV"
+              chIds={dtvChIds}
+              setChIds={setDtvChIds}
+            />
           </Tab>
 
           <Tab key="STV" title="BS / CS">
-            <ChSelector type="STV" chIds={stvChIds} setChIds={setStvChIds} />
+            <ChannelCheckboxGroup
+              type="STV"
+              chIds={stvChIds}
+              setChIds={setStvChIds}
+            />
           </Tab>
         </Tabs>
       </Modal>

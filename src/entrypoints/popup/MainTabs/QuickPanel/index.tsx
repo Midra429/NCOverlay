@@ -13,12 +13,6 @@ import { ReportButton } from './ReportButton'
 import { ShowHideToggle } from './ShowHideToggle'
 import { SidePanelButton } from './SidePanelButton'
 
-const SETTINGS_INIT_ITEMS = Object.fromEntries(
-  SETTINGS_INIT_DATA.flatMap(({ items }) => {
-    return items.map((item) => [item.settingsKey, item])
-  })
-)
-
 const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:opacity',
   'settings:comment:scale',
@@ -26,6 +20,12 @@ const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
   'settings:comment:amount',
   'settings:autoSearch:targets',
 ]
+
+const SETTINGS_INIT_ITEMS = SETTINGS_INIT_DATA.flatMap((v) => v.items)
+
+const QUICKPANEL_ITEMS = QUICKPANEL_ITEM_KEYS.map((key) => {
+  return SETTINGS_INIT_ITEMS.find((v) => v.settingsKey === key)
+}).filter((v) => v != null)
 
 /**
  * クイックパネル
@@ -52,12 +52,11 @@ export function QuickPanel() {
       <div className="flex h-full flex-col gap-2 overflow-y-auto p-2">
         <ShowHideToggle />
 
-        {QUICKPANEL_ITEM_KEYS.map((key) => {
-          const item = SETTINGS_INIT_ITEMS[key]
+        {QUICKPANEL_ITEMS.map((item) => {
           const Input = SettingsInput[item.inputType]
 
           return (
-            <PanelItem key={key} className="px-2.5 py-0.5">
+            <PanelItem key={item.settingsKey} className="px-2.5 py-0.5">
               <Input {...(item as any)} description={undefined} />
             </PanelItem>
           )

@@ -10,13 +10,17 @@ import { Settings } from './MainTabs/Settings'
 
 function App() {
   const isActive = !!ncoState
-  const height = isActive ? 585 : 508
 
   return (
-    <Layout className="overflow-hidden">
-      <div className="flex size-fit flex-row" style={{ height }}>
+    <Layout className="overflow-visible">
+      <div
+        className="flex w-fit flex-row *:h-full"
+        style={{
+          height: isActive ? 585 : 508,
+        }}
+      >
         {isActive && (
-          <div className="flex h-full w-107 flex-col border-foreground-200 border-r-1">
+          <div className="flex w-107 flex-col border-foreground-200 border-r-1">
             <Header />
 
             <Comments />
@@ -28,7 +32,7 @@ function App() {
           </div>
         )}
 
-        <div className="flex h-full w-93 flex-col">
+        <div className="flex w-93 flex-col">
           {isActive ? (
             <MainTabs />
           ) : (

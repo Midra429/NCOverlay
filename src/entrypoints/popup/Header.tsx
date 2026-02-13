@@ -10,7 +10,6 @@ import {
 } from '@heroui/react'
 import {
   CalendarClockIcon,
-  ChevronDownIcon,
   DatabaseIcon,
   FileTextIcon,
   PlusIcon,
@@ -70,16 +69,11 @@ export function Header() {
         >
           <DropdownTrigger>
             <Button
-              className={cn(
-                '[&>svg:last-child]:rotate-0 [&[aria-expanded="true"]>svg]:rotate-180',
-                '[&>svg:last-child]:transition-transform'
-              )}
               size="sm"
               variant="flat"
               color="primary"
               disableRipple
               startContent={<PlusIcon className="size-4" />}
-              endContent={<ChevronDownIcon className="size-4" />}
             >
               追加
             </Button>
