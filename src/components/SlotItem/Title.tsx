@@ -18,14 +18,16 @@ const BASE_URLS: Record<NonNullable<TitleProps['source']>, string> = {
   niconico: 'https://www.nicovideo.jp/watch/',
   syobocal: 'https://cal.syoboi.jp/tid/',
   tver: 'https://tver.jp/series/',
-  nhkPlus: 'https://plus.nhk.jp/watch/st/',
+  nhk_one: '',
+  nhk_chronicle: 'https://www.nhk.or.jp/archives/chronicle/detail/?crnid=',
   nicolog: 'https://nicolog.ecchi.club/nico-live-anime/',
 }
 
 export function Title({ id, source, title, isSearch }: TitleProps) {
   const { ref, overflow } = useOverflowDetector()
 
-  const url = id && new URL(id, source ? BASE_URLS[source] : BASE_URLS.niconico)
+  const baseUrl = source ? BASE_URLS[source] : BASE_URLS.niconico
+  const url = id && encodeURI(baseUrl + id)
   const prefix = title.match(programIconsRegExp)?.[0]
   const icon = {
     new: prefix?.includes('🈟'),
@@ -53,7 +55,7 @@ export function Title({ id, source, title, isSearch }: TitleProps) {
       {isSearch || !url ? (
         element
       ) : (
-        <Link color="foreground" href={url.href} isExternal>
+        <Link color="foreground" href={url} isExternal>
           {element}
         </Link>
       )}

@@ -201,7 +201,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:autoSearch:targets',
         inputType: 'checkbox',
         label: '検索対象',
-        description: `${VODS.nhkPlus}は「実況」のみ`,
+        // description: `${VODS.nhkPlus}は「実況」のみ`,
         options: AUTO_SEARCH_TARGET_KEYS.map((key) => ({
           label: SOURCE_NAMES[key],
           value: key,
