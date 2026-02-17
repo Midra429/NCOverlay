@@ -22,6 +22,7 @@ export interface VideoChapter {
   type: VideoChapterType
   startMs: number
   endMs: number
+  duration: number
 }
 
 export type JikkyoChapterType =
@@ -59,26 +60,66 @@ export function findChapters(
     return []
   }
 
-  const durationMs = duration * 1000
-  const halfDuration = durationMs / 2
-
-  chapters.sort((a, b) => a.startMs - b.startMs)
-
   const marker = Object.fromEntries(
     MARKERS.map((val, idx) => {
       const marker = markers[idx]
-      return [val.key, marker !== null ? marker - 800 : null]
+      return [val.key, marker !== null ? marker - 1000 : null]
     })
   ) as Record<MarkerKey, number | null>
 
-  const avantChapter = chapters.find((v) => v.type === 'avant')
-  const opChapter = chapters.find((v) => v.type === 'op')
-  const avantOpChapter = chapters.find((v) => v.type === 'avant_op')
-  const mainChapter = chapters.find((v) => v.type === 'main')
-  const edChapter = chapters.find((v) => v.type === 'ed')
-  const cPartChapter = chapters.find((v) => v.type === 'cPart')
-  const opEdChapter = chapters.find((v) => v.type === 'op-ed')
-  // const otherChapters = chapters.filter((v) => v.type === 'other')
+  if (marker.start === null) {
+    return []
+  }
+
+  const durationMs = duration * 1000
+  const halfDuration = durationMs / 2
+
+  let avantChapter: VideoChapter | undefined
+  let opChapter: VideoChapter | undefined
+  let avantOpChapter: VideoChapter | undefined
+  let mainChapter: VideoChapter | undefined
+  let edChapter: VideoChapter | undefined
+  let cPartChapter: VideoChapter | undefined
+
+  for (const chapter of chapters) {
+    switch (chapter.type) {
+      case 'avant':
+        avantChapter ??= chapter
+        break
+
+      case 'op':
+        opChapter ??= chapter
+        break
+
+      case 'avant_op':
+        avantOpChapter ??= chapter
+        break
+
+      case 'main':
+        mainChapter ??= chapter
+        break
+
+      case 'ed':
+        edChapter ??= chapter
+        break
+
+      case 'cPart':
+        cPartChapter ??= chapter
+        break
+
+      case 'op-ed':
+        if (chapter.startMs < halfDuration) {
+          opChapter ??= chapter
+        } else {
+          edChapter ??= chapter
+        }
+        break
+    }
+  }
+
+  if (!mainChapter) {
+    return []
+  }
 
   let avantJkChapter: JikkyoChapter | undefined
   let opJkChapter: JikkyoChapter | undefined
@@ -89,115 +130,42 @@ export function findChapters(
   const cmJkChapters: JikkyoChapter[] = []
   const otherJkChapters: JikkyoChapter[] = []
 
-  if (!mainChapter) {
-    return []
-  }
-
-  // アバン
-  if (avantChapter) {
-    const avantDurationByChapter = avantChapter.endMs - avantChapter.startMs
-
-    let startMs: number | undefined
-    let endMs: number | undefined
-
-    if (marker.start !== null && marker.op !== null) {
-      const avantDurationByMarker = marker.op - marker.start
-      const durationDiff = avantDurationByChapter - avantDurationByMarker
-
-      // アバン手前のクレジット部分の調節
-      if (5000 <= durationDiff) {
-        startMs = marker.start
-        endMs = marker.op
-
-        const otherStartMs = startMs - durationDiff
-        const otherEndMs = startMs
-
-        otherJkChapters.push({
-          type: 'other',
-          startMs: otherStartMs,
-          endMs: otherEndMs,
-          isAdd: true,
-        })
-      }
-    }
-
-    startMs ??= marker.start ?? avantChapter.startMs
-    endMs ??= startMs + avantDurationByChapter
-
-    avantJkChapter = {
-      type: 'avant',
-      startMs,
-      endMs,
-    }
-  }
-
   // OP
   if (opChapter) {
-    const startMs = avantJkChapter
-      ? // アバン後にOP
-        marker.op
-      : // 出OP
-        (marker.start ?? marker.op)
+    const startMs =
+      0 < opChapter.startMs
+        ? // アバン後にOP
+          marker.op
+        : // 出OP
+          marker.start
 
     if (startMs !== null) {
-      const opDuration = opChapter.endMs - opChapter.startMs
-      const endMs = startMs + opDuration
+      const endMs = startMs + opChapter.duration
 
       opJkChapter = {
         type: 'op',
         startMs,
         endMs,
       }
-    }
-  }
 
-  // アバン(あらすじ) + OP
-  if (avantOpChapter) {
-    if (
-      !avantJkChapter &&
-      !opJkChapter &&
-      marker.start !== null &&
-      marker.op !== null
-    ) {
-      const avantOpDuration = avantOpChapter.endMs - avantOpChapter.startMs
-      const avantDuration = marker.op - marker.start
-      const opDuration = avantOpDuration - avantDuration
-
-      if (60000 < opDuration && opDuration <= 100000) {
-        const avantStartMs = marker.start
-        const avantEndMs = avantStartMs + avantDuration
-        const opStartMs = avantEndMs
-        const opEndMs = opStartMs + opDuration
-
-        avantJkChapter = {
-          type: 'avant',
-          startMs: avantStartMs,
-          endMs: avantEndMs,
-        }
-        opJkChapter = {
-          type: 'op',
-          startMs: opStartMs,
-          endMs: opEndMs,
-        }
-      }
+      console.log('opJkChapter:', opJkChapter)
     }
   }
 
   // ED
   if (edChapter) {
-    const edDuration = edChapter.endMs - edChapter.startMs
     let startMs: number | undefined
     let endMs: number | undefined
 
     if (marker.ed !== null) {
       startMs = marker.ed
-      endMs = startMs + edDuration
+      endMs = startMs + edChapter.duration
     } else if (marker.cPart !== null) {
       endMs = marker.cPart
-      startMs = endMs - edDuration
+      startMs = endMs - edChapter.duration
     } else if (marker.op !== null && halfDuration < marker.op) {
       startMs = marker.op
-      endMs = startMs + edDuration
+      endMs = startMs + edChapter.duration
     }
 
     if (startMs != null && endMs != null) {
@@ -206,112 +174,58 @@ export function findChapters(
         startMs,
         endMs,
       }
+
+      console.log('edJkChapter:', edJkChapter)
     }
   }
 
-  // OP or ED
-  if (opEdChapter) {
-    const isEd = halfDuration < opEdChapter.startMs
-    const opEdDuration = opEdChapter.endMs - opEdChapter.startMs
-
-    if (isEd) {
-      let startMs: number | undefined
-      let endMs: number | undefined
-
-      if (marker.op !== null || marker.ed !== null) {
-        startMs = (marker.ed ?? marker.op)!
-        endMs = startMs + opEdDuration
-      } else if (marker.cPart !== null) {
-        endMs = marker.cPart
-        startMs = endMs - opEdDuration
-      }
-
-      if (startMs != null && endMs != null && halfDuration < endMs) {
-        edJkChapter = {
-          type: 'ed',
-          startMs,
-          endMs,
-        }
-      }
-    } else {
-      const startMs = avantJkChapter
-        ? // アバン後にOP
-          marker.op
-        : // 出OP
-          (marker.start ?? marker.op)
-
-      if (startMs !== null && startMs < halfDuration) {
-        const endMs = startMs + opEdDuration
-
-        opJkChapter = {
-          type: 'op',
-          startMs,
-          endMs,
-        }
-      }
-    }
-  }
-
-  // Cパート
-  if (cPartChapter) {
-    const startMs = marker.cPart ?? edJkChapter?.endMs
-
-    if (startMs != null) {
-      const cPartDuration = cPartChapter.endMs - cPartChapter.startMs
-      const endMs = startMs + cPartDuration
-
-      cPartJkChapter = {
-        type: 'cPart',
-        startMs,
-        endMs,
-      }
-    }
+  // EDがないと判定不可
+  if (!edJkChapter) {
+    return []
   }
 
   // 本編
-  if (edJkChapter) {
-    if (marker.start !== null || marker.aPart !== null) {
-      const aPartStartMs = (marker.aPart ?? marker.start)!
-      const bPartStartMs = marker.bPart
+  {
+    const aPartStartMs = marker.aPart
+    const bPartStartMs = marker.bPart
 
-      const mainDuration = mainChapter.endMs - mainChapter.startMs
-      const cmDuration = edJkChapter.startMs - aPartStartMs - mainDuration
+    if (aPartStartMs === null) {
+      return []
+    }
 
-      // CMあり (A/Bパート)
-      if (0 < cmDuration && bPartStartMs !== null) {
-        const aPartEndMs = bPartStartMs - cmDuration
-        const bPartEndMs = edJkChapter.startMs
-        const cmStartMs = aPartEndMs
-        const cmEndMs = bPartStartMs
+    const cmDuration = edJkChapter.startMs - aPartStartMs - mainChapter.duration
 
-        aPartJkChapter = {
-          type: 'aPart',
-          startMs: aPartStartMs,
-          endMs: aPartEndMs,
-        }
-        bPartJkChapter = {
-          type: 'bPart',
-          startMs: bPartStartMs,
-          endMs: bPartEndMs,
-        }
+    // CMあり (A/Bパート)
+    if (0 < cmDuration && bPartStartMs !== null) {
+      const aPartEndMs = bPartStartMs - cmDuration
+      const bPartEndMs = edJkChapter.startMs
 
-        cmJkChapters.push({
-          type: 'cm',
-          startMs: cmStartMs,
-          endMs: cmEndMs,
-          isRemove: true,
-        })
+      aPartJkChapter = {
+        type: 'aPart',
+        startMs: aPartStartMs,
+        endMs: aPartEndMs,
       }
-      // CMなし (Aパートのみ)
-      else if (Math.abs(cmDuration) < 2000 && bPartStartMs === null) {
-        const aPartEndMs = aPartStartMs + mainDuration
-
-        aPartJkChapter = {
-          type: 'aPart',
-          startMs: aPartStartMs,
-          endMs: aPartEndMs,
-        }
+      bPartJkChapter = {
+        type: 'bPart',
+        startMs: bPartStartMs,
+        endMs: bPartEndMs,
       }
+
+      console.log('aPartJkChapter:', aPartJkChapter)
+      console.log('bPartJkChapter:', bPartJkChapter)
+    }
+    // CMなし (Aパートのみ)
+    else if (Math.abs(cmDuration) < 4000 && bPartStartMs === null) {
+      const endMs = edJkChapter.startMs
+      const startMs = endMs - mainChapter.duration
+
+      aPartJkChapter = {
+        type: 'aPart',
+        startMs,
+        endMs,
+      }
+
+      console.log('aPartJkChapter:', aPartJkChapter)
     }
   }
 
@@ -320,7 +234,100 @@ export function findChapters(
     return []
   }
 
-  const jikkyoChapters: JikkyoChapter[] = [
+  // Cパート
+  if (cPartChapter) {
+    const startMs = marker.cPart ?? edJkChapter.endMs
+    const endMs = startMs + cPartChapter.duration
+
+    cPartJkChapter = {
+      type: 'cPart',
+      startMs,
+      endMs,
+    }
+
+    console.log('cPartJkChapter:', cPartJkChapter)
+  }
+
+  // アバン
+  if (avantChapter && opJkChapter) {
+    const endMs = opJkChapter.startMs
+    const tmpStartMs = endMs - avantChapter.duration
+    let startMs: number
+
+    // 配信のほうがアバンが長い
+    if (tmpStartMs < 0) {
+      startMs = 0
+
+      const otherStartMs = tmpStartMs
+      const otherEndMs = 0
+
+      otherJkChapters.push({
+        type: 'other',
+        startMs: otherStartMs,
+        endMs: otherEndMs,
+        isAdd: true,
+      })
+
+      console.log('otherJkChapters:', otherJkChapters)
+    } else {
+      startMs = tmpStartMs
+
+      if (0 < startMs) {
+        const otherStartMs = 0
+        const otherEndMs = startMs
+
+        otherJkChapters.push({
+          type: 'other',
+          startMs: otherStartMs,
+          endMs: otherEndMs,
+          isRemove: true,
+        })
+
+        console.log('otherJkChapters:', otherJkChapters)
+      }
+    }
+
+    avantJkChapter = {
+      type: 'avant',
+      startMs,
+      endMs,
+    }
+
+    console.log('avantJkChapter:', avantJkChapter)
+  }
+
+  // アバン(あらすじ) + OP
+  if (
+    avantOpChapter &&
+    !avantJkChapter &&
+    !opJkChapter &&
+    marker.start !== null &&
+    marker.op !== null
+  ) {
+    const avantDuration = marker.op - marker.start
+    const opDuration = avantOpChapter.duration - avantDuration
+
+    const avantStartMs = marker.start
+    const avantEndMs = avantStartMs + avantDuration
+    const opStartMs = marker.op
+    const opEndMs = opStartMs + opDuration
+
+    avantJkChapter = {
+      type: 'avant',
+      startMs: avantStartMs,
+      endMs: avantEndMs,
+    }
+    opJkChapter = {
+      type: 'op',
+      startMs: opStartMs,
+      endMs: opEndMs,
+    }
+
+    console.log('avantJkChapter:', avantJkChapter)
+    console.log('opJkChapter:', opJkChapter)
+  }
+
+  const jkChapters: JikkyoChapter[] = [
     avantJkChapter,
     opJkChapter,
     aPartJkChapter,
@@ -332,19 +339,17 @@ export function findChapters(
   ]
     .filter((v) => v != null)
     .sort((a, b) => a.startMs - b.startMs)
-  const jikkyoChapterCount = jikkyoChapters.length
+  const jkChapterCount = jkChapters.length
 
-  const results: JikkyoChapter[] = []
+  const jkChapterResults: JikkyoChapter[] = []
 
-  // 間を埋める
-  for (let i = 0; i < jikkyoChapterCount; i++) {
-    const prev = jikkyoChapters[i - 1]
-    const current = jikkyoChapters[i]
+  // 間を詰める
+  for (let i = 0; i < jkChapterCount; i++) {
+    const prev = jkChapters[i - 1]
+    const current = jkChapters[i]
 
     let startMs: number | undefined
     let endMs: number | undefined
-    let isAdd: boolean | undefined
-    let isRemove: boolean | undefined
 
     if (prev) {
       if (prev.endMs < current.startMs) {
@@ -352,28 +357,25 @@ export function findChapters(
 
         startMs = prev.endMs
         endMs = startMs + duration
-        isRemove = true
       }
-    } else if (0 < current.startMs && 3000 < current.startMs) {
+    } else if (0 < current.startMs) {
       startMs = 0
       endMs = current.startMs
-      isAdd = true
     }
 
     if (startMs != null && endMs != null) {
-      results.push({
+      jkChapterResults.push({
         type: 'other',
         startMs,
         endMs,
-        isAdd,
-        isRemove,
+        isRemove: true,
       })
     }
 
-    results.push(current)
+    jkChapterResults.push(current)
   }
 
-  return results
+  return jkChapterResults
 }
 
 export function filterThreadsByJikkyoChapters(

@@ -71,7 +71,6 @@ async function main() {
       let opChapter: VideoChapter | undefined
       let mainChapter: VideoChapter | undefined
       let edChapter: VideoChapter | undefined
-      // let cPartChapter: VideoChapter | undefined
 
       if (streamChapters) {
         if (streamChapters.op) {
@@ -82,6 +81,7 @@ async function main() {
             type: 'op',
             startMs,
             endMs,
+            duration: endMs - startMs,
           }
 
           if (0 < opChapter.startMs) {
@@ -89,6 +89,7 @@ async function main() {
               type: 'avant',
               startMs: 0,
               endMs: opChapter.startMs,
+              duration: opChapter.startMs,
             }
           }
         }
@@ -101,23 +102,24 @@ async function main() {
             type: 'ed',
             startMs,
             endMs,
+            duration: endMs - startMs,
           }
         }
 
-        mainChapter = {
-          type: 'main',
-          startMs: opChapter?.endMs ?? 0,
-          endMs: edChapter?.startMs ?? duration * 1000,
+        if (opChapter || edChapter) {
+          const startMs = opChapter?.endMs ?? 0
+          const endMs = edChapter?.startMs ?? duration * 1000
+
+          mainChapter = {
+            type: 'main',
+            startMs,
+            endMs,
+            duration: endMs - startMs,
+          }
         }
       }
 
-      const chapters = [
-        avantChapter,
-        opChapter,
-        mainChapter,
-        edChapter,
-        // cPartChapter,
-      ]
+      const chapters = [avantChapter, opChapter, mainChapter, edChapter]
         .filter((v) => v != null)
         .sort((a, b) => a.startMs - b.startMs)
 

@@ -123,6 +123,7 @@ async function main() {
           type,
           startMs: chapter.start,
           endMs: chapter.end,
+          duration: chapter.end - chapter.start,
         })
       }
 
@@ -134,11 +135,13 @@ async function main() {
             type: 'op',
             startMs: opChapter.start,
             endMs: opChapter.end,
+            duration: opChapter.end - opChapter.start,
           })
           chapters.push({
             type: 'ed',
             startMs: edChapter.start,
             endMs: edChapter.end,
+            duration: edChapter.end - edChapter.start,
           })
 
           break
@@ -152,6 +155,7 @@ async function main() {
             type: hasOp ? 'ed' : 'op-ed',
             startMs: opEdChapter.start,
             endMs: opEdChapter.end,
+            duration: opEdChapter.end - opEdChapter.start,
           })
 
           break
