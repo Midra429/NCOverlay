@@ -2,6 +2,7 @@ import type browser from 'webextension-polyfill'
 import type { Browser } from 'wxt/browser'
 
 import { browser as webext } from 'wxt/browser'
+import { isBackground } from '@wxt-dev/is-background'
 
 declare module 'wxt/browser' {
   namespace Browser {
@@ -59,11 +60,11 @@ declare module 'wxt/browser' {
     export var isFirefox: boolean
     export var isSafari: boolean
 
-    export var inContentScript: boolean
     export var inBackground: boolean
+    export var inContentScript: boolean
     export var inPopup: boolean
     export var inSidePanel: boolean
-    export var inPopupWindow: boolean
+    export var inPopout: boolean
 
     export function getCurrentActiveTab(): Promise<tabs.Tab | undefined>
 
@@ -86,14 +87,11 @@ const searchParamTabId = new URLSearchParams(search).get(
   webext.SEARCH_PARAM_TAB_ID
 )
 
-webext.inContentScript = /^https?:$/.test(protocol)
-webext.inBackground =
-  !webext.inContentScript &&
-  (pathname === '/background.js' ||
-    pathname === '/_generated_background_page.html')
+webext.inBackground = isBackground()
+webext.inContentScript = !webext.inBackground && /^https?:$/.test(protocol)
 webext.inPopup = !webext.inContentScript && pathname === '/popup.html'
 webext.inSidePanel = !webext.inContentScript && pathname === '/sidepanel.html'
-webext.inPopupWindow = !!searchParamTabId
+webext.inPopout = !!searchParamTabId
 
 webext.getCurrentActiveTab = async function () {
   const tabId = searchParamTabId

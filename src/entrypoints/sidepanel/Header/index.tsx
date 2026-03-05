@@ -17,7 +17,7 @@ export function Header() {
 
   useEffect(() => {
     webext.runtime.getPlatformInfo().then(({ os }) => {
-      setIsShownNewWindowButton(!webext.inPopupWindow && os !== 'android')
+      setIsShownNewWindowButton(!webext.inPopout && os !== 'android')
     })
   }, [])
 
