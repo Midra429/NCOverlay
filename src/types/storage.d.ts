@@ -181,6 +181,12 @@ export interface SettingItems {
   'settings:autoSearch:jikkyoChannelIds': JikkyoChannelId[]
 
   /**
+   * 自動検索:実況: 再放送を除外する
+   * @default false
+   */
+  'settings:autoSearch:jikkyoIgnoreRerun': boolean
+
+  /**
    * 自動検索:実況: オフセット自動調節可のみ
    * @default false
    */

@@ -31,6 +31,7 @@ export const SETTINGS_DEFAULT: SettingItems = {
   'settings:autoSearch:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
+  'settings:autoSearch:jikkyoIgnoreRerun': false,
   'settings:autoSearch:jikkyoOnlyAdjustable': true,
   'settings:autoSearch:manual': false,
 

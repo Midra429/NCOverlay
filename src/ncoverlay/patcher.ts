@@ -123,16 +123,19 @@ export class NCOPatcher {
       try {
         const info = await this.#nco.state.get('info')
 
-        const [targets, jikkyoChannelIds] = await settings.get(
-          'settings:autoSearch:targets',
-          'settings:autoSearch:jikkyoChannelIds'
-        )
+        const [targets, jikkyoChannelIds, jikkyoIgnoreRerun] =
+          await settings.get(
+            'settings:autoSearch:targets',
+            'settings:autoSearch:jikkyoChannelIds',
+            'settings:autoSearch:jikkyoIgnoreRerun'
+          )
 
         const args: NCOSearcherAutoSearchArgs | null = {
           input: '',
           duration: 0,
           targets,
           jikkyoChannelIds,
+          jikkyoIgnoreRerun,
           ...info,
         }
 

@@ -3,9 +3,9 @@ import type { StateSlotDetail } from '@/ncoverlay/state'
 import { Link, cn } from '@heroui/react'
 import { useOverflowDetector } from 'react-detectable-overflow'
 
-import { ProgramIcons } from '@/components/ProgramIcons'
+import { PROGRAM_FLAG_REGEXP } from '@/constants'
 
-const programIconsRegExp = /^(?:[🈟🈡🈞]\s?)+/
+import { ProgramIcons } from '@/components/ProgramIcons'
 
 export interface TitleProps {
   id: StateSlotDetail['info']['id']
@@ -28,7 +28,7 @@ export function Title({ id, source, title, isSearch }: TitleProps) {
 
   const baseUrl = source ? BASE_URLS[source] : BASE_URLS.niconico
   const url = id && encodeURI(baseUrl + id)
-  const prefix = title.match(programIconsRegExp)?.[0]
+  const prefix = title.match(PROGRAM_FLAG_REGEXP)?.[0]
   const icon = {
     new: prefix?.includes('🈟'),
     last: prefix?.includes('🈡'),
@@ -46,7 +46,7 @@ export function Title({ id, source, title, isSearch }: TitleProps) {
     >
       <ProgramIcons icon={icon} />
 
-      <span>{title.replace(programIconsRegExp, '')}</span>
+      <span>{title.replace(PROGRAM_FLAG_REGEXP, '')}</span>
     </span>
   )
 

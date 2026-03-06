@@ -217,6 +217,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         })),
       },
       {
+        settingsKey: 'settings:autoSearch:jikkyoIgnoreRerun',
+        inputType: 'toggle',
+        label: '実況: 再放送を除外する',
+        description: '再放送を自動検索の対象から除外します。',
+      },
+      {
         settingsKey: 'settings:autoSearch:jikkyoOnlyAdjustable',
         inputType: 'toggle',
         label: '実況: オフセット自動調節可のみ',

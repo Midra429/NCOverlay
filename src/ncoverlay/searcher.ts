@@ -40,8 +40,10 @@ export interface NCOSearcherAutoSearchArgs {
   duration: number
   /** 検索対象 */
   targets: AutoSearchTarget[]
-  /** 実況チャンネル */
+  /** 実況: チャンネル */
   jikkyoChannelIds?: JikkyoChannelId[]
+  /** 実況: 再放送を除外する */
+  jikkyoIgnoreRerun?: boolean
 }
 
 /**
@@ -58,7 +60,8 @@ export class NCOSearcher {
     args.input = parse(args.input)
 
     const isAutoLoaded = true
-    const { input, duration, targets, jikkyoChannelIds } = args
+    const { input, duration, targets, jikkyoChannelIds, jikkyoIgnoreRerun } =
+      args
 
     const channelIds = jikkyoChannelIds
       ?.map((jkId) => jikkyoSyobocalChIdMap.get(jkId))
@@ -172,7 +175,13 @@ export class NCOSearcher {
           isAutoLoaded,
         })
 
-        if (loadedIds.includes(slotDetail.id)) continue
+        if (
+          loadedIds.includes(slotDetail.id) ||
+          // 再放送を除外
+          (jikkyoIgnoreRerun && slotDetail.info.title.startsWith('🈞'))
+        ) {
+          continue
+        }
 
         loadingSlotDetails.jikkyo.set(slotDetail.id, slotDetail)
       }

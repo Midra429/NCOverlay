@@ -87,3 +87,5 @@ export const KAWAII_REGEXP = new RegExp(
   ].join('|'),
   'i'
 )
+
+export const PROGRAM_FLAG_REGEXP = /^(?:[🈟🈡🈞]\s?)+/
