@@ -19,7 +19,7 @@ const SOURCE_BADGE_CLASSES: {
   chapter: cn('bg-danime-400 text-white dark:bg-danime-500'),
   szbh: cn('bg-gray-500 text-white dark:bg-gray-600'),
   jikkyo: cn('bg-jikkyo-600 text-white dark:bg-jikkyo-700'),
-  nicolog: cn('bg-[#252525] text-white'),
+  nicolog: cn('bg-blue-500 text-white dark:bg-blue-600'),
   file: cn('bg-blue-500 text-white dark:bg-blue-600'),
 }
 
