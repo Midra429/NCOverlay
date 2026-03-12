@@ -28,10 +28,9 @@ export function Files({ directoryName, disabledIds, setFileName }: FilesProps) {
         path: `${NICO_LIVE_ANIME_ROOT}/${directoryName}`,
       })
       .then((list) => {
-        const files = list?.content.filter(
-          (v) => !v.is_dir && !v.name.endsWith('_raw.xml')
-        )
-        // .sort((a, b) => b.created - a.created)
+        const files = list?.content
+          .filter((v) => !v.is_dir && !v.name.endsWith('_raw.xml'))
+          .sort((a, b) => b.created - a.created)
 
         setFiles(files ?? [])
       })
