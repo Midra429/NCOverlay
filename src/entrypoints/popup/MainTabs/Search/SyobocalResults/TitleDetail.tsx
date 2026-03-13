@@ -1,20 +1,14 @@
-import type { SyoboCalProgramDb } from '@midra/nco-utils/types/api/syobocal/db'
-import type { ScSubtitleItem, SubtitleItemHandle } from './SubtitleItem'
+import type { ProgramItemsHandle } from './ProgramItems'
+import type { SubtitleItemsHandle } from './SubtitleItems'
 import type { ScTitleItem } from './TitleItem'
 
-import { useImperativeHandle, useRef, useState } from 'react'
-import { Spinner, cn } from '@heroui/react'
-import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
-
-import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
-import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
-import { useNcoState } from '@/hooks/useNco'
-import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
+import { useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { Tab, Tabs } from '@heroui/react'
 
 import { Modal } from '@/components/Modal'
-import { SlotItem } from '@/components/SlotItem'
 
-import { SubtitleItem } from './SubtitleItem'
+import { ProgramItems } from './ProgramItems'
+import { SubtitleItems } from './SubtitleItems'
 import { TitleItemInner } from './TitleItem'
 
 export interface TitleDetailHandle {
@@ -34,64 +28,26 @@ export function TitleDetail({
   onOpenChange,
   ref,
 }: TitleDetailProps) {
-  const subtitleItemRefs = useRef<{
-    [index: number]: SubtitleItemHandle
-  }>({})
+  const subtitlesRef = useRef<SubtitleItemsHandle>(null)
+  const programsRef = useRef<ProgramItemsHandle>(null)
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [programs, setPrograms] = useState<SyoboCalProgramDb[]>([])
-  const [subtitles, setSubtitles] = useState<ScSubtitleItem[]>([])
+  const [selectedKey, setSelectedKey] = useState('subtitles')
 
-  const stateSlotDetails = useNcoState('slotDetails')
+  async function initialize(key?: string) {
+    switch (key ?? selectedKey) {
+      case 'subtitles':
+        subtitlesRef.current?.initialize()
+        break
 
-  const ids = stateSlotDetails?.map((v) => v.id) ?? []
-
-  const currentDate = new Date()
-  const programItems = programs
-    .filter((program) => new Date(program.EdTime) <= currentDate)
-    .sort((a, b) => (new Date(a.StTime) > new Date(b.StTime) ? 1 : -1))
-    .map((program) => programToSlotDetail(title.Title, program))
-
-  const macCountLength = Math.max(...subtitles.map(([cnt]) => cnt.length), 2)
-  const subtitleItems = subtitles.map((val, idx) => ({
-    subtitle: [zeroPadding(val[0], macCountLength), val[1]] as ScSubtitleItem,
-    refCallbackFunction: (handle: SubtitleItemHandle | null) => {
-      if (handle && !subtitleItemRefs.current[idx]) {
-        subtitleItemRefs.current[idx] = handle
-      } else {
-        delete subtitleItemRefs.current[idx]
-      }
-    },
-  }))
-
-  async function initialize() {
-    setIsLoading(true)
-    setPrograms([])
-    setSubtitles([])
-
-    if (title.Cat === '8') {
-      const response = await ncoApiProxy.syobocal.db('ProgLookup', {
-        TID: title.TID,
-        ChID: SYOBOCAL_CHANNEL_IDS,
-      })
-
-      if (response) {
-        setPrograms(Object.values(response))
-      }
-    } else {
-      const response = await ncoApiProxy.syobocal.json(['SubTitles'], {
-        TID: title.TID,
-      })
-
-      const subtitles = response?.SubTitles[title.TID]
-
-      if (subtitles) {
-        setSubtitles(Object.entries(subtitles))
-      }
+      case 'programs':
+        programsRef.current?.initialize()
+        break
     }
-
-    setIsLoading(false)
   }
+
+  useEffect(() => {
+    setSelectedKey(title.Cat === '8' ? 'programs' : 'subtitles')
+  }, [title.Cat])
 
   useImperativeHandle(ref, () => {
     return { initialize }
@@ -104,55 +60,31 @@ export function TitleDetail({
       cancelText="閉じる"
       header={<TitleItemInner item={title} isHeader />}
     >
-      {isLoading || (!programItems.length && !subtitleItems.length) ? (
-        <div
-          className={cn(
-            'absolute inset-0 z-20',
-            'flex size-full items-center justify-center'
-          )}
-        >
-          {isLoading ? (
-            <Spinner size="lg" color="primary" />
-          ) : (
-            <span className="text-foreground-500 text-small">
-              サブタイトルまたは放送時間がありません
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-1.5 p-1.5">
-          {programItems.map((detail) => (
-            <SlotItem
-              key={detail.id}
-              detail={detail}
-              isSearch
-              isDisabled={ids.includes(detail.id)}
-            />
-          ))}
+      <Tabs
+        classNames={{
+          base: 'border-foreground-200 border-b-1 bg-content1',
+          tabList: 'p-0',
+          tab: 'h-10 p-0',
+          panel: 'h-full overflow-y-auto overflow-x-hidden bg-content1 p-0',
+        }}
+        variant="underlined"
+        color="primary"
+        fullWidth
+        destroyInactiveTabPanel={false}
+        selectedKey={selectedKey}
+        onSelectionChange={(key) => {
+          initialize(key as string)
+          setSelectedKey(key as string)
+        }}
+      >
+        <Tab key="subtitles" title="サブタイトル">
+          <SubtitleItems title={title} ref={subtitlesRef} />
+        </Tab>
 
-          {subtitleItems.map(({ subtitle, refCallbackFunction }, idx) => (
-            <SubtitleItem
-              key={subtitle[0]}
-              title={title}
-              subtitle={subtitle}
-              onClick={() => {
-                const item = subtitleItemRefs.current[idx]
-
-                if (item.isOpen) {
-                  item.close()
-                } else {
-                  for (const item of Object.values(subtitleItemRefs.current)) {
-                    item.close()
-                  }
-
-                  item.open()
-                }
-              }}
-              ref={refCallbackFunction}
-            />
-          ))}
-        </div>
-      )}
+        <Tab key="programs" title="放送時間">
+          <ProgramItems title={title} ref={programsRef} />
+        </Tab>
+      </Tabs>
     </Modal>
   )
 }

@@ -1,9 +1,8 @@
 import type { StateSlotDetailJikkyo } from '@/ncoverlay/state'
-import type { ScSubtitleItem } from './SubtitleItems'
 import type { ScTitleItem } from './TitleItem'
 
 import { useImperativeHandle, useState } from 'react'
-import { Spinner } from '@heroui/react'
+import { Spinner, cn } from '@heroui/react'
 
 import { SYOBOCAL_CHANNEL_IDS } from '@/constants/channels'
 import { programToSlotDetail } from '@/utils/api/syobocal/programToSlotDetail'
@@ -12,17 +11,18 @@ import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 import { SlotItem } from '@/components/SlotItem'
 
-export interface SubtitleDetailHandle {
+const CARET_PREFIX_REGEXP = /^\^/
+
+export interface ProgramItemsHandle {
   initialize: () => void
 }
 
-export interface SubtitleDetailProps {
+export interface ProgramItemsProps {
   title: ScTitleItem
-  subtitle: ScSubtitleItem
-  ref: React.Ref<SubtitleDetailHandle>
+  ref: React.Ref<ProgramItemsHandle>
 }
 
-export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
+export function ProgramItems({ title, ref }: ProgramItemsProps) {
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [programItems, setProgramItems] = useState<StateSlotDetailJikkyo[]>([])
@@ -40,16 +40,11 @@ export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
 
     const response = await ncoApiProxy.syobocal.db('ProgLookup', {
       TID: title.TID,
-      Count: Number(subtitle[0]),
       ChID: SYOBOCAL_CHANNEL_IDS,
     })
 
     if (response) {
       const currentDateTime = new Date().getTime()
-      const slotTitle = [title.Title, `#${Number(subtitle[0])}`, subtitle[1]]
-        .filter(Boolean)
-        .join(' ')
-        .trim()
 
       const programs = Object.values(response)
       const programItems = programs
@@ -59,8 +54,19 @@ export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
           _EdDateTime: new Date(program.EdTime).getTime(),
         }))
         .filter((program) => program._EdDateTime <= currentDateTime)
-        .sort((a, b) => a._StDateTime - b._StDateTime)
-        .map((program) => programToSlotDetail(slotTitle, program))
+        .sort((a, b) => b._StDateTime - a._StDateTime)
+        .map((program) => {
+          const slotTitle = [
+            !program.SubTitle.startsWith('^') && title.Title,
+            program.Count && `#${Number(program.Count)}`,
+            program.SubTitle.replace(CARET_PREFIX_REGEXP, ''),
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .trim()
+
+          return programToSlotDetail(slotTitle, program)
+        })
 
       setProgramItems(programItems)
     }
@@ -73,17 +79,22 @@ export function SubtitleDetail({ title, subtitle, ref }: SubtitleDetailProps) {
   }, [initialize])
 
   return isLoading || !programItems.length ? (
-    <div className="flex size-full items-center justify-center py-1">
+    <div
+      className={cn(
+        'relative inset-0 z-20',
+        'flex size-full items-center justify-center'
+      )}
+    >
       {isLoading ? (
-        <Spinner size="sm" color="primary" />
+        <Spinner size="lg" color="primary" />
       ) : (
-        <span className="my-0.5 text-foreground-500 text-tiny">
+        <span className="text-foreground-500 text-small">
           放送時間がありません
         </span>
       )}
     </div>
   ) : (
-    <div className="flex min-h-7 flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5 p-1.5">
       {programItems.map((detail) => (
         <SlotItem
           key={detail.id}
