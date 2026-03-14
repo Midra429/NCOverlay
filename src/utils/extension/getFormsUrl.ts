@@ -4,6 +4,7 @@ import type {
   ExtractedResultSingleEpisode,
 } from '@midra/nco-utils/parse/libs/extract'
 import type { StateInfo, StateVod } from '@/ncoverlay/state'
+import type { AutoSearchTarget } from '@/types/storage'
 import type { Browser } from '@/utils/webext'
 
 import { GOOGLE_FORMS_IDS, GOOGLE_FORMS_URL } from '@/constants'
@@ -163,11 +164,13 @@ export async function getFormsUrl({
   }
 
   // 自動検索の検索対象
-  for (const target of autoSearchTargets) {
-    formUrl.searchParams.append(
-      `entry.${GOOGLE_FORMS_IDS.AUTO_SEARCH_TARGETS}`,
-      SOURCE_NAMES[target]
-    )
+  for (const key of Object.keys(SOURCE_NAMES) as AutoSearchTarget[]) {
+    if (autoSearchTargets.includes(key)) {
+      formUrl.searchParams.append(
+        `entry.${GOOGLE_FORMS_IDS.AUTO_SEARCH_TARGETS}`,
+        SOURCE_NAMES[key]
+      )
+    }
   }
 
   // 該当の動画
