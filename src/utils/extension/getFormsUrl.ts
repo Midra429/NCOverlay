@@ -7,9 +7,11 @@ import type { StateInfo, StateVod } from '@/ncoverlay/state'
 import type { Browser } from '@/utils/webext'
 
 import { GOOGLE_FORMS_IDS, GOOGLE_FORMS_URL } from '@/constants'
+import { SOURCE_NAMES } from '@/constants/settings'
 import { VODS } from '@/constants/vods'
 import { get } from '@/utils/get'
 import { webext } from '@/utils/webext'
+import { settings } from '@/utils/settings/extension'
 
 const CONTENTS = {
   bug: '不具合報告',
@@ -124,25 +126,30 @@ export async function getFormsUrl({
   info?: StateInfo | null
   url?: string | null
 } = {}) {
-  const { version } = webext.runtime.getManifest()
   const { os } = await webext.runtime.getPlatformInfo()
+  const { version } = webext.runtime.getManifest()
+  const autoSearchTargets = await settings.get('settings:autoSearch:targets')
 
   const osName = OS_NAMES[os]
 
   const formUrl = new URL(GOOGLE_FORMS_URL)
 
+  // バージョン
   formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VERSION}`, version)
 
+  // OS
   if (osName) {
     formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.OS}`, osName)
   }
 
+  // ブラウザ
   if (webext.isChrome) {
     formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Chrome')
   } else if (webext.isFirefox) {
     formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.BROWSER}`, 'Firefox')
   }
 
+  // 内容
   if (content) {
     formUrl.searchParams.set(
       `entry.${GOOGLE_FORMS_IDS.CONTENT}`,
@@ -150,10 +157,20 @@ export async function getFormsUrl({
     )
   }
 
+  // 動画配信サービス
   if (vod) {
     formUrl.searchParams.set(`entry.${GOOGLE_FORMS_IDS.VODS}`, VODS[vod])
   }
 
+  // 自動検索の検索対象
+  for (const target of autoSearchTargets) {
+    formUrl.searchParams.append(
+      `entry.${GOOGLE_FORMS_IDS.AUTO_SEARCH_TARGETS}`,
+      SOURCE_NAMES[target]
+    )
+  }
+
+  // 該当の動画
   const input = info?.input
 
   const inputText =

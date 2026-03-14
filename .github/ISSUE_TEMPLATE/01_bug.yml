@@ -50,6 +50,18 @@ body:
         - label: NHKプラス
         - label: TVer
 
+  - type: checkboxes
+    id: auto-search-targets
+    attributes:
+      label: 自動検索の検索対象
+      options:
+        - label: 公式
+        - label: dアニメ
+        - label: dアニメ(分割)
+        - label: コメント専用
+        - label: 実況
+        - label: 生放送
+
   - type: textarea
     id: video
     attributes:
