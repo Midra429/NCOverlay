@@ -123,7 +123,7 @@ https://jikkyo.tsukumijima.net/<br>
 ニコニコ実況の過去ログ
 
 - **nicolog**<br>
-https://nicolog.ecchi.club/<br>
+https://nicolog.oyasumi.today/<br>
 ニコニコ生放送のアニメコメントアーカイブ
 
 ## ライセンス
