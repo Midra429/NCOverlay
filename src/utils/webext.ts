@@ -309,4 +309,5 @@ if (webext.isFirefox) {
 }
 
 export type { Browser }
+
 export { webext }
