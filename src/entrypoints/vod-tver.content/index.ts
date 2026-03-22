@@ -33,7 +33,7 @@ async function main() {
       )
 
       const seriesTitleText = seriesTitleElem?.textContent
-      const episodeTitle = titleElem?.textContent ?? null
+      const episodeTitle = titleElem?.textContent
 
       const seasonText = [
         ...document.body.querySelectorAll(
@@ -48,11 +48,11 @@ async function main() {
 
       const { title, season } = seriesTitleText
         ? parse(
-            `${seriesTitleText} ${(seasonText !== '本編' && `(${seasonText})`) || ''} #0`
+            `${seriesTitleText} ${seasonText && seasonText !== '本編' ? `(${seasonText})` : ''} #0`
           )
         : {}
       const parsed = parse(
-        `${title ?? ''} ${season?.text ?? ''} ${episodeTitle}`
+        `${title ?? ''} ${season?.text ?? ''} ${episodeTitle ?? ''}`
       )
 
       if (!parsed.title) {
@@ -61,7 +61,7 @@ async function main() {
       }
       if (parsed.isSingleEpisode && !parsed.episode && !parsed.subtitle) {
         const { subtitle, subtitleStripped } = parse(
-          `タイトル #0 ${episodeTitle}`
+          `タイトル #0 ${episodeTitle ?? ''}`
         )
 
         parsed.subtitle = subtitle
