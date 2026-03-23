@@ -242,8 +242,15 @@ export async function filterDisplayThreads(
 
     if (!slot) continue
 
+    // NHKはオフセット自動調節の対象外
+    const isNHK =
+      id.startsWith('jk1:') ||
+      id.startsWith('jk2:') ||
+      id.startsWith('jk101:') ||
+      id.startsWith('jk103:')
+
     // 実況: オフセット自動調節
-    if (type === 'jikkyo') {
+    if (type === 'jikkyo' && !isNHK) {
       if (adjustJikkyoOffset) {
         if (detail.chapters.length) {
           slot.threads = filterThreadsByJikkyoChapters(
