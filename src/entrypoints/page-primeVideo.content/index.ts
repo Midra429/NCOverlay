@@ -17,6 +17,13 @@ import { onMessageInPage } from '@/messaging/to-page'
 
 const vod: VodKey = 'primeVideo'
 
+export default defineContentScript({
+  matches: MATCHES[vod],
+  runAt: 'document_start',
+  world: 'MAIN',
+  main: () => void main(),
+})
+
 const MP4_URL_REGEXP = /\/([0-9a-f-]+)_video_\d+\.mp4$/
 const MPD_URL_REGEXP = /\/([0-9a-f-]+)_corrected\.mpd$/i
 
@@ -52,108 +59,95 @@ function isPlayerChromeResources(
   )
 }
 
-export default defineContentScript({
-  matches: MATCHES[vod],
-  runAt: 'document_start',
-  world: 'MAIN',
-  main: () => {
-    let currentMpdId: string | null = null
+function main() {
+  let currentMpdId: string | null = null
 
-    const playbackUrlsQueue = new Queue<PlaybackUrlsQueueItem>(25)
-    const catalogQueue = new Queue<CatalogQueueItem>(25)
+  const playbackUrlsQueue = new Queue<PlaybackUrlsQueueItem>(25)
+  const catalogQueue = new Queue<CatalogQueueItem>(25)
 
-    onMessageInPage('getCurrentData', () => {
-      if (!currentMpdId) {
-        return null
-      }
+  onMessageInPage('getCurrentData', () => {
+    if (!currentMpdId) {
+      return null
+    }
 
-      const playbackUrlsQueueItem = playbackUrlsQueue.find(
-        ({ playbackUrls }) => {
-          return playbackUrls.intraTitlePlaylist.some(({ urls }) => {
-            return urls?.some(({ url }) => {
-              const matched = url.match(MPD_URL_REGEXP)
+    const playbackUrlsQueueItem = playbackUrlsQueue.find(({ playbackUrls }) => {
+      return playbackUrls.intraTitlePlaylist.some(({ urls }) => {
+        return urls?.some(({ url }) => {
+          const matched = url.match(MPD_URL_REGEXP)
 
-              return matched?.[1] === currentMpdId
-            })
-          })
-        }
-      )
-
-      if (!playbackUrlsQueueItem) {
-        return null
-      }
-
-      const catalogQueueItem = catalogQueue.find(
-        (v) => v.entityId === playbackUrlsQueueItem.titleId
-      )
-
-      if (!catalogQueueItem) {
-        return null
-      }
-
-      return {
-        ...playbackUrlsQueueItem,
-        ...catalogQueueItem,
-      }
+          return matched?.[1] === currentMpdId
+        })
+      })
     })
 
-    xhook.after((req, res) => {
-      try {
-        const url = URL.canParse(req.url)
-          ? new URL(req.url)
-          : new URL(req.url, location.origin)
-        const { pathname, search, searchParams } = url
+    if (!playbackUrlsQueueItem) {
+      return null
+    }
 
-        // .mp4
-        if (pathname.endsWith('.mp4')) {
-          const matched = pathname.match(MP4_URL_REGEXP)
+    const catalogQueueItem = catalogQueue.find(
+      (v) => v.entityId === playbackUrlsQueueItem.titleId
+    )
 
-          if (matched) {
-            currentMpdId = matched[1]
-          }
+    if (!catalogQueueItem) {
+      return null
+    }
+
+    return {
+      ...playbackUrlsQueueItem,
+      ...catalogQueueItem,
+    }
+  })
+
+  xhook.after((req, res) => {
+    try {
+      const url = URL.canParse(req.url)
+        ? new URL(req.url)
+        : new URL(req.url, location.origin)
+      const { pathname, search, searchParams } = url
+
+      // .mp4
+      if (pathname.endsWith('.mp4')) {
+        const matched = pathname.match(MP4_URL_REGEXP)
+
+        if (matched) {
+          currentMpdId = matched[1]
         }
-        // GetVodPlaybackResources
-        else if (isGetVodPlaybackResources(req, res)) {
-          const titleId = searchParams.get('titleId')
+      }
+      // GetVodPlaybackResources
+      else if (isGetVodPlaybackResources(req, res)) {
+        const titleId = searchParams.get('titleId')
 
-          if (
-            !titleId ||
-            playbackUrlsQueue.find((v) => v.titleId === titleId)
-          ) {
+        if (!titleId || playbackUrlsQueue.find((v) => v.titleId === titleId)) {
+          return
+        }
+
+        const {
+          vodPlaylistedPlaybackUrls: {
+            result: { playbackUrls },
+          },
+        } = JSON.parse(res.text) as GetVodPlaybackResources
+
+        playbackUrlsQueue.enqueue({ titleId, playbackUrls })
+      }
+      // playerChromeResources
+      else if (isPlayerChromeResources(req, res)) {
+        // catalogMetadataV2
+        if (search.includes('catalogMetadataV2')) {
+          const entityId = searchParams.get('entityId')
+
+          if (!entityId || catalogQueue.find((v) => v.entityId === entityId)) {
             return
           }
 
           const {
-            vodPlaylistedPlaybackUrls: {
-              result: { playbackUrls },
+            resources: {
+              catalogMetadataV2: { catalog },
             },
-          } = JSON.parse(res.text) as GetVodPlaybackResources
+          } = JSON.parse(res.text) as PlayerChromeResources
 
-          playbackUrlsQueue.enqueue({ titleId, playbackUrls })
+          catalogQueue.enqueue({ entityId, catalog })
         }
-        // playerChromeResources
-        else if (isPlayerChromeResources(req, res)) {
-          // catalogMetadataV2
-          if (search.includes('catalogMetadataV2')) {
-            const entityId = searchParams.get('entityId')
-
-            if (
-              !entityId ||
-              catalogQueue.find((v) => v.entityId === entityId)
-            ) {
-              return
-            }
-
-            const {
-              resources: {
-                catalogMetadataV2: { catalog },
-              },
-            } = JSON.parse(res.text) as PlayerChromeResources
-
-            catalogQueue.enqueue({ entityId, catalog })
-          }
-        }
-      } catch {}
-    })
-  },
-})
+      }
+    } catch {}
+  })
+}
