@@ -18,7 +18,7 @@ const BASE_URLS: Record<NonNullable<TitleProps['source']>, string> = {
   niconico: 'https://www.nicovideo.jp/watch/',
   syobocal: 'https://cal.syoboi.jp/tid/',
   tver: 'https://tver.jp/series/',
-  nhk_one: '',
+  nhk_timetable: 'https://www.nhk.jp/timetable/130/tv/',
   nhk_chronicle: 'https://www.nhk.or.jp/archives/chronicle/detail/?crnid=',
   nicolog: 'https://nicolog.ecchi.club/nico-live-anime/',
 }

@@ -11,5 +11,6 @@ export const MATCHES: Record<VodKey, string[]> = {
   netflix: ['https://www.netflix.com/*'],
   hulu: ['https://www.hulu.jp/*'],
   niconico: ['https://www.nicovideo.jp/watch/*'],
+  nhkOndemand: ['https://www.nhk-ondemand.jp/goods/*'],
   tver: ['https://tver.jp/*'],
 }

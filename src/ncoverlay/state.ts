@@ -114,7 +114,7 @@ export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
   type: 'jikkyo'
   info: {
     id: string | null
-    source: 'syobocal' | 'tver' | 'nhk_one' | 'nhk_chronicle' | null
+    source: 'syobocal' | 'tver' | 'nhk_timetable' | 'nhk_chronicle' | null
     title: string
     duration: number
     date: [start: number, end: number]
