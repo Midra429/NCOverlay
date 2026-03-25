@@ -1,4 +1,3 @@
-import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { PanelItemProps } from '@/components/PanelItem'
 import type {
   StateSlot,
@@ -52,17 +51,13 @@ function getAddFunction(detail: StateSlotDetail) {
       status: 'loading',
     })
 
-    const { type, id, info } = detail
+    const { type, id } = detail
 
     let slotDetail: StateSlotDetailUpdate | undefined
     let slot: StateSlot | undefined
 
     if (type === 'jikkyo') {
-      const comment = await getJikkyoKakolog(ncoState, {
-        jkChId: id.split(':')[0] as JikkyoChannelId,
-        starttime: info.date[0] / 1000,
-        endtime: info.date[1] / 1000,
-      })
+      const comment = await getJikkyoKakolog(ncoState, id)
 
       if (comment) {
         const { thread, markers, chapters, kawaiiCount } = comment

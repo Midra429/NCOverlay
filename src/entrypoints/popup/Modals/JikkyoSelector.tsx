@@ -50,22 +50,28 @@ function createSlotDetailJikkyo({
     return null
   }
 
-  const starttime = startDateTime.toDate().getTime()
-  const endtime = endDateTime.toDate().getTime()
+  const starttimeDate = startDateTime.toDate()
+  const endtimeDate = endDateTime.toDate()
+
+  const starttimeMs = starttimeDate.getTime()
+  const endtimeMs = endtimeDate.getTime()
+
+  const starttime = Math.floor(starttimeMs / 1000)
+  const endtime = Math.floor(endtimeMs / 1000)
 
   return {
     type: 'jikkyo',
-    id: `${jkChId}:${starttime / 1000}-${endtime / 1000}`,
+    id: `${jkChId}:${starttime}-${endtime}`,
     status: 'pending',
     info: {
       id: null,
       source: null,
       title: [
         `${jkChId}: ${JIKKYO_CHANNELS[jkChId]}`,
-        `${formatDate(starttime, 'YYYY/MM/DD hh:mm')} 〜 ${formatDate(endtime, 'hh:mm')}`,
+        `${formatDate(starttimeDate, 'YYYY/MM/DD hh:mm')} 〜 ${formatDate(endtimeDate, 'hh:mm')}`,
       ].join('\n'),
-      duration: (endtime - starttime) / 1000,
-      date: [starttime, endtime],
+      duration: endtime - starttime,
+      date: [starttimeMs, endtimeMs],
       count: {
         comment: 0,
       },
@@ -136,11 +142,7 @@ export function JikkyoSelector({ isOpen, onOpenChange }: JikkyoSelectorProps) {
 
     const { id } = slotDetail
 
-    const comment = await getJikkyoKakolog(ncoState, {
-      jkChId,
-      starttime: startDateTime.toDate().getTime() / 1000,
-      endtime: endDateTime.toDate().getTime() / 1000,
-    })
+    const comment = await getJikkyoKakolog(ncoState, id)
 
     if (comment) {
       const { thread, markers, chapters, kawaiiCount } = comment

@@ -1,7 +1,4 @@
-import type {
-  JikkyoChannelId,
-  NhkChannelId,
-} from '@midra/nco-utils/types/api/constants'
+import type { NhkChannelId } from '@midra/nco-utils/types/api/constants'
 import type {
   StateSlot,
   StateSlotDetailJikkyo,
@@ -147,19 +144,17 @@ async function main() {
 
       // 番組表 (1ヶ月以内)
       if (currentDateTime - dateTime < ONE_MONTH_MS) {
-        const year = date.getFullYear().toString()
-        const month = zeroPadding(date.getMonth() + 1, 2)
-        const day = zeroPadding(date.getDate(), 2)
-
-        const timetable = await ncoApiProxy.nhk.timetable(
-          `${year}-${month}-${day}`
-        )
+        const timetable = await ncoApiProxy.nhk.timetable(dateTime)
 
         logger.log('nhk.timetable', timetable)
 
         if (!timetable) return
 
-        const infoId = year + month + day
+        const infoId = [
+          date.getFullYear(),
+          zeroPadding(date.getMonth() + 1, 2),
+          zeroPadding(date.getDate(), 2),
+        ].join('-')
 
         const timetableData = [
           ['g1', timetable.g1.publication],
@@ -182,10 +177,13 @@ async function main() {
           if (!matchedPublications.length) continue
 
           for (const publication of matchedPublications) {
-            const starttime = new Date(publication.startDate).getTime()
-            const endtime = new Date(publication.endDate).getTime()
+            const starttimeMs = new Date(publication.startDate).getTime()
+            const endtimeMs = new Date(publication.endDate).getTime()
 
-            const id = `${jkChId}:${Math.floor(starttime / 1000)}-${Math.floor(endtime / 1000)}`
+            const starttime = Math.floor(starttimeMs / 1000)
+            const endtime = Math.floor(endtimeMs / 1000)
+
+            const id = `${jkChId}:${starttime}-${endtime}`
 
             if (loadedIds.includes(id)) continue
 
@@ -198,8 +196,8 @@ async function main() {
                 id: infoId,
                 source: 'nhk_timetable',
                 title: publication.name,
-                duration: (endtime - starttime) / 1000,
-                date: [starttime, endtime],
+                duration: endtime - starttime,
+                date: [starttimeMs, endtimeMs],
                 count: {
                   comment: 0,
                 },
@@ -249,18 +247,21 @@ async function main() {
             continue
           }
 
-          const starttime = parseAirDateTime(
+          const starttimeMs = parseAirDateTime(
             result.airdate1,
             result.airtime1
           )?.getTime()
-          const endtime = parseAirDateTime(
+          const endtimeMs = parseAirDateTime(
             result.airdate2,
             result.airtime2
           )?.getTime()
 
-          if (!starttime || !endtime) continue
+          if (!starttimeMs || !endtimeMs) continue
 
-          const id = `${jkChId}:${Math.floor(starttime / 1000)}-${Math.floor(endtime / 1000)}`
+          const starttime = Math.floor(starttimeMs / 1000)
+          const endtime = Math.floor(endtimeMs / 1000)
+
+          const id = `${jkChId}:${starttime}-${endtime}`
 
           if (loadedIds.includes(id)) continue
 
@@ -275,8 +276,8 @@ async function main() {
               title: cleanTitle(
                 `${result.title1} ${result.title2} ${result.title3}`
               ),
-              duration: (endtime - starttime) / 1000,
-              date: [starttime, endtime],
+              duration: endtime - starttime,
+              date: [starttimeMs, endtimeMs],
               count: {
                 comment: 0,
               },
@@ -302,13 +303,7 @@ async function main() {
 
       // ニコニコ実況 過去ログ 取得
       const commentsJikkyo = await Promise.all(
-        loadingSlotDetails.map(({ id, info }) => {
-          return getJikkyoKakolog(nco.state, {
-            jkChId: id.split(':')[0] as JikkyoChannelId,
-            starttime: info.date[0] / 1000,
-            endtime: info.date[1] / 1000,
-          })
-        })
+        loadingSlotDetails.map((v) => getJikkyoKakolog(nco.state, v.id))
       )
 
       logger.log('commentsJikkyo', commentsJikkyo)

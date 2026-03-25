@@ -25,17 +25,29 @@ export interface GetJikkyoKakologResult {
 
 /**
  * ニコニコ実況 過去ログを取得
+ * @param params `"${jkChId}:${starttime}-${endtime}"` | `GetJikkyoKakologParams`
  */
 export async function getJikkyoKakolog(
   state: NCOState,
-  { jkChId, starttime, endtime }: GetJikkyoKakologParams
+  params: string | GetJikkyoKakologParams
 ): Promise<GetJikkyoKakologResult | null> {
+  if (typeof params === 'string') {
+    const [jkChId, time] = params.split(':')
+    const [starttime, endtime] = time.split('-')
+
+    params = {
+      jkChId: jkChId as JikkyoChannelId,
+      starttime: Number(starttime),
+      endtime: Number(endtime),
+    }
+  }
+
   // 過去ログ取得
   const thread = await ncoApiProxy.jikkyo.kakolog(
-    jkChId,
+    params.jkChId,
     {
-      starttime,
-      endtime,
+      starttime: params.starttime,
+      endtime: params.endtime,
       format: 'json',
     },
     {

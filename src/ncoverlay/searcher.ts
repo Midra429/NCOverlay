@@ -247,8 +247,8 @@ export class NCOSearcher {
         scPrograms.map((prog) => {
           return getJikkyoKakolog(this.#state, {
             jkChId: syobocalJikkyoChIdMap.get(prog.ChID)!,
-            starttime: convertProgramTime(prog.StTime) / 1000,
-            endtime: convertProgramTime(prog.EdTime) / 1000,
+            starttime: Math.floor(convertProgramTime(prog.StTime) / 1000),
+            endtime: Math.floor(convertProgramTime(prog.EdTime) / 1000),
           })
         })
       ),

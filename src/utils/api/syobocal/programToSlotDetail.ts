@@ -19,7 +19,7 @@ function getSlotId(
   starttime: number,
   endtime: number
 ) {
-  return `${syobocalJikkyoChIdMap.get(scChId)}:${starttime / 1000}-${endtime / 1000}`
+  return `${syobocalJikkyoChIdMap.get(scChId)}:${starttime}-${endtime}`
 }
 
 export function convertProgramTime(time: string): number {
@@ -33,11 +33,13 @@ export function convertProgramTime(time: string): number {
 export function getSlotIdFromProgram(
   program: SyoboCalProgram | SyoboCalProgramDb
 ): string {
-  return getSlotId(
-    program.ChID,
-    convertProgramTime(program.StTime),
-    convertProgramTime(program.EdTime)
-  )
+  const starttimeMs = convertProgramTime(program.StTime)
+  const endtimeMs = convertProgramTime(program.EdTime)
+
+  const starttime = Math.floor(starttimeMs / 1000)
+  const endtime = Math.floor(endtimeMs / 1000)
+
+  return getSlotId(program.ChID, starttime, endtime)
 }
 
 export function programToSlotDetail(
@@ -45,8 +47,11 @@ export function programToSlotDetail(
   program: SyoboCalProgram | SyoboCalProgramDb,
   detail?: DeepPartial<StateSlotDetailJikkyo>
 ): StateSlotDetailJikkyo {
-  const starttime = convertProgramTime(program.StTime)
-  const endtime = convertProgramTime(program.EdTime)
+  const starttimeMs = convertProgramTime(program.StTime)
+  const endtimeMs = convertProgramTime(program.EdTime)
+
+  const starttime = Math.floor(starttimeMs / 1000)
+  const endtime = Math.floor(endtimeMs / 1000)
 
   const id = getSlotId(program.ChID, starttime, endtime)
 
@@ -78,8 +83,8 @@ export function programToSlotDetail(
         id: `${program.TID}/time?Filter=${program.ChID}#${program.PID}`,
         source: 'syobocal',
         title: [...flags, title].join(' ').trim(),
-        duration: (endtime - starttime) / 1000,
-        date: [starttime, endtime],
+        duration: endtime - starttime,
+        date: [starttimeMs, endtimeMs],
         count: {
           comment: 0,
         },
