@@ -1,4 +1,8 @@
-import type { NhkChannelId } from '@midra/nco-utils/types/api/constants'
+import type {
+  JikkyoChannelId,
+  NhkChannelId,
+  NhkServiceId,
+} from '@midra/nco-utils/types/api/constants'
 import type {
   StateSlot,
   StateSlotDetailJikkyo,
@@ -39,12 +43,14 @@ const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
 
 const ONE_MONTH_MS = 31 * 24 * 60 * 60 * 1000
 const DATE_MS_20231130 = new Date('2023-11-30T23:59:59+09:00').getTime()
-const NHK_JIKKYO_CH_IDS = {
+const NHK_SERVICE_ID_JIKKYO_CH: {
+  [id in NhkServiceId]?: JikkyoChannelId
+} = {
   g1: 'jk1',
   e1: 'jk2',
   s1: 'jk101',
   s5: 'jk103',
-} as const
+}
 
 function cleanTitle(title: string): string {
   return title
@@ -87,8 +93,6 @@ async function main() {
   if (!(await checkVodEnable(vod))) return
 
   logger.log('vod', vod)
-
-  const currentDateTime = Date.now()
 
   const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
@@ -140,10 +144,12 @@ async function main() {
       const loadedIds = slotDetails?.map((v) => v.id) ?? []
 
       // ロード中のデータ
-      const loadingSlotDetails: StateSlotDetailJikkyo[] = []
+      const loadingSlotDetails: {
+        [key in JikkyoChannelId]?: StateSlotDetailJikkyo[]
+      } = {}
 
       // 番組表 (1ヶ月以内)
-      if (currentDateTime - dateTime < ONE_MONTH_MS) {
+      if (Date.now() - dateTime < ONE_MONTH_MS) {
         const timetable = await ncoApiProxy.nhk.timetable(dateTime)
 
         logger.log('nhk.timetable', timetable)
@@ -164,9 +170,9 @@ async function main() {
         ] as const
 
         for (const [key, publications] of timetableData) {
-          const jkChId = NHK_JIKKYO_CH_IDS[key]
+          const jkChId = NHK_SERVICE_ID_JIKKYO_CH[key]
 
-          if (!jikkyoChannelIds.includes(jkChId)) {
+          if (!jkChId || !jikkyoChannelIds.includes(jkChId)) {
             continue
           }
 
@@ -187,7 +193,8 @@ async function main() {
 
             if (loadedIds.includes(id)) continue
 
-            loadingSlotDetails.push({
+            loadingSlotDetails[jkChId] ??= []
+            loadingSlotDetails[jkChId].push({
               type: 'jikkyo',
               id,
               status: 'loading',
@@ -265,7 +272,8 @@ async function main() {
 
           if (loadedIds.includes(id)) continue
 
-          loadingSlotDetails.push({
+          loadingSlotDetails[jkChId] ??= []
+          loadingSlotDetails[jkChId].push({
             type: 'jikkyo',
             id,
             status: 'loading',
@@ -288,22 +296,30 @@ async function main() {
         }
       }
 
-      // 放送日順に並び替え
-      loadingSlotDetails.sort((a, b) => a.info.date[0] - b.info.date[0])
+      for (const jkChId in loadingSlotDetails) {
+        const slotDetails = loadingSlotDetails[jkChId as JikkyoChannelId]!
 
-      // 再放送を除外
-      if (jikkyoIgnoreRerun) {
-        loadingSlotDetails.splice(1)
+        // 放送日順に並び替え
+        slotDetails.sort((a, b) => a.info.date[0] - b.info.date[0])
+
+        // 再放送を除外
+        if (jikkyoIgnoreRerun) {
+          slotDetails.splice(1)
+        }
       }
 
-      await nco.state.add('slotDetails', ...loadingSlotDetails)
+      const loadingSlotDetailsArray = Object.values(loadingSlotDetails).flatMap(
+        (v) => [...v.values()]
+      )
+
+      await nco.state.add('slotDetails', ...loadingSlotDetailsArray)
 
       // コメント取得
       await nco.state.set('status', 'loading')
 
       // ニコニコ実況 過去ログ 取得
       const commentsJikkyo = await Promise.all(
-        loadingSlotDetails.map((v) => getJikkyoKakolog(nco.state, v.id))
+        loadingSlotDetailsArray.map((v) => getJikkyoKakolog(nco.state, v.id))
       )
 
       logger.log('commentsJikkyo', commentsJikkyo)
@@ -340,7 +356,7 @@ async function main() {
 
       const slots: StateSlot[] = []
 
-      for (const { id } of loadingSlotDetails) {
+      for (const { id } of loadingSlotDetailsArray) {
         const slot = loadedSlotMap.get(id)
         const detail = updateSlotDetailMap.get(id)
 
