@@ -21,6 +21,7 @@
 - [Netflix](https://www.netflix.com/)
 - [Hulu](https://www.hulu.jp/)
 - [ニコニコ動画](https://www.nicovideo.jp/)
+- [NHK ONE](https://www.web.nhk/)
 - [NHKオンデマンド](https://www.nhk-ondemand.jp/)
 - [TVer](https://tver.jp/)
 

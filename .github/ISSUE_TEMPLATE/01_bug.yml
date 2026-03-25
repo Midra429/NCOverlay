@@ -47,6 +47,7 @@ body:
         - label: Netflix
         - label: Hulu
         - label: ニコニコ動画
+        - label: NHK ONE
         - label: NHKオンデマンド
         - label: TVer
 

@@ -1,0 +1,5 @@
+.NCOverlay-Capture {
+  .NCOverlay-Canvas ~ * {
+    opacity: 0 !important;
+  }
+}
