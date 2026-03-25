@@ -62,7 +62,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
           classNames={{
             base: [
               'flex-1',
-              'min-w-fit max-w-none',
+              'min-w-fit max-w-[55%]',
               'm-0 px-1.5 py-1',
               'bg-default-100 hover:bg-default-200',
               'data-[selected=true]:bg-primary/15 dark:data-[selected=true]:bg-primary/20',
@@ -83,7 +83,7 @@ export function Input(props: Omit<Props, 'inputType'>) {
         >
           <div className="w-full min-w-2" />
           <span className="line-clamp-1 max-w-full shrink-0">{label}</span>
-          <div className="w-full min-w-1" />
+          <div className="w-full min-w-2" />
         </Checkbox>
       ))}
     </CheckboxGroup>
