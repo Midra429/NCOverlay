@@ -201,7 +201,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         settingsKey: 'settings:autoSearch:targets',
         inputType: 'checkbox',
         label: '検索対象',
-        description: `${VODS.nhkOndemand}は\n「${SOURCE_NAMES.jikkyo}」のみ`,
+        description: `${VODS.nhkOne}と${VODS.nhkOndemand}は「${SOURCE_NAMES.jikkyo}」のみ`,
         options: AUTO_SEARCH_TARGET_KEYS.map((key) => ({
           label: SOURCE_NAMES[key],
           value: key,
