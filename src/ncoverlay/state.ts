@@ -1,3 +1,4 @@
+import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type {
   V1Comment,
   V1Thread,
@@ -112,6 +113,7 @@ export interface StateSlotDetailDefault extends StateSlotDetailBase {
 
 export interface StateSlotDetailJikkyo extends StateSlotDetailBase {
   type: 'jikkyo'
+  id: `${JikkyoChannelId}:${number}-${number}`
   info: {
     id: string | null
     source: 'syobocal' | 'tver' | 'nhk_timetable' | 'nhk_chronicle' | null

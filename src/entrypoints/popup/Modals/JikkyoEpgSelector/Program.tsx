@@ -111,7 +111,7 @@ export function ProgramPopover({ tverChId, program }: ProgramPopoverProps) {
 
   const { title, description, startAt, endAt, icon } = program
 
-  const id = `${tverJikkyoChIdMap.get(tverChId)}:${startAt}-${endAt}`
+  const id = `${tverJikkyoChIdMap.get(tverChId)!}:${startAt}-${endAt}` as const
 
   const slotTitle = [
     icon.revival && '🈞',

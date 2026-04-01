@@ -19,7 +19,7 @@ function getSlotId(
   starttime: number,
   endtime: number
 ) {
-  return `${syobocalJikkyoChIdMap.get(scChId)}:${starttime}-${endtime}`
+  return `${syobocalJikkyoChIdMap.get(scChId)!}:${starttime}-${endtime}` as const
 }
 
 export function convertProgramTime(time: string): number {

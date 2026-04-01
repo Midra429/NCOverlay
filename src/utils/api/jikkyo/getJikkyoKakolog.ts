@@ -1,6 +1,6 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
-import type { NCOState } from '@/ncoverlay/state'
+import type { NCOState, StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import type { JikkyoChapter } from '@/utils/api/jikkyo/findChapters'
 import type { JikkyoMarker } from '@/utils/api/jikkyo/findMarkers'
 
@@ -29,7 +29,7 @@ export interface GetJikkyoKakologResult {
  */
 export async function getJikkyoKakolog(
   state: NCOState,
-  params: string | GetJikkyoKakologParams
+  params: StateSlotDetailJikkyo['id'] | GetJikkyoKakologParams
 ): Promise<GetJikkyoKakologResult | null> {
   if (typeof params === 'string') {
     const [jkChId, time] = params.split(':')

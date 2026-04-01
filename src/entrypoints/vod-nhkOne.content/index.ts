@@ -194,7 +194,7 @@ async function main() {
         if (!jikkyoKakologParams) return
 
         const { jkChId, starttime, endtime } = jikkyoKakologParams
-        const id = `${jkChId}:${starttime}-${endtime}`
+        const id = `${jkChId}:${starttime}-${endtime}` as const
 
         if (loadedIds.includes(id)) return
 
@@ -258,7 +258,7 @@ async function main() {
             const starttime = Math.floor(starttimeMs / 1000)
             const endtime = Math.floor(endtimeMs / 1000)
 
-            const id = `${jkChId}:${starttime}-${endtime}`
+            const id = `${jkChId}:${starttime}-${endtime}` as const
 
             if (loadedIds.includes(id)) continue
 
@@ -336,7 +336,7 @@ async function main() {
           const starttime = Math.floor(starttimeMs / 1000)
           const endtime = Math.floor(endtimeMs / 1000)
 
-          const id = `${jkChId}:${starttime}-${endtime}`
+          const id = `${jkChId}:${starttime}-${endtime}` as const
 
           if (loadedIds.includes(id)) continue
 

@@ -37,7 +37,7 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const TITLE_PREFIX_REGEXP = /^【.+?】/
+const TITLE_PREFIX_REGEXP = /^(?:【.+?】|連続テレビ小説\s)/
 const DATE_TEXT_REGEXP = /(?<year>\d{4})年(?<month>\d{1,2})月(?<day>\d{1,2})日/
 const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
 
@@ -189,7 +189,7 @@ async function main() {
             const starttime = Math.floor(starttimeMs / 1000)
             const endtime = Math.floor(endtimeMs / 1000)
 
-            const id = `${jkChId}:${starttime}-${endtime}`
+            const id = `${jkChId}:${starttime}-${endtime}` as const
 
             if (loadedIds.includes(id)) continue
 
@@ -268,7 +268,7 @@ async function main() {
           const starttime = Math.floor(starttimeMs / 1000)
           const endtime = Math.floor(endtimeMs / 1000)
 
-          const id = `${jkChId}:${starttime}-${endtime}`
+          const id = `${jkChId}:${starttime}-${endtime}` as const
 
           if (loadedIds.includes(id)) continue
 
