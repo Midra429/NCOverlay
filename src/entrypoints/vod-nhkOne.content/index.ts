@@ -297,7 +297,16 @@ async function main() {
 
         if (!channelIds.length) return
 
-        const chronicle = await ncoApiProxy.nhk.chronicle(title, channelIds)
+        const onwards = [
+          date.getFullYear(),
+          zeroPadding(date.getMonth() + 1, 2),
+          zeroPadding(date.getDate(), 2),
+        ].join('')
+
+        const chronicle = await ncoApiProxy.nhk.chronicle(title, {
+          channelIds,
+          onwards,
+        })
 
         logger.log('nhk.chronicle', chronicle)
 

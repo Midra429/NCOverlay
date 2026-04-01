@@ -11,6 +11,8 @@ import type {
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
+import { compare } from '@midra/nco-utils/compare'
+import { parse } from '@midra/nco-utils/parse'
 import {
   jikkyoNhkChIdMap,
   jikkyoNhkChIdMap_20231130,
@@ -18,7 +20,7 @@ import {
   nhkJikkyoChIdMap_20231130,
 } from '@midra/nco-utils/api/constants'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
-import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize/index'
+import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
@@ -40,6 +42,7 @@ export default defineContentScript({
 const TITLE_PREFIX_REGEXP = /^(?:【.+?】|連続テレビ小説\s)/
 const DATE_TEXT_REGEXP = /(?<year>\d{4})年(?<month>\d{1,2})月(?<day>\d{1,2})日/
 const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
+const EP_SHORT_REGEXP = /(（[０-９]+）)/
 
 const ONE_MONTH_MS = 31 * 24 * 60 * 60 * 1000
 const DATE_MS_20231130 = new Date('2023-11-30T23:59:59+09:00').getTime()
@@ -97,7 +100,7 @@ async function main() {
   const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
       const titleElem = document.querySelector<HTMLElement>(
-        '#moviePlayer .pg_title_content > h1'
+        '#moviePlayer .pg_title_content h1'
       )
       const title = titleElem?.textContent
 
@@ -138,6 +141,18 @@ async function main() {
 
       const title = typeof input === 'string' ? input : input.input
       const titleNormalized = normalizeAll(title)
+      const titleParsed = parse(title)
+
+      const isConsecutiveEp =
+        titleParsed.isSingleEpisode &&
+        titleParsed.episode !== null &&
+        // (1)
+        ((titleParsed.episode.prefix === '(' &&
+          titleParsed.episode.suffix === ')') ||
+          // 第1回
+          (titleParsed.episode.prefix.trim() === '第' &&
+            titleParsed.episode.suffix === '回')) &&
+        titleParsed.subtitle !== null
 
       // 読み込み済みのスロットID
       const slotDetails = await nco.state.get('slotDetails')
@@ -177,7 +192,11 @@ async function main() {
           }
 
           const matchedPublications = publications.filter(({ name }) => {
-            return normalizeAll(normalizeTitle(name)) === titleNormalized
+            const fullTitle = normalizeTitle(name)
+
+            return isConsecutiveEp
+              ? compare(fullTitle, titleParsed, { strict: true })
+              : normalizeAll(fullTitle) === titleNormalized
           })
 
           if (!matchedPublications.length) continue
@@ -229,18 +248,37 @@ async function main() {
 
         if (!channelIds.length) return
 
-        const chronicle = await ncoApiProxy.nhk.chronicle(title, channelIds)
+        const onwards = [
+          date.getFullYear(),
+          zeroPadding(date.getMonth() + 1, 2),
+          zeroPadding(date.getDate(), 2),
+        ].join('')
+
+        const searchTitle = isConsecutiveEp
+          ? [
+              titleParsed.title,
+              titleParsed.episode!.number,
+              titleParsed.subtitleStripped,
+            ].join(' ')
+          : title
+
+        const chronicle = await ncoApiProxy.nhk.chronicle(searchTitle, {
+          channelIds,
+          onwards,
+        })
 
         logger.log('nhk.chronicle', chronicle)
 
         if (!chronicle) return
 
         const matchedChronicleResults = chronicle.filter((val) => {
-          return (
-            normalizeAll(
-              normalizeTitle(`${val.title1} ${val.title2} ${val.title3}`)
-            ) === titleNormalized
-          )
+          const fullTitle = normalizeTitle(
+            `${val.title1} ${val.title2} ${val.title3}`
+          ).replace(EP_SHORT_REGEXP, ' $1 ')
+
+          return isConsecutiveEp
+            ? compare(fullTitle, titleParsed, { strict: true })
+            : normalizeAll(fullTitle) === titleNormalized
         })
 
         for (const result of matchedChronicleResults) {
