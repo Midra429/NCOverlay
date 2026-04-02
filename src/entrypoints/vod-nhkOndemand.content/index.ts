@@ -40,8 +40,9 @@ export default defineContentScript({
 })
 
 const TITLE_PREFIX_REGEXP =
-  /^(?:【.+?】|(?:連続テレビ小説|月曜ドラマシリーズ)\s)/
-const TITLE_SUFFIX_REGEXP = /(?:＜新＞|＜全[０-９]+回＞)/
+  /^(?:【.+?】|(?:連続テレビ小説|月曜ドラマシリーズ|ドラマ)\s)/
+const TITLE_SUFFIX_REGEXP = /(?:＜新＞|＜全[０-９]+回＞|（最終回）)/
+const PROGRAM_FLAG_REGEXP = /(?:🈟|🈡|🈞)/
 const DATE_TEXT_REGEXP = /(?<year>\d{4})年(?<month>\d{1,2})月(?<day>\d{1,2})日/
 const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
 const EP_SHORT_REGEXP = /(（[０-９]+）)/
@@ -68,6 +69,7 @@ function normalizeTitle(title: string): string {
   return cleanTitle(title)
     .replace(TITLE_PREFIX_REGEXP, '')
     .replace(TITLE_SUFFIX_REGEXP, '')
+    .replace(PROGRAM_FLAG_REGEXP, '')
     .trim()
 }
 
