@@ -39,7 +39,8 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const TITLE_PREFIX_REGEXP = /^(?:【.+?】|連続テレビ小説\s)/
+const TITLE_PREFIX_REGEXP =
+  /^(?:【.+?】|(?:連続テレビ小説|月曜ドラマシリーズ)\s)/
 const TITLE_SUFFIX_REGEXP = /(?:＜新＞|＜全[０-９]+回＞)/
 const DATE_TEXT_REGEXP = /(?<year>\d{4})年(?<month>\d{1,2})月(?<day>\d{1,2})日/
 const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
@@ -268,14 +269,31 @@ async function main() {
           ? [
               titleParsed.title,
               titleParsed.episode!.number,
-              titleParsed.subtitleStripped,
+              titleParsed.subtitle,
             ].join(' ')
           : title
 
-        const chronicle = await ncoApiProxy.nhk.chronicle(searchTitle, {
+        let chronicle = await ncoApiProxy.nhk.chronicle(searchTitle, {
           channelIds,
           onwards,
         })
+
+        if (
+          !chronicle &&
+          isConsecutiveEp &&
+          titleParsed.subtitle !== titleParsed.subtitleStripped
+        ) {
+          const searchTitleStripped = [
+            titleParsed.title,
+            titleParsed.episode!.number,
+            titleParsed.subtitleStripped,
+          ].join(' ')
+
+          chronicle = await ncoApiProxy.nhk.chronicle(searchTitleStripped, {
+            channelIds,
+            onwards,
+          })
+        }
 
         logger.log('nhk.chronicle', chronicle)
 
