@@ -40,6 +40,7 @@ export default defineContentScript({
 })
 
 const TITLE_PREFIX_REGEXP = /^(?:【.+?】|連続テレビ小説\s)/
+const TITLE_SUFFIX_REGEXP = /(?:＜新＞|＜全[０-９]+回＞)/
 const DATE_TEXT_REGEXP = /(?<year>\d{4})年(?<month>\d{1,2})月(?<day>\d{1,2})日/
 const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
 const EP_SHORT_REGEXP = /(（[０-９]+）)/
@@ -63,7 +64,10 @@ function cleanTitle(title: string): string {
 }
 
 function normalizeTitle(title: string): string {
-  return cleanTitle(title).replace(TITLE_PREFIX_REGEXP, '').trim()
+  return cleanTitle(title)
+    .replace(TITLE_PREFIX_REGEXP, '')
+    .replace(TITLE_SUFFIX_REGEXP, '')
+    .trim()
 }
 
 function parseDate(dateText: string): Date | null {
@@ -114,7 +118,12 @@ async function main() {
       logger.log('input', input)
       logger.log('duration', duration)
 
-      return { input, duration, disableParse: true }
+      return {
+        input,
+        duration,
+        disableParse: true,
+        disableAdjustJikkyoOffset: true,
+      }
     },
     autoSearch: async (nco, args) => {
       const { input, duration, targets, jikkyoChannelIds, jikkyoIgnoreRerun } =
@@ -149,8 +158,9 @@ async function main() {
         // (1)
         ((titleParsed.episode.prefix === '(' &&
           titleParsed.episode.suffix === ')') ||
-          // 第1回
-          (titleParsed.episode.prefix.trim() === '第' &&
+          // 第1回, 2回
+          ((!titleParsed.episode.prefix ||
+            titleParsed.episode.prefix.trim() === '第') &&
             titleParsed.episode.suffix === '回')) &&
         titleParsed.subtitle !== null
 

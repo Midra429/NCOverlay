@@ -156,7 +156,12 @@ async function main() {
       logger.log('input', input)
       logger.log('duration', duration)
 
-      return { input, duration, disableParse: true }
+      return {
+        input,
+        duration,
+        disableParse: true,
+        disableAdjustJikkyoOffset: true,
+      }
     },
     autoSearch: async (nco, args) => {
       if (!tvEpisode) return
