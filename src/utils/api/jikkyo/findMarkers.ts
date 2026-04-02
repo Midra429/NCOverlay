@@ -12,6 +12,10 @@ export function findMarkers(
   threads: V1Thread[],
   info: StateInfo | null
 ): JikkyoMarker[] {
+  if (info?.disableAdjustJikkyoOffset) {
+    return []
+  }
+
   const comments = threads
     .flatMap((thread) => thread.comments)
     .sort((a, b) => a.vposMs - b.vposMs)

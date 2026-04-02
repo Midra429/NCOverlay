@@ -50,9 +50,9 @@ export function findChapters(
   markers: JikkyoMarker[],
   info: StateInfo | null
 ): JikkyoChapter[] {
-  if (!info) return []
-
-  logger.log('findChapters()')
+  if (!info || info.disableAdjustJikkyoOffset) {
+    return []
+  }
 
   const { duration, chapters } = info
 

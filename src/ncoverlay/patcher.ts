@@ -17,6 +17,7 @@ export interface PlayingInfo {
   duration: number
   chapters?: VideoChapter[]
   disableParse?: boolean
+  disableAdjustJikkyoOffset?: boolean
 }
 
 export class NCOPatcher {
@@ -98,6 +99,7 @@ export class NCOPatcher {
           input: parsed ?? '',
           duration: info ? Math.floor(info.duration) : 0,
           chapters: info?.chapters,
+          disableAdjustJikkyoOffset: info?.disableAdjustJikkyoOffset,
         }
 
         await this.#nco.state.set('vod', this.#vod)

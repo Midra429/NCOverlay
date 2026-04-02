@@ -58,7 +58,7 @@ export function MarkerButtons() {
           !detail.skip &&
           detail.type === 'jikkyo' &&
           (!adjustJikkyoOffset || !detail.chapters.length) &&
-          detail.markers[idx] !== null
+          detail.markers[idx] != null
         )
       })
     })

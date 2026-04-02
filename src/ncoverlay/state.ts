@@ -66,6 +66,7 @@ export type StateVod = VodKey
 
 export type StateInfo = Partial<NCOSearcherAutoSearchArgs> & {
   chapters?: VideoChapter[]
+  disableAdjustJikkyoOffset?: boolean
 }
 
 export type StateOffset = number
