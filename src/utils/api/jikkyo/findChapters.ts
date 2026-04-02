@@ -5,7 +5,7 @@ import type { VodKey } from '@/types/constants'
 import type { JikkyoMarker } from './findMarkers'
 
 import { MARKERS } from '@/constants/markers'
-import { logger } from '@/utils/logger'
+// import { logger } from '@/utils/logger'
 
 export const SUPPORTED_VOD_KEYS: VodKey[] = ['dAnime', 'dmmTv']
 
@@ -153,7 +153,7 @@ export function findChapters(
         endMs,
       }
 
-      logger.log('opJkChapter:', opJkChapter)
+      // logger.log('opJkChapter', opJkChapter)
     }
   }
 
@@ -180,7 +180,7 @@ export function findChapters(
         endMs,
       }
 
-      logger.log('edJkChapter:', edJkChapter)
+      // logger.log('edJkChapter', edJkChapter)
     }
   }
 
@@ -221,8 +221,8 @@ export function findChapters(
           endMs: bPartEndMs,
         }
 
-        logger.log('aPartJkChapter:', aPartJkChapter)
-        logger.log('bPartJkChapter:', bPartJkChapter)
+        // logger.log('aPartJkChapter', aPartJkChapter)
+        // logger.log('bPartJkChapter', bPartJkChapter)
       }
     }
     // Bなし
@@ -247,7 +247,7 @@ export function findChapters(
           endMs,
         }
 
-        logger.log('aPartJkChapter:', aPartJkChapter)
+        // logger.log('aPartJkChapter', aPartJkChapter)
       }
     }
   }
@@ -268,7 +268,7 @@ export function findChapters(
       endMs,
     }
 
-    logger.log('cPartJkChapter:', cPartJkChapter)
+    // logger.log('cPartJkChapter', cPartJkChapter)
   }
 
   // アバン
@@ -291,7 +291,7 @@ export function findChapters(
         isAdd: true,
       })
 
-      logger.log('otherJkChapters:', otherJkChapters)
+      // logger.log('otherJkChapters', otherJkChapters)
     } else {
       startMs = tmpStartMs
 
@@ -306,7 +306,7 @@ export function findChapters(
           isRemove: true,
         })
 
-        logger.log('otherJkChapters:', otherJkChapters)
+        // logger.log('otherJkChapters', otherJkChapters)
       }
     }
 
@@ -316,7 +316,7 @@ export function findChapters(
       endMs,
     }
 
-    logger.log('avantJkChapter:', avantJkChapter)
+    // logger.log('avantJkChapter', avantJkChapter)
   }
 
   // アバン(あらすじ) + OP
@@ -346,8 +346,8 @@ export function findChapters(
       endMs: opEndMs,
     }
 
-    logger.log('avantJkChapter:', avantJkChapter)
-    logger.log('opJkChapter:', opJkChapter)
+    // logger.log('avantJkChapter', avantJkChapter)
+    // logger.log('opJkChapter', opJkChapter)
   }
 
   const jkChapters: JikkyoChapter[] = [
