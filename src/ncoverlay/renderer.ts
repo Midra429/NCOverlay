@@ -56,6 +56,7 @@ export class NCORenderer {
     this.stop()
 
     this.#niconicomments?.clear()
+    this.#niconicomments?.destroy()
     this.#niconicomments = null
     this.#threads = null
 
@@ -116,6 +117,7 @@ export class NCORenderer {
 
   reload() {
     this.#niconicomments?.clear()
+    this.#niconicomments?.destroy()
     this.#niconicomments = null
 
     if (this.#threads) {

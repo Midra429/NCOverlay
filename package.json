@@ -26,7 +26,7 @@
     "@midra/nco-utils": "^1.2.7",
     "@webext-core/messaging": "^2.3.0",
     "@wxt-dev/is-background": "^1.0.0",
-    "@xpadev-net/niconicomments": "^0.2.76",
+    "@xpadev-net/niconicomments": "^0.2.78",
     "color2k": "^2.0.3",
     "colord": "^2.9.3",
     "deepmerge": "^4.3.1",
@@ -34,7 +34,7 @@
     "filesize": "^11.0.15",
     "framer-motion": "^12.38.0",
     "hotkeys-js": "^4.0.3",
-    "lucide-react": "^0.577.0",
+    "lucide-react": "^1.7.0",
     "nanoid": "^5.1.7",
     "nanoid-dictionary": "^5.0.0",
     "react": "^19.2.4",
@@ -60,7 +60,7 @@
     "postcss": "^8.5.8",
     "publish-browser-extension": "^4.0.4",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "utility-types": "^3.11.0",
     "wxt": "^0.20.20"
   }
