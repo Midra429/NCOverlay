@@ -42,8 +42,7 @@
     "react-dom": "^19.2.4",
     "react-hotkeys-hook": "^5.2.4",
     "react-virtuoso": "^4.18.4",
-    "rfdc": "^1.4.1",
-    "xhook": "^1.6.2"
+    "rfdc": "^1.4.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
@@ -52,7 +51,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/webextension-polyfill": "^0.12.5",
-    "@types/xhook": "^1.5.3",
     "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/module-react": "^1.2.2",
     "babel-plugin-react-compiler": "^1.0.0",

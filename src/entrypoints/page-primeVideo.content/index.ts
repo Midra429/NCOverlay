@@ -9,7 +9,6 @@ import type {
 } from '@/types/vod/primeVideo/playerChromeResources'
 
 import { defineContentScript } from '#imports'
-import xhook from 'xhook'
 
 import { MATCHES } from '@/constants/matches'
 import { Queue } from '@/utils/queue'
@@ -37,25 +36,15 @@ export interface CatalogQueueItem {
   catalog: Catalog
 }
 
-function isGetVodPlaybackResources(
-  req: xhook.Request,
-  res: xhook.Response
-): boolean {
+function isGetVodPlaybackResources(xhr: XMLHttpRequest): boolean {
   return (
-    res.status === 200 &&
-    res.headers['content-type'] === 'application/json' &&
-    req.url.includes('/GetVodPlaybackResources')
+    xhr.status === 200 && xhr.responseURL.includes('/GetVodPlaybackResources')
   )
 }
 
-function isPlayerChromeResources(
-  req: xhook.Request,
-  res: xhook.Response
-): boolean {
+function isPlayerChromeResources(xhr: XMLHttpRequest): boolean {
   return (
-    res.status === 200 &&
-    res.headers['content-type'] === 'application/json' &&
-    req.url.includes('/playerChromeResources/')
+    xhr.status === 200 && xhr.responseURL.includes('/playerChromeResources/')
   )
 }
 
@@ -98,56 +87,72 @@ function main() {
     }
   })
 
-  xhook.after((req, res) => {
-    try {
-      const url = URL.canParse(req.url)
-        ? new URL(req.url)
-        : new URL(req.url, location.origin)
-      const { pathname, search, searchParams } = url
+  const $send = XMLHttpRequest.prototype.send
 
-      // .mp4
-      if (pathname.endsWith('.mp4')) {
-        const matched = pathname.match(MP4_URL_REGEXP)
+  XMLHttpRequest.prototype.send = function (body) {
+    const $onload = this.onload
 
-        if (matched) {
-          currentMpdId = matched[1]
+    this.onload = function (evt) {
+      try {
+        const url = URL.canParse(this.responseURL)
+          ? new URL(this.responseURL)
+          : new URL(this.responseURL, location.origin)
+        const { pathname, search, searchParams } = url
+
+        // .mp4
+        if (pathname.endsWith('.mp4')) {
+          const matched = pathname.match(MP4_URL_REGEXP)
+
+          if (matched) {
+            currentMpdId = matched[1]
+          }
         }
-      }
-      // GetVodPlaybackResources
-      else if (isGetVodPlaybackResources(req, res)) {
-        const titleId = searchParams.get('titleId')
+        // GetVodPlaybackResources
+        else if (isGetVodPlaybackResources(this)) {
+          const titleId = searchParams.get('titleId')
 
-        if (!titleId || playbackUrlsQueue.find((v) => v.titleId === titleId)) {
-          return
-        }
-
-        const {
-          vodPlaylistedPlaybackUrls: {
-            result: { playbackUrls },
-          },
-        } = JSON.parse(res.text) as GetVodPlaybackResources
-
-        playbackUrlsQueue.enqueue({ titleId, playbackUrls })
-      }
-      // playerChromeResources
-      else if (isPlayerChromeResources(req, res)) {
-        // catalogMetadataV2
-        if (search.includes('catalogMetadataV2')) {
-          const entityId = searchParams.get('entityId')
-
-          if (!entityId || catalogQueue.find((v) => v.entityId === entityId)) {
+          if (
+            !titleId ||
+            playbackUrlsQueue.find((v) => v.titleId === titleId)
+          ) {
             return
           }
 
           const {
-            resources: {
-              catalogMetadataV2: { catalog },
+            vodPlaylistedPlaybackUrls: {
+              result: { playbackUrls },
             },
-          } = JSON.parse(res.text) as PlayerChromeResources
+          } = JSON.parse(this.responseText) as GetVodPlaybackResources
 
-          catalogQueue.enqueue({ entityId, catalog })
+          playbackUrlsQueue.enqueue({ titleId, playbackUrls })
         }
-      }
-    } catch {}
-  })
+        // playerChromeResources
+        else if (isPlayerChromeResources(this)) {
+          // catalogMetadataV2
+          if (search.includes('catalogMetadataV2')) {
+            const entityId = searchParams.get('entityId')
+
+            if (
+              !entityId ||
+              catalogQueue.find((v) => v.entityId === entityId)
+            ) {
+              return
+            }
+
+            const {
+              resources: {
+                catalogMetadataV2: { catalog },
+              },
+            } = JSON.parse(this.responseText) as PlayerChromeResources
+
+            catalogQueue.enqueue({ entityId, catalog })
+          }
+        }
+      } catch {}
+
+      return $onload?.apply(this, [evt])
+    }
+
+    return $send.apply(this, [body])
+  }
 }
