@@ -1,14 +1,9 @@
-import type {
-  CatalogQueueItem,
-  PlaybackUrlsQueueItem,
-} from '@/entrypoints/page-primeVideo.content'
+import type { GetCurrentData } from '@/entrypoints/page-primeVideo.content'
 
 import { defineWindowMessaging } from '@webext-core/messaging/page'
 
 export interface ProtocolMap {
-  getCurrentData: (
-    args?: null
-  ) => (PlaybackUrlsQueueItem & CatalogQueueItem) | null
+  getCurrentData: (args?: null) => GetCurrentData | null
 }
 
 export const { sendMessage: sendMessageToPage, onMessage: onMessageInPage } =
