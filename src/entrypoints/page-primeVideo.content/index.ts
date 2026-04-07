@@ -11,7 +11,7 @@ import type {
 import { defineContentScript } from '#imports'
 
 import { MATCHES } from '@/constants/matches'
-import { Queue } from '@/utils/queue'
+import { LRUQueue } from '@/utils/queue'
 import { onMessageInPage } from '@/messaging/to-page'
 
 const vod: VodKey = 'primeVideo'
@@ -26,13 +26,9 @@ export default defineContentScript({
 const MP4_URL_REGEXP = /\/([0-9a-f-]+)_video_\d+\.mp4$/
 const MPD_URL_REGEXP = /\/([0-9a-f-]+)_corrected\.mpd$/i
 
-export interface PlaybackUrlsQueueItem {
-  titleId: string
+export interface GetCurrentData {
+  id: string
   playbackUrls: PlaybackUrls
-}
-
-export interface CatalogQueueItem {
-  entityId: string
   catalog: Catalog
 }
 
@@ -51,15 +47,15 @@ function isPlayerChromeResources(xhr: XMLHttpRequest): boolean {
 function main() {
   let currentMpdId: string | null = null
 
-  const playbackUrlsQueue = new Queue<PlaybackUrlsQueueItem>(25)
-  const catalogQueue = new Queue<CatalogQueueItem>(25)
+  const playbackUrlsQueue = new LRUQueue<string, PlaybackUrls>(25)
+  const catalogQueue = new LRUQueue<string, Catalog>(25)
 
   onMessageInPage('getCurrentData', () => {
     if (!currentMpdId) {
       return null
     }
 
-    const playbackUrlsQueueItem = playbackUrlsQueue.find(({ playbackUrls }) => {
+    const playbackUrlsQueueItem = playbackUrlsQueue.find((playbackUrls) => {
       return playbackUrls.intraTitlePlaylist.some(({ urls }) => {
         return urls?.some(({ url }) => {
           const matched = url.match(MPD_URL_REGEXP)
@@ -73,18 +69,15 @@ function main() {
       return null
     }
 
-    const catalogQueueItem = catalogQueue.find(
-      (v) => v.entityId === playbackUrlsQueueItem.titleId
-    )
+    const [id, playbackUrls] = playbackUrlsQueueItem
 
-    if (!catalogQueueItem) {
+    const catalog = catalogQueue.get(id)
+
+    if (!catalog) {
       return null
     }
 
-    return {
-      ...playbackUrlsQueueItem,
-      ...catalogQueueItem,
-    }
+    return { id, playbackUrls, catalog }
   })
 
   const $send = XMLHttpRequest.prototype.send
@@ -111,20 +104,15 @@ function main() {
         else if (isGetVodPlaybackResources(this)) {
           const titleId = searchParams.get('titleId')
 
-          if (
-            !titleId ||
-            playbackUrlsQueue.find((v) => v.titleId === titleId)
-          ) {
-            return
+          if (titleId && !playbackUrlsQueue.hit(titleId)) {
+            const {
+              vodPlaylistedPlaybackUrls: {
+                result: { playbackUrls },
+              },
+            } = JSON.parse(this.responseText) as GetVodPlaybackResources
+
+            playbackUrlsQueue.add(titleId, playbackUrls)
           }
-
-          const {
-            vodPlaylistedPlaybackUrls: {
-              result: { playbackUrls },
-            },
-          } = JSON.parse(this.responseText) as GetVodPlaybackResources
-
-          playbackUrlsQueue.enqueue({ titleId, playbackUrls })
         }
         // playerChromeResources
         else if (isPlayerChromeResources(this)) {
@@ -132,20 +120,15 @@ function main() {
           if (search.includes('catalogMetadataV2')) {
             const entityId = searchParams.get('entityId')
 
-            if (
-              !entityId ||
-              catalogQueue.find((v) => v.entityId === entityId)
-            ) {
-              return
+            if (entityId && !catalogQueue.hit(entityId)) {
+              const {
+                resources: {
+                  catalogMetadataV2: { catalog },
+                },
+              } = JSON.parse(this.responseText) as PlayerChromeResources
+
+              catalogQueue.add(entityId, catalog)
             }
-
-            const {
-              resources: {
-                catalogMetadataV2: { catalog },
-              },
-            } = JSON.parse(this.responseText) as PlayerChromeResources
-
-            catalogQueue.enqueue({ entityId, catalog })
           }
         }
       } catch {}
