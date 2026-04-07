@@ -31,7 +31,7 @@ export class LRUQueue<K, V> {
   }
 
   hit(key: K): boolean {
-    if (this.#map.has(key)) {
+    if (!this.#map.has(key)) {
       return false
     }
 
