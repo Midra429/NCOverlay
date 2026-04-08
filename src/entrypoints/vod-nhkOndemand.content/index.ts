@@ -39,6 +39,8 @@ export default defineContentScript({
   main: () => void main(),
 })
 
+const OPEN_PUNCTUATION_REGEXP = /(?<=[^\s])(\p{Ps})(?=[０-９])/gu
+const CLOSE_PUNCTUATION_REGEXP = /(?<=[０-９])(\p{Pe})(?=[^\s])/gu
 const TITLE_PREFIX_REGEXP =
   /^(?:【.+?】|(?:連続テレビ小説|月曜ドラマシリーズ|ドラマ)\s)/
 const TITLE_SUFFIX_REGEXP = /(?:＜新＞|＜全[０-９]+回＞|（最終回）)/
@@ -153,7 +155,14 @@ async function main() {
 
       const title = typeof input === 'string' ? input : input.input
       const titleNormalized = normalizeAll(title)
-      const titleParsed = parse(title)
+      const titleParsed = parse(
+        title
+          // 括弧の前後にスペースを入れる
+          .replace(OPEN_PUNCTUATION_REGEXP, ' $1')
+          .replace(CLOSE_PUNCTUATION_REGEXP, '$1 ')
+      )
+
+      logger.log('titleParsed', titleParsed)
 
       const isConsecutiveEp =
         titleParsed.isSingleEpisode &&
