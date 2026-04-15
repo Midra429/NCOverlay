@@ -7,15 +7,11 @@ import { isBackground } from '@wxt-dev/is-background'
 declare module 'wxt/browser' {
   namespace Browser {
     export namespace runtime {
-      export interface ManifestSidePanel {
-        default_path?: string
-      }
       export interface ManifestSidebarAction {
         default_panel?: string
       }
 
       export interface ManifestV3 {
-        side_panel?: ManifestSidePanel
         sidebar_action?: ManifestSidebarAction
       }
 
