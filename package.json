@@ -22,7 +22,7 @@
   "dependencies": {
     "@heroui/react": "^2.8.10",
     "@icons-pack/react-simple-icons": "^13.13.0",
-    "@internationalized/date": "^3.12.0",
+    "@internationalized/date": "^3.12.1",
     "@midra/nco-utils": "^1.2.8",
     "@webext-core/messaging": "^2.3.0",
     "@wxt-dev/is-background": "^1.0.0",
@@ -34,18 +34,18 @@
     "filesize": "^11.0.15",
     "framer-motion": "^12.38.0",
     "hotkeys-js": "^4.0.3",
-    "lucide-react": "^1.7.0",
+    "lucide-react": "^1.8.0",
     "nanoid": "^5.1.7",
     "nanoid-dictionary": "^5.0.0",
-    "react": "^19.2.4",
+    "react": "^19.2.5",
     "react-detectable-overflow": "^0.8.0",
-    "react-dom": "^19.2.4",
+    "react-dom": "^19.2.5",
     "react-hotkeys-hook": "^5.2.4",
-    "react-virtuoso": "^4.18.4",
+    "react-virtuoso": "^4.18.5",
     "rfdc": "^1.4.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.10",
+    "@biomejs/biome": "^2.4.12",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/nanoid-dictionary": "^4.2.3",
     "@types/react": "^19.2.14",
@@ -56,10 +56,10 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "concurrently": "^9.2.1",
     "postcss": "^8.5.9",
-    "publish-browser-extension": "^4.0.4",
+    "publish-browser-extension": "^4.0.5",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
     "utility-types": "^3.11.0",
-    "wxt": "^0.20.20"
+    "wxt": "^0.20.22"
   }
 }
