@@ -133,7 +133,7 @@ async function main() {
 
       if (EP_PATH_REGEXP.test(pathname) || SLOT_PATH_REGEXP.test(pathname)) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          '.com-a-Video__video > video[preload][src]'
+          '.com-vod-VODScreen__player video[preload][src]'
         )
 
         if (video) {
