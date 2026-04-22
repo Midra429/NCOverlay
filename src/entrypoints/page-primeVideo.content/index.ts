@@ -11,7 +11,9 @@ import type {
 import { defineContentScript } from '#imports'
 
 import { MATCHES } from '@/constants/matches'
+import { logger } from '@/utils/logger'
 import { LRUQueue } from '@/utils/queue'
+import { checkVodEnable } from '@/utils/extension/page/checkVodEnable'
 import { onMessageInPage } from '@/messaging/to-page'
 
 const vod: VodKey = 'primeVideo'
@@ -25,6 +27,9 @@ export default defineContentScript({
 
 const MP4_URL_REGEXP = /\/([0-9a-f-]+)_video_\d+\.mp4$/
 const MPD_URL_REGEXP = /\/([0-9a-f-]+)_corrected\.mpd$/i
+// "シーズン1、エピソード1 サブタイトル"
+const SUBTITLE_REGEXP =
+  /^シーズン(?<season>\d+)、エピソード(?<episode>\d+)\s(?<subtitle>.+)$/
 
 export interface GetCurrentData {
   id: string
@@ -44,36 +49,86 @@ function isPlayerChromeResources(xhr: XMLHttpRequest): boolean {
   )
 }
 
-function main() {
-  let currentMpdId: string | null = null
+async function main() {
+  if (!(await checkVodEnable(vod))) return
 
-  const playbackUrlsQueue = new LRUQueue<string, PlaybackUrls>(25)
-  const catalogQueue = new LRUQueue<string, Catalog>(25)
+  logger.log('page', vod)
+
+  let mpdId: string | null = null
+
+  const playbackUrlsQueue = new LRUQueue<PlaybackUrls>(25)
+  const catalogQueue = new LRUQueue<Catalog>(25)
 
   onMessageInPage('getCurrentData', () => {
-    if (!currentMpdId) {
-      return null
-    }
+    let id: string | undefined
+    let playbackUrls: PlaybackUrls | undefined
+    let catalog: Catalog | undefined
 
-    const playbackUrlsQueueItem = playbackUrlsQueue.find((playbackUrls) => {
-      return playbackUrls.intraTitlePlaylist.some(({ urls }) => {
-        return urls?.some(({ url }) => {
-          const matched = url.match(MPD_URL_REGEXP)
+    if (mpdId) {
+      const playbackUrlsQueueItem = playbackUrlsQueue.find((playbackUrls) => {
+        return playbackUrls.intraTitlePlaylist.some(({ urls }) => {
+          return urls?.some(({ url }) => {
+            const matched = url.match(MPD_URL_REGEXP)
 
-          return matched?.[1] === currentMpdId
+            return matched?.[1] === mpdId
+          })
         })
       })
-    })
 
-    if (!playbackUrlsQueueItem) {
-      return null
+      if (playbackUrlsQueueItem) {
+        id = playbackUrlsQueueItem[0]
+        playbackUrls = playbackUrlsQueueItem[1]
+        catalog = catalogQueue.get(id)
+      }
     }
 
-    const [id, playbackUrls] = playbackUrlsQueueItem
-
-    const catalog = catalogQueue.get(id)
-
     if (!catalog) {
+      // タイトル
+      const titleText = document.body.querySelector(
+        '.atvwebplayersdk-title-text'
+      )?.textContent
+      // シーズン1、エピソード1 サブタイトル
+      const subtitleText = document.body.querySelector(
+        '.atvwebplayersdk-subtitle-text'
+      )?.textContent
+
+      logger.log('titleText', titleText)
+      logger.log('subtitleText', subtitleText)
+
+      if (!titleText || !subtitleText) {
+        return null
+      }
+
+      const {
+        season,
+        episode,
+        subtitle,
+      }: {
+        season?: string
+        episode?: string
+        subtitle?: string
+      } = subtitleText.match(SUBTITLE_REGEXP)?.groups ?? {}
+
+      const seasonNum = season ? Number(season) : -1
+      const episodeNum = episode ? Number(episode) : -1
+
+      const catalogQueueItem = catalogQueue.find((val) => {
+        return (
+          val.seriesTitle === titleText &&
+          val.seasonNumber === seasonNum &&
+          val.episodeNumber === episodeNum &&
+          val.title === subtitle
+        )
+      })
+
+      if (catalogQueueItem) {
+        id = catalogQueueItem[0]
+        catalog = catalogQueueItem[1]
+        playbackUrls = playbackUrlsQueue.get(id)
+      }
+    }
+
+    if (!id || !playbackUrls || !catalog) {
       return null
     }
 
@@ -97,7 +152,7 @@ function main() {
           const matched = pathname.match(MP4_URL_REGEXP)
 
           if (matched) {
-            currentMpdId = matched[1]
+            mpdId = matched[1]
           }
         }
         // GetVodPlaybackResources

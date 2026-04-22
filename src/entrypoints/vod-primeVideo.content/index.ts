@@ -34,6 +34,8 @@ async function main() {
 
       const item = await sendMessageToPage('getCurrentData', null)
 
+      logger.log('getCurrentData', item)
+
       if (!item) {
         return null
       }

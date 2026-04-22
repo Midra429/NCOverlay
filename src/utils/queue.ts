@@ -1,6 +1,6 @@
-export class LRUQueue<K, V> {
+export class LRUQueue<V> {
   #limit: number
-  #map: Map<K, V>
+  #map: Map<string, V>
 
   constructor(limit: number) {
     this.#limit = limit
@@ -11,7 +11,7 @@ export class LRUQueue<K, V> {
     this.#map.clear()
   }
 
-  add(key: K, value: V) {
+  add(key: string, value: V) {
     this.#map.delete(key)
     this.#map.set(key, value)
 
@@ -22,15 +22,15 @@ export class LRUQueue<K, V> {
     }
   }
 
-  remove(key: K): boolean {
+  remove(key: string): boolean {
     return this.#map.delete(key)
   }
 
-  has(key: K): boolean {
+  has(key: string): boolean {
     return this.#map.has(key)
   }
 
-  hit(key: K): boolean {
+  hit(key: string): boolean {
     if (!this.#map.has(key)) {
       return false
     }
@@ -43,7 +43,7 @@ export class LRUQueue<K, V> {
     return true
   }
 
-  get(key: K): V | undefined {
+  get(key: string): V | undefined {
     if (!this.#map.has(key)) return
 
     const value = this.#map.get(key)!
@@ -54,7 +54,13 @@ export class LRUQueue<K, V> {
     return value
   }
 
-  find(predicate: (value: V, index: number) => unknown): [K, V] | undefined {
+  find(
+    predicate: (value: V, index: number) => unknown
+  ): [string, V] | undefined {
     return this.#map.entries().find(([_, v], i) => predicate(v, i))
+  }
+
+  toObject(): Record<string, V> {
+    return Object.fromEntries(this.#map.entries())
   }
 }
