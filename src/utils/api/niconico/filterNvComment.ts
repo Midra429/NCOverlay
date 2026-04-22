@@ -12,7 +12,10 @@ export function filterNvComment(comment: DataComment) {
       // かんたんコメント
       thread.label.includes('easy') ||
       // 引用コメント
-      thread.label.includes('extra')
+      thread.label.includes('extra') ||
+      // AIキャラクターコメント
+      thread.forkLabel === 'ai' ||
+      thread.label === 'ai'
     ) {
       ignoreThreadIds.push(`${thread.forkLabel}:${thread.id}`)
     }
