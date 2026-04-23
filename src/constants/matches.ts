@@ -10,6 +10,7 @@ export const MATCHES: Record<VodKey, string[]> = {
   primeVideo: ['https://www.amazon.co.jp/*'],
   netflix: ['https://www.netflix.com/*'],
   hulu: ['https://www.hulu.jp/*'],
+  disneyPlus: ['https://www.disneyplus.com/*'],
   niconico: ['https://www.nicovideo.jp/watch/*'],
   nhkOne: ['https://www.web.nhk/*'],
   nhkOndemand: ['https://www.nhk-ondemand.jp/goods/*'],
