@@ -46,6 +46,7 @@ body:
         - label: Prime Video
         - label: Netflix
         - label: Hulu
+        - label: Disney+
         - label: ニコニコ動画
         - label: NHK ONE
         - label: NHKオンデマンド
