@@ -61,13 +61,13 @@ async function main() {
 
       const seasonText =
         !titleSeason && 2 <= seasonNum && seasonNum !== seasonNumVague
-          ? `${seasonNum}期`
+          ? `第${seasonNum}期`
           : null
       const workTitle =
         [title, seasonText].filter(Boolean).join(' ').trim() || null
 
       const episodeText =
-        !subtitleEpisode && 0 <= episodeNum ? `${episodeNum}話` : null
+        !subtitleEpisode && 0 <= episodeNum ? `第${episodeNum}話` : null
       const episodeTitle =
         [episodeText, subtitle].filter(Boolean).join(' ').trim() || null
 
