@@ -1,6 +1,7 @@
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { BaseOptions } from '@xpadev-net/niconicomments'
 import type { StorageItems } from '@/types/storage'
+import type { NCOPatcherFunctions } from './patcher'
 
 import NiconiComments from '@xpadev-net/niconicomments'
 
@@ -32,7 +33,12 @@ export class NCORenderer {
   #frameId: number = 0
   #lastFrameTime: number = 0
 
-  constructor(video: HTMLVideoElement) {
+  getCurrentTime: () => number
+
+  constructor(
+    video: HTMLVideoElement,
+    { getCurrentTime }: NCOPatcherFunctions = {}
+  ) {
     this.video = video
     this.video.classList.add('NCOverlay-Video')
 
@@ -40,6 +46,8 @@ export class NCORenderer {
     this.canvas.classList.add('NCOverlay-Canvas')
     this.canvas.width = 1920
     this.canvas.height = 1080
+
+    this.getCurrentTime = getCurrentTime ?? (() => this.video.currentTime)
   }
 
   dispose() {
@@ -110,7 +118,7 @@ export class NCORenderer {
 
   updateTime() {
     this.#startTimestamp = performance.now()
-    this.#startTime = this.video.currentTime
+    this.#startTime = this.getCurrentTime()
     this.#startTimeVpos = Math.max((this.#startTime - this.#offset) * 100, 0)
     this.#playbackRate = this.video.playbackRate
   }

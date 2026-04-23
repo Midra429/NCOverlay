@@ -20,11 +20,23 @@ export interface PlayingInfo {
   disableAdjustJikkyoOffset?: boolean
 }
 
+export interface NCOPatcherInit {
+  getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
+  appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
+  autoSearch?: (
+    nco: NCOverlay,
+    args: NCOSearcherAutoSearchArgs
+  ) => Promise<void>
+}
+
+export interface NCOPatcherFunctions {
+  getCurrentTime?: () => number
+}
+
 export class NCOPatcher {
   readonly #vod
-  readonly #getInfo
-  readonly #appendCanvas
-  readonly #autoSearch
+  readonly #init
+  readonly #functions
 
   #video: HTMLVideoElement | null = null
   #nco: NCOverlay | null = null
@@ -35,19 +47,12 @@ export class NCOPatcher {
 
   constructor(
     vod: VodKey,
-    init: {
-      getInfo: (nco: NCOverlay) => Promise<PlayingInfo | null>
-      appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
-      autoSearch?: (
-        nco: NCOverlay,
-        args: NCOSearcherAutoSearchArgs
-      ) => Promise<void>
-    }
+    init: NCOPatcherInit,
+    functions?: NCOPatcherFunctions
   ) {
     this.#vod = vod
-    this.#getInfo = init.getInfo
-    this.#appendCanvas = init.appendCanvas
-    this.#autoSearch = init.autoSearch
+    this.#init = init
+    this.#functions = functions
   }
 
   dispose() {
@@ -67,13 +72,13 @@ export class NCOPatcher {
     const tab = await sendMessageToBackground('getCurrentTab', null)
     const tabId = tab?.id
 
-    this.#nco = new NCOverlay(tabId!, this.#video)
+    this.#nco = new NCOverlay(tabId!, this.#video, this.#functions)
 
     const loadInfo = async () => {
       if (!this.#nco) return
 
       try {
-        const info = await this.#getInfo(this.#nco)
+        const info = await this.#init.getInfo(this.#nco)
 
         let parsed: ParsedResult | undefined
 
@@ -143,8 +148,8 @@ export class NCOPatcher {
 
         // 自動検索
         if (targets.length && args.input && args.duration) {
-          if (this.#autoSearch) {
-            await this.#autoSearch(this.#nco, args)
+          if (this.#init.autoSearch) {
+            await this.#init.autoSearch(this.#nco, args)
           } else {
             await this.#nco.searcher.autoSearch(args)
           }
@@ -189,11 +194,11 @@ export class NCOPatcher {
 
         sendMessageToBackground('timeupdate', {
           id: this.id,
-          time: this.renderer.video.currentTime * 1000,
+          time: this.renderer.getCurrentTime() * 1000,
         })
       }
     })
 
-    this.#appendCanvas(this.#video, this.#nco.renderer.canvas)
+    this.#init.appendCanvas(this.#video, this.#nco.renderer.canvas)
   }
 }

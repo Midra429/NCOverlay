@@ -28,76 +28,91 @@ async function main() {
 
   logger.log('vod', vod)
 
-  const patcher = new NCOPatcher(vod, {
-    getInfo: async () => {
-      await sleep(2000)
+  let progressBarThumbElem: Element | null | undefined = null
 
-      const titleBugRoot = document.body.querySelector('title-bug')?.shadowRoot
-      const progressBarRoot =
-        document.body.querySelector('progress-bar')?.shadowRoot
+  const patcher = new NCOPatcher(
+    vod,
+    {
+      getInfo: async () => {
+        await sleep(2000)
 
-      const titleElem = titleBugRoot?.querySelector('.title-field')
-      const subtitleElem = titleBugRoot?.querySelector('.subtitle-field')
-      const progressBarThumbElem = progressBarRoot?.querySelector(
-        '.progress-bar__thumb'
-      )
+        const titleBugRoot =
+          document.body.querySelector('title-bug')?.shadowRoot
+        const progressBarRoot =
+          document.body.querySelector('progress-bar')?.shadowRoot
 
-      // タイトル
-      const titleText = titleElem?.textContent.trim()
-      // S1：第1話「サブタイトル」
-      const subtitleText = subtitleElem?.textContent.trim()
-      // 長さ
-      const durationText = progressBarThumbElem?.getAttribute('aria-valuemax')
+        const titleElem = titleBugRoot?.querySelector('.title-field')
+        const subtitleElem = titleBugRoot?.querySelector('.subtitle-field')
 
-      logger.log('titleText', titleText)
-      logger.log('subtitleText', subtitleText)
-      logger.log('durationText', durationText)
+        progressBarThumbElem = progressBarRoot?.querySelector(
+          '.progress-bar__thumb'
+        )
 
-      if (!titleText || !subtitleText || !durationText) {
-        return null
-      }
+        // タイトル
+        const titleText = titleElem?.textContent.trim()
+        // S1：第1話「サブタイトル」
+        const subtitleText = subtitleElem?.textContent.trim()
+        // 長さ
+        const durationText = progressBarThumbElem?.getAttribute('aria-valuemax')
 
-      const {
-        season,
-        episode,
-        subtitle,
-      }: {
-        season?: string
-        episode?: string
-        subtitle?: string
-      } = subtitleText.match(SUBTITLE_REGEXP)?.groups ?? {}
+        logger.log('titleText', titleText)
+        logger.log('subtitleText', subtitleText)
+        logger.log('durationText', durationText)
 
-      const seasonNum = season ? Number(season) : -1
-      const episodeNum = episode ? Number(episode) : -1
+        if (!titleText || !subtitleText || !durationText) {
+          return null
+        }
 
-      const seasonText = 2 <= seasonNum ? `第${seasonNum}期` : null
-      const workTitle =
-        [titleText, seasonText].filter(Boolean).join(' ').trim() || null
+        const {
+          season,
+          episode,
+          subtitle,
+        }: {
+          season?: string
+          episode?: string
+          subtitle?: string
+        } = subtitleText.match(SUBTITLE_REGEXP)?.groups ?? {}
 
-      const episodeText = 0 <= episodeNum ? `第${episodeNum}話` : null
-      const episodeTitle =
-        [!EP_REGEXP.test(subtitle) && episodeText, subtitle]
-          .filter(Boolean)
-          .join(' ')
-          .trim() || null
+        const seasonNum = season ? Number(season) : -1
+        const episodeNum = episode ? Number(episode) : -1
 
-      const duration = Number(durationText)
+        const seasonText = 2 <= seasonNum ? `第${seasonNum}期` : null
+        const workTitle =
+          [titleText, seasonText].filter(Boolean).join(' ').trim() || null
 
-      logger.log('workTitle', workTitle)
-      logger.log('episodeTitle', episodeTitle)
-      logger.log('duration', duration)
+        const episodeText = 0 <= episodeNum ? `第${episodeNum}話` : null
+        const episodeTitle =
+          [!EP_REGEXP.test(subtitle) && episodeText, subtitle]
+            .filter(Boolean)
+            .join(' ')
+            .trim() || null
 
-      return workTitle
-        ? {
-            input: `${workTitle} ${episodeTitle ?? ''}`,
-            duration,
-          }
-        : null
+        const duration = Number(durationText)
+
+        logger.log('workTitle', workTitle)
+        logger.log('episodeTitle', episodeTitle)
+        logger.log('duration', duration)
+
+        return workTitle
+          ? {
+              input: `${workTitle} ${episodeTitle ?? ''}`,
+              duration,
+            }
+          : null
+      },
+      appendCanvas: (video, canvas) => {
+        video.insertAdjacentElement('afterend', canvas)
+      },
     },
-    appendCanvas: (video, canvas) => {
-      video.insertAdjacentElement('afterend', canvas)
-    },
-  })
+    {
+      getCurrentTime: () => {
+        const currentTimeText =
+          progressBarThumbElem?.getAttribute('aria-valuenow')
+
+        return currentTimeText ? Number(currentTimeText) : 0
+      },
+    }
+  )
 
   const obs_config: MutationObserverInit = {
     childList: true,
@@ -111,6 +126,8 @@ async function main() {
     if (patcher.nco) {
       if (!patcher.nco.renderer.video.checkVisibility()) {
         patcher.dispose()
+
+        progressBarThumbElem = null
       }
     } else {
       if (location.pathname.startsWith('/ja-jp/play/')) {

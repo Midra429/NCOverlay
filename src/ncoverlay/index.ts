@@ -1,5 +1,6 @@
 import type { MarkerKey } from '@/constants/markers'
 import type { Browser } from '@/utils/webext'
+import type { NCOPatcherFunctions } from './patcher'
 
 import equal from 'fast-deep-equal'
 
@@ -41,11 +42,15 @@ export class NCOverlay {
   readonly #removeListenerCallbacks: (() => void)[] = []
   readonly #port: Browser.runtime.Port
 
-  constructor(tabId: number, video: HTMLVideoElement) {
+  constructor(
+    tabId: number,
+    video: HTMLVideoElement,
+    functions?: NCOPatcherFunctions
+  ) {
     this.id = tabId
     this.state = new NCOState(this.id)
     this.searcher = new NCOSearcher(this.state)
-    this.renderer = new NCORenderer(video)
+    this.renderer = new NCORenderer(video, functions)
     this.keyboard = new NCOKeyboard(this.state, {
       jumpMarker: (...args) => this.jumpMarker(...args),
     })
@@ -107,7 +112,7 @@ export class NCOverlay {
     } else {
       const markerIdx = MARKERS.findIndex((v) => v.key === key)
 
-      const currentTimeMs = this.renderer.video.currentTime * 1000
+      const currentTimeMs = this.renderer.getCurrentTime() * 1000
 
       if (newDetails) {
         const adjustJikkyoOffset = await settings.get(
@@ -299,7 +304,7 @@ export class NCOverlay {
 
       // メッセージ (現在の再生時間を取得)
       onMessageInContent('getCurrentTime', () => {
-        return this.renderer.video.currentTime
+        return this.renderer.getCurrentTime()
       }),
 
       // メッセージ (再描画)
