@@ -5,7 +5,6 @@ import equal from 'fast-deep-equal'
 
 import { MARKERS } from '@/constants/markers'
 import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
-import { clone } from '@/utils/clone'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
@@ -97,7 +96,7 @@ export class NCOverlay {
    */
   async jumpMarker(key: MarkerKey | null) {
     const oldDetails = await this.state.get('slotDetails')
-    const newDetails = clone(oldDetails)
+    const newDetails = structuredClone(oldDetails)
 
     if (key === null) {
       if (newDetails) {

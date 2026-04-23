@@ -6,7 +6,6 @@ import { defineContentScript } from '#imports'
 import { parse } from '@midra/nco-utils/parse'
 
 import { MATCHES } from '@/constants/matches'
-import { clone } from '@/utils/clone'
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
@@ -67,7 +66,7 @@ async function main() {
 
       const duration = partData.partMeasureSecond
 
-      const partChapters = clone(partData.chapters)
+      const partChapters = structuredClone(partData.chapters)
       const chapters: VideoChapter[] = []
 
       // アバンの手前の部分(多分あらすじ)をアバンに統合する
