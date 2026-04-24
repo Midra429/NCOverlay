@@ -1,6 +1,5 @@
 .NCOverlay-Capture {
-  :is(.webPlayerUIContainer, .atvwebplayersdk-player-container)
-    > *:not(.NCOverlay-Canvas) {
+  .atvwebplayersdk-player-container > *:not(.NCOverlay-Canvas) {
     display: none !important;
   }
 }

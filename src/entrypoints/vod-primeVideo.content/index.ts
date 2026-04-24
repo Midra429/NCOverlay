@@ -86,10 +86,8 @@ async function main() {
     },
     appendCanvas: (video, canvas) => {
       video
-        .closest('div[id^=dv-web-player]')
-        ?.querySelector(
-          '.webPlayerUIContainer, .atvwebplayersdk-player-container'
-        )
+        .closest('.dv-player-fullscreen')
+        ?.querySelector('.atvwebplayersdk-player-container')
         ?.insertAdjacentElement('afterbegin', canvas)
     },
   })
@@ -109,7 +107,7 @@ async function main() {
       }
     } else {
       const video = document.body.querySelector<HTMLVideoElement>(
-        'div[id^=dv-web-player].dv-player-fullscreen video[src]'
+        '.dv-player-fullscreen video[src]'
       )
 
       if (video) {
