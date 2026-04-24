@@ -158,6 +158,8 @@ export class NCOverlay {
     [P in keyof HTMLVideoElementEventMap]?: (evt: Event) => void
   } = {
     loadedmetadata: () => {
+      logger.log('loadedmetadata')
+
       this.#trigger('loadedmetadata')
     },
 

@@ -161,7 +161,16 @@ export class NCOPatcher {
       await this.#nco.state.set('status', 'ready')
     }
 
+    let prev = 0
+
     this.#nco.addEventListener('loadedmetadata', async function () {
+      const now = performance.now()
+      const isSkip = now - prev < 1000
+
+      prev = now
+
+      if (isSkip) return
+
       await this.clear()
 
       await loadInfo()
