@@ -7,7 +7,7 @@ import type { JikkyoMarker } from './findMarkers'
 import { MARKERS } from '@/constants/markers'
 // import { logger } from '@/utils/logger'
 
-export const SUPPORTED_VOD_KEYS: VodKey[] = ['dAnime', 'dmmTv']
+export const SUPPORTED_VOD_KEYS: VodKey[] = ['dAnime', 'abema', 'dmmTv']
 
 const SPONSOR_DURATION_MS = 10000
 

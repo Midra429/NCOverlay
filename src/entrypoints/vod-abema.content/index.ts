@@ -1,4 +1,5 @@
 import type { VodKey } from '@/types/constants'
+import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 
 import { defineContentScript } from '#imports'
 import { parse } from '@midra/nco-utils/parse'
@@ -99,14 +100,74 @@ async function main() {
 
       const duration = program.info.duration
 
+      const { opening, ending } = program.viewingPoint
+
+      let avantChapter: VideoChapter | undefined
+      let opChapter: VideoChapter | undefined
+      let mainChapter: VideoChapter | undefined
+      let edChapter: VideoChapter | undefined
+
+      // アバン, OP
+      if (opening) {
+        const startMs = opening.start * 1000
+        const endMs = opening.end * 1000
+
+        opChapter = {
+          type: 'op',
+          startMs,
+          endMs,
+          duration: endMs - startMs,
+        }
+
+        if (0 < opChapter.startMs) {
+          avantChapter = {
+            type: 'avant',
+            startMs: 0,
+            endMs: opChapter.startMs,
+            duration: opChapter.startMs,
+          }
+        }
+      }
+
+      // ED
+      if (ending) {
+        const startMs = ending.start * 1000
+        const endMs = ending.end * 1000
+
+        edChapter = {
+          type: 'ed',
+          startMs,
+          endMs,
+          duration: endMs - startMs,
+        }
+      }
+
+      if (opChapter || edChapter) {
+        const startMs = opChapter?.endMs ?? 0
+        const endMs = edChapter?.startMs ?? duration * 1000
+
+        mainChapter = {
+          type: 'main',
+          startMs,
+          endMs,
+          duration: endMs - startMs,
+        }
+      }
+
+      const chapters = [avantChapter, opChapter, mainChapter, edChapter]
+        .filter((v) => v != null)
+        .sort((a, b) => a.startMs - b.startMs)
+
       logger.log('workTitle', workTitle)
       logger.log('episodeTitle', episodeTitle)
       logger.log('duration', duration)
+      logger.log('chapters', chapters)
 
       return workTitle
         ? {
             input: `${workTitle} ${episodeTitle ?? ''}`,
             duration,
+            chapters,
           }
         : null
     },
