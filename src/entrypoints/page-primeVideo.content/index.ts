@@ -13,6 +13,7 @@ import { defineContentScript } from '#imports'
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
 import { LRUQueue } from '@/utils/queue'
+import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { checkVodEnable } from '@/utils/extension/page/checkVodEnable'
 import { onMessageInPage } from '@/messaging/to-page'
 
@@ -25,8 +26,6 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const MP4_URL_REGEXP = /\/([0-9a-f-]+)_video_\d+\.mp4$/
-const MPD_URL_REGEXP = /\/([0-9a-f-]+)_corrected\.mpd$/i
 // "シーズン1、エピソード1 サブタイトル"
 const SUBTITLE_REGEXP =
   /^シーズン(?<season>\d+)、エピソード(?<episode>\d+)\s(?<subtitle>.+)$/
@@ -37,98 +36,70 @@ export interface GetCurrentData {
   catalog: Catalog
 }
 
-function isGetVodPlaybackResources(xhr: XMLHttpRequest): boolean {
-  return (
-    xhr.status === 200 && xhr.responseURL.includes('/GetVodPlaybackResources')
-  )
-}
-
-function isPlayerChromeResources(xhr: XMLHttpRequest): boolean {
-  return (
-    xhr.status === 200 && xhr.responseURL.includes('/playerChromeResources/')
-  )
-}
-
 async function main() {
   if (!(await checkVodEnable(vod))) return
 
   logger.log('page', vod)
 
-  let mpdId: string | null = null
-
   const playbackUrlsQueue = new LRUQueue<PlaybackUrls>(25)
   const catalogQueue = new LRUQueue<Catalog>(25)
 
-  onMessageInPage('getCurrentData', () => {
-    let id: string | undefined
-    let playbackUrls: PlaybackUrls | undefined
-    let catalog: Catalog | undefined
+  onMessageInPage('getCurrentData', async () => {
+    const titleTextElem = await querySelectorAsync(
+      document.body,
+      '.dv-player-fullscreen .atvwebplayersdk-title-text:not(:empty)'
+    )
+    const subtitleTextElem = document.body.querySelector(
+      '.dv-player-fullscreen .atvwebplayersdk-subtitle-text'
+    )
 
-    if (mpdId) {
-      const playbackUrlsQueueItem = playbackUrlsQueue.find((playbackUrls) => {
-        return playbackUrls.intraTitlePlaylist.some(({ urls }) => {
-          return urls?.some(({ url }) => {
-            const matched = url.match(MPD_URL_REGEXP)
+    // タイトル
+    const titleText = titleTextElem?.textContent ?? null
+    // シーズン1、エピソード1 サブタイトル
+    const subtitleText = subtitleTextElem?.textContent ?? null
 
-            return matched?.[1] === mpdId
-          })
-        })
-      })
+    logger.log('titleText', titleText)
+    logger.log('subtitleText', subtitleText)
 
-      if (playbackUrlsQueueItem) {
-        id = playbackUrlsQueueItem[0]
-        playbackUrls = playbackUrlsQueueItem[1]
-        catalog = catalogQueue.get(id)
-      }
+    if (!titleText) {
+      return null
     }
 
-    if (!catalog) {
-      // タイトル
-      const titleText = document.body.querySelector(
-        '.atvwebplayersdk-title-text'
-      )?.textContent
-      // シーズン1、エピソード1 サブタイトル
-      const subtitleText = document.body.querySelector(
-        '.atvwebplayersdk-subtitle-text'
-      )?.textContent
+    const {
+      season,
+      episode,
+      subtitle,
+    }: {
+      season?: string
+      episode?: string
+      subtitle?: string
+    } = subtitleText?.match(SUBTITLE_REGEXP)?.groups ?? {}
 
-      logger.log('titleText', titleText)
-      logger.log('subtitleText', subtitleText)
+    const seasonNum = season ? Number(season) : -1
+    const episodeNum = episode ? Number(episode) : -1
 
-      if (!titleText || !subtitleText) {
-        return null
-      }
-
-      const {
-        season,
-        episode,
-        subtitle,
-      }: {
-        season?: string
-        episode?: string
-        subtitle?: string
-      } = subtitleText.match(SUBTITLE_REGEXP)?.groups ?? {}
-
-      const seasonNum = season ? Number(season) : -1
-      const episodeNum = episode ? Number(episode) : -1
-
-      const catalogQueueItem = catalogQueue.find((val) => {
+    const catalogQueueItem = catalogQueue.find((val) => {
+      if (val.type === 'MOVIE') {
+        return val.title === titleText && !subtitleText
+      } else {
         return (
           val.seriesTitle === titleText &&
           val.seasonNumber === seasonNum &&
           val.episodeNumber === episodeNum &&
           val.title === subtitle
         )
-      })
-
-      if (catalogQueueItem) {
-        id = catalogQueueItem[0]
-        catalog = catalogQueueItem[1]
-        playbackUrls = playbackUrlsQueue.get(id)
       }
+    })
+
+    if (!catalogQueueItem) {
+      return null
     }
 
-    if (!id || !playbackUrls || !catalog) {
+    const id = catalogQueueItem[0]
+    const catalog = catalogQueueItem[1]
+    const playbackUrls = playbackUrlsQueue.get(id)
+
+    if (!playbackUrls) {
       return null
     }
 
@@ -142,21 +113,17 @@ async function main() {
 
     this.onload = function (evt) {
       try {
+        if (this.status !== 200) {
+          throw new Error()
+        }
+
         const url = URL.canParse(this.responseURL)
           ? new URL(this.responseURL)
           : new URL(this.responseURL, location.origin)
         const { pathname, search, searchParams } = url
 
-        // .mp4
-        if (pathname.endsWith('.mp4')) {
-          const matched = pathname.match(MP4_URL_REGEXP)
-
-          if (matched) {
-            mpdId = matched[1]
-          }
-        }
         // GetVodPlaybackResources
-        else if (isGetVodPlaybackResources(this)) {
+        if (pathname.endsWith('/GetVodPlaybackResources')) {
           const titleId = searchParams.get('titleId')
 
           if (titleId && !playbackUrlsQueue.hit(titleId)) {
@@ -170,7 +137,7 @@ async function main() {
           }
         }
         // playerChromeResources
-        else if (isPlayerChromeResources(this)) {
+        else if (pathname.endsWith('/playerChromeResources/v1')) {
           // catalogMetadataV2
           if (search.includes('catalogMetadataV2')) {
             const entityId = searchParams.get('entityId')
