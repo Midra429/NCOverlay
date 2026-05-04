@@ -5,6 +5,7 @@ import type {
 import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
 
 import { KAWAII_REGEXP } from '@/constants'
+import { sleep } from '@/utils/sleep'
 import { applyNgSettings } from '@/utils/api/niconico/applyNgSetting'
 import { extractNgSettings } from '@/utils/api/niconico/extractNgSettings'
 import { filterNvComment } from '@/utils/api/niconico/filterNvComment'
@@ -99,6 +100,8 @@ export async function getNiconicoComment(
         additionals.when = Math.floor(
           new Date(mainThread.comments[0].postedAt).getTime() / 1000
         )
+
+        await sleep(1000)
       }
 
       baseMainThread.comments.sort((a, b) => a.no - b.no)
