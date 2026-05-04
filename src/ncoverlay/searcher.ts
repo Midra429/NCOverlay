@@ -450,7 +450,11 @@ export class NCOSearcher {
 
         await this.#state.update('slotDetails', ['id'], detail)
       } else {
-        await this.#state.remove('slotDetails', { id })
+        await this.#state.update('slotDetails', ['id'], {
+          id,
+          status: 'error',
+        })
+        // await this.#state.remove('slotDetails', { id })
       }
     }
 
