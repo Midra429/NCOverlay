@@ -2,7 +2,7 @@ import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { VodKey } from '@/types/constants'
 import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 import type { NCOSearcherAutoSearchArgs } from './searcher'
-import type { StateInfo } from './state'
+import type { StateInfo, StatePlayingVideo } from './state'
 
 import { parse } from '@midra/nco-utils/parse'
 
@@ -62,7 +62,10 @@ export class NCOPatcher {
     this.#nco = null
   }
 
-  async setVideo(video: HTMLVideoElement) {
+  async setVideo(
+    video: HTMLVideoElement,
+    playingVideo: StatePlayingVideo | null = null
+  ) {
     if (this.#video === video) return
 
     this.dispose()
@@ -73,6 +76,9 @@ export class NCOPatcher {
     const tabId = tab?.id
 
     this.#nco = new NCOverlay(tabId!, this.#video, this.#functions)
+
+    this.#nco.state.set('vod', this.#vod)
+    this.#nco.state.set('playingVideo', playingVideo)
 
     const loadInfo = async () => {
       if (!this.#nco) return
@@ -108,6 +114,7 @@ export class NCOPatcher {
         }
 
         await this.#nco.state.set('vod', this.#vod)
+        await this.#nco.state.set('playingVideo', playingVideo)
         await this.#nco.state.set('info', args)
 
         logger.log('state.info', args)

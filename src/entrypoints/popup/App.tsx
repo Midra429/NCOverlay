@@ -1,14 +1,15 @@
-import { ncoState } from '@/hooks/useNco'
+import { ncoState, useNcoState } from '@/hooks/useNco'
 
 import { Layout } from '@/components/Layout'
-import { PositionControl } from '@/components/PositionControl'
 
-import { Comments } from './Comments'
-import { Header } from './Header'
+import { DisplayedComments } from './DisplayedComments'
 import { MainTabs } from './MainTabs'
 import { Settings } from './MainTabs/Settings'
+import { PlayingVideo } from './PlayingVideo'
 
 function App() {
+  const vod = useNcoState('vod')
+
   const isActive = !!ncoState
 
   return (
@@ -21,14 +22,9 @@ function App() {
       >
         {isActive && (
           <div className="flex w-107 flex-col border-foreground-200 border-r-1">
-            <Header />
+            {vod === '_local' && <PlayingVideo />}
 
-            <Comments />
-
-            <PositionControl
-              className="border-foreground-200 border-t-1"
-              compact
-            />
+            <DisplayedComments />
           </div>
         )}
 

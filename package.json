@@ -24,6 +24,7 @@
     "@icons-pack/react-simple-icons": "^13.13.0",
     "@internationalized/date": "^3.12.1",
     "@midra/nco-utils": "^1.2.12",
+    "@videojs/react": "^10.0.0-beta.23",
     "@webext-core/messaging": "^2.3.0",
     "@wxt-dev/is-background": "^1.0.0",
     "@xpadev-net/niconicomments": "^0.2.78",
@@ -40,7 +41,7 @@
     "react": "^19.2.5",
     "react-detectable-overflow": "^0.8.0",
     "react-dom": "^19.2.5",
-    "react-hotkeys-hook": "^5.3.0",
+    "react-hotkeys-hook": "^5.3.2",
     "react-virtuoso": "^4.18.6"
   },
   "devDependencies": {
@@ -54,7 +55,7 @@
     "@wxt-dev/module-react": "^1.2.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "concurrently": "^9.2.1",
-    "postcss": "^8.5.13",
+    "postcss": "^8.5.14",
     "publish-browser-extension": "^4.0.5",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",

@@ -53,10 +53,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         inputType: 'checkbox',
         label: '動画配信サービス',
         description: '選択した動画配信サービスで\n拡張機能を有効にします。',
-        options: Object.entries(VODS).map(([key, value]) => ({
-          label: value,
-          value: key as VodKey,
-        })),
+        options: Object.entries(VODS)
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([key, value]) => ({
+            label: value,
+            value: key as VodKey,
+          })),
       },
       {
         settingsKey: 'settings:capture:format',

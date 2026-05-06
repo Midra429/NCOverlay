@@ -20,6 +20,8 @@ export interface ProtocolMap {
     format: 'jpeg' | 'png'
     data?: number[]
   }
+
+  selectVideoFile: (args?: null) => void
 }
 
 export const {

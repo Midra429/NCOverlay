@@ -15,4 +15,5 @@ export const MATCHES: Record<VodKey, string[]> = {
   nhkOne: ['https://www.web.nhk/*'],
   nhkOndemand: ['https://www.nhk-ondemand.jp/goods/*'],
   tver: ['https://tver.jp/*'],
+  _local: [],
 }

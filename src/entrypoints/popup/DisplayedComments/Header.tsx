@@ -20,9 +20,9 @@ import { openPopout, shouldOpenPopout } from '@/entrypoints/popout/open'
 
 import { SelectCommentFileModal } from '@/components/SelectCommentFileModal'
 
-import { JikkyoEpgSelector } from './Modals/JikkyoEpgSelector'
-import { JikkyoSelector } from './Modals/JikkyoSelector'
-import { NicologSelector } from './Modals/NicologSelector'
+import { JikkyoEpgSelector } from '../Modals/JikkyoEpgSelector'
+import { JikkyoSelector } from '../Modals/JikkyoSelector'
+import { NicologSelector } from '../Modals/NicologSelector'
 
 export function Header() {
   const [isOpenPopout, setIsOpenPopout] = useState(false)

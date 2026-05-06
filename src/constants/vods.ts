@@ -15,6 +15,7 @@ export const VOD_KEYS = [
   'nhkOne',
   'nhkOndemand',
   'tver',
+  '_local',
 ] as const
 
 /** 動画配信サービス */
@@ -33,6 +34,7 @@ export const VODS = {
   nhkOne: 'NHK ONE',
   nhkOndemand: 'NHKオンデマンド',
   tver: 'TVer',
+  _local: 'ローカルファイル',
 } as const satisfies {
   [P in VodKey]: string
 }

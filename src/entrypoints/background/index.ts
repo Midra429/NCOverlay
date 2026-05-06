@@ -159,6 +159,11 @@ async function main() {
   // コンテキストメニュー
   webext.contextMenus.removeAll().then(() => {
     webext.contextMenus.create({
+      id: 'open-player',
+      title: '動画プレイヤー',
+      contexts: ['action'],
+    })
+    webext.contextMenus.create({
       id: 'report',
       title: '不具合報告・機能提案・その他',
       contexts: ['action'],
@@ -167,9 +172,16 @@ async function main() {
     webext.contextMenus.onClicked.addListener(async ({ menuItemId }) => {
       switch (menuItemId) {
         case 'report':
-          const url = await getFormsUrl()
+          webext.tabs.create({
+            url: await getFormsUrl(),
+          })
 
-          webext.tabs.create({ url })
+          break
+
+        case 'open-player':
+          webext.tabs.create({
+            url: webext.runtime.getURL('/player.html'),
+          })
 
           break
       }
