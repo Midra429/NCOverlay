@@ -171,16 +171,16 @@ async function main() {
 
     webext.contextMenus.onClicked.addListener(async ({ menuItemId }) => {
       switch (menuItemId) {
-        case 'report':
+        case 'open-player':
           webext.tabs.create({
-            url: await getFormsUrl(),
+            url: webext.runtime.getURL('/player.html'),
           })
 
           break
 
-        case 'open-player':
+        case 'report':
           webext.tabs.create({
-            url: webext.runtime.getURL('/player.html'),
+            url: await getFormsUrl(),
           })
 
           break
