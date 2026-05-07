@@ -138,23 +138,41 @@ function App() {
         ref={videoFileDrop}
       />
 
-      <Player.Provider>
-        <VideoSkin className="rounded-none! outline-none!">
-          <Video
-            src={fileObjUrl ?? undefined}
-            playsInline
-            onLoadedMetadata={({ currentTarget }) => {
-              patcher.setVideo(currentTarget, statePlayingVideo)
-            }}
-            onContextMenu={(evt) => {
-              evt.preventDefault()
+      <div
+        className="size-full bg-black"
+        onContextMenu={(evt) => {
+          evt.preventDefault()
 
-              videoFilePicker.current?.click()
+          videoFilePicker.current?.click()
+        }}
+      >
+        <Player.Provider>
+          <VideoSkin
+            className="rounded-none! outline-none!"
+            style={{
+              visibility: fileObjUrl ? undefined : 'hidden',
             }}
-            ref={videoRef}
-          />
-        </VideoSkin>
-      </Player.Provider>
+          >
+            <Video
+              src={fileObjUrl ?? undefined}
+              playsInline
+              onLoadedMetadata={({ currentTarget }) => {
+                patcher.setVideo(currentTarget, statePlayingVideo)
+              }}
+              ref={videoRef}
+            />
+          </VideoSkin>
+        </Player.Provider>
+      </div>
+
+      {!fileObjUrl && (
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+          <div className="text-medium text-white">
+            <p>動画ファイルをこのページにドラッグ&ドロップするか、</p>
+            <p>このページ上で右クリックしてファイル選択画面を開いてください</p>
+          </div>
+        </div>
+      )}
     </Layout>
   )
 }
