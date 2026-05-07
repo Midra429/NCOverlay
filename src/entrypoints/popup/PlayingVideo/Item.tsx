@@ -18,7 +18,7 @@ export function Item() {
               {playingVideo.name}
             </span>
           ) : (
-            <span className="text-foreground-500 dark:text-foreground-600">
+            <span className="text-foreground-500">
               動画ファイルを選択してください
             </span>
           )}

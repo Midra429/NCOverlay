@@ -15,6 +15,14 @@
     border-width: 1px;
   }
 
+  .media-slider__track {
+    background-color: color-mix(
+      in oklab,
+      hsl(var(--heroui-default-300) / 1) 50%,
+      transparent
+    );
+  }
+
   .media-overlay {
     backdrop-filter: none;
   }
