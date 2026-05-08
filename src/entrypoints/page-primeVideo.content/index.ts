@@ -36,6 +36,10 @@ export interface GetCurrentData {
   catalog: Catalog
 }
 
+function convertURL(input: string): URL {
+  return new URL(input, URL.canParse(input) ? undefined : location.href)
+}
+
 async function main() {
   if (!(await checkVodEnable(vod))) return
 
@@ -106,32 +110,38 @@ async function main() {
     return { id, playbackUrls, catalog }
   })
 
-  const $send = XMLHttpRequest.prototype.send
+  // fetch
+  window.fetch = new Proxy(window.fetch, {
+    apply: async (
+      target,
+      thisArg,
+      argArray: Parameters<typeof window.fetch>
+    ) => {
+      const promise = Reflect.apply(target, thisArg, argArray)
+      let response: Response | undefined
 
-  XMLHttpRequest.prototype.send = function (body) {
-    const $onload = this.onload
-
-    this.onload = function (evt) {
       try {
-        if (this.status !== 200) {
+        const [input] = argArray
+
+        if (typeof input !== 'string') {
           throw new Error()
         }
 
-        const url = URL.canParse(this.responseURL)
-          ? new URL(this.responseURL)
-          : new URL(this.responseURL, location.origin)
-        const { pathname, search, searchParams } = url
+        const { pathname, search, searchParams } = convertURL(input)
 
         // GetVodPlaybackResources
         if (pathname.endsWith('/GetVodPlaybackResources')) {
           const titleId = searchParams.get('titleId')
 
           if (titleId && !playbackUrlsQueue.hit(titleId)) {
+            response = await promise
+
+            const json: GetVodPlaybackResources = await response.clone().json()
             const {
               vodPlaylistedPlaybackUrls: {
                 result: { playbackUrls },
               },
-            } = JSON.parse(this.responseText) as GetVodPlaybackResources
+            } = json
 
             playbackUrlsQueue.add(titleId, playbackUrls)
           }
@@ -143,11 +153,67 @@ async function main() {
             const entityId = searchParams.get('entityId')
 
             if (entityId && !catalogQueue.hit(entityId)) {
+              response = await promise
+
+              const json: PlayerChromeResources = await response.clone().json()
               const {
                 resources: {
                   catalogMetadataV2: { catalog },
                 },
-              } = JSON.parse(this.responseText) as PlayerChromeResources
+              } = json
+
+              catalogQueue.add(entityId, catalog)
+            }
+          }
+        }
+      } catch {}
+
+      return response ?? promise
+    },
+  })
+
+  // XMLHttpRequest
+  const $send = XMLHttpRequest.prototype.send
+
+  XMLHttpRequest.prototype.send = function (body) {
+    const $onload = this.onload
+
+    this.onload = function (evt) {
+      try {
+        if (this.status !== 200) {
+          throw new Error()
+        }
+
+        const { pathname, search, searchParams } = convertURL(this.responseURL)
+
+        // GetVodPlaybackResources
+        if (pathname.endsWith('/GetVodPlaybackResources')) {
+          const titleId = searchParams.get('titleId')
+
+          if (titleId && !playbackUrlsQueue.hit(titleId)) {
+            const json: GetVodPlaybackResources = JSON.parse(this.responseText)
+            const {
+              vodPlaylistedPlaybackUrls: {
+                result: { playbackUrls },
+              },
+            } = json
+
+            playbackUrlsQueue.add(titleId, playbackUrls)
+          }
+        }
+        // playerChromeResources
+        else if (pathname.endsWith('/playerChromeResources/v1')) {
+          // catalogMetadataV2
+          if (search.includes('catalogMetadataV2')) {
+            const entityId = searchParams.get('entityId')
+
+            if (entityId && !catalogQueue.hit(entityId)) {
+              const json: PlayerChromeResources = JSON.parse(this.responseText)
+              const {
+                resources: {
+                  catalogMetadataV2: { catalog },
+                },
+              } = json
 
               catalogQueue.add(entityId, catalog)
             }
