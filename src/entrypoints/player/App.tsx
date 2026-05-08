@@ -1,46 +1,22 @@
 import type { StatePlayingVideo } from '@/ncoverlay/state'
 
 import { useEffect, useRef, useState } from 'react'
-import {
-  bufferFeature,
-  controlsFeature,
-  createPlayer,
-  fullscreenFeature,
-  playbackFeature,
-  playbackRateFeature,
-  textTrackFeature,
-  timeFeature,
-  volumeFeature,
-} from '@videojs/react'
-import { Video, VideoSkin } from '@videojs/react/video'
 
 import { logger } from '@/utils/logger'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import { Layout } from '@/components/Layout'
 
-import '@videojs/react/video/skin.css'
+import { VideoPlayer } from './skin'
+
 import './style.css'
 
 const FILE_EXT_REGEXP = /\.[a-z0-9]+$/i
 
-const Player = createPlayer({
-  features: [
-    playbackFeature,
-    playbackRateFeature,
-    volumeFeature,
-    timeFeature,
-    bufferFeature,
-    fullscreenFeature,
-    controlsFeature,
-    textTrackFeature,
-  ],
-})
-
 function App() {
   const [statePlayingVideo, setStatePlayingVideo] =
     useState<StatePlayingVideo | null>(null)
-  const [fileObjUrl, setFileObjUrl] = useState<string | null>(null)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
 
   const videoFilePicker = useRef<HTMLInputElement>(null)
   const videoFileDrop = useRef<HTMLInputElement>(null)
@@ -83,8 +59,8 @@ function App() {
 
     patcher.dispose()
 
-    if (fileObjUrl) {
-      URL.revokeObjectURL(fileObjUrl)
+    if (videoUrl) {
+      URL.revokeObjectURL(videoUrl)
     }
 
     const [file] = files
@@ -94,10 +70,9 @@ function App() {
       name: file.name,
       size: file.size,
     })
-    setFileObjUrl(URL.createObjectURL(file))
+    setVideoUrl(URL.createObjectURL(file))
 
     document.title = `${file.name} | NCOverlay`
-
     navigator.mediaSession.metadata = new MediaMetadata({
       title: file.name,
     })
@@ -146,26 +121,18 @@ function App() {
           videoFilePicker.current?.click()
         }}
       >
-        <Player.Provider>
-          <VideoSkin
-            className="rounded-none! outline-none!"
-            style={{
-              visibility: fileObjUrl ? undefined : 'hidden',
-            }}
-          >
-            <Video
-              src={fileObjUrl ?? undefined}
-              playsInline
-              onLoadedMetadata={({ currentTarget }) => {
-                patcher.setVideo(currentTarget, statePlayingVideo)
-              }}
-              ref={videoRef}
-            />
-          </VideoSkin>
-        </Player.Provider>
+        <VideoPlayer
+          src={videoUrl}
+          ref={videoRef}
+          videoEvents={{
+            onLoadedMetadata: ({ currentTarget }) => {
+              patcher.setVideo(currentTarget, statePlayingVideo)
+            },
+          }}
+        />
       </div>
 
-      {!fileObjUrl && (
+      {!videoUrl && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
           <div className="text-medium text-white">
             <p>動画ファイルをこのページにドラッグ&ドロップするか、</p>

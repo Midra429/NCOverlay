@@ -9,25 +9,36 @@
   --media-surface-background-color: hsl(var(--heroui-content1) / 1);
   --media-surface-backdrop-filter: none;
 
+  visibility: hidden;
+  outline: none !important;
+  border-radius: unset !important;
+
+  &:has(> video[src]) {
+    visibility: visible;
+  }
+
   .media-controls {
     border-color: hsl(var(--heroui-foreground-200) / 1);
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
 
-  .media-slider__track {
-    background-color: color-mix(
-      in oklab,
-      hsl(var(--heroui-default-300) / 1) 50%,
-      transparent
-    );
+  .media-slider {
+    .media-slider__track {
+      background-color: color-mix(
+        in oklab,
+        hsl(var(--heroui-default-300) / 1) 50%,
+        transparent
+      );
+    }
   }
 
   .media-overlay {
     backdrop-filter: none;
   }
 
-  .media-tooltip {
-    display: none;
+  .media-icon {
+    width: 18px;
+    height: 18px;
   }
 }
