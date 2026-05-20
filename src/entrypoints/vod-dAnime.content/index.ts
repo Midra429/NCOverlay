@@ -45,11 +45,16 @@ async function main() {
       }
 
       let workTitle = partData.workTitle
-      let episodeTitle = partData.partTitle
+      let episodeTitle = `${partData.partDispNumber} ${partData.partTitle}`
 
       if (partData.partDispNumber === '本編') {
-        if (normalize(episodeTitle).startsWith(normalize(workTitle))) {
-          workTitle = episodeTitle
+        const workTitleNormalized = normalize(workTitle)
+        const partTitleNormalized = normalize(partData.partTitle)
+
+        if (workTitleNormalized === partTitleNormalized) {
+          episodeTitle = ''
+        } else if (partTitleNormalized.startsWith(workTitleNormalized)) {
+          workTitle = partData.partTitle
           episodeTitle = ''
         }
       } else if (
@@ -59,7 +64,7 @@ async function main() {
         const parsed = parse(partData.prevTitle)
 
         if (parsed.isSingleEpisode && parsed.episode) {
-          episodeTitle = `${parsed.episode.number + 1}話 ${episodeTitle}`
+          episodeTitle = `${parsed.episode.number + 1}話 ${partData.partTitle}`
         }
       }
 
