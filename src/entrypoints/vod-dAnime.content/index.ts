@@ -4,6 +4,7 @@ import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 
 import { defineContentScript } from '#imports'
 import { parse } from '@midra/nco-utils/parse'
+import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
@@ -44,10 +45,13 @@ async function main() {
       }
 
       let workTitle = partData.workTitle
-      let episodeText = partData.partDispNumber
+      let episodeTitle = partData.partTitle
 
       if (partData.partDispNumber === '本編') {
-        episodeText = ''
+        if (normalize(episodeTitle).startsWith(normalize(workTitle))) {
+          workTitle = episodeTitle
+          episodeTitle = ''
+        }
       } else if (
         EP_TITLE_LAST_REGEXP.test(partData.partDispNumber) &&
         partData.prevTitle
@@ -55,14 +59,9 @@ async function main() {
         const parsed = parse(partData.prevTitle)
 
         if (parsed.isSingleEpisode && parsed.episode) {
-          episodeText = `${parsed.episode.number + 1}話`
+          episodeTitle = `${parsed.episode.number + 1}話 ${episodeTitle}`
         }
       }
-
-      const episodeTitle = [episodeText, partData.partTitle]
-        .filter(Boolean)
-        .join(' ')
-        .trim()
 
       const duration = partData.partMeasureSecond
 
