@@ -19,7 +19,7 @@ import {
   nhkJikkyoChIdMap_20231130,
 } from '@midra/nco-utils/api/constants'
 import { zeroPadding } from '@midra/nco-utils/common/zeroPadding'
-import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize/index'
+import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'

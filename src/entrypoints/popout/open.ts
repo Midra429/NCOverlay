@@ -2,6 +2,8 @@ import type { Browser } from '@/utils/webext'
 
 import { webext } from '@/utils/webext'
 
+const popoutUrl = webext.runtime.getURL('/popout.html')
+
 export type OpenAction =
   | 'import-settings'
   | 'export-settings'
@@ -22,7 +24,7 @@ export async function openPopout(
   if (tab?.id != null) {
     const windowInfo = await webext.windows.get(tab.windowId)
 
-    const url = new URL(webext.runtime.getURL('/popout.html'))
+    const url = new URL(popoutUrl)
 
     url.searchParams.set(webext.SEARCH_PARAM_TAB_ID, tab.id.toString())
     url.searchParams.set('action', action)

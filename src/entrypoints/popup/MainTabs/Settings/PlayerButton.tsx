@@ -4,18 +4,14 @@ import { webext } from '@/utils/webext'
 
 import { IconLink } from '@/components/IconLink'
 
-export function PlayerButton() {
-  function onPress() {
-    webext.tabs.create({
-      url: webext.runtime.getURL('/player.html'),
-    })
-  }
+const playerUrl = webext.runtime.getURL('/player.html')
 
+export function PlayerButton() {
   return (
     <IconLink
       Icon={TvMinimalPlayIcon}
       title="動画プレイヤー"
-      onPress={onPress}
+      href={playerUrl}
     />
   )
 }
