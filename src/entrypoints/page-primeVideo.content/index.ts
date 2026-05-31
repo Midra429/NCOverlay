@@ -29,6 +29,9 @@ export default defineContentScript({
 // "シーズン1、エピソード1 サブタイトル"
 const SUBTITLE_REGEXP =
   /^シーズン(?<season>\d+)、エピソード(?<episode>\d+)\s(?<subtitle>.+)$/
+// "S1 E1 サブタイトル"
+const SUBTITLE_SHORT_REGEXP =
+  /^S(?<season>\d+)\sE(?<episode>\d+)\s(?<subtitle>.+)$/
 
 export interface GetCurrentData {
   id: string
@@ -54,12 +57,12 @@ async function main() {
       '.dv-player-fullscreen .atvwebplayersdk-title-text:not(:empty)'
     )
     const subtitleTextElem = document.body.querySelector(
-      '.dv-player-fullscreen .atvwebplayersdk-subtitle-text'
+      '.dv-player-fullscreen :is(.atvwebplayersdk-subtitle-text, .atvwebplayersdk-episode-info)'
     )
 
     // タイトル
     const titleText = titleTextElem?.textContent ?? null
-    // シーズン1、エピソード1 サブタイトル
+    // "シーズン1、エピソード1 サブタイトル" or "S1 E1 サブタイトル"
     const subtitleText = subtitleTextElem?.textContent ?? null
 
     logger.log('titleText', titleText)
@@ -77,7 +80,11 @@ async function main() {
       season?: string
       episode?: string
       subtitle?: string
-    } = subtitleText?.match(SUBTITLE_REGEXP)?.groups ?? {}
+    } =
+      (
+        subtitleText?.match(SUBTITLE_REGEXP) ??
+        subtitleText?.match(SUBTITLE_SHORT_REGEXP)
+      )?.groups ?? {}
 
     const seasonNum = season ? Number(season) : -1
     const episodeNum = episode ? Number(episode) : -1
