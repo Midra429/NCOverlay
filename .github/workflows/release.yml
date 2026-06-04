@@ -29,41 +29,52 @@ jobs:
       id-token: write
       contents: write
 
+    env:
+      IS_RELEASE: ${{ inputs.bump_type != 'none' }}
+
     steps:
       - uses: actions/checkout@v6
 
       - name: Bunをインストール
         uses: oven-sh/setup-bun@v2
 
+      - name: 依存関係をインストール
+        run: |
+          bun install --frozen-lockfile
+          bun run pre
+
       - name: Gitのユーザーを設定
-        if: ${{ github.event.inputs.bump_type != 'none' }}
+        if: ${{ env.IS_RELEASE == 'true' }}
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: バージョンを更新
-        if: ${{ github.event.inputs.bump_type != 'none' }}
+        if: ${{ env.IS_RELEASE == 'true' }}
         run: |
-          bunx bumpp ${{ github.event.inputs.bump_type }} --commit "v%s" --yes
+          bunx bumpp ${{ inputs.bump_type }} -c "v" --yes
           echo VERSION=$(bun -e "console.log(require('./package.json').version)") >> $GITHUB_ENV
 
-      - name: 拡張機能をビルド
-        run: |
-          bun install --frozen-lockfile
-          bun run zip
+      - name: 拡張機能をビルド (Chrome / Edge)
+        if: ${{ env.IS_RELEASE == 'true' || inputs.submit_chrome || inputs.submit_edge }}
+        run: bun run zip:chrome
+
+      - name: 拡張機能をビルド (Firefox)
+        if: ${{ env.IS_RELEASE == 'true' || inputs.submit_firefox }}
+        run: bun run zip:firefox
 
       - name: GitHubへリリース
-        if: ${{ github.event.inputs.bump_type != 'none' }}
+        if: ${{ env.IS_RELEASE == 'true' }}
         run: |
           gh release create "v${VERSION}" \
             ./dist/*-chrome.zip \
             ./dist/*-firefox.zip \
-            -t "$(cat ./package.json | jq -r '.displayName') v${VERSION}"
+            -t "$(bun -e "console.log(require('./package.json').displayName)") v${VERSION}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Chrome Web Storeへ提出
-        if: ${{ github.event.inputs.submit_chrome == 'true' }}
+        if: ${{ inputs.submit_chrome }}
         run: |
           bun run wxt submit \
             --chrome-zip ./dist/*-chrome.zip
@@ -75,7 +86,7 @@ jobs:
         continue-on-error: true
 
       - name: Edge Add-onsへ提出
-        if: ${{ github.event.inputs.submit_edge == 'true' }}
+        if: ${{ inputs.submit_edge }}
         run: |
           bun run wxt submit \
             --edge-zip ./dist/*-chrome.zip
@@ -86,7 +97,7 @@ jobs:
         continue-on-error: true
 
       - name: Firefox Add-onsへ提出
-        if: ${{ github.event.inputs.submit_firefox == 'true' }}
+        if: ${{ inputs.submit_firefox }}
         run: |
           bun run wxt submit \
             --firefox-zip ./dist/*-firefox.zip \
