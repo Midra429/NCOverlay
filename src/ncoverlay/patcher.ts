@@ -168,11 +168,11 @@ export class NCOPatcher {
       await this.#nco.state.set('status', 'ready')
     }
 
-    let prev = 0
+    let prev: number | null = null
 
     this.#nco.addEventListener('loadedmetadata', async function () {
       const now = performance.now()
-      const isSkip = now - prev < 1000
+      const isSkip = prev !== null && now - prev < 1000
 
       prev = now
 
