@@ -38,7 +38,7 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 
 - Microsoft Edge アドオン\
-https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl\
+https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl \
 ※他よりアップデートの配信が遅いので注意
 
 ### Firefox (v142以降)
