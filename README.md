@@ -38,7 +38,8 @@ https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 https://chromewebstore.google.com/detail/ofhffkmglkibpkgcfhbgajghlkgplafe
 
 - Microsoft Edge アドオン\
-https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl
+https://microsoftedge.microsoft.com/addons/detail/pglfdhpihampbbmllndglcejpnjgkkkl\
+※他よりアップデートの配信が遅いので注意
 
 ### Firefox (v142以降)
 - Firefox アドオン\
@@ -49,11 +50,13 @@ https://addons.mozilla.org/ja/firefox/addon/ncoverlay/
 サイドパネル（コメントリスト）の表示ができない可能性があります。
 
 ## 不具合報告・機能提案など
-- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)<br>
-(NCOverlay経由でアクセスすると、バージョンやOSなどの情報が自動入力されます)
+- [Google フォーム](https://docs.google.com/forms/d/e/1FAIpQLSerDl7pYEmaXv0_bBMDOT2DfJllzP1kdesDIRaDBM8sOAzHGw/viewform)\
+NCOverlay経由でアクセスすると、バージョンやOSなどの情報が自動入力されます
 - GitHubの[Issues](https://github.com/Midra429/NCOverlay/issues)
 - SNSアカウント宛にメッセージやメンション
-  - X (Twitter): [@Midra429](https://x.com/Midra429)
+  - X（Twitter）: [@Midra429](https://x.com/Midra429)
+  - Bluesky: [@midra.me](https://bsky.app/profile/midra.me)
+- X（Twitter）で `NCOverlay` を含めてポスト（ツイート）
 
 ---
 
