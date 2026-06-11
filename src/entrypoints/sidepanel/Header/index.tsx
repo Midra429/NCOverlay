@@ -5,7 +5,7 @@ import { Button, cn } from '@heroui/react'
 import { Settings2Icon, SquareArrowOutUpRight, XIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
-import { sendMessageToBackground } from '@/messaging/to-background'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 import { Tooltip } from '@/components/Tooltip'
 
@@ -22,7 +22,7 @@ export function Header() {
   }, [])
 
   const openPopout: ButtonProps['onClick'] = (evt) => {
-    sendMessageToBackground('openPopout', {
+    sendExtensionMessage('bg:openPopout', {
       type: 'sidePanel',
       createData: {
         top: evt.screenY - evt.pageY,

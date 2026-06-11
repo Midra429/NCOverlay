@@ -2,11 +2,11 @@ import { Button, cn } from '@heroui/react'
 import { FilePlayIcon } from 'lucide-react'
 
 import { webext } from '@/utils/webext'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 export function Header() {
   async function onPress() {
-    await sendMessageToContent('selectVideoFile', null)
+    await sendExtensionMessage('content:selectVideoFile', null)
 
     window.close()
   }

@@ -3,28 +3,28 @@ import type { Browser } from '@/utils/webext'
 import { webext } from '@/utils/webext'
 import { captureTab } from '@/utils/extension/captureTab'
 import { setBadge } from '@/utils/extension/setBadge'
-import { onMessageInBackground } from '@/messaging/to-background'
+import { onExtensionMessage } from '@/messaging/extension'
 
 export default function () {
-  onMessageInBackground('getCurrentTab', ({ sender }) => {
+  onExtensionMessage('bg:getCurrentTab', ({ sender }) => {
     return sender.tab as Browser.tabs.Tab
   })
 
-  onMessageInBackground('setBadge', ({ sender, data }) => {
+  onExtensionMessage('bg:setBadge', ({ sender, data }) => {
     return setBadge({
       tabId: sender.tab?.id,
       ...data,
     })
   })
 
-  onMessageInBackground('captureTab', ({ sender, data }) => {
+  onExtensionMessage('bg:captureTab', ({ sender, data }) => {
     return captureTab({
       windowId: sender.tab?.windowId,
       ...data,
     })
   })
 
-  onMessageInBackground('openPopout', async ({ sender, data }) => {
+  onExtensionMessage('bg:openPopout', async ({ sender, data }) => {
     await webext[data.type].openPopout({
       tabId: sender.tab?.id,
       ...data.createData,

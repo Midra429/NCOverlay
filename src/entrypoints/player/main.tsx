@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { onMessageInContent } from '@/messaging/to-content'
+import { onExtensionMessage } from '@/messaging/extension'
 
 import App from './App'
 
@@ -41,7 +41,7 @@ window.addEventListener('drop', (evt) => {
   }
 })
 
-onMessageInContent('selectVideoFile', () => {
+onExtensionMessage('content:selectVideoFile', () => {
   const input = document.getElementById('video-file-picker') as HTMLInputElement
 
   input.click()

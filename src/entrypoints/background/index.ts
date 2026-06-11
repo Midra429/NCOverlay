@@ -13,7 +13,7 @@ import { onProxyMessage } from '@/utils/proxy-service/messaging/extension'
 import { registerProxy } from '@/utils/proxy-service/register'
 import { settings } from '@/utils/settings/extension'
 import { storage } from '@/utils/storage/extension'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 import clearTemporaryData from './clearTemporaryData'
 import migration from './migration'
@@ -147,7 +147,7 @@ async function main() {
   webext.tabs.onUpdated.addListener(async (tabId) => {
     if (tabId === webext.tabs.TAB_ID_NONE) return
 
-    if (!(await sendMessageToContent('getNcoId', null, tabId))) {
+    if (!(await sendExtensionMessage('content:getNcoId', null, tabId))) {
       webext.sidePanel.setOptions({
         enabled: false,
         path: webext.sidePanel.path,

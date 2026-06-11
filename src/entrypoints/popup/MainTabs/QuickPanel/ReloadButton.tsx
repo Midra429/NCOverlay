@@ -2,7 +2,7 @@ import { RefreshCwIcon, SearchIcon } from 'lucide-react'
 
 import { useNcoState } from '@/hooks/useNco'
 import { useSettings } from '@/hooks/useSettings'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 import { PanelButton } from '@/components/PanelButton'
 
@@ -13,7 +13,7 @@ export function ReloadButton() {
   const isLoading = stateStatus === 'searching' || stateStatus === 'loading'
 
   function onPress() {
-    sendMessageToContent('reload', null)
+    sendExtensionMessage('content:reload', null)
   }
 
   return (

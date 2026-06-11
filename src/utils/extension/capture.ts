@@ -3,7 +3,7 @@ import type { StorageItems } from '@/types/storage'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 export async function capture(): Promise<
   StorageItems['settings:capture:method'] | false
@@ -13,8 +13,8 @@ export async function capture(): Promise<
     'settings:capture:method'
   )
 
-  const response = await sendMessageToContent(
-    'capture',
+  const response = await sendExtensionMessage(
+    'content:capture',
     method === 'copy' ? 'png' : format
   )
 

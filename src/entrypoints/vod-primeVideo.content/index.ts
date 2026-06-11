@@ -8,7 +8,7 @@ import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
 import { sleep } from '@/utils/sleep'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { sendMessageToPage } from '@/messaging/to-page'
+import { sendPageMessage } from '@/messaging/page'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
@@ -32,7 +32,7 @@ async function main() {
     getInfo: async () => {
       await sleep(2000)
 
-      const item = await sendMessageToPage('getCurrentData', null)
+      const item = await sendPageMessage('page:primeVideo:getCurrentData', null)
 
       logger.log('getCurrentData', item)
 

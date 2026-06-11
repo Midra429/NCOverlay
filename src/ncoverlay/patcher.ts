@@ -8,7 +8,7 @@ import { parse } from '@midra/nco-utils/parse'
 
 import { logger } from '@/utils/logger'
 import { settings } from '@/utils/settings/extension'
-import { sendMessageToBackground } from '@/messaging/to-background'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 import { NCOverlay } from '.'
 
@@ -72,7 +72,7 @@ export class NCOPatcher {
 
     this.#video = video
 
-    const tab = await sendMessageToBackground('getCurrentTab', null)
+    const tab = await sendExtensionMessage('bg:getCurrentTab', null)
     const tabId = tab?.id
 
     this.#nco = new NCOverlay(tabId!, this.#video, this.#functions)
@@ -208,7 +208,7 @@ export class NCOPatcher {
       if (intervalMs < delta) {
         lastTime = time - (delta % intervalMs)
 
-        sendMessageToBackground('timeupdate', {
+        sendExtensionMessage('bg:timeupdate', {
           id: this.id,
           time: this.renderer.getCurrentTime() * 1000,
         })

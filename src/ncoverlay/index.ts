@@ -9,8 +9,6 @@ import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
-import { sendMessageToBackground } from '@/messaging/to-background'
-import { onMessageInContent } from '@/messaging/to-content'
 
 import { NCOKeyboard } from './keyboard'
 import { NCORenderer } from './renderer'
@@ -18,6 +16,7 @@ import { NCOSearcher } from './searcher'
 import { NCOState } from './state'
 
 import './style.css'
+import { onExtensionMessage, sendExtensionMessage } from '@/messaging/extension'
 
 export interface NCOverlayEventMap {
   playing: (this: NCOverlay) => void
@@ -64,7 +63,7 @@ export class NCOverlay {
 
     this.#registerEventListener()
 
-    sendMessageToBackground('setBadge', { text: null })
+    sendExtensionMessage('bg:setBadge', { text: null })
 
     // 既にメタデータ読み込み済みの場合
     if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
@@ -86,14 +85,14 @@ export class NCOverlay {
     this.#unregisterEventListener()
     this.removeAllEventListeners()
 
-    sendMessageToBackground('setBadge', { text: null })
+    sendExtensionMessage('bg:setBadge', { text: null })
   }
 
   async clear() {
     await this.state.clear()
     this.renderer.clear()
 
-    await sendMessageToBackground('setBadge', { text: null })
+    await sendExtensionMessage('bg:setBadge', { text: null })
   }
 
   /**
@@ -284,7 +283,7 @@ export class NCOverlay {
             (detail) => detail.status === 'error'
           ).length
 
-          sendMessageToBackground('setBadge', {
+          sendExtensionMessage('bg:setBadge', {
             text:
               (loadingCounts && loadingCounts.toString()) ||
               (successCounts && successCounts.toString()) ||
@@ -300,32 +299,32 @@ export class NCOverlay {
       }),
 
       // メッセージ (インスタンスのID取得)
-      onMessageInContent('getNcoId', () => {
+      onExtensionMessage('content:getNcoId', () => {
         return this.id
       }),
 
       // メッセージ (現在の再生時間を取得)
-      onMessageInContent('getCurrentTime', () => {
+      onExtensionMessage('content:getCurrentTime', () => {
         return this.renderer.getCurrentTime()
       }),
 
       // メッセージ (再描画)
-      onMessageInContent('rerender', () => {
+      onExtensionMessage('content:rerender', () => {
         this.renderer.rerender()
       }),
 
       // メッセージ (再読み込み)
-      onMessageInContent('reload', () => {
+      onExtensionMessage('content:reload', () => {
         this.#trigger('reload')
       }),
 
       // メッセージ (マーカー)
-      onMessageInContent('jumpMarker', ({ data }) => {
+      onExtensionMessage('content:jumpMarker', ({ data }) => {
         return this.jumpMarker(data)
       }),
 
       // メッセージ (スクリーンショット)
-      onMessageInContent('capture', ({ data }) => {
+      onExtensionMessage('content:capture', ({ data }) => {
         return this.renderer.capture(data)
       })
     )

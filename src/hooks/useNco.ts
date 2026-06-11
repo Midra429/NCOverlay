@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 
 import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
 import { settings } from '@/utils/settings/extension'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 import { NCOState } from '@/ncoverlay/state'
 
 export let ncoId: number | undefined
 export let ncoState: NCOState | undefined
 
 export async function initializeNcoState() {
-  const id = await sendMessageToContent('getNcoId', null)
+  const id = await sendExtensionMessage('content:getNcoId', null)
 
   if (id) {
     ncoId = id

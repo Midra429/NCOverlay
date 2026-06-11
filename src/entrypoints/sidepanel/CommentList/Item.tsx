@@ -18,7 +18,7 @@ import { readableColor } from '@/utils/color'
 import { formatDate, formatDuration } from '@/utils/format'
 import { settings } from '@/utils/settings/extension'
 import { ncoState } from '@/hooks/useNco'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 type CnReturn = ReturnType<typeof cn>
 
@@ -316,14 +316,14 @@ export function Item({ comment, offsetMs }: ItemProps) {
   // メニュー (再生時間)
   async function adjustGlobalOffset() {
     const currentTime =
-      (await sendMessageToContent('getCurrentTime', null)) ?? 0
+      (await sendExtensionMessage('content:getCurrentTime', null)) ?? 0
 
     await ncoState?.set(
       'offset',
       Math.floor((comment.vposMs / 1000) * -1 + currentTime)
     )
 
-    sendMessageToContent('rerender', null)
+    sendExtensionMessage('content:rerender', null)
   }
 
   const timeMenu = (

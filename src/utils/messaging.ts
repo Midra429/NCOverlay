@@ -1,5 +1,6 @@
 import type {
   ExtensionMessage,
+  ExtensionMessagingConfig,
   ExtensionMessenger,
   GetDataType,
   GetReturnType,
@@ -8,9 +9,11 @@ import type {
   RemoveListenerCallback,
 } from '@webext-core/messaging'
 
+import { defineExtensionMessaging } from '@webext-core/messaging'
+
 import { webext } from '@/utils/webext'
 
-export interface ReceivedCallback<
+interface ReceivedCallback<
   ProtocolMap extends Record<string, any>,
   T extends keyof ProtocolMap,
 > {
@@ -19,18 +22,15 @@ export interface ReceivedCallback<
   ): MaybePromise<GetReturnType<ProtocolMap[T]>>
 }
 
-export function patchSendMessage<
-  To extends 'background' | 'content',
-  ProtocolMap extends Record<string, any>,
->(to: To, sendMessage: ExtensionMessenger<ProtocolMap>['sendMessage']) {
+function patchSendMessage<ProtocolMap extends Record<string, any>>(
+  sendMessage: ExtensionMessenger<ProtocolMap>['sendMessage']
+) {
   return async function <T extends keyof ProtocolMap>(
     type: T,
     data: GetDataType<ProtocolMap[T]>,
-    tabId?:
-      | (To extends 'background' ? undefined : never)
-      | (To extends 'content' ? number : never)
+    tabId?: T extends `content:${string}` ? number : never
   ): Promise<ReturnType<ProtocolMap[T]> | undefined> {
-    if (to === 'content' && tabId == null) {
+    if (type.toString().startsWith('content:') && tabId == null) {
       tabId = (await webext.getCurrentActiveTabId()) as any
     }
 
@@ -40,7 +40,7 @@ export function patchSendMessage<
   }
 }
 
-export function patchOnMessage<ProtocolMap extends Record<string, any>>(
+function patchOnMessage<ProtocolMap extends Record<string, any>>(
   onMessage: ExtensionMessenger<ProtocolMap>['onMessage']
 ) {
   return function <T extends keyof ProtocolMap>(
@@ -52,5 +52,21 @@ export function patchOnMessage<ProtocolMap extends Record<string, any>>(
     } catch {
       return () => {}
     }
+  }
+}
+
+export function defineMessaging<ProtocolMap extends Record<string, any>>(
+  config?: ExtensionMessagingConfig
+) {
+  const messenger = defineExtensionMessaging<ProtocolMap>(config)
+
+  const sendMessage = patchSendMessage(messenger.sendMessage)
+  const onMessage = patchOnMessage(messenger.onMessage)
+  const removeAllListeners = messenger.removeAllListeners
+
+  return {
+    sendMessage,
+    onMessage,
+    removeAllListeners,
   }
 }

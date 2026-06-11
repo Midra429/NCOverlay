@@ -7,7 +7,7 @@ import NiconiComments from '@xpadev-net/niconicomments'
 
 import { logger } from '@/utils/logger'
 import { getObjectFitRect } from '@/utils/dom/getObjectFitRect'
-import { sendMessageToBackground } from '@/messaging/to-background'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 interface NiconiCommentsOptions
   extends Partial<Omit<BaseOptions, 'mode' | 'format'>> {}
@@ -206,7 +206,7 @@ export class NCORenderer {
         let data: number[] | undefined
 
         try {
-          data = await sendMessageToBackground('captureTab', {
+          data = await sendExtensionMessage('bg:captureTab', {
             rect: getObjectFitRect(true, this.canvas, 1920, 1080),
             scale: window.devicePixelRatio,
             format,

@@ -6,7 +6,7 @@ import { Virtuoso } from 'react-virtuoso'
 
 import { ncoId, ncoState, useNcoState } from '@/hooks/useNco'
 import { useSettings } from '@/hooks/useSettings'
-import { onMessageInBackground } from '@/messaging/to-background'
+import { onExtensionMessage } from '@/messaging/extension'
 import { filterDisplayThreads } from '@/ncoverlay/state'
 
 import { Header } from './Header'
@@ -62,7 +62,7 @@ export function CommentList() {
   useEffect(() => {
     if (isHover) return
 
-    return onMessageInBackground('timeupdate', ({ data }) => {
+    return onExtensionMessage('bg:timeupdate', ({ data }) => {
       if (data.id !== ncoId) return
 
       const currentTime = data.time - offsetMs

@@ -15,7 +15,7 @@ import { logger } from '@/utils/logger'
 import { LRUQueue } from '@/utils/queue'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { checkVodEnable } from '@/utils/extension/page/checkVodEnable'
-import { onMessageInPage } from '@/messaging/to-page'
+import { onPageMessage } from '@/messaging/page'
 
 const vod: VodKey = 'primeVideo'
 
@@ -51,7 +51,7 @@ async function main() {
   const playbackUrlsQueue = new LRUQueue<PlaybackUrls>(25)
   const catalogQueue = new LRUQueue<Catalog>(25)
 
-  onMessageInPage('getCurrentData', async () => {
+  onPageMessage('page:primeVideo:getCurrentData', async () => {
     const titleTextElem = await querySelectorAsync(
       document.body,
       '.dv-player-fullscreen .atvwebplayersdk-title-text:not(:empty)'

@@ -6,7 +6,7 @@ import { RotateCcwIcon } from 'lucide-react'
 import { MARKERS } from '@/constants/markers'
 import { useNcoState } from '@/hooks/useNco'
 import { useSettings } from '@/hooks/useSettings'
-import { sendMessageToContent } from '@/messaging/to-content'
+import { sendExtensionMessage } from '@/messaging/extension'
 
 import { Tooltip } from '@/components/Tooltip'
 
@@ -24,7 +24,7 @@ export function MarkerButton({
   disabled,
 }: MarkerButtonProps) {
   function onPress() {
-    sendMessageToContent('jumpMarker', markerKey)
+    sendExtensionMessage('content:jumpMarker', markerKey)
   }
 
   return (
