@@ -69,18 +69,21 @@ async function main() {
         const operationName = searchParams.get('operationName')
 
         switch (operationName) {
-          // case 'cosmo_getTitle': {
-          //   response = await promise
+          case 'cosmo_getTitle': {
+            // titleStage = null
+            positionList = null
 
-          //   const json: GetTitle = await response.clone().json()
-          //   const {
-          //     data: { webfront_title_stage },
-          //   } = json
+            // response = await promise
 
-          //   titleStage = webfront_title_stage
+            // const json: GetTitle = await response.clone().json()
+            // const {
+            //   data: { webfront_title_stage },
+            // } = json
 
-          //   break
-          // }
+            // titleStage = webfront_title_stage
+
+            break
+          }
 
           case 'cosmo_getPlaylistUrl': {
             response = await promise
