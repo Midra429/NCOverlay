@@ -11,6 +11,7 @@ import type {
 import { defineContentScript } from '#imports'
 
 import { MATCHES } from '@/constants/matches'
+import { convertURL } from '@/utils/convertURL'
 import { logger } from '@/utils/logger'
 import { LRUQueue } from '@/utils/queue'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
@@ -33,14 +34,10 @@ const SUBTITLE_REGEXP =
 const SUBTITLE_SHORT_REGEXP =
   /^S(?<season>\d+)\sE(?<episode>\d+)\s(?<subtitle>.+)$/
 
-export interface GetCurrentData {
+export interface PrimeVideoPlaybackInfo {
   id: string
   playbackUrls: PlaybackUrls
   catalog: Catalog
-}
-
-function convertURL(input: string): URL {
-  return new URL(input, URL.canParse(input) ? undefined : location.href)
 }
 
 async function main() {
@@ -51,7 +48,7 @@ async function main() {
   const playbackUrlsQueue = new LRUQueue<PlaybackUrls>(25)
   const catalogQueue = new LRUQueue<Catalog>(25)
 
-  onPageMessage('page:primeVideo:getCurrentData', async () => {
+  onPageMessage('page:primeVideo:getPlaybackInfo', async () => {
     const titleTextElem = await querySelectorAsync(
       document.body,
       '.dv-player-fullscreen .atvwebplayersdk-title-text:not(:empty)'

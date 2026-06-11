@@ -1,13 +1,11 @@
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { MarkerKey } from '@/constants/markers'
 import type { StateInfo } from '@/ncoverlay/state'
-import type { VodKey } from '@/types/constants'
 import type { JikkyoMarker } from './findMarkers'
 
 import { MARKERS } from '@/constants/markers'
-// import { logger } from '@/utils/logger'
 
-export const SUPPORTED_VOD_KEYS: VodKey[] = ['dAnime', 'abema', 'dmmTv']
+// import { logger } from '@/utils/logger'
 
 const SPONSOR_DURATION_MS = 10000
 

@@ -1,4 +1,5 @@
 import type { StateSlotDetail } from '@/ncoverlay/state'
+import type { VodKey } from '@/types/constants'
 import type {
   AutoSearchTarget,
   CommentCustomizeTarget,
@@ -48,4 +49,11 @@ export const SLOTS_REFRESH_SETTINGS_KEYS: SettingsKey[] = [
   'settings:ng:largeComments',
   'settings:ng:fixedComments',
   'settings:ng:coloredComments',
+]
+
+export const ADJUST_OFFSET_VOD_KEYS: VodKey[] = [
+  'dAnime',
+  'abema',
+  'dmmTv',
+  'unext',
 ]

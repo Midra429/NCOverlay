@@ -1,4 +1,5 @@
-import type { GetCurrentData } from '@/entrypoints/page-primeVideo.content'
+import type { PrimeVideoPlaybackInfo } from '@/entrypoints/page-primeVideo.content'
+import type { UnextPlaybackInfo } from '@/entrypoints/page-unext.content'
 import type { setBadge } from '@/utils/extension/setBadge'
 
 import { defineCustomEventMessaging } from '@webext-core/messaging/page'
@@ -10,7 +11,10 @@ export interface ProtocolMap {
   ) => Awaited<ReturnType<typeof setBadge>>
 
   // content -> page
-  'page:primeVideo:getCurrentData': (args?: null) => GetCurrentData | null
+  'page:primeVideo:getPlaybackInfo': (
+    args?: null
+  ) => PrimeVideoPlaybackInfo | null
+  'page:unext:getPlaybackInfo': (args?: null) => UnextPlaybackInfo | null
 }
 
 export const { sendMessage: sendPageMessage, onMessage: onPageMessage } =

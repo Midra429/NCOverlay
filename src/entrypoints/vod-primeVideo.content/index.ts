@@ -32,15 +32,18 @@ async function main() {
     getInfo: async () => {
       await sleep(2000)
 
-      const item = await sendPageMessage('page:primeVideo:getCurrentData', null)
+      const playbackInfo = await sendPageMessage(
+        'page:primeVideo:getPlaybackInfo',
+        null
+      )
 
-      logger.log('getCurrentData', item)
+      logger.log('getPlaybackInfo', playbackInfo)
 
-      if (!item) {
+      if (!playbackInfo) {
         return null
       }
 
-      const { playbackUrls, catalog } = item
+      const { playbackUrls, catalog } = playbackInfo
 
       const title = catalog.seriesTitle || catalog.title
       const subtitle = catalog.seriesTitle ? catalog.title : null

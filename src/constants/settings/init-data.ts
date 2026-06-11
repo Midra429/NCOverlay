@@ -16,9 +16,12 @@ import { JIKKYO_CHANNELS } from '@midra/nco-utils/api/constants'
 
 import { PLUGINS } from '@/constants/plugins'
 import { VODS } from '@/constants/vods'
-import { SUPPORTED_VOD_KEYS } from '@/utils/api/jikkyo/findChapters'
 
-import { AUTO_SEARCH_TARGET_KEYS, SOURCE_NAMES } from '.'
+import {
+  ADJUST_OFFSET_VOD_KEYS,
+  AUTO_SEARCH_TARGET_KEYS,
+  SOURCE_NAMES,
+} from '.'
 
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
@@ -189,7 +192,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           '※コメントの内容や数に依存するため、不正確な可能性があります',
           '',
           '[対応動画配信サービス]',
-          SUPPORTED_VOD_KEYS.map((v) => VODS[v]).join(' / '),
+          ADJUST_OFFSET_VOD_KEYS.map((v) => VODS[v]).join(' / '),
         ].join('\n'),
       },
     ],
