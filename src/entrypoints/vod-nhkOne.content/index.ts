@@ -23,6 +23,13 @@ import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize'
 
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
+import {
+  DATE_MS_20231130,
+  NHK_SERVICE_ID_JIKKYO_CH,
+  ONE_MONTH_MS,
+  cleanTitle,
+  parseAirDateTime,
+} from '@/utils/nhkOndemand'
 import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
@@ -39,43 +46,12 @@ export default defineContentScript({
 })
 
 const TITLE_PREFIX_REGEXP = /^【.+?】/
-const AIR_DATE_TIME_REGEXP = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
 const TITLE_DATE_REGEXP =
   /^\d{4}年\d{1,2}月\d{1,2}日(?:午[前後]\d{1,2}:\d{1,2})?$/
 const BADGE_URL_SERVICE_ID_REGEXP = /(?<=\/bs\/)[a-z]\d(?=\/)/
 
-const ONE_MONTH_MS = 31 * 24 * 60 * 60 * 1000
-const DATE_MS_20231130 = new Date('2023-11-30T23:59:59+09:00').getTime()
-const NHK_SERVICE_ID_JIKKYO_CH: {
-  [id in NhkServiceId]?: JikkyoChannelId
-} = {
-  g1: 'jk1',
-  e1: 'jk2',
-  s1: 'jk101',
-  s5: 'jk103',
-}
-
-function cleanTitle(title: string): string {
-  return title
-    .replace(/\ue486|\ue488/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
 function normalizeTitle(title: string): string {
   return cleanTitle(title).replace(TITLE_PREFIX_REGEXP, '').trim()
-}
-
-function parseAirDateTime(airdate: string, airtime: string): Date | null {
-  const str = airdate + airtime
-
-  if (!AIR_DATE_TIME_REGEXP.test(str)) {
-    return null
-  }
-
-  return new Date(
-    (airdate + airtime).replace(AIR_DATE_TIME_REGEXP, '$1-$2-$3T$4:$5:$6+09:00')
-  )
 }
 
 async function main() {

@@ -3,13 +3,18 @@ import type {
   GetPlaylistUrl,
   MoviePartsPositionList,
 } from '@/types/vod/unext/getPlaylistUrl'
-// import type { GetTitle, WebfrontTitleStage } from '@/types/vod/unext/getTitle'
+import type {
+  EpisodeElement,
+  GetTitle,
+  WebfrontTitleStage,
+} from '@/types/vod/unext/getTitle'
 
 import { defineContentScript } from '#imports'
 
 import { MATCHES } from '@/constants/matches'
 import { convertURL } from '@/utils/convertURL'
 import { logger } from '@/utils/logger'
+import { LRUQueue } from '@/utils/queue'
 import { checkVodEnable } from '@/utils/extension/page/checkVodEnable'
 import { onPageMessage } from '@/messaging/page'
 
@@ -22,8 +27,11 @@ export default defineContentScript({
   main: () => void main(),
 })
 
+const TITLE_EP_ID_REGEXP = /\/play\/(?<titleId>[^\/]+)\/(?<episodeId>[^\/]+)/
+
 export interface UnextPlaybackInfo {
-  // titleStage: WebfrontTitleStage
+  titleStage: WebfrontTitleStage
+  titleEpisodes: EpisodeElement[]
   positionList: MoviePartsPositionList[]
 }
 
@@ -32,15 +40,29 @@ async function main() {
 
   logger.log('page', vod)
 
-  // let titleStage: WebfrontTitleStage | null = null
-  let positionList: MoviePartsPositionList[] | null = null
+  const titleStageQueue = new LRUQueue<WebfrontTitleStage>(25)
+  const titleEpisodesQueue = new LRUQueue<EpisodeElement[]>(25)
+  const positionListQueue = new LRUQueue<MoviePartsPositionList[]>(25)
 
   onPageMessage('page:unext:getPlaybackInfo', async () => {
-    if (!positionList) {
+    const groups = location.pathname.match(TITLE_EP_ID_REGEXP)?.groups
+    const { titleId, episodeId } = groups ?? {}
+
+    if (!titleId || !episodeId) {
       return null
     }
 
-    return { positionList }
+    const titleEpId = `${titleId}/${episodeId}`
+
+    const titleStage = titleStageQueue.get(titleEpId)
+    const titleEpisodes = titleEpisodesQueue.get(titleId)
+    const positionList = positionListQueue.get(episodeId)
+
+    if (!titleStage || !titleEpisodes || !positionList) {
+      return null
+    }
+
+    return { titleStage, titleEpisodes, positionList }
   })
 
   // fetch
@@ -67,20 +89,31 @@ async function main() {
         }
 
         const operationName = searchParams.get('operationName')
+        const variables = JSON.parse(searchParams.get('variables') ?? '{}')
 
         switch (operationName) {
           case 'cosmo_getTitle': {
-            // titleStage = null
-            positionList = null
+            response = await promise
 
-            // response = await promise
+            const json: GetTitle = await response.clone().json()
+            const {
+              data: {
+                webfront_title_stage,
+                webfront_title_titleEpisodes: { episodes },
+              },
+            } = json
 
-            // const json: GetTitle = await response.clone().json()
-            // const {
-            //   data: { webfront_title_stage },
-            // } = json
+            const titleId = webfront_title_stage.id
+            const episodeId = webfront_title_stage.episode.id
+            const titleEpId = `${titleId}/${episodeId}`
 
-            // titleStage = webfront_title_stage
+            if (!titleStageQueue.hit(titleEpId)) {
+              titleStageQueue.add(titleEpId, webfront_title_stage)
+            }
+
+            if (!titleEpisodesQueue.hit(titleId)) {
+              titleEpisodesQueue.add(titleId, episodes)
+            }
 
             break
           }
@@ -97,7 +130,11 @@ async function main() {
               },
             } = json
 
-            positionList = moviePartsPositionList
+            const episodeId = variables.code as string
+
+            if (!positionListQueue.hit(episodeId)) {
+              positionListQueue.add(episodeId, moviePartsPositionList)
+            }
 
             break
           }

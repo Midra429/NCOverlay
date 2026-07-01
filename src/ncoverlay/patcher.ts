@@ -18,6 +18,7 @@ export interface PlayingInfo {
   chapters?: VideoChapter[]
   disableParse?: boolean
   disableAdjustJikkyoOffset?: boolean
+  isNhkOndemand?: boolean
 }
 
 export interface NCOPatcherInit {
@@ -25,7 +26,7 @@ export interface NCOPatcherInit {
   appendCanvas: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void
   autoSearch?: (
     nco: NCOverlay,
-    args: NCOSearcherAutoSearchArgs
+    args: NCOSearcherAutoSearchArgs & StateInfo
   ) => Promise<void>
 }
 
@@ -111,6 +112,7 @@ export class NCOPatcher {
           duration: info ? Math.floor(info.duration) : 0,
           chapters: info?.chapters,
           disableAdjustJikkyoOffset: info?.disableAdjustJikkyoOffset,
+          isNhkOndemand: info?.isNhkOndemand,
         }
 
         await this.#nco.state.set('vod', this.#vod)
@@ -144,7 +146,7 @@ export class NCOPatcher {
             'settings:autoSearch:jikkyoIgnoreRerun'
           )
 
-        const args: NCOSearcherAutoSearchArgs | null = {
+        const args: (NCOSearcherAutoSearchArgs & StateInfo) | null = {
           input: '',
           duration: 0,
           targets,
