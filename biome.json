@@ -17,7 +17,7 @@
       "react": "recommended"
     },
     "rules": {
-      "recommended": false,
+      "preset": "none",
       "correctness": {
         "noUnusedFunctionParameters": "warn",
         "noUnusedImports": "warn",
@@ -56,7 +56,7 @@
   "assist": {
     "enabled": true,
     "actions": {
-      "recommended": false,
+      "preset": "none",
       "source": {
         "organizeImports": {
           "level": "on",
