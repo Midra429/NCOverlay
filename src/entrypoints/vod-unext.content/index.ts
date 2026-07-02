@@ -82,6 +82,11 @@ async function main() {
       const episodeTitle = episode.displayNo
         ? `${episode.displayNo} ${episode.episodeName}`
         : null
+      let input = `${workTitle} ${episodeTitle ?? ''}`.trim()
+
+      if (!input) {
+        return null
+      }
 
       const duration = episode.duration
 
@@ -148,29 +153,37 @@ async function main() {
           .sort((a, b) => a.startMs - b.startMs)
       }
 
-      const isNhkOndemand =
-        episode.thumbnail.standard.includes('/img/info/NOD/')
-
       const yearStr = episode.thumbnail.standard.match(
         THUMB_PATH_YEAR_REGEXP
       )?.[0]
 
       year = yearStr ? Number(yearStr) : null
 
-      logger.log('workTitle', workTitle)
-      logger.log('episodeTitle', episodeTitle)
-      logger.log('duration', duration)
-      logger.log('chapters', chapters)
-      logger.log('isNhkOndemand', isNhkOndemand)
+      if (episode.thumbnail.standard.includes('/img/info/NOD/')) {
+        input = normalizeTitle(input)
 
-      return workTitle
-        ? {
-            input: `${workTitle} ${episodeTitle ?? ''}`,
-            duration,
-            chapters,
-            isNhkOndemand,
-          }
-        : null
+        logger.log('input', input)
+        logger.log('duration', duration)
+
+        return {
+          input,
+          duration,
+          disableParse: true,
+          disableAdjustJikkyoOffset: true,
+          isNhkOndemand: true,
+        }
+      } else {
+        logger.log('workTitle', workTitle)
+        logger.log('episodeTitle', episodeTitle)
+        logger.log('duration', duration)
+        logger.log('chapters', chapters)
+
+        return {
+          input,
+          duration,
+          chapters,
+        }
+      }
     },
     autoSearch: async (nco, args) => {
       if (!args.isNhkOndemand || !year) {
