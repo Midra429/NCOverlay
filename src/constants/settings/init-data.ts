@@ -26,11 +26,12 @@ import {
 /** 設定画面の初期化データ */
 export const SETTINGS_INIT_DATA: SettingsInitData = [
   {
+    id: 'general',
     title: '全般',
     Icon: SlidersHorizontalIcon,
     items: [
       {
-        settingsKey: 'settings:theme',
+        settingsKey: 'theme',
         inputType: 'select',
         label: 'テーマ',
         options: [
@@ -52,7 +53,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
-        settingsKey: 'settings:vods',
+        settingsKey: 'vods',
         inputType: 'checkbox',
         label: '動画配信サービス',
         description: '選択した動画配信サービスで\n拡張機能を有効にします。',
@@ -64,7 +65,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
           })),
       },
       {
-        settingsKey: 'settings:capture:format',
+        settingsKey: 'capture:format',
         inputType: 'select',
         label: 'キャプチャ: 形式',
         options: [
@@ -73,7 +74,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
-        settingsKey: 'settings:capture:method',
+        settingsKey: 'capture:method',
         inputType: 'select',
         label: 'キャプチャ: 方式',
         options: [
@@ -82,13 +83,13 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
-        settingsKey: 'settings:showChangelog',
+        settingsKey: 'showChangelog',
         inputType: 'toggle',
         label: '更新内容を表示',
         description: 'アップデート後に更新内容を新しいタブで開きます。',
       },
       {
-        settingsKey: 'settings:showKawaiiPct',
+        settingsKey: 'showKawaiiPct',
         inputType: 'toggle',
         label: 'かわいい率を表示',
         description:
@@ -98,11 +99,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   },
 
   {
+    id: 'comment',
     title: 'コメント',
     Icon: MessageSquareTextIcon,
     items: [
       {
-        settingsKey: 'settings:comment:fps',
+        settingsKey: 'comment:fps',
         inputType: 'select',
         label: 'フレームレート',
         options: [
@@ -112,7 +114,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
-        settingsKey: 'settings:comment:opacity',
+        settingsKey: 'comment:opacity',
         inputType: 'range',
         label: '不透明度',
         min: 0,
@@ -121,7 +123,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         suffix: '%',
       },
       {
-        settingsKey: 'settings:comment:scale',
+        settingsKey: 'comment:scale',
         inputType: 'range',
         label: '表示サイズ',
         min: 50,
@@ -130,7 +132,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         suffix: '%',
       },
       {
-        settingsKey: 'settings:comment:speed',
+        settingsKey: 'comment:speed',
         inputType: 'range',
         label: '速度',
         min: 0.25,
@@ -139,13 +141,13 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         prefix: 'x',
       },
       {
-        settingsKey: 'settings:comment:customize',
+        settingsKey: 'comment:customize',
         inputType: 'comment-customizer',
         label: 'カスタマイズ',
         description: '種類別にコメントの色と不透明度を設定します。',
       },
       {
-        settingsKey: 'settings:comment:amount',
+        settingsKey: 'comment:amount',
         inputType: 'range',
         label: '表示量',
         description: [
@@ -159,14 +161,14 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         disable: {
           when: [
             {
-              key: 'settings:comment:useNiconicoCredentials',
+              key: 'comment:useNiconicoCredentials',
               value: false,
             },
           ],
         },
       },
       {
-        settingsKey: 'settings:comment:useNiconicoCredentials',
+        settingsKey: 'comment:useNiconicoCredentials',
         inputType: 'toggle',
         label: 'ニコニコのログイン情報を使用',
         description: [
@@ -174,7 +176,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ].join('\n'),
       },
       {
-        settingsKey: 'settings:comment:hideAssistedComments',
+        settingsKey: 'comment:hideAssistedComments',
         inputType: 'toggle',
         label: 'コメントアシストの表示を抑制',
         description: [
@@ -183,7 +185,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ].join('\n'),
       },
       {
-        settingsKey: 'settings:comment:adjustJikkyoOffset',
+        settingsKey: 'comment:adjustJikkyoOffset',
         inputType: 'toggle',
         label: '実況: オフセット自動調節 (β)',
         description: [
@@ -199,11 +201,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   },
 
   {
+    id: 'autoSearch',
     title: '自動検索',
     Icon: SearchIcon,
     items: [
       {
-        settingsKey: 'settings:autoSearch:targets',
+        settingsKey: 'autoSearch:targets',
         inputType: 'checkbox',
         label: '検索対象',
         description: `${VODS.nhkOne}と${VODS.nhkOndemand}は「${SOURCE_NAMES.jikkyo}」のみ`,
@@ -213,7 +216,7 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         })),
       },
       {
-        settingsKey: 'settings:autoSearch:jikkyoChannelIds',
+        settingsKey: 'autoSearch:jikkyoChannelIds',
         inputType: 'ch-selector',
         label: '実況: チャンネル',
         options: Object.entries(JIKKYO_CHANNELS).map(([id, val]) => ({
@@ -222,27 +225,27 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         })),
       },
       {
-        settingsKey: 'settings:autoSearch:jikkyoIgnoreRerun',
+        settingsKey: 'autoSearch:jikkyoIgnoreRerun',
         inputType: 'toggle',
         label: '実況: 再放送を除外する',
         description: '再放送を自動検索の対象から除外します。',
       },
       {
-        settingsKey: 'settings:autoSearch:jikkyoOnlyAdjustable',
+        settingsKey: 'autoSearch:jikkyoOnlyAdjustable',
         inputType: 'toggle',
         label: '実況: オフセット自動調節可のみ',
         description: 'オフセット自動調節ができる実況過去ログのみを表示します。',
         disable: {
           when: [
             {
-              key: 'settings:comment:adjustJikkyoOffset',
+              key: 'comment:adjustJikkyoOffset',
               value: false,
             },
           ],
         },
       },
       {
-        settingsKey: 'settings:autoSearch:manual',
+        settingsKey: 'autoSearch:manual',
         inputType: 'toggle',
         label: '手動で実行',
         description: [
@@ -254,11 +257,12 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   },
 
   {
+    id: 'ng',
     title: 'NG設定',
     Icon: MessageSquareOffIcon,
     items: [
       {
-        settingsKey: 'settings:ng:sharingLevel',
+        settingsKey: 'ng:sharingLevel',
         inputType: 'select',
         label: 'NG共有レベル',
         options: [
@@ -269,34 +273,34 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         ],
       },
       {
-        settingsKey: 'settings:ng:words',
+        settingsKey: 'ng:words',
         inputType: 'ng-list',
         label: 'コメント',
       },
       {
-        settingsKey: 'settings:ng:commands',
+        settingsKey: 'ng:commands',
         inputType: 'ng-list',
         label: 'コマンド',
       },
       {
-        settingsKey: 'settings:ng:ids',
+        settingsKey: 'ng:ids',
         inputType: 'ng-list',
         label: 'ユーザーID',
       },
       {
-        settingsKey: 'settings:ng:largeComments',
+        settingsKey: 'ng:largeComments',
         inputType: 'toggle',
         label: 'サイズの大きいコメントを非表示',
         description: '「big」コマンドを含むコメントを非表示にします。',
       },
       {
-        settingsKey: 'settings:ng:fixedComments',
+        settingsKey: 'ng:fixedComments',
         inputType: 'toggle',
         label: '固定コメントを非表示',
         description: '「ue」「shita」コマンドを含むコメントを非表示にします。',
       },
       {
-        settingsKey: 'settings:ng:coloredComments',
+        settingsKey: 'ng:coloredComments',
         inputType: 'toggle',
         label: '色付きコメントを非表示',
         description: '色指定コマンドを含むコメントを非表示にします。',
@@ -305,61 +309,62 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   },
 
   {
+    id: 'kbd',
     title: 'キーボード',
     Icon: KeyboardIcon,
     items: [
       {
-        settingsKey: 'settings:kbd:toggleDisplayComment',
+        settingsKey: 'kbd:toggleDisplayComment',
         inputType: 'kbd-shortcut',
         label: 'コメントの表示を切り替える',
       },
       {
-        settingsKey: 'settings:kbd:increaseGlobalOffset',
+        settingsKey: 'kbd:increaseGlobalOffset',
         inputType: 'kbd-shortcut',
         label: '全体のオフセットを増やす (+1s)',
       },
       {
-        settingsKey: 'settings:kbd:decreaseGlobalOffset',
+        settingsKey: 'kbd:decreaseGlobalOffset',
         inputType: 'kbd-shortcut',
         label: '全体のオフセットを減らす (-1s)',
       },
       {
-        settingsKey: 'settings:kbd:resetGlobalOffset',
+        settingsKey: 'kbd:resetGlobalOffset',
         inputType: 'kbd-shortcut',
         label: '全体のオフセットをリセットする',
       },
       {
-        settingsKey: 'settings:kbd:jumpMarkerToStart',
+        settingsKey: 'kbd:jumpMarkerToStart',
         inputType: 'kbd-shortcut',
         label: '「ｷﾀ-（開始）」にジャンプ',
       },
       {
-        settingsKey: 'settings:kbd:jumpMarkerToOP',
+        settingsKey: 'kbd:jumpMarkerToOP',
         inputType: 'kbd-shortcut',
         label: '「OP（オープニング）」にジャンプ',
       },
       {
-        settingsKey: 'settings:kbd:jumpMarkerToA',
+        settingsKey: 'kbd:jumpMarkerToA',
         inputType: 'kbd-shortcut',
         label: '「A（Aパート）」にジャンプ',
       },
       {
-        settingsKey: 'settings:kbd:jumpMarkerToB',
+        settingsKey: 'kbd:jumpMarkerToB',
         inputType: 'kbd-shortcut',
         label: '「B（Bパート）」にジャンプ',
       },
       {
-        settingsKey: 'settings:kbd:jumpMarkerToED',
+        settingsKey: 'kbd:jumpMarkerToED',
         inputType: 'kbd-shortcut',
         label: '「ED（エンディング）」にジャンプ',
       },
       {
-        settingsKey: 'settings:kbd:jumpMarkerToC',
+        settingsKey: 'kbd:jumpMarkerToC',
         inputType: 'kbd-shortcut',
         label: '「C（Cパート）」にジャンプ',
       },
       {
-        settingsKey: 'settings:kbd:resetMarker',
+        settingsKey: 'kbd:resetMarker',
         inputType: 'kbd-shortcut',
         label: 'オフセットをリセットする',
       },
@@ -367,10 +372,11 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
   },
 
   {
+    id: 'plugins',
     title: 'プラグイン',
     Icon: BlocksIcon,
     items: Object.entries(PLUGINS).map(([key, value]) => ({
-      settingsKey: 'settings:plugins',
+      settingsKey: 'plugins',
       inputType: 'checkcard',
       label: VODS[key as VodKey],
       options: value.map((val) => ({

@@ -42,7 +42,7 @@ export function CommentList() {
   const stateSlots = useNcoState('slots')
   const stateSlotDetails = useNcoState('slotDetails')
 
-  const [smoothScrolling] = useSettings('settings:commentList:smoothScrolling')
+  const [smoothScrolling] = useSettings('commentList:smoothScrolling')
 
   const offsetMs = (stateOffset ?? 0) * 1000
   const behavior = smoothScrolling ? 'smooth' : 'auto'

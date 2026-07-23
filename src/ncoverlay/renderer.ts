@@ -1,6 +1,6 @@
 import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
 import type { BaseOptions } from '@xpadev-net/niconicomments'
-import type { StorageItems } from '@/types/storage'
+import type { SettingItems } from '@/types/storage'
 import type { NCOPatcherFunctions } from './patcher'
 
 import NiconiComments from '@xpadev-net/niconicomments'
@@ -195,7 +195,7 @@ export class NCORenderer {
   /**
    * スクリーンショット
    */
-  async capture(format: StorageItems['settings:capture:format']) {
+  async capture(format: SettingItems['capture:format']) {
     document.body.classList.add('NCOverlay-Capture')
 
     return new Promise<{

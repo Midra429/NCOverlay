@@ -129,7 +129,7 @@ export async function getFormsUrl({
 } = {}) {
   const { os } = await webext.runtime.getPlatformInfo()
   const { version } = webext.runtime.getManifest()
-  const autoSearchTargets = await settings.get('settings:autoSearch:targets')
+  const autoSearchTargets = await settings.get('autoSearch:targets')
 
   const osName = OS_NAMES[os]
 

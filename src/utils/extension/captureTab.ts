@@ -1,4 +1,4 @@
-import type { StorageItems } from '@/types/storage'
+import type { SettingItems } from '@/types/storage'
 
 import { webext } from '@/utils/webext'
 
@@ -15,7 +15,7 @@ export async function captureTab({
     height: number
   }
   scale: number
-  format?: StorageItems['settings:capture:format']
+  format?: SettingItems['capture:format']
   windowId?: number
 }): Promise<number[]> {
   format ??= 'jpeg'

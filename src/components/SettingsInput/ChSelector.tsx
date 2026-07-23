@@ -31,7 +31,7 @@ import { Tooltip } from '@/components/Tooltip'
 
 import { initConditional } from '.'
 
-export type Key = 'settings:autoSearch:jikkyoChannelIds'
+export type Key = 'autoSearch:jikkyoChannelIds'
 
 export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'ch-selector'> {

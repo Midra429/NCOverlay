@@ -8,17 +8,14 @@ import { useSettings } from '@/hooks/useSettings'
 
 import { Select, SelectItem, SelectSection } from '@/components/Select'
 
-const GENRES: SettingItems['settings:search:genre'][] = [
-  '未指定',
-  ...NICONICO_GENRES,
-]
+const GENRES: SettingItems['search:genre'][] = ['未指定', ...NICONICO_GENRES]
 
 export interface GenreProps {
   isDisabled?: boolean
 }
 
 export function Genre({ isDisabled }: GenreProps) {
-  const [value, setValue] = useSettings('settings:search:genre')
+  const [value, setValue] = useSettings('search:genre')
 
   return (
     <Select

@@ -8,69 +8,67 @@ import { VOD_KEYS } from '../vods'
 /** 設定のデフォルト値 */
 export const SETTINGS_DEFAULT: SettingItems = {
   // 全般
-  'settings:theme': 'auto',
-  'settings:vods': [
-    ...VOD_KEYS.filter((v) => !v.startsWith('_') && v !== 'niconico'),
-  ],
-  'settings:capture:format': 'jpeg',
-  'settings:capture:method': 'window',
-  'settings:showChangelog': true,
-  'settings:showKawaiiPct': false,
+  theme: 'auto',
+  vods: [...VOD_KEYS.filter((v) => !v.startsWith('_') && v !== 'niconico')],
+  'capture:format': 'jpeg',
+  'capture:method': 'window',
+  showChangelog: true,
+  showKawaiiPct: false,
 
   // コメント
-  'settings:comment:fps': 60,
-  'settings:comment:opacity': 100,
-  'settings:comment:scale': 100,
-  'settings:comment:speed': 1,
-  'settings:comment:customize': {},
-  'settings:comment:amount': 1,
-  'settings:comment:useNiconicoCredentials': true,
-  'settings:comment:hideAssistedComments': false,
-  'settings:comment:adjustJikkyoOffset': false,
+  'comment:fps': 60,
+  'comment:opacity': 100,
+  'comment:scale': 100,
+  'comment:speed': 1,
+  'comment:customize': {},
+  'comment:amount': 1,
+  'comment:useNiconicoCredentials': true,
+  'comment:hideAssistedComments': false,
+  'comment:adjustJikkyoOffset': false,
 
   // 自動検索
-  'settings:autoSearch:targets': ['official', 'danime', 'chapter'],
-  'settings:autoSearch:jikkyoChannelIds': Object.keys(
+  'autoSearch:targets': ['official', 'danime', 'chapter'],
+  'autoSearch:jikkyoChannelIds': Object.keys(
     JIKKYO_CHANNELS
   ) as JikkyoChannelId[],
-  'settings:autoSearch:jikkyoIgnoreRerun': false,
-  'settings:autoSearch:jikkyoOnlyAdjustable': true,
-  'settings:autoSearch:manual': false,
+  'autoSearch:jikkyoIgnoreRerun': false,
+  'autoSearch:jikkyoOnlyAdjustable': true,
+  'autoSearch:manual': false,
 
   // NG設定
-  'settings:ng:words': [],
-  'settings:ng:commands': [],
-  'settings:ng:ids': [],
-  'settings:ng:largeComments': false,
-  'settings:ng:fixedComments': false,
-  'settings:ng:coloredComments': false,
-  'settings:ng:sharingLevel': 'none',
+  'ng:words': [],
+  'ng:commands': [],
+  'ng:ids': [],
+  'ng:largeComments': false,
+  'ng:fixedComments': false,
+  'ng:coloredComments': false,
+  'ng:sharingLevel': 'none',
 
   // キーボード
-  'settings:kbd:toggleDisplayComment': '',
-  'settings:kbd:increaseGlobalOffset': '',
-  'settings:kbd:decreaseGlobalOffset': '',
-  'settings:kbd:resetGlobalOffset': '',
-  'settings:kbd:jumpMarkerToStart': '',
-  'settings:kbd:jumpMarkerToOP': '',
-  'settings:kbd:jumpMarkerToA': '',
-  'settings:kbd:jumpMarkerToB': '',
-  'settings:kbd:jumpMarkerToED': '',
-  'settings:kbd:jumpMarkerToC': '',
-  'settings:kbd:resetMarker': '',
+  'kbd:toggleDisplayComment': '',
+  'kbd:increaseGlobalOffset': '',
+  'kbd:decreaseGlobalOffset': '',
+  'kbd:resetGlobalOffset': '',
+  'kbd:jumpMarkerToStart': '',
+  'kbd:jumpMarkerToOP': '',
+  'kbd:jumpMarkerToA': '',
+  'kbd:jumpMarkerToB': '',
+  'kbd:jumpMarkerToED': '',
+  'kbd:jumpMarkerToC': '',
+  'kbd:resetMarker': '',
 
   // プラグイン
-  'settings:plugins': [],
+  plugins: [],
 
   // 検索 (設定には非表示)
-  'settings:search:sort': '-startTime',
-  'settings:search:dateRange': [null, null],
-  'settings:search:genre': 'アニメ',
-  'settings:search:lengthRange': [null, null],
+  'search:sort': '-startTime',
+  'search:dateRange': [null, null],
+  'search:genre': 'アニメ',
+  'search:lengthRange': [null, null],
 
   // コメントリスト (設定には非表示)
-  'settings:commentList:smoothScrolling': false,
-  'settings:commentList:showPositionControl': true,
+  'commentList:smoothScrolling': false,
+  'commentList:showPositionControl': true,
 }
 
 export const SETTINGS_DEFAULT_KEYS = Object.keys(

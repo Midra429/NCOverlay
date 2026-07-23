@@ -8,7 +8,7 @@ import { Select, SelectItem, SelectSection } from '@/components/Select'
 
 const DATE_RANGE_OPTIONS: {
   label: string
-  value: SettingItems['settings:search:dateRange']
+  value: SettingItems['search:dateRange']
 }[] = [
   {
     label: '未指定',
@@ -37,7 +37,7 @@ export interface DateRangeProps {
 }
 
 export function DateRange({ isDisabled }: DateRangeProps) {
-  const [value, setValue] = useSettings('settings:search:dateRange')
+  const [value, setValue] = useSettings('search:dateRange')
 
   return (
     <Select

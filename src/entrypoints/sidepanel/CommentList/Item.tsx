@@ -222,8 +222,8 @@ export function Item({ comment, offsetMs }: ItemProps) {
 
   async function addNgComment() {
     try {
-      await settings.set('settings:ng:words', [
-        ...(await settings.get('settings:ng:words')),
+      await settings.set('ng:words', [
+        ...(await settings.get('ng:words')),
         { content: comment.body },
       ])
 
@@ -240,8 +240,8 @@ export function Item({ comment, offsetMs }: ItemProps) {
   }
   async function addNgId() {
     try {
-      await settings.set('settings:ng:ids', [
-        ...(await settings.get('settings:ng:ids')),
+      await settings.set('ng:ids', [
+        ...(await settings.get('ng:ids')),
         { content: comment.userId },
       ])
 

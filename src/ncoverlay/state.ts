@@ -221,12 +221,12 @@ export async function filterDisplayThreads(
   ] = await Promise.all([
     getNgSettings(),
     settings.get(
-      'settings:comment:speed',
-      'settings:comment:customize',
-      'settings:comment:hideAssistedComments',
-      'settings:comment:adjustJikkyoOffset',
-      'settings:autoSearch:jikkyoOnlyAdjustable',
-      'settings:ng:sharingLevel'
+      'comment:speed',
+      'comment:customize',
+      'comment:hideAssistedComments',
+      'comment:adjustJikkyoOffset',
+      'autoSearch:jikkyoOnlyAdjustable',
+      'ng:sharingLevel'
     ),
   ])
 

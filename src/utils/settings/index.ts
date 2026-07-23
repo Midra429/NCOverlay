@@ -11,10 +11,10 @@ import {
   SETTINGS_DEFAULT_KEYS,
 } from '@/constants/settings/default'
 
-const SETTINGS_EXPORT_KEYS = [
+const SETTINGS_EXPORT_KEYS: SettingsExportKey[] = [
   '_migrate_version',
-  ...SETTINGS_DEFAULT_KEYS,
-] as SettingsExportKey[]
+  ...SETTINGS_DEFAULT_KEYS.map((k) => `settings:${k}` as const),
+]
 
 /**
  * 設定を取得
@@ -72,7 +72,7 @@ export interface SettingsGetBytesInUseFunction {
 export interface SettingsOnChangeFunction {
   <K extends SettingsKey>(
     key: K,
-    callback: StorageOnChangeCallback<K>
+    callback: StorageOnChangeCallback<`settings:${K}`>
   ): () => void
 }
 
@@ -107,34 +107,34 @@ export class WebExtSettings {
     this.#storage = storage
   }
 
-  get set() {
-    return this.#storage.set as SettingsSetFunction
-  }
-
-  get onChange() {
-    return this.#storage.onChange as SettingsOnChangeFunction
-  }
-
   readonly get: SettingsGetFunction = async (...keys: SettingsKey[]) => {
     if (!keys.length) {
-      const values = await this.#storage.get()
+      const values = await this.#storage.get(
+        ...SETTINGS_DEFAULT_KEYS.map((k) => `settings:${k}` as const)
+      )
       const items = Object.fromEntries(
-        Object.entries(values).map(([key, val]) => {
-          return [key, val ?? SETTINGS_DEFAULT[key as SettingsKey]]
+        SETTINGS_DEFAULT_KEYS.map((key, idx) => {
+          return [key, values[idx] ?? SETTINGS_DEFAULT[key]]
         })
       )
 
       return { ...SETTINGS_DEFAULT, ...items }
     } else if (keys.length === 1) {
       const key = keys[0]
-      const value = (await this.#storage.get(key)) as any
+      const value = (await this.#storage.get(`settings:${key}`)) as any
 
       return value ?? SETTINGS_DEFAULT[key]
     } else {
-      const values = await this.#storage.get(...keys)
+      const values = await this.#storage.get(
+        ...keys.map((k) => `settings:${k}` as const)
+      )
 
       return values.map((v, i) => v ?? SETTINGS_DEFAULT[keys[i]])
     }
+  }
+
+  readonly set: SettingsSetFunction = (key, value) => {
+    return this.#storage.set(`settings:${key}`, value as any)
   }
 
   readonly remove: SettingsRemoveFunction = (...keys: SettingsKey[]) => {
@@ -142,7 +142,7 @@ export class WebExtSettings {
       keys = SETTINGS_DEFAULT_KEYS
     }
 
-    return this.#storage.remove(...keys)
+    return this.#storage.remove(...keys.map((k) => `settings:${k}` as const))
   }
 
   readonly getBytesInUse: SettingsGetBytesInUseFunction = (
@@ -152,7 +152,13 @@ export class WebExtSettings {
       keys = SETTINGS_DEFAULT_KEYS
     }
 
-    return this.#storage.getBytesInUse(...keys)
+    return this.#storage.getBytesInUse(
+      ...keys.map((k) => `settings:${k}` as const)
+    )
+  }
+
+  readonly onChange: SettingsOnChangeFunction = (key, callback) => {
+    return this.#storage.onChange(`settings:${key}`, callback)
   }
 
   readonly watch: SettingsWatch = (key, callback) => {

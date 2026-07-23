@@ -141,9 +141,9 @@ export class NCOPatcher {
 
         const [targets, jikkyoChannelIds, jikkyoIgnoreRerun] =
           await settings.get(
-            'settings:autoSearch:targets',
-            'settings:autoSearch:jikkyoChannelIds',
-            'settings:autoSearch:jikkyoIgnoreRerun'
+            'autoSearch:targets',
+            'autoSearch:jikkyoChannelIds',
+            'autoSearch:jikkyoIgnoreRerun'
           )
 
         const args: (NCOSearcherAutoSearchArgs & StateInfo) | null = {
@@ -184,7 +184,7 @@ export class NCOPatcher {
 
       await loadInfo()
 
-      if (await settings.get('settings:autoSearch:manual')) return
+      if (await settings.get('autoSearch:manual')) return
 
       await autoSearch()
     })

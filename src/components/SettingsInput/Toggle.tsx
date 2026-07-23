@@ -1,4 +1,4 @@
-import type { SettingsKey, StorageItems } from '@/types/storage'
+import type { SettingItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ import { ItemLabel } from '@/components/ItemLabel'
 import { initConditional } from '.'
 
 export type Key = {
-  [P in SettingsKey]: StorageItems[P] extends boolean ? P : never
+  [P in SettingsKey]: SettingItems[P] extends boolean ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>

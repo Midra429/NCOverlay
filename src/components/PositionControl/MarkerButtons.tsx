@@ -45,9 +45,7 @@ export function MarkerButton({
 
 export function MarkerButtons() {
   const stateSlotDetails = useNcoState('slotDetails')
-  const [adjustJikkyoOffset] = useSettings(
-    'settings:comment:adjustJikkyoOffset'
-  )
+  const [adjustJikkyoOffset] = useSettings('comment:adjustJikkyoOffset')
 
   const markerEnableFlags = Array(MARKERS.length)
     .fill(false)

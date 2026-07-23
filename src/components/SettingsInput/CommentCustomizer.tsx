@@ -24,7 +24,7 @@ import { Tooltip } from '@/components/Tooltip'
 
 import { initConditional } from '.'
 
-export type Key = 'settings:comment:customize'
+export type Key = 'comment:customize'
 
 export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'comment-customizer'> {}

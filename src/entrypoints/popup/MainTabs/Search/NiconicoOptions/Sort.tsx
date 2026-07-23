@@ -49,7 +49,7 @@ export interface SortProps {
 }
 
 export function Sort({ isDisabled }: SortProps) {
-  const [value, setValue] = useSettings('settings:search:sort')
+  const [value, setValue] = useSettings('search:sort')
 
   return (
     <Select

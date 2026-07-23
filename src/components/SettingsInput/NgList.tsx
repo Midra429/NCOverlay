@@ -1,7 +1,7 @@
 import type {
   NgSettingsContent,
+  SettingItems,
   SettingsKey,
-  StorageItems,
 } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
@@ -29,10 +29,10 @@ import { Tooltip } from '@/components/Tooltip'
 
 import { initConditional } from '.'
 
-type SettingsNgKey = Extract<SettingsKey, `settings:ng:${string}`>
+type SettingsNgKey = Extract<SettingsKey, `ng:${string}`>
 
 export type Key = {
-  [P in SettingsNgKey]: StorageItems[P] extends unknown[] ? P : never
+  [P in SettingsNgKey]: SettingItems[P] extends unknown[] ? P : never
 }[SettingsNgKey]
 
 export interface Props<K extends Key = Key>

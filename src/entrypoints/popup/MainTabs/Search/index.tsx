@@ -38,10 +38,10 @@ export function Search() {
 
   const stateStatus = useNcoState('status')
 
-  const [sort] = useSettings('settings:search:sort')
-  const [dateRange] = useSettings('settings:search:dateRange')
-  const [genre] = useSettings('settings:search:genre')
-  const [lengthRange] = useSettings('settings:search:lengthRange')
+  const [sort] = useSettings('search:sort')
+  const [dateRange] = useSettings('search:dateRange')
+  const [genre] = useSettings('search:genre')
+  const [lengthRange] = useSettings('search:lengthRange')
 
   const isReady = !(stateStatus === 'searching' || stateStatus === 'loading')
 

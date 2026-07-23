@@ -20,6 +20,7 @@ export type Plugins<K extends PluginVodKey> = {
 }
 
 export interface SettingsInitItem {
+  id: string
   title: string
   items: SettingsInputProps<SettingsKey>[]
   Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode

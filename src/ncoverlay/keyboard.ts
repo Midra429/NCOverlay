@@ -1,10 +1,11 @@
 import type { KeyHandler } from 'hotkeys-js'
-import type { StorageKey } from '@/types/storage'
+import type { SettingsKey } from '@/types/storage'
 import type { NCOverlay } from '.'
 import type { NCOState } from './state'
 
 import hotkeys from 'hotkeys-js'
 
+import { settings } from '@/utils/settings/extension'
 import { storage } from '@/utils/storage/extension'
 
 interface NCOKeyboardFunctions {
@@ -12,12 +13,14 @@ interface NCOKeyboardFunctions {
 }
 
 function register(
-  key: Extract<StorageKey, `settings:kbd:${string}`>,
+  key: Extract<SettingsKey, `kbd:${string}`> extends `kbd:${infer K}`
+    ? K
+    : never,
   method: (...args: Parameters<KeyHandler>) => void
 ) {
   let tmpShortcutKey: string | null = null
 
-  return storage.watch(key, (shortcutKey) => {
+  return settings.watch(`kbd:${key}`, (shortcutKey) => {
     if (tmpShortcutKey) {
       hotkeys.unbind(tmpShortcutKey)
     }
@@ -63,59 +66,59 @@ export class NCOKeyboard {
 
   async #registerEventListener() {
     this.#storageOnChangeRemoveListeners.push(
-      register('settings:kbd:toggleDisplayComment', async () => {
-        const opacity = await storage.get('settings:comment:opacity')
+      register('toggleDisplayComment', async () => {
+        const opacity = await settings.get('comment:opacity')
 
         // 非表示
         if (opacity) {
           await storage.set('tmp:comment:opacity', opacity)
-          await storage.set('settings:comment:opacity', 0)
+          await settings.set('comment:opacity', 0)
         }
         // 表示
         else {
           const tmpOpacity = await storage.get('tmp:comment:opacity')
 
-          await storage.set('settings:comment:opacity', tmpOpacity || 100)
+          await settings.set('comment:opacity', tmpOpacity || 100)
         }
       }),
 
-      register('settings:kbd:increaseGlobalOffset', async () => {
+      register('increaseGlobalOffset', async () => {
         this.setOffset((await this.getOffset()) + 1)
       }),
 
-      register('settings:kbd:decreaseGlobalOffset', async () => {
+      register('decreaseGlobalOffset', async () => {
         this.setOffset((await this.getOffset()) - 1)
       }),
 
-      register('settings:kbd:resetGlobalOffset', async () => {
+      register('resetGlobalOffset', async () => {
         this.setOffset(null)
       }),
 
-      register('settings:kbd:jumpMarkerToStart', () => {
+      register('jumpMarkerToStart', () => {
         this.#functions.jumpMarker('start')
       }),
 
-      register('settings:kbd:jumpMarkerToOP', () => {
+      register('jumpMarkerToOP', () => {
         this.#functions.jumpMarker('op')
       }),
 
-      register('settings:kbd:jumpMarkerToA', () => {
+      register('jumpMarkerToA', () => {
         this.#functions.jumpMarker('aPart')
       }),
 
-      register('settings:kbd:jumpMarkerToB', () => {
+      register('jumpMarkerToB', () => {
         this.#functions.jumpMarker('bPart')
       }),
 
-      register('settings:kbd:jumpMarkerToED', () => {
+      register('jumpMarkerToED', () => {
         this.#functions.jumpMarker('ed')
       }),
 
-      register('settings:kbd:jumpMarkerToC', () => {
+      register('jumpMarkerToC', () => {
         this.#functions.jumpMarker('cPart')
       }),
 
-      register('settings:kbd:resetMarker', () => {
+      register('resetMarker', () => {
         this.#functions.jumpMarker(null)
       })
     )

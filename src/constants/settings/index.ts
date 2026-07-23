@@ -37,18 +37,18 @@ export const AUTO_SEARCH_TARGET_KEYS: AutoSearchTarget[] = [
 ]
 
 export const SLOTS_REFRESH_SETTINGS_KEYS: SettingsKey[] = [
-  'settings:comment:speed',
-  'settings:comment:customize',
-  'settings:comment:hideAssistedComments',
-  'settings:comment:adjustJikkyoOffset',
-  'settings:autoSearch:jikkyoOnlyAdjustable',
-  'settings:ng:sharingLevel',
-  'settings:ng:words',
-  'settings:ng:commands',
-  'settings:ng:ids',
-  'settings:ng:largeComments',
-  'settings:ng:fixedComments',
-  'settings:ng:coloredComments',
+  'comment:speed',
+  'comment:customize',
+  'comment:hideAssistedComments',
+  'comment:adjustJikkyoOffset',
+  'autoSearch:jikkyoOnlyAdjustable',
+  'ng:sharingLevel',
+  'ng:words',
+  'ng:commands',
+  'ng:ids',
+  'ng:largeComments',
+  'ng:fixedComments',
+  'ng:coloredComments',
 ]
 
 export const ADJUST_OFFSET_VOD_KEYS: VodKey[] = [

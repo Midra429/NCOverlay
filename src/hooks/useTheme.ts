@@ -2,7 +2,7 @@ import { useSettings } from './useSettings'
 import { useSystemTheme } from './useSystemTheme'
 
 export function useTheme() {
-  const [theme, _, { loading }] = useSettings('settings:theme')
+  const [theme, _, { loading }] = useSettings('theme')
   const systemTheme = useSystemTheme()
 
   if (loading) {

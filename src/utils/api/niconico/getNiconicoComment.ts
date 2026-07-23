@@ -26,8 +26,8 @@ export async function getNiconicoComment(
   when?: number
 ): Promise<GetNiconicoCommentResult | null> {
   const [useNiconicoCredentials, amount] = await settings.get(
-    'settings:comment:useNiconicoCredentials',
-    'settings:comment:amount'
+    'comment:useNiconicoCredentials',
+    'comment:amount'
   )
 
   // 動画情報取得

@@ -117,7 +117,7 @@ function KeyboardKey({ kbdKey, os }: KeyboardKeyProps) {
   )
 }
 
-export type Key = Extract<SettingsKey, `settings:kbd:${string}`>
+export type Key = Extract<SettingsKey, `kbd:${string}`>
 
 export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'kbd-shortcut'> {}

@@ -52,10 +52,7 @@ async function main() {
         await clearTemporaryData()
         await migration()
 
-        if (
-          import.meta.env.PROD &&
-          (await settings.get('settings:showChangelog'))
-        ) {
+        if (import.meta.env.PROD && (await settings.get('showChangelog'))) {
           const { version } = webext.runtime.getManifest()
 
           // リリースノート

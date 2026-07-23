@@ -8,7 +8,7 @@ import { Select, SelectItem, SelectSection } from '@/components/Select'
 
 const LENGTH_RANGE_OPTIONS: {
   label: string
-  value: SettingItems['settings:search:lengthRange']
+  value: SettingItems['search:lengthRange']
 }[] = [
   {
     label: '未指定',
@@ -37,7 +37,7 @@ export interface LengthRangeProps {
 }
 
 export function LengthRange({ isDisabled }: LengthRangeProps) {
-  const [value, setValue] = useSettings('settings:search:lengthRange')
+  const [value, setValue] = useSettings('search:lengthRange')
 
   return (
     <Select

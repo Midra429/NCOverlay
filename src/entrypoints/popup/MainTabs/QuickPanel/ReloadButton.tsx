@@ -7,7 +7,7 @@ import { sendExtensionMessage } from '@/messaging/extension'
 import { PanelButton } from '@/components/PanelButton'
 
 export function ReloadButton() {
-  const [manual] = useSettings('settings:autoSearch:manual')
+  const [manual] = useSettings('autoSearch:manual')
   const stateStatus = useNcoState('status')
 
   const isLoading = stateStatus === 'searching' || stateStatus === 'loading'

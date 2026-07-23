@@ -115,7 +115,7 @@ export class NCOverlay {
 
       if (newDetails) {
         const adjustJikkyoOffset = await settings.get(
-          'settings:comment:adjustJikkyoOffset'
+          'comment:adjustJikkyoOffset'
         )
 
         for (const detail of newDetails) {
@@ -210,7 +210,7 @@ export class NCOverlay {
     // ストレージの監視
     this.#removeListenerCallbacks.push(
       // 設定 (コメント:表示サイズ)
-      settings.watch('settings:comment:scale', (scale) => {
+      settings.watch('comment:scale', (scale) => {
         this.renderer.setOptions({
           scale: scale / 100,
           keepCA: scale !== 100,
@@ -220,12 +220,12 @@ export class NCOverlay {
       }),
 
       // 設定 (コメント:不透明度)
-      settings.watch('settings:comment:opacity', (opacity) => {
+      settings.watch('comment:opacity', (opacity) => {
         this.renderer.setOpacity(opacity / 100)
       }),
 
       // 設定 (コメント:フレームレート)
-      settings.watch('settings:comment:fps', (fps) => {
+      settings.watch('comment:fps', (fps) => {
         this.renderer.setFps(fps)
       }),
 

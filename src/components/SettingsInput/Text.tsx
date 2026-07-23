@@ -1,4 +1,4 @@
-import type { SettingsKey, StorageItems } from '@/types/storage'
+import type { SettingItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
@@ -9,7 +9,7 @@ import { useSettings } from '@/hooks/useSettings'
 import { initConditional } from '.'
 
 export type Key = {
-  [P in SettingsKey]: StorageItems[P] extends string ? P : never
+  [P in SettingsKey]: SettingItems[P] extends string ? P : never
 }[SettingsKey]
 
 export interface Props<K extends Key = Key>

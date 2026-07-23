@@ -25,12 +25,12 @@ export function formatNgSettingsContent({
 export async function getNgSettings(): Promise<NgSettingsFormatted> {
   const [largeComments, fixedComments, coloredComments, words, commands, ids] =
     await settings.get(
-      'settings:ng:largeComments',
-      'settings:ng:fixedComments',
-      'settings:ng:coloredComments',
-      'settings:ng:words',
-      'settings:ng:commands',
-      'settings:ng:ids'
+      'ng:largeComments',
+      'ng:fixedComments',
+      'ng:coloredComments',
+      'ng:words',
+      'ng:commands',
+      'ng:ids'
     )
 
   const ngWords = new Set(words)

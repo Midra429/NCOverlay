@@ -1,5 +1,5 @@
 import type { NCOverlay } from '@/ncoverlay'
-import type { StorageItems } from '@/types/storage'
+import type { SettingItems } from '@/types/storage'
 import type { captureTab } from '@/utils/extension/captureTab'
 import type { setBadge } from '@/utils/extension/setBadge'
 import type { Browser } from '@/utils/webext'
@@ -15,7 +15,7 @@ export interface ProtocolMap {
   'content:jumpMarker': (
     args: Parameters<NCOverlay['jumpMarker']>[0]
   ) => ReturnType<NCOverlay['jumpMarker']>
-  'content:capture': (args: StorageItems['settings:capture:format']) => {
+  'content:capture': (args: SettingItems['capture:format']) => {
     format: 'jpeg' | 'png'
     data?: number[]
   }

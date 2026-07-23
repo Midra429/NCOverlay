@@ -14,7 +14,7 @@ export function ShowHideToggle() {
   const [show, setShow] = useState(true)
 
   const [tmpOpacity, setTmpOpacity] = useStorage('tmp:comment:opacity')
-  const [opacity, setOpacity] = useSettings('settings:comment:opacity')
+  const [opacity, setOpacity] = useSettings('comment:opacity')
 
   useEffect(() => {
     setShow(!!opacity)

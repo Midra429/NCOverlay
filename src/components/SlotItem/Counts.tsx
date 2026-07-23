@@ -12,7 +12,7 @@ export interface CountsProps {
 }
 
 export function Counts({ status, infoCount, isSearch }: CountsProps) {
-  const [showKawaiiPct] = useSettings('settings:showKawaiiPct')
+  const [showKawaiiPct] = useSettings('showKawaiiPct')
 
   const kawaiiPct =
     showKawaiiPct &&

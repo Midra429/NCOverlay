@@ -37,12 +37,12 @@ export function Options({ isOpen }: OptionsProps) {
               )}
             >
               <SettingsInputToggle
-                settingsKey="settings:commentList:smoothScrolling"
+                settingsKey="commentList:smoothScrolling"
                 label="スムーズなスクロール"
               />
 
               <SettingsInputToggle
-                settingsKey="settings:commentList:showPositionControl"
+                settingsKey="commentList:showPositionControl"
                 label="オフセット調節を表示"
               />
             </div>

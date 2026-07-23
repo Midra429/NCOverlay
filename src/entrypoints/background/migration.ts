@@ -28,8 +28,8 @@ export default async function () {
       // @ts-ignore
       'settings:comment:jikkyoChannelIds'
     )) as unknown as [
-      StorageItems_v4['settings:comment:autoLoads'] | null,
-      StorageItems_v4['settings:comment:jikkyoChannelIds'] | null,
+      StorageItems_v4['comment:autoLoads'] | null,
+      StorageItems_v4['comment:jikkyoChannelIds'] | null,
     ]
 
     await storage.set('settings:autoSearch:targets', autoLoads)

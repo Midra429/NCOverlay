@@ -1,4 +1,4 @@
-import type { StorageItems } from '@/types/storage'
+import type { SettingItems } from '@/types/storage'
 
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
@@ -6,11 +6,11 @@ import { settings } from '@/utils/settings/extension'
 import { sendExtensionMessage } from '@/messaging/extension'
 
 export async function capture(): Promise<
-  StorageItems['settings:capture:method'] | false
+  SettingItems['capture:method'] | false
 > {
   const [format, method] = await settings.get(
-    'settings:capture:format',
-    'settings:capture:method'
+    'capture:format',
+    'capture:method'
   )
 
   const response = await sendExtensionMessage(

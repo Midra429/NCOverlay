@@ -1,4 +1,4 @@
-import type { SettingsKey, StorageItems } from '@/types/storage'
+import type { SettingItems, SettingsKey } from '@/types/storage'
 import type { SettingsInputBaseProps } from '.'
 
 import { useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ import { Select, SelectItem } from '@/components/Select'
 import { initConditional } from '.'
 
 export type Key = {
-  [P in SettingsKey]: StorageItems[P] extends string | number | boolean
+  [P in SettingsKey]: SettingItems[P] extends string | number | boolean
     ? P
     : never
 }[SettingsKey]
@@ -20,7 +20,7 @@ export interface Props<K extends Key = Key>
   extends SettingsInputBaseProps<K, 'select'> {
   options: {
     label: string
-    value: StorageItems[K]
+    value: SettingItems[K]
     Icon?: (props: React.ComponentProps<'svg'>) => React.ReactNode
   }[]
 }

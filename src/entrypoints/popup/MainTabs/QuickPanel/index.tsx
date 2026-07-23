@@ -14,11 +14,11 @@ import { ShowHideToggle } from './ShowHideToggle'
 import { SidePanelButton } from './SidePanelButton'
 
 const QUICKPANEL_ITEM_KEYS: SettingsKey[] = [
-  'settings:comment:opacity',
-  'settings:comment:scale',
-  'settings:comment:speed',
-  'settings:comment:amount',
-  'settings:autoSearch:targets',
+  'comment:opacity',
+  'comment:scale',
+  'comment:speed',
+  'comment:amount',
+  'autoSearch:targets',
 ]
 
 const SETTINGS_INIT_ITEMS = SETTINGS_INIT_DATA.flatMap((v) => v.items)

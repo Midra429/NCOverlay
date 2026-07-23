@@ -13,7 +13,7 @@ const TIMEZONE_SUFFIX_REGEXP = /\[.+\]$/
 
 export async function searchNiconicoByIds(...contentIds: string[]) {
   const useNiconicoCredentials = await settings.get(
-    'settings:comment:useNiconicoCredentials'
+    'comment:useNiconicoCredentials'
   )
 
   const credentials: RequestInit['credentials'] = useNiconicoCredentials
@@ -34,10 +34,10 @@ export async function searchNiconicoByIds(...contentIds: string[]) {
 }
 
 export interface SearchNiconicoOptions {
-  sort?: SettingItems['settings:search:sort']
-  dateRange?: SettingItems['settings:search:dateRange']
-  genre?: SettingItems['settings:search:genre']
-  lengthRange?: SettingItems['settings:search:lengthRange']
+  sort?: SettingItems['search:sort']
+  dateRange?: SettingItems['search:dateRange']
+  genre?: SettingItems['search:genre']
+  lengthRange?: SettingItems['search:lengthRange']
 }
 
 export async function searchNiconicoByKeyword(
