@@ -253,38 +253,38 @@ export async function filterDisplayThreads(
 
     if (!slot) continue
 
-    // NHKはオフセット自動調節の対象外
-    const isNHK =
-      id.startsWith('jk1:') ||
-      id.startsWith('jk2:') ||
-      id.startsWith('jk101:') ||
-      id.startsWith('jk103:')
-
     // 実況: オフセット自動調節
-    if (type === 'jikkyo' && !isNHK) {
-      if (adjustJikkyoOffset) {
-        if (detail.chapters.length) {
-          slot.threads = filterThreadsByJikkyoChapters(
-            slot.threads,
-            detail.chapters
-          )
-        } else if (isAutoLoaded && jikkyoOnlyAdjustable) {
-          if (!skip) {
-            await ncoState.update('slotDetails', ['id'], {
-              id,
-              skip: true,
-            })
+    if (type === 'jikkyo') {
+      const jkChId = id.split(':')[0]
+
+      // NHKはオフセット自動調節の対象外
+      const isNHK = ['jk1', 'jk2', 'jk101', 'jk103'].includes(jkChId)
+
+      if (!isNHK) {
+        if (adjustJikkyoOffset) {
+          if (detail.chapters.length) {
+            slot.threads = filterThreadsByJikkyoChapters(
+              slot.threads,
+              detail.chapters
+            )
+          } else if (isAutoLoaded && jikkyoOnlyAdjustable) {
+            if (!skip) {
+              await ncoState.update('slotDetails', ['id'], {
+                id,
+                skip: true,
+              })
+            }
+
+            continue
           }
-
-          continue
         }
-      }
 
-      if (skip) {
-        await ncoState.update('slotDetails', ['id'], {
-          id,
-          skip: false,
-        })
+        if (skip) {
+          await ncoState.update('slotDetails', ['id'], {
+            id,
+            skip: false,
+          })
+        }
       }
     }
 

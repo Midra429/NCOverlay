@@ -9,6 +9,7 @@ import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
 import { logger } from '@/utils/logger'
 import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
+import { onExtensionMessage, sendExtensionMessage } from '@/messaging/extension'
 
 import { NCOKeyboard } from './keyboard'
 import { NCORenderer } from './renderer'
@@ -16,7 +17,6 @@ import { NCOSearcher } from './searcher'
 import { NCOState } from './state'
 
 import './style.css'
-import { onExtensionMessage, sendExtensionMessage } from '@/messaging/extension'
 
 export interface NCOverlayEventMap {
   playing: (this: NCOverlay) => void
