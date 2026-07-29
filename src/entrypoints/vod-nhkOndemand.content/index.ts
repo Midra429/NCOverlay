@@ -61,7 +61,7 @@ function parseDate(dateText: string): Date | null {
   const { year, month, day } = match.groups!
 
   return new Date(
-    `${year}-${zeroPadding(month, 2)}-${zeroPadding(day, 2)}T00:00:00+09:00`
+    `${year!}-${zeroPadding(month!, 2)}-${zeroPadding(day!, 2)}T00:00:00+09:00`
   )
 }
 

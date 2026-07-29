@@ -27,10 +27,11 @@ window.addEventListener('drop', (evt) => {
   evt.preventDefault()
 
   const files = evt.dataTransfer?.files
+  const file = files?.[0]
 
-  if (!files?.length) return
+  if (!file) return
 
-  if (files[0].type.startsWith('video/')) {
+  if (file.type.startsWith('video/')) {
     const input = document.getElementById('video-file-drop') as HTMLInputElement
 
     input.files = files

@@ -183,7 +183,7 @@ export function SubtitleItems({ title, ref }: SubtitleItemsProps) {
           title={title}
           subtitle={subtitle}
           onClick={() => {
-            const item = subtitleItemRefs.current[idx]
+            const item = subtitleItemRefs.current[idx]!
 
             if (item.isOpen) {
               item.close()

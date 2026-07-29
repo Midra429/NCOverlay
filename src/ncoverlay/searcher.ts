@@ -159,7 +159,7 @@ export class NCOSearcher {
     addLoadingSlotDetails('szbh', searchNiconicoResults.szbh)
 
     // ニコニコ実況 過去ログ
-    if (searchSyobocalResults && syobocalPrograms.length) {
+    if (searchSyobocalResults && syobocalPrograms[0]) {
       const slotTitle = [
         searchSyobocalResults.title.Title,
         `#${syobocalPrograms[0].Count}`,
@@ -283,7 +283,7 @@ export class NCOSearcher {
 
         if (!cmt) continue
 
-        const { contentId: id } = results[i]
+        const { contentId: id } = results[i]!
 
         const {
           videoData: { video },
@@ -320,15 +320,15 @@ export class NCOSearcher {
     addLoadedSlots(searchNiconicoResults.szbh, commentsSzbh)
 
     // dアニメ(分割)
-    if (commentsChapter.length && commentsChapter.every((v) => v !== null)) {
-      const result = searchNiconicoResults.chapter[0]
+    if (commentsChapter[0] && commentsChapter.every((v) => v !== null)) {
+      const result = searchNiconicoResults.chapter[0]!
       const id = result.contentId
       const {
         video: { thumbnail },
       } = commentsChapter[0].videoData
 
       const { groups } = result.title.match(REGEXP_DANIME_CHAPTER)!
-      const title = groups!.title.trim()
+      const title = groups!.title!.trim()
       const chapterTitle = `${title} Chapter.1 〜 ${commentsChapter.length}`
 
       let tmpOffset = 0

@@ -64,7 +64,7 @@ export async function getNiconicoComment(
         return prev.commentCount < current.commentCount ? current : prev
       })
 
-    if (!baseMainThread?.comments.length || baseMainThread.comments[0].no < 5) {
+    if (!baseMainThread?.comments[0] || baseMainThread.comments[0].no < 5) {
       threadsData = baseThreadsData
     } else {
       videoData.comment.nvComment.params.targets =
@@ -91,7 +91,7 @@ export async function getNiconicoComment(
           )
         })
 
-        if (!mainThread?.comments.length) break
+        if (!mainThread?.comments[0]) break
 
         baseMainThread.comments.push(...mainThread.comments)
 

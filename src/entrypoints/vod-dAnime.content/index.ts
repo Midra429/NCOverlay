@@ -132,7 +132,7 @@ async function main() {
 
       switch (opEdChapters.length) {
         case 2:
-          const [opChapter, edChapter] = opEdChapters
+          const [opChapter, edChapter] = opEdChapters as [Chapter, Chapter]
 
           chapters.push({
             type: 'op',
@@ -150,7 +150,7 @@ async function main() {
           break
 
         case 1:
-          const [opEdChapter] = opEdChapters
+          const [opEdChapter] = opEdChapters as [Chapter]
 
           const hasOp = !!chapters.find((v) => v.type === 'avant_op')
 

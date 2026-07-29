@@ -46,10 +46,10 @@ export function Input(props: Omit<Props, 'inputType'>) {
         onSelectionChange={([key]) =>
           setValue(key && JSON.parse(key as string))
         }
-        renderValue={([{ props, rendered }]) => (
+        renderValue={([item]) => (
           <>
-            {props?.startContent}
-            <span>{rendered}</span>
+            {item!.props?.startContent}
+            <span>{item!.rendered}</span>
           </>
         )}
       >

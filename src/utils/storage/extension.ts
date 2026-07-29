@@ -14,7 +14,7 @@ export const storage = new WebExtStorage({
     if (!keys.length) {
       return extensionStorage.get()
     } else if (keys.length === 1) {
-      const key = keys[0]
+      const key = keys[0]!
       const value: any = (await extensionStorage.get(key))[key]
 
       return value ?? null

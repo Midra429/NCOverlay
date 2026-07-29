@@ -112,7 +112,7 @@ function KeyboardKey({ kbdKey, os }: KeyboardKeyProps) {
       )}
       keys={isKey ? key : undefined}
     >
-      {!isKey && key[0].toUpperCase() + key.slice(1)}
+      {!isKey && key[0]!.toUpperCase() + key.slice(1)}
     </Kbd>
   )
 }

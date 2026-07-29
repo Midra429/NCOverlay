@@ -2,6 +2,7 @@
   "extends": "./.wxt/tsconfig.json",
   "exclude": ["./node_modules", "./dist"],
   "compilerOptions": {
+    "strict": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
     "verbatimModuleSyntax": true,

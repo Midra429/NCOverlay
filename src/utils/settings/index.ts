@@ -120,7 +120,7 @@ export class WebExtSettings {
 
       return { ...SETTINGS_DEFAULT, ...items }
     } else if (keys.length === 1) {
-      const key = keys[0]
+      const key = keys[0]!
       const value = (await this.#storage.get(`settings:${key}`)) as any
 
       return value ?? SETTINGS_DEFAULT[key]
@@ -129,7 +129,7 @@ export class WebExtSettings {
         ...keys.map((k) => `settings:${k}` as const)
       )
 
-      return values.map((v, i) => v ?? SETTINGS_DEFAULT[keys[i]])
+      return values.map((v, i) => v ?? SETTINGS_DEFAULT[keys[i]!])
     }
   }
 

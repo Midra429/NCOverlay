@@ -92,7 +92,7 @@ export function SearchInput({ isDisabled, onSearch, ref }: SearchInputProps) {
             label="検索対象"
             labelPlacement="outside-left"
             selectedKeys={[source]}
-            renderValue={([{ props }]) => props?.startContent}
+            renderValue={([item]) => item!.props?.startContent}
             onSelectionChange={([key]) => {
               setSource((key as SearchSource) || 'niconico')
               setIsNiconicoOptionsOpen(false)

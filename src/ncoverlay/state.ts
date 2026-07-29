@@ -255,7 +255,7 @@ export async function filterDisplayThreads(
 
     // 実況: オフセット自動調節
     if (type === 'jikkyo') {
-      const jkChId = id.split(':')[0]
+      const jkChId = id.split(':')[0]!
 
       // NHKはオフセット自動調節の対象外
       const isNHK = ['jk1', 'jk2', 'jk101', 'jk103'].includes(jkChId)
@@ -399,7 +399,7 @@ export async function filterDisplayThreads(
 
           if (durationCommandIdx !== -1) {
             const customDuration = Number(
-              commands[durationCommandIdx].match(DURATION_COMMAND_REGEXP)![0]
+              commands[durationCommandIdx]!.match(DURATION_COMMAND_REGEXP)![0]
             )
 
             commands[durationCommandIdx] =

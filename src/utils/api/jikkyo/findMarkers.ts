@@ -60,7 +60,7 @@ export function findMarkers(
     let tmpVposMs = 0
 
     for (let i = 0; i < len; i++) {
-      const { vposMs } = filtered[i]
+      const { vposMs } = filtered[i]!
 
       const commentsInRange = filtered.slice(i).filter((val) => {
         return val.vposMs - vposMs <= 8000
@@ -68,7 +68,7 @@ export function findMarkers(
       const count = commentsInRange.length
 
       if (tmpCount < count) {
-        const first = commentsInRange[0]
+        const first = commentsInRange[0]!
         const last = commentsInRange.at(-1)!
 
         const adjustOffset = Math.trunc((last.vposMs - first.vposMs) / 10)

@@ -50,7 +50,7 @@ export function CommentCustomizer({
           getValue={(val) => `${val}%`}
           onChange={setTmpOpacity}
           onChangeEnd={(val) => {
-            onOpacityChange(Array.isArray(val) ? val[0] : val)
+            onOpacityChange(Array.isArray(val) ? val[0]! : val)
           }}
         />
       </div>

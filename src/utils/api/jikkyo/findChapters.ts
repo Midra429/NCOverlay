@@ -65,7 +65,7 @@ export function findChapters(
 
   const marker = Object.fromEntries(
     MARKERS.map((val, idx) => {
-      const marker = markers[idx]
+      const marker = markers[idx]!
       return [val.key, marker !== null ? marker - 1000 : null]
     })
   ) as Record<MarkerKey, number | null>
@@ -367,7 +367,7 @@ export function findChapters(
   // 間を詰める
   for (let i = 0; i < jkChapterCount; i++) {
     const prev = jkChapters[i - 1]
-    const current = jkChapters[i]
+    const current = jkChapters[i]!
 
     let startMs: number | undefined
     let endMs: number | undefined

@@ -82,7 +82,7 @@ async function main() {
 
         const episodeText = 0 <= episodeNum ? `第${episodeNum}話` : null
         const episodeTitle =
-          [!EP_REGEXP.test(subtitle) && episodeText, subtitle]
+          [subtitle && !EP_REGEXP.test(subtitle) && episodeText, subtitle]
             .filter(Boolean)
             .join(' ')
             .trim() || null

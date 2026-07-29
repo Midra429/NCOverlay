@@ -117,7 +117,7 @@ export function findAssistedCommentIds(comments: V1Comment[]): string[] {
 
     for (const { id, userId } of targets) {
       // ユーザーが同じコメントをした回数
-      const userCount = userCounts[userId]
+      const userCount = userCounts[userId]!
       const scoreThreshold = 5 - Math.min(userCount, 4)
 
       if (scoreThreshold <= wordScore && scoreThreshold <= commentScore) {

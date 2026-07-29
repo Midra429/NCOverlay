@@ -125,7 +125,7 @@ async function main() {
             const {
               data: {
                 webfront_playlistUrl: {
-                  urlInfo: [{ moviePartsPositionList }],
+                  urlInfo: [urlInfo],
                 },
               },
             } = json
@@ -133,7 +133,7 @@ async function main() {
             const episodeId = variables.code as string
 
             if (!positionListQueue.hit(episodeId)) {
-              positionListQueue.add(episodeId, moviePartsPositionList)
+              positionListQueue.add(episodeId, urlInfo!.moviePartsPositionList)
             }
 
             break

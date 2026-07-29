@@ -14,7 +14,7 @@ export function extractSyobocalId(value: string): string | null {
     const { hostname, pathname } = new URL(value)
 
     if (hostname === 'cal.syoboi.jp' && PATH_REGEXP.test(pathname)) {
-      return pathname.split('/')[2]
+      return pathname.split('/')[2]!
     }
   } catch {}
 

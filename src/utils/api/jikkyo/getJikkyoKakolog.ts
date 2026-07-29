@@ -32,8 +32,11 @@ export async function getJikkyoKakolog(
   params: StateSlotDetailJikkyo['id'] | GetJikkyoKakologParams
 ): Promise<GetJikkyoKakologResult | null> {
   if (typeof params === 'string') {
-    const [jkChId, time] = params.split(':')
-    const [starttime, endtime] = time.split('-')
+    const [jkChId, time] = params.split(':') as [
+      JikkyoChannelId,
+      `${number}-${number}`,
+    ]
+    const [starttime, endtime] = time.split('-') as [`${number}`, `${number}`]
 
     params = {
       jkChId: jkChId as JikkyoChannelId,

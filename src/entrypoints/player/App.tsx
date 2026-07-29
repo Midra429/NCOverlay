@@ -53,17 +53,15 @@ function App() {
   ) {
     evt.preventDefault()
 
-    const files = evt.currentTarget.files
+    const file = evt.currentTarget.files?.[0]
 
-    if (!files?.length) return
+    if (!file) return
 
     patcher.dispose()
 
     if (videoUrl) {
       URL.revokeObjectURL(videoUrl)
     }
-
-    const [file] = files
 
     setStatePlayingVideo({
       type: file.type,

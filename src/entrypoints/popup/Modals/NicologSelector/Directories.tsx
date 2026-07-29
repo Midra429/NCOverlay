@@ -59,8 +59,8 @@ export function Directories({
             directories?.findIndex((v) => compare(base, `${v.name} #0`)) ?? -1
 
           if (idx !== -1) {
-            const directory = directories![idx]
-            const element = directoryItemRefs.current[idx]
+            const directory = directories![idx]!
+            const element = directoryItemRefs.current[idx]!
 
             setDirectoryName(directory.name)
 

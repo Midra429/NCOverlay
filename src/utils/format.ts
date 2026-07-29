@@ -36,7 +36,7 @@ export function formatDate(
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const days = date.getDate()
-  const dow = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]
+  const dow = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()]!
 
   const hours = date.getHours()
   const minutes = date.getMinutes()
