@@ -31,14 +31,19 @@
         transparent
       );
     }
+
+    .media-slider__value {
+      bottom: calc(var(--spacing) * 8) !important;
+      padding: 0.125em 0.5em;
+      background-color: var(--media-surface-background-color);
+      border-color: hsl(var(--heroui-foreground-200) / 1);
+      border-style: var(--tw-border-style);
+      border-width: 1px;
+      border-radius: 99em;
+    }
   }
 
   .media-overlay {
     backdrop-filter: none;
-  }
-
-  .media-icon {
-    width: 18px;
-    height: 18px;
   }
 }
