@@ -4,21 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       bump_type:
-        description: 'v[major].[minor].[patch]'
+        description: "v[major].[minor].[patch]"
         required: true
         type: choice
-        default: 'patch'
+        default: "patch"
         options: [major, minor, patch, none]
       submit_chrome:
-        description: 'Chrome Web Store'
+        description: "Chrome Web Store"
         type: boolean
         default: true
       submit_edge:
-        description: 'Edge Add-ons'
+        description: "Edge Add-ons"
         type: boolean
         default: true
       submit_firefox:
-        description: 'Firefox Add-ons'
+        description: "Firefox Add-ons"
         type: boolean
         default: true
 
@@ -76,22 +76,19 @@ jobs:
       - name: Chrome Web Storeへ提出
         if: ${{ inputs.submit_chrome }}
         run: |
-          bun run wxt submit \
+          bun run publish-extension \
             --chrome-zip ./dist/*-chrome.zip
         env:
-          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
-          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
         continue-on-error: true
 
       - name: Edge Add-onsへ提出
         if: ${{ inputs.submit_edge }}
         run: |
-          bun run wxt submit \
+          bun run publish-extension \
             --edge-zip ./dist/*-chrome.zip
         env:
-          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
           EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
           EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
         continue-on-error: true
@@ -99,11 +96,9 @@ jobs:
       - name: Firefox Add-onsへ提出
         if: ${{ inputs.submit_firefox }}
         run: |
-          bun run wxt submit \
+          bun run publish-extension \
             --firefox-zip ./dist/*-firefox.zip \
             --firefox-sources-zip ./dist/*-sources.zip
         env:
-          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
-          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
           FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
         continue-on-error: true
