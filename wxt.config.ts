@@ -74,6 +74,7 @@ export default defineConfig({
       EXT_USER_AGENT,
     },
     build: {
+      modulePreload: false,
       chunkSizeWarningLimit: 1024,
     },
     ssr: {
