@@ -49,7 +49,7 @@ async function main() {
           .join(' ')
           .trim() || null
 
-      const duration = nco.renderer.video.duration ?? 0
+      const duration = nco.video.duration ?? 0
 
       logger.log('workTitle', workTitle)
       logger.log('episodeTitle', episodeTitle)
@@ -75,7 +75,7 @@ async function main() {
     obs.disconnect()
 
     if (patcher.nco) {
-      if (!patcher.nco.renderer.video.checkVisibility()) {
+      if (!patcher.nco.video.checkVisibility()) {
         patcher.dispose()
       }
     } else {

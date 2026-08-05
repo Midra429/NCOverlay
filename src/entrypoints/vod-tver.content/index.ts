@@ -68,7 +68,7 @@ async function main() {
         parsed.subtitleStripped = subtitleStripped
       }
 
-      const duration = nco.renderer.video.duration ?? 0
+      const duration = nco.video.duration ?? 0
 
       logger.log('parsed', parsed)
       logger.log('duration', duration)
@@ -93,7 +93,7 @@ async function main() {
     obs.disconnect()
 
     if (patcher.nco) {
-      if (!patcher.nco.renderer.video.checkVisibility()) {
+      if (!patcher.nco.video.checkVisibility()) {
         patcher.dispose()
       }
     } else {

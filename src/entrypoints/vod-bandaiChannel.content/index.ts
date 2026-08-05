@@ -45,7 +45,7 @@ async function main() {
           .join(' ')
           .trim() || null
 
-      const duration = nco.renderer.video.duration ?? 0
+      const duration = nco.video.duration ?? 0
 
       logger.log('workTitle', workTitle)
       logger.log('episodeTitle', episodeTitle)

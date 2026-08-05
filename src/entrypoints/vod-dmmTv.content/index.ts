@@ -63,7 +63,7 @@ async function main() {
           : null
 
       const duration =
-        dataVideo.episode?.playInfo.duration ?? nco.renderer.video.duration ?? 0
+        dataVideo.episode?.playInfo.duration ?? nco.video.duration ?? 0
 
       const streamChapters = dataStream?.chapter
 
@@ -149,7 +149,7 @@ async function main() {
     obs.disconnect()
 
     if (patcher.nco) {
-      if (!patcher.nco.renderer.video.checkVisibility()) {
+      if (!patcher.nco.video.checkVisibility()) {
         patcher.dispose()
       }
     } else {

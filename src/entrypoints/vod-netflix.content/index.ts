@@ -76,8 +76,7 @@ async function main() {
         : null
 
       const duration =
-        (episode?.runtime ?? videoData.runtime ?? nco.renderer.video.duration) -
-        10
+        (episode?.runtime ?? videoData.runtime ?? nco.video.duration) - 10
 
       logger.log('workTitle', workTitle)
       logger.log('episodeTitle', episodeTitle)
@@ -103,7 +102,7 @@ async function main() {
     obs.disconnect()
 
     if (patcher.nco) {
-      if (!patcher.nco.renderer.video.checkVisibility()) {
+      if (!patcher.nco.video.checkVisibility()) {
         patcher.dispose()
       }
     } else {

@@ -82,7 +82,7 @@ async function main() {
       }
 
       const input = normalizeTitle(title)
-      const duration = nco.renderer.video.duration
+      const duration = nco.video.duration
 
       logger.log('input', input)
       logger.log('duration', duration)
@@ -432,7 +432,7 @@ async function main() {
     obs.disconnect()
 
     if (patcher.nco) {
-      if (!patcher.nco.renderer.video.checkVisibility()) {
+      if (!patcher.nco.video.checkVisibility()) {
         patcher.dispose()
       }
     } else {

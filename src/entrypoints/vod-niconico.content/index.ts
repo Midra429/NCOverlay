@@ -29,7 +29,7 @@ async function main() {
 
   const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
-      const wrapper = nco.renderer.video.closest('div[data-name="inner"]')
+      const wrapper = nco.video.closest('div[data-name="inner"]')
 
       wrapper?.classList.remove('NCOverlay')
 
@@ -113,7 +113,7 @@ async function main() {
     obs.disconnect()
 
     if (patcher.nco) {
-      if (!patcher.nco.renderer.video.checkVisibility()) {
+      if (!patcher.nco.video.checkVisibility()) {
         patcher.dispose()
       }
     } else {

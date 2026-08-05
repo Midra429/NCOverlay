@@ -41,6 +41,13 @@ export class NCOverlay {
   readonly #removeListenerCallbacks: (() => void)[] = []
   readonly #port: Browser.runtime.Port
 
+  get video() {
+    return this.renderer.video
+  }
+  get canvas() {
+    return this.renderer.canvas
+  }
+
   constructor(
     tabId: number,
     video: HTMLVideoElement,
@@ -66,7 +73,7 @@ export class NCOverlay {
     sendExtensionMessage('bg:setBadge', { text: null })
 
     // 既にメタデータ読み込み済みの場合
-    if (HTMLMediaElement.HAVE_METADATA <= this.renderer.video.readyState) {
+    if (HTMLMediaElement.HAVE_METADATA <= this.video.readyState) {
       setTimeout(() => {
         this.#trigger('loadedmetadata')
       }, 100)
@@ -198,7 +205,7 @@ export class NCOverlay {
       const type = key as keyof HTMLVideoElementEventMap
       const listener = this.#videoEventListeners[type]!
 
-      this.renderer.video.addEventListener(type, listener)
+      this.video.addEventListener(type, listener)
     }
 
     for (const key of SLOTS_REFRESH_SETTINGS_KEYS) {
@@ -231,10 +238,7 @@ export class NCOverlay {
 
       // 検索ステータス
       this.state.onChange('status', (status) => {
-        if (
-          (status === 'ready' || status === 'error') &&
-          !this.renderer.video.paused
-        ) {
+        if ((status === 'ready' || status === 'error') && !this.video.paused) {
           this.renderer.start()
         }
       }),
@@ -338,7 +342,7 @@ export class NCOverlay {
       const type = key as keyof HTMLVideoElementEventMap
       const listener = this.#videoEventListeners[type]!
 
-      this.renderer.video.removeEventListener(type, listener)
+      this.video.removeEventListener(type, listener)
     }
 
     while (this.#removeListenerCallbacks.length) {

@@ -74,9 +74,9 @@ export class NCOPatcher {
     this.#video = video
 
     const tab = await sendExtensionMessage('bg:getCurrentTab', null)
-    const tabId = tab?.id
+    const tabId = tab?.id!
 
-    this.#nco = new NCOverlay(tabId!, this.#video, this.#functions)
+    this.#nco = new NCOverlay(tabId, this.#video, this.#functions)
 
     this.#nco.state.set('vod', this.#vod)
     this.#nco.state.set('playingVideo', playingVideo)
@@ -217,6 +217,6 @@ export class NCOPatcher {
       }
     })
 
-    this.#init.appendCanvas(this.#video, this.#nco.renderer.canvas)
+    this.#init.appendCanvas(this.#video, this.#nco.canvas)
   }
 }

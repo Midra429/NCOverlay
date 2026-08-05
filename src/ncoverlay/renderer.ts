@@ -16,8 +16,8 @@ interface NiconiCommentsOptions
  * NCOverlayの描画担当
  */
 export class NCORenderer {
-  readonly video: HTMLVideoElement
-  readonly canvas: HTMLCanvasElement
+  #video: HTMLVideoElement
+  #canvas: HTMLCanvasElement
 
   #niconicomments: NiconiComments | null = null
   #threads: V1Thread[] | null = null
@@ -35,19 +35,43 @@ export class NCORenderer {
 
   getCurrentTime: () => number
 
+  get video() {
+    return this.#video
+  }
+  get canvas() {
+    return this.#canvas
+  }
+
   constructor(
     video: HTMLVideoElement,
     { getCurrentTime }: NCOPatcherFunctions = {}
   ) {
-    this.video = video
-    this.video.classList.add('NCOverlay-Video')
+    this.#video = video
+    this.#video.classList.add('NCOverlay-Video')
 
-    this.canvas = document.createElement('canvas')
-    this.canvas.classList.add('NCOverlay-Canvas')
-    this.canvas.width = 1920
-    this.canvas.height = 1080
+    this.#canvas = this.#createCanvas()
 
-    this.getCurrentTime = getCurrentTime ?? (() => this.video.currentTime)
+    this.getCurrentTime = getCurrentTime ?? (() => this.#video.currentTime)
+  }
+
+  #createCanvas() {
+    const canvas = document.createElement('canvas')
+    canvas.classList.add('NCOverlay-Canvas')
+    canvas.width = 1920
+    canvas.height = 1080
+
+    return canvas
+  }
+
+  #replaceCanvas(canvas: HTMLCanvasElement) {
+    if (this.#canvas.parentNode) {
+      canvas.className = this.#canvas.className
+      canvas.style.cssText = this.#canvas.style.cssText
+
+      this.#canvas.replaceWith(canvas)
+    }
+
+    this.#canvas = canvas
   }
 
   dispose() {
@@ -55,9 +79,9 @@ export class NCORenderer {
 
     this.#options = null
 
-    this.canvas.remove()
+    this.#canvas.remove()
 
-    this.video.classList.remove('NCOverlay-Video')
+    this.#video.classList.remove('NCOverlay-Video')
   }
 
   clear() {
@@ -113,14 +137,14 @@ export class NCORenderer {
    * @param opacity 0 ~ 1
    */
   setOpacity(opacity: number) {
-    this.canvas.style.opacity = opacity.toString()
+    this.#canvas.style.opacity = opacity.toString()
   }
 
   updateTime() {
     this.#startTimestamp = performance.now()
     this.#startTime = this.getCurrentTime()
     this.#startTimeVpos = Math.max((this.#startTime - this.#offset) * 100, 0)
-    this.#playbackRate = this.video.playbackRate
+    this.#playbackRate = this.#video.playbackRate
   }
 
   reload() {
@@ -129,7 +153,9 @@ export class NCORenderer {
     this.#niconicomments = null
 
     if (this.#threads) {
-      this.#niconicomments = new NiconiComments(this.canvas, this.#threads, {
+      this.#replaceCanvas(this.#createCanvas())
+
+      this.#niconicomments = new NiconiComments(this.#canvas, this.#threads, {
         mode: 'html5',
         format: 'v1',
         ...this.#options,
@@ -207,7 +233,7 @@ export class NCORenderer {
 
         try {
           data = await sendExtensionMessage('bg:captureTab', {
-            rect: getObjectFitRect(true, this.canvas, 1920, 1080),
+            rect: getObjectFitRect(true, this.#canvas, 1920, 1080),
             scale: window.devicePixelRatio,
             format,
           })
