@@ -118,7 +118,7 @@ export class NCOverlay {
     } else {
       const markerIdx = MARKERS.findIndex((v) => v.key === key)
 
-      const currentTimeMs = this.renderer.getCurrentTime() * 1000
+      const currentTimeMs = Math.trunc(this.renderer.getCurrentTime() * 1000)
 
       if (newDetails) {
         const adjustJikkyoOffset = await settings.get(
