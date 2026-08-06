@@ -1,14 +1,8 @@
-'use client'
-
-import type { RenderProp } from '@videojs/react'
+import type { FlatTranslations } from '@videojs/react'
 import type { CSSProperties, ComponentProps, ReactNode } from 'react'
 
-import { forwardRef, isValidElement } from 'react'
-import {
-  playbackRateText,
-  settingsText,
-  speedText,
-} from '@videojs/core/i18n/text/menu'
+import { forwardRef } from 'react'
+import { cn } from '@heroui/react'
 import {
   BufferingIndicator,
   Container,
@@ -16,12 +10,10 @@ import {
   FullscreenButton,
   Gesture,
   Hotkey,
-  I18nProvider,
   Menu,
   MuteButton,
   PlayButton,
   Popover,
-  Poster,
   SeekButton,
   Time,
   TimeSlider,
@@ -30,15 +22,18 @@ import {
   bufferFeature,
   controlsFeature,
   createPlayer,
+  createTranslator,
   fullscreenFeature,
   playbackFeature,
   playbackRateFeature,
+  selectFullscreen,
+  selectPlayback,
   timeFeature,
   usePlaybackRateOptions,
   usePlayer,
-  useTranslator,
   volumeFeature,
 } from '@videojs/react'
+import ja from '@videojs/react/i18n/locales/ja'
 import {
   CheckIcon,
   ChevronIcon,
@@ -56,11 +51,11 @@ import {
   VolumeOffIcon,
 } from '@videojs/react/icons'
 import { Video } from '@videojs/react/video'
+import { flatten } from '@videojs/utils/object'
 
-import '@videojs/react/i18n/locales/ja/register'
 import '@videojs/react/video/skin.css'
 
-export const Player = createPlayer({
+const Player = createPlayer({
   features: [
     playbackFeature,
     playbackRateFeature,
@@ -72,16 +67,46 @@ export const Player = createPlayer({
   ],
 })
 
-function MenuChevron({ flipped = false }: { flipped?: boolean }): ReactNode {
+const t = createTranslator(flatten(ja) as FlatTranslations, 'ja')
+
+function PlaybackControl(): ReactNode {
+  const playbackState = usePlayer(selectPlayback)
+
+  return (
+    <Tooltip.Root side="top">
+      <Tooltip.Trigger
+        render={
+          <PlayButton className="media-button--play" render={<Button />}>
+            <RestartIcon className="media-icon media-icon--restart" />
+            <PlayIcon className="media-icon media-icon--play" />
+            <PauseIcon className="media-icon media-icon--pause" />
+          </PlayButton>
+        }
+      />
+      <Tooltip.Popup className="media-surface media-tooltip">
+        <Tooltip.Label>
+          {(playbackState?.ended && t('buttons.replay')) ||
+            (playbackState?.paused && t('buttons.play')) ||
+            (playbackState?.started && t('buttons.pause'))}
+        </Tooltip.Label>
+        <Tooltip.Shortcut className="media-tooltip__kbd" />
+      </Tooltip.Popup>
+    </Tooltip.Root>
+  )
+}
+
+function MenuChevron({ flipped }: { flipped?: boolean }): ReactNode {
   return (
     <ChevronIcon
-      className={`media-icon media-menu__chevron ${flipped ? 'media-icon--flipped' : undefined}`}
+      className={cn(
+        'media-icon media-menu__chevron',
+        flipped && 'media-icon--flipped'
+      )}
     />
   )
 }
 
 function SettingsMenu(): ReactNode {
-  const t = useTranslator()
   const playbackRate = usePlaybackRateOptions()
   const hasPlaybackRate = playbackRate?.state.availability === 'available'
 
@@ -90,7 +115,7 @@ function SettingsMenu(): ReactNode {
   return (
     <Menu.Root side="top" align="center">
       <Menu.Trigger
-        aria-label={t(settingsText)}
+        aria-label={t('menu.settings')}
         className="media-button--settings"
         render={<Button />}
       >
@@ -107,7 +132,7 @@ function SettingsMenu(): ReactNode {
                   render={(props) => (
                     <div {...props}>
                       <SpeedIcon className="media-icon" />
-                      <span>{t(speedText)}</span>
+                      <span>{t('menu.speed')}</span>
                       <span className="media-menu__hint">
                         <Menu.ItemValue className="media-menu__hint-label" />
                         <MenuChevron />
@@ -118,14 +143,14 @@ function SettingsMenu(): ReactNode {
                 <Menu.Content className="media-menu__panel">
                   <Menu.Back className="media-menu__back">
                     <MenuChevron flipped />
-                    {t(speedText)}
+                    {t('menu.speed')}
                   </Menu.Back>
                   <Menu.Separator className="media-menu__separator" />
                   <Menu.RadioGroup
                     className="media-menu__group"
                     value={playbackRate.value}
                     onValueChange={playbackRate.setValue}
-                    aria-label={t(playbackRateText)}
+                    aria-label={t('menu.playbackRate')}
                   >
                     {playbackRate.options.map((option) => (
                       <Menu.RadioItem
@@ -156,6 +181,8 @@ function SettingsMenu(): ReactNode {
 }
 
 function FullscreenControl() {
+  const state = usePlayer(selectFullscreen)
+
   return (
     <Tooltip.Root side="top">
       <Tooltip.Trigger
@@ -170,7 +197,9 @@ function FullscreenControl() {
         }
       />
       <Tooltip.Popup className="media-surface media-tooltip">
-        <Tooltip.Label />
+        <Tooltip.Label>
+          {state?.fullscreen ? t('fullscreen.exit') : t('fullscreen.enter')}
+        </Tooltip.Label>
         <Tooltip.Shortcut className="media-tooltip__kbd" />
       </Tooltip.Popup>
     </Tooltip.Root>
@@ -184,11 +213,9 @@ function FullscreenControl() {
 const SEEK_TIME = 10
 
 export interface VideoPlayerProps {
-  src?: string | null
-  style?: CSSProperties
   className?: string
-  poster?: string | RenderProp<Poster.State> | undefined
-  placeholder?: string
+  style?: CSSProperties
+  src?: string | null
   ref?: React.Ref<HTMLVideoElement>
   videoEvents?: Omit<
     React.DOMAttributes<HTMLVideoElement>,
@@ -201,204 +228,165 @@ export interface VideoPlayerProps {
  * ```tsx
  * <VideoPlayer
  *   src="https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/highest.mp4"
- *   poster="https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/thumbnail.webp"
  * />
  * ```
  */
 export function VideoPlayer({
-  src,
   className,
-  poster,
-  placeholder,
+  style,
+  src,
   ref,
   videoEvents,
-  style,
   ...rest
 }: VideoPlayerProps): ReactNode {
-  const containerStyle = placeholder
-    ? ({
-        '--media-poster-placeholder': `url(${placeholder})`,
-        ...style,
-      } as CSSProperties)
-    : style
-
   return (
     <Player.Provider>
-      <I18nProvider locale="ja">
-        <Container
-          className={`media-default-skin media-default-skin--video ${className ?? ''}`}
-          style={containerStyle}
-          {...rest}
-        >
-          <Video
-            src={src ?? undefined}
-            playsInline
-            ref={ref}
-            {...videoEvents}
-          />
+      <Container
+        className={cn(
+          'media-default-skin media-default-skin--video',
+          className
+        )}
+        {...rest}
+      >
+        <Video src={src ?? undefined} playsInline ref={ref} {...videoEvents} />
 
-          {poster && (
-            <Poster
-              src={isString(poster) ? poster : undefined}
-              render={isRenderProp(poster) ? poster : undefined}
-            />
+        <BufferingIndicator
+          render={(props) => (
+            <div {...props} className="media-buffering-indicator">
+              <SpinnerIcon className="media-icon" />
+            </div>
           )}
+        />
 
-          <BufferingIndicator
-            render={(props) => (
-              <div {...props} className="media-buffering-indicator">
-                <SpinnerIcon className="media-icon" />
-              </div>
-            )}
-          />
+        <Controls.Root className="media-surface media-controls media-controls--root">
+          <Tooltip.Provider>
+            <div className="media-surface media-controls media-controls--primary">
+              <div className="media-button-group">
+                <PlaybackControl />
 
-          <Controls.Root className="media-surface media-controls media-controls--root">
-            <Tooltip.Provider>
-              <div className="media-surface media-controls media-controls--primary">
-                <div className="media-button-group">
-                  <Tooltip.Root side="top">
-                    <Tooltip.Trigger
-                      render={
-                        <PlayButton
-                          className="media-button--play"
-                          render={<Button />}
-                        >
-                          <RestartIcon className="media-icon media-icon--restart" />
-                          <PlayIcon className="media-icon media-icon--play" />
-                          <PauseIcon className="media-icon media-icon--pause" />
-                        </PlayButton>
-                      }
-                    />
-                    <Tooltip.Popup className="media-surface media-tooltip">
-                      <Tooltip.Label />
-                      <Tooltip.Shortcut className="media-tooltip__kbd" />
-                    </Tooltip.Popup>
-                  </Tooltip.Root>
+                <Tooltip.Root side="top">
+                  <Tooltip.Trigger
+                    render={
+                      <SeekButton
+                        seconds={-SEEK_TIME}
+                        className="media-button--seek"
+                        render={<Button />}
+                      >
+                        <span className="media-icon__container">
+                          <SeekIcon className="media-icon media-icon--seek media-icon--flipped" />
+                          <span className="media-icon__label">{SEEK_TIME}</span>
+                        </span>
+                      </SeekButton>
+                    }
+                  />
+                  <Tooltip.Popup className="media-surface media-tooltip">
+                    <Tooltip.Label>
+                      {t('seek.backward', { seconds: SEEK_TIME })}
+                    </Tooltip.Label>
+                    <Tooltip.Shortcut className="media-tooltip__kbd" />
+                  </Tooltip.Popup>
+                </Tooltip.Root>
+                <Tooltip.Root side="top">
+                  <Tooltip.Trigger
+                    render={
+                      <SeekButton
+                        seconds={SEEK_TIME}
+                        className="media-button--seek"
+                        render={<Button />}
+                      >
+                        <span className="media-icon__container">
+                          <SeekIcon className="media-icon media-icon--seek" />
+                          <span className="media-icon__label">{SEEK_TIME}</span>
+                        </span>
+                      </SeekButton>
+                    }
+                  />
+                  <Tooltip.Popup className="media-surface media-tooltip">
+                    <Tooltip.Label>
+                      {t('seek.forward', { seconds: SEEK_TIME })}
+                    </Tooltip.Label>
+                    <Tooltip.Shortcut className="media-tooltip__kbd" />
+                  </Tooltip.Popup>
+                </Tooltip.Root>
 
-                  <Tooltip.Root side="top">
-                    <Tooltip.Trigger
-                      render={
-                        <SeekButton
-                          seconds={-SEEK_TIME}
-                          className="media-button--seek"
-                          render={<Button />}
-                        >
-                          <span className="media-icon__container">
-                            <SeekIcon className="media-icon media-icon--seek media-icon--flipped" />
-                            <span className="media-icon__label">
-                              {SEEK_TIME}
-                            </span>
-                          </span>
-                        </SeekButton>
-                      }
-                    />
-                    <Tooltip.Popup className="media-surface media-tooltip">
-                      <Tooltip.Label />
-                      <Tooltip.Shortcut className="media-tooltip__kbd" />
-                    </Tooltip.Popup>
-                  </Tooltip.Root>
-                  <Tooltip.Root side="top">
-                    <Tooltip.Trigger
-                      render={
-                        <SeekButton
-                          seconds={SEEK_TIME}
-                          className="media-button--seek"
-                          render={<Button />}
-                        >
-                          <span className="media-icon__container">
-                            <SeekIcon className="media-icon media-icon--seek" />
-                            <span className="media-icon__label">
-                              {SEEK_TIME}
-                            </span>
-                          </span>
-                        </SeekButton>
-                      }
-                    />
-                    <Tooltip.Popup className="media-surface media-tooltip">
-                      <Tooltip.Label />
-                      <Tooltip.Shortcut className="media-tooltip__kbd" />
-                    </Tooltip.Popup>
-                  </Tooltip.Root>
-
-                  <VolumePopover />
-                </div>
-
-                <div className="media-time-controls">
-                  <Time.Value type="current" className="media-time" />
-                  <TimeSlider.Root className="media-slider">
-                    <TimeSlider.Track className="media-slider__track">
-                      <TimeSlider.Fill className="media-slider__fill" />
-                      <TimeSlider.Buffer className="media-slider__buffer" />
-                    </TimeSlider.Track>
-                    <TimeSlider.Thumb className="media-slider__thumb" />
-
-                    <TimeSlider.Preview className="media-slider__preview">
-                      <TimeSlider.Value
-                        type="pointer"
-                        className="media-time media-slider__value"
-                      />
-                    </TimeSlider.Preview>
-                  </TimeSlider.Root>
-                  <Time.Value toggle type="duration" className="media-time" />
-                </div>
-
-                <div className="media-button-group">
-                  <SettingsMenu />
-                </div>
+                <VolumePopover />
               </div>
 
-              <div className="media-surface media-controls media-controls--secondary">
-                <div className="media-button-group">
-                  <FullscreenControl />
-                </div>
+              <div className="media-time-controls">
+                <Time.Value type="current" className="media-time" />
+                <TimeSlider.Root className="media-slider">
+                  <TimeSlider.Track className="media-slider__track">
+                    <TimeSlider.Fill className="media-slider__fill" />
+                    <TimeSlider.Buffer className="media-slider__buffer" />
+                  </TimeSlider.Track>
+                  <TimeSlider.Thumb className="media-slider__thumb" />
+
+                  <TimeSlider.Preview className="media-slider__preview">
+                    <TimeSlider.Value
+                      type="pointer"
+                      className="media-time media-slider__value"
+                    />
+                  </TimeSlider.Preview>
+                </TimeSlider.Root>
+                <Time.Value toggle type="duration" className="media-time" />
               </div>
-            </Tooltip.Provider>
-          </Controls.Root>
 
-          <div className="media-overlay" />
+              <div className="media-button-group">
+                <SettingsMenu />
+              </div>
+            </div>
 
-          {/* Hotkeys */}
-          <Hotkey keys="Space" action="togglePaused" />
-          <Hotkey keys="k" action="togglePaused" />
-          <Hotkey keys="m" action="toggleMuted" />
-          <Hotkey keys="f" action="toggleFullscreen" />
-          <Hotkey keys="c" action="toggleSubtitles" />
-          <Hotkey keys="i" action="togglePictureInPicture" />
-          <Hotkey keys="ArrowRight" action="seekStep" value={SEEK_TIME / 2} />
-          <Hotkey keys="ArrowLeft" action="seekStep" value={-(SEEK_TIME / 2)} />
-          <Hotkey keys="l" action="seekStep" value={SEEK_TIME} />
-          <Hotkey keys="j" action="seekStep" value={-SEEK_TIME} />
-          <Hotkey keys="ArrowUp" action="volumeStep" value={0.05} />
-          <Hotkey keys="ArrowDown" action="volumeStep" value={-0.05} />
-          <Hotkey keys="0-9" action="seekToPercent" />
-          <Hotkey keys="Home" action="seekToPercent" value={0} />
-          <Hotkey keys="End" action="seekToPercent" value={100} />
-          <Hotkey keys=">" action="speedUp" />
-          <Hotkey keys="<" action="speedDown" />
+            <div className="media-surface media-controls media-controls--secondary">
+              <div className="media-button-group">
+                <FullscreenControl />
+              </div>
+            </div>
+          </Tooltip.Provider>
+        </Controls.Root>
 
-          {/* Gestures */}
-          <Gesture
-            type="tap"
-            action="togglePaused"
-            pointer="mouse"
-            region="center"
-          />
-          <Gesture type="tap" action="toggleControls" pointer="touch" />
-          <Gesture
-            type="doubletap"
-            action="seekStep"
-            value={-SEEK_TIME}
-            region="left"
-          />
-          <Gesture type="doubletap" action="toggleFullscreen" region="center" />
-          <Gesture
-            type="doubletap"
-            action="seekStep"
-            value={SEEK_TIME}
-            region="right"
-          />
-        </Container>
-      </I18nProvider>
+        <div className="media-overlay" />
+
+        {/* Hotkeys */}
+        <Hotkey keys="Space" action="togglePaused" />
+        <Hotkey keys="k" action="togglePaused" />
+        <Hotkey keys="m" action="toggleMuted" />
+        <Hotkey keys="f" action="toggleFullscreen" />
+        <Hotkey keys="c" action="toggleSubtitles" />
+        <Hotkey keys="i" action="togglePictureInPicture" />
+        <Hotkey keys="ArrowRight" action="seekStep" value={SEEK_TIME / 2} />
+        <Hotkey keys="ArrowLeft" action="seekStep" value={-(SEEK_TIME / 2)} />
+        <Hotkey keys="l" action="seekStep" value={SEEK_TIME} />
+        <Hotkey keys="j" action="seekStep" value={-SEEK_TIME} />
+        <Hotkey keys="ArrowUp" action="volumeStep" value={0.05} />
+        <Hotkey keys="ArrowDown" action="volumeStep" value={-0.05} />
+        <Hotkey keys="0-9" action="seekToPercent" />
+        <Hotkey keys="Home" action="seekToPercent" value={0} />
+        <Hotkey keys="End" action="seekToPercent" value={100} />
+        <Hotkey keys=">" action="speedUp" />
+        <Hotkey keys="<" action="speedDown" />
+
+        {/* Gestures */}
+        <Gesture
+          type="tap"
+          action="togglePaused"
+          pointer="mouse"
+          region="center"
+        />
+        <Gesture type="tap" action="toggleControls" pointer="touch" />
+        <Gesture
+          type="doubletap"
+          action="seekStep"
+          value={-SEEK_TIME}
+          region="left"
+        />
+        <Gesture type="doubletap" action="toggleFullscreen" region="center" />
+        <Gesture
+          type="doubletap"
+          action="seekStep"
+          value={SEEK_TIME}
+          region="right"
+        />
+      </Container>
     </Player.Provider>
   )
 }
@@ -413,7 +401,10 @@ const Button = forwardRef<HTMLButtonElement, ComponentProps<'button'>>(
       <button
         ref={ref}
         type="button"
-        className={`media-button media-button--subtle media-button--icon ${className ?? ''}`}
+        className={cn(
+          'media-button media-button--subtle media-button--icon',
+          className
+        )}
         {...props}
       />
     )
@@ -452,16 +443,4 @@ function VolumePopover(): ReactNode {
       </Popover.Popup>
     </Popover.Root>
   )
-}
-
-// ================================================================
-// Utilities
-// ================================================================
-
-function isString(value: unknown): value is string {
-  return typeof value === 'string'
-}
-
-function isRenderProp(value: unknown): value is RenderProp<unknown> {
-  return typeof value === 'function' || isValidElement(value)
 }
