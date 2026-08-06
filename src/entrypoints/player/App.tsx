@@ -3,6 +3,7 @@ import type { StatePlayingVideo } from '@/ncoverlay/state'
 import { useEffect, useRef, useState } from 'react'
 
 import { logger } from '@/utils/logger'
+import { webext } from '@/utils/webext'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import { Layout } from '@/components/Layout'
@@ -13,10 +14,17 @@ import './style.css'
 
 const FILE_EXT_REGEXP = /\.[a-z0-9]+$/i
 
+async function getThumbnailURL(): Promise<string> {
+  const url = webext.runtime.getURL('/thumbnail.png')
+  const blob = await fetch(url).then((res) => res.blob())
+  return URL.createObjectURL(blob)
+}
+
 function App() {
   const [statePlayingVideo, setStatePlayingVideo] =
     useState<StatePlayingVideo | null>(null)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [thumbObjUrl, setThumbObjUrl] = useState<string | null>(null)
 
   const videoFilePicker = useRef<HTMLInputElement>(null)
   const videoFileDrop = useRef<HTMLInputElement>(null)
@@ -28,15 +36,15 @@ function App() {
         return null
       }
 
-      const fileName = statePlayingVideo?.name.replace(FILE_EXT_REGEXP, '')
+      const title = statePlayingVideo?.name.replace(FILE_EXT_REGEXP, '')
       const duration = videoRef.current.duration
 
-      logger.log('fileName', fileName)
+      logger.log('title', title)
       logger.log('duration', duration)
 
-      return fileName
+      return title
         ? {
-            input: fileName,
+            input: title,
             duration,
           }
         : null
@@ -46,7 +54,7 @@ function App() {
     },
   })
 
-  function onChange(
+  async function onChange(
     evt:
       | React.ChangeEvent<HTMLInputElement, HTMLInputElement>
       | React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -70,9 +78,13 @@ function App() {
     })
     setVideoUrl(URL.createObjectURL(file))
 
-    document.title = `${file.name} | NCOverlay`
+    const title = file.name.replace(FILE_EXT_REGEXP, '')
+
+    document.title = `${title} | NCOverlay`
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: file.name,
+      title,
+      artist: 'NCOverlay',
+      artwork: thumbObjUrl ? [{ src: thumbObjUrl }] : undefined,
     })
   }
 
@@ -81,7 +93,15 @@ function App() {
 
     patcher.setVideo(videoRef.current)
 
-    return () => patcher.dispose()
+    getThumbnailURL().then(setThumbObjUrl)
+
+    return () => {
+      patcher.dispose()
+
+      if (thumbObjUrl) {
+        URL.revokeObjectURL(thumbObjUrl)
+      }
+    }
   }, [])
 
   return (
