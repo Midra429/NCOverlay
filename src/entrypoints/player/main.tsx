@@ -87,7 +87,15 @@ void (async () => {
     navigator.mediaSession.metadata = new MediaMetadata({
       title,
       artist: 'NCOverlay',
-      artwork: thumbObjUrl ? [{ src: thumbObjUrl }] : undefined,
+      artwork: thumbObjUrl
+        ? [
+            {
+              src: thumbObjUrl,
+              sizes: '512x512',
+              type: 'image/png',
+            },
+          ]
+        : undefined,
     })
   }
 
