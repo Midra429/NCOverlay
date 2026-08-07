@@ -1,5 +1,5 @@
 import type { FlatTranslations } from '@videojs/react'
-import type { CSSProperties, ComponentProps, ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { forwardRef } from 'react'
 import { cn } from '@heroui/react'

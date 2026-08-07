@@ -9,13 +9,13 @@ import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import App from './App'
 
-const FILE_EXT_REGEXP = /\.[a-z0-9]+$/i
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 )
+
+const FILE_EXT_REGEXP = /\.[a-z0-9]+$/i
 
 void (async () => {
   // NCOPatcher
