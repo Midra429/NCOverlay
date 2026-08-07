@@ -212,43 +212,30 @@ function FullscreenControl() {
 
 const SEEK_TIME = 10
 
-export interface VideoPlayerProps {
-  className?: string
-  style?: CSSProperties
-  src?: string | null
-  ref?: React.Ref<HTMLVideoElement>
-  videoEvents?: Omit<
-    React.DOMAttributes<HTMLVideoElement>,
+export interface VideoPlayerProps
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
     'children' | 'dangerouslySetInnerHTML'
-  >
+  > {
+  src?: string
 }
 
-/**
- * @example
- * ```tsx
- * <VideoPlayer
- *   src="https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/highest.mp4"
- * />
- * ```
- */
 export function VideoPlayer({
   className,
   style,
   src,
-  ref,
-  videoEvents,
   ...rest
 }: VideoPlayerProps): ReactNode {
   return (
     <Player.Provider>
       <Container
+        {...rest}
         className={cn(
           'media-default-skin media-default-skin--video',
           className
         )}
-        {...rest}
       >
-        <Video src={src ?? undefined} playsInline ref={ref} {...videoEvents} />
+        <Video src={src} playsInline />
 
         <BufferingIndicator
           render={(props) => (

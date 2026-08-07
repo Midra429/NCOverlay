@@ -80,10 +80,10 @@ export class NCOverlay {
     }
   }
 
-  dispose() {
+  async dispose() {
     logger.log('NCOverlay.dispose()')
 
-    this.state.dispose()
+    await this.state.dispose()
     this.renderer.dispose()
     this.keyboard.dispose()
 
@@ -92,7 +92,7 @@ export class NCOverlay {
     this.#unregisterEventListener()
     this.removeAllEventListeners()
 
-    sendExtensionMessage('bg:setBadge', { text: null })
+    await sendExtensionMessage('bg:setBadge', { text: null })
   }
 
   async clear() {

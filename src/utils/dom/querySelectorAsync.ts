@@ -1,18 +1,23 @@
 export async function querySelectorAsync<T extends Element>(
-  parent: T,
+  parent: HTMLElement,
   selectors: string,
-  intervalMs: number = 1000
+  options?: {
+    intervalMs: number
+    timeoutMs: number
+  }
 ): Promise<T | null> {
-  let cnt = 0
+  const { intervalMs = 100, timeoutMs = 5000 } = options ?? {}
 
   return new Promise((resolve) => {
+    const start = performance.now()
+
     const intervalId = setInterval(() => {
       const element = parent.querySelector<T>(selectors)
 
       if (element) {
         resolve(element)
         clearInterval(intervalId)
-      } else if (5 < ++cnt) {
+      } else if (timeoutMs < performance.now() - start) {
         resolve(null)
         clearInterval(intervalId)
       }

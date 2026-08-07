@@ -4,18 +4,18 @@ import { useNcoState } from '@/hooks/useNco'
 
 export function Item() {
   const { ref, overflow } = useOverflowDetector()
-  const playingVideo = useNcoState('playingVideo')
+  const fileDetail = useNcoState('fileDetail')
 
   return (
     <div className="border-foreground-200 border-b-1 px-2">
       <div className="flex h-9.25 items-center">
         <span className="truncate break-all text-tiny" ref={ref}>
-          {playingVideo ? (
+          {fileDetail ? (
             <span
               className="font-semibold"
-              title={overflow ? playingVideo.name : undefined}
+              title={overflow ? fileDetail.name : undefined}
             >
-              {playingVideo.name}
+              {fileDetail.name}
             </span>
           ) : (
             <span className="text-foreground-500">

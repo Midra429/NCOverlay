@@ -2,7 +2,7 @@ import type { ParsedResult } from '@midra/nco-utils/parse'
 import type { VodKey } from '@/types/constants'
 import type { VideoChapter } from '@/utils/api/jikkyo/findChapters'
 import type { NCOSearcherAutoSearchArgs } from './searcher'
-import type { StateInfo, StatePlayingVideo } from './state'
+import type { StateFileDetail, StateInfo } from './state'
 
 import { parse } from '@midra/nco-utils/parse'
 
@@ -40,6 +40,7 @@ export class NCOPatcher {
   readonly #functions
 
   #video: HTMLVideoElement | null = null
+  #fileDetail: StateFileDetail | null = null
   #nco: NCOverlay | null = null
 
   get nco() {
@@ -56,22 +57,24 @@ export class NCOPatcher {
     this.#functions = functions
   }
 
-  dispose() {
-    this.#nco?.dispose()
+  async dispose() {
+    await this.#nco?.dispose()
 
     this.#video = null
+    this.#fileDetail = null
     this.#nco = null
   }
 
   async setVideo(
     video: HTMLVideoElement,
-    playingVideo: StatePlayingVideo | null = null
+    fileDetail: StateFileDetail | null = null
   ) {
     if (this.#video === video) return
 
-    this.dispose()
+    await this.dispose()
 
     this.#video = video
+    this.#fileDetail = fileDetail
 
     const tab = await sendExtensionMessage('bg:getCurrentTab', null)
     const tabId = tab?.id!
@@ -79,12 +82,15 @@ export class NCOPatcher {
     this.#nco = new NCOverlay(tabId, this.#video, this.#functions)
 
     this.#nco.state.set('vod', this.#vod)
-    this.#nco.state.set('playingVideo', playingVideo)
+    this.#nco.state.set('fileDetail', this.#fileDetail)
 
     const loadInfo = async () => {
       if (!this.#nco) return
 
       try {
+        await this.#nco.state.set('vod', this.#vod)
+        await this.#nco.state.set('fileDetail', this.#fileDetail)
+
         const info = await this.#init.getInfo(this.#nco)
 
         let parsed: ParsedResult | undefined
@@ -115,8 +121,6 @@ export class NCOPatcher {
           isNhkOndemand: info?.isNhkOndemand,
         }
 
-        await this.#nco.state.set('vod', this.#vod)
-        await this.#nco.state.set('playingVideo', playingVideo)
         await this.#nco.state.set('info', args)
 
         logger.log('state.info', args)

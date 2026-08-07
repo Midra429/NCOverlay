@@ -39,7 +39,7 @@ export interface NCOStateItems {
   [key: `state:${number}:offset`]: StateOffset | null
   [key: `state:${number}:slots`]: StateSlot[] | null
   [key: `state:${number}:slotDetails`]: StateSlotDetail[] | null
-  [key: `state:${number}:playingVideo`]: StatePlayingVideo | null
+  [key: `state:${number}:fileDetail`]: StateFileDetail | null
 }
 
 export type NCOStateItemKey =
@@ -171,7 +171,7 @@ export type StateSlotDetail =
 export type StateSlotDetailUpdate = DeepPartial<StateSlotDetail> &
   Required<Pick<StateSlotDetail, 'id'>>
 
-export interface StatePlayingVideo {
+export interface StateFileDetail {
   type: string
   name: string
   size: number
@@ -458,8 +458,8 @@ export class NCOState {
     this.id = id
   }
 
-  dispose() {
-    this.clear()
+  async dispose() {
+    await this.clear()
   }
 
   async get<K extends NCOStateItemKey, V extends NCOStateItem<K>>(
@@ -594,7 +594,7 @@ export class NCOState {
       this.remove('offset'),
       this.remove('slots'),
       this.remove('slotDetails'),
-      this.remove('playingVideo'),
+      this.remove('fileDetail'),
     ])
   }
 

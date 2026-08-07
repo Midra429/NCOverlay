@@ -4,6 +4,10 @@
   }
 }
 
+#player:has(> video[src]) + #onboarding {
+  display: none;
+}
+
 .media-default-skin--video {
   --media-color-primary: hsl(var(--heroui-foreground) / 1);
   --media-surface-background-color: hsl(var(--heroui-content1) / 1);
