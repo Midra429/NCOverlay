@@ -56,11 +56,11 @@ export class NCOKeyboard {
     this.#unregisterEventListener()
   }
 
-  async getOffset() {
+  async _getOffset() {
     return (await this.#state.get('offset')) ?? 0
   }
 
-  async setOffset(offset: number | null) {
+  async _setOffset(offset: number | null) {
     return this.#state.set('offset', offset)
   }
 
@@ -83,15 +83,15 @@ export class NCOKeyboard {
       }),
 
       register('increaseGlobalOffset', async () => {
-        this.setOffset((await this.getOffset()) + 1)
+        this._setOffset((await this._getOffset()) + 1)
       }),
 
       register('decreaseGlobalOffset', async () => {
-        this.setOffset((await this.getOffset()) - 1)
+        this._setOffset((await this._getOffset()) - 1)
       }),
 
       register('resetGlobalOffset', async () => {
-        this.setOffset(null)
+        this._setOffset(null)
       }),
 
       register('jumpMarkerToStart', () => {
