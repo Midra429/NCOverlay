@@ -1,6 +1,4 @@
-import { useLayoutEffect, useState } from 'react'
-
-import { ncoState, useNcoState } from '@/hooks/useNco'
+import { useNcoState } from '@/hooks/useNco'
 
 import { Layout } from '@/components/Layout'
 
@@ -12,13 +10,7 @@ import { PlayingVideo } from './PlayingVideo'
 function App() {
   const vod = useNcoState('vod')
 
-  const [isActive, setIsActive] = useState(false)
-
-  useLayoutEffect(() => {
-    ncoState?.get('vod').then((vod) => {
-      setIsActive(!!vod)
-    })
-  }, [])
+  const isActive = !!vod
 
   return (
     <Layout className="overflow-visible">
