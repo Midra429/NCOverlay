@@ -53,6 +53,8 @@ export class NCOverlay {
     video: HTMLVideoElement,
     functions?: NCOPatcherFunctions
   ) {
+    logger.log('new NCOverlay()')
+
     this.id = tabId
     this.state = new NCOState(this.id)
     this.searcher = new NCOSearcher(this.state)
@@ -96,6 +98,8 @@ export class NCOverlay {
   }
 
   async clear() {
+    logger.log('NCOverlay.clear()')
+
     await this.state.clear()
     this.renderer.clear()
 
@@ -106,6 +110,8 @@ export class NCOverlay {
    * 指定したマーカーの位置にジャンプ
    */
   async jumpMarker(key: MarkerKey | null) {
+    logger.log('NCOverlay.jumpMarker()', key)
+
     const oldDetails = await this.state.get('slotDetails')
     const newDetails = structuredClone(oldDetails)
 
@@ -164,7 +170,7 @@ export class NCOverlay {
     [P in keyof HTMLVideoElementEventMap]?: (evt: Event) => void
   } = {
     loadedmetadata: () => {
-      logger.log('loadedmetadata')
+      logger.log('event', 'loadedmetadata')
 
       this.#trigger('loadedmetadata')
     },
@@ -300,11 +306,6 @@ export class NCOverlay {
               undefined,
           })
         }
-      }),
-
-      // メッセージ (インスタンスのID取得)
-      onExtensionMessage('content:getNcoId', () => {
-        return this.id
       }),
 
       // メッセージ (現在の再生時間を取得)

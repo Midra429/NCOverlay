@@ -8,7 +8,6 @@ import { defineMessaging } from '@/utils/messaging'
 
 export interface ProtocolMap {
   // background -> content
-  'content:getNcoId': (args?: null) => number | null
   'content:getCurrentTime': (args?: null) => number
   'content:rerender': (args?: null) => void
   'content:reload': (args?: null) => void

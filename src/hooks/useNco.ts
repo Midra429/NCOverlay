@@ -3,19 +3,19 @@ import type { NCOStateItem, NCOStateItemKey } from '@/ncoverlay/state'
 import { useEffect, useState } from 'react'
 
 import { SLOTS_REFRESH_SETTINGS_KEYS } from '@/constants/settings'
+import { webext } from '@/utils/webext'
 import { settings } from '@/utils/settings/extension'
-import { sendExtensionMessage } from '@/messaging/extension'
 import { NCOState } from '@/ncoverlay/state'
 
 export let ncoId: number | undefined
 export let ncoState: NCOState | undefined
 
 export async function initializeNcoState() {
-  const id = await sendExtensionMessage('content:getNcoId', null)
+  const tabId = await webext.getCurrentActiveTabId()
 
-  if (id) {
-    ncoId = id
-    ncoState = new NCOState(id)
+  if (tabId != null) {
+    ncoId = tabId
+    ncoState = new NCOState(ncoId)
   }
 }
 

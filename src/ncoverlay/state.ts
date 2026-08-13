@@ -194,6 +194,15 @@ export interface NcoV1Thread extends Omit<V1Thread, 'comments'> {
 
 const DURATION_COMMAND_REGEXP = /(?<=^@)[\d\.]+$/
 
+const CLEAR_KEYS: NCOStateItemKey[] = [
+  'status',
+  'info',
+  'offset',
+  'slots',
+  'slotDetails',
+]
+const CLEAR_ALL_KEYS: NCOStateItemKey[] = [...CLEAR_KEYS, 'vod', 'fileDetail']
+
 export async function filterDisplayThreads(
   ncoState: NCOState
 ): Promise<NcoV1Thread[] | null> {
@@ -459,7 +468,7 @@ export class NCOState {
   }
 
   async dispose() {
-    await this.clear()
+    await this.clearAll()
   }
 
   async get<K extends NCOStateItemKey, V extends NCOStateItem<K>>(
@@ -587,15 +596,15 @@ export class NCOState {
   }
 
   async clear() {
-    await Promise.all([
-      this.remove('status'),
-      this.remove('vod'),
-      this.remove('info'),
-      this.remove('offset'),
-      this.remove('slots'),
-      this.remove('slotDetails'),
-      this.remove('fileDetail'),
-    ])
+    for (const key of CLEAR_KEYS) {
+      await this.remove(key)
+    }
+  }
+
+  async clearAll() {
+    for (const key of CLEAR_ALL_KEYS) {
+      await this.remove(key)
+    }
   }
 
   onChange<K extends NCOStateItemKey>(

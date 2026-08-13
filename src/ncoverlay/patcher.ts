@@ -39,8 +39,8 @@ export class NCOPatcher {
   readonly #init
   readonly #functions
 
+  #tabId: number | null = null
   #video: HTMLVideoElement | null = null
-  #fileDetail: StateFileDetail | null = null
   #nco: NCOverlay | null = null
 
   get nco() {
@@ -52,17 +52,30 @@ export class NCOPatcher {
     init: NCOPatcherInit,
     functions?: NCOPatcherFunctions
   ) {
+    logger.log('new NCOPatcher()')
+
     this.#vod = vod
     this.#init = init
     this.#functions = functions
   }
 
   async dispose() {
-    await this.#nco?.dispose()
+    logger.log('NCOPatcher.dispose()')
 
     this.#video = null
-    this.#fileDetail = null
+
+    let oldNco: NCOverlay | null = this.#nco
+
     this.#nco = null
+
+    return new Promise<void>((resolve) => {
+      if (oldNco) {
+        oldNco.dispose().then(resolve)
+        oldNco = null
+      } else {
+        resolve()
+      }
+    })
   }
 
   async setVideo(
@@ -71,26 +84,35 @@ export class NCOPatcher {
   ) {
     if (this.#video === video) return
 
-    await this.dispose()
+    logger.log('NCOPatcher.setVideo()')
 
     this.#video = video
-    this.#fileDetail = fileDetail
 
-    const tab = await sendExtensionMessage('bg:getCurrentTab', null)
-    const tabId = tab?.id!
+    if (this.#nco) {
+      const oldNco = this.#nco
 
-    this.#nco = new NCOverlay(tabId, this.#video, this.#functions)
+      this.#nco = null
+
+      await oldNco.dispose()
+    }
+
+    if (this.#tabId === null) {
+      const tab = await sendExtensionMessage('bg:getCurrentTab', null)
+
+      this.#tabId = tab?.id!
+    }
+
+    this.#nco = new NCOverlay(this.#tabId, video, this.#functions)
 
     this.#nco.state.set('vod', this.#vod)
-    this.#nco.state.set('fileDetail', this.#fileDetail)
+    this.#nco.state.set('fileDetail', fileDetail)
 
     const loadInfo = async () => {
       if (!this.#nco) return
 
-      try {
-        await this.#nco.state.set('vod', this.#vod)
-        await this.#nco.state.set('fileDetail', this.#fileDetail)
+      logger.log('NCOPatcher.setVideo > loadInfo()')
 
+      try {
         const info = await this.#init.getInfo(this.#nco)
 
         let parsed: ParsedResult | undefined
@@ -125,12 +147,14 @@ export class NCOPatcher {
 
         logger.log('state.info', args)
       } catch (err) {
-        logger.error('patcher:loadInfo', err)
+        logger.error('NCOPatcher.setVideo > loadInfo()', err)
       }
     }
 
     const autoSearch = async () => {
       if (!this.#nco) return
+
+      logger.log('NCOPatcher.setVideo > autoSearch()')
 
       const status = await this.#nco.state.get('status')
 
@@ -168,7 +192,7 @@ export class NCOPatcher {
           }
         }
       } catch (err) {
-        logger.error('patcher:autoSearch', err)
+        logger.error('NCOPatcher.setVideo > autoSearch()', err)
       }
 
       await this.#nco.state.set('status', 'ready')
@@ -194,11 +218,9 @@ export class NCOPatcher {
     })
 
     this.#nco.addEventListener('reload', async function () {
-      await Promise.all([
-        this.state.remove('status'),
-        this.state.remove('slots', { isAutoLoaded: true }),
-        this.state.remove('slotDetails', { isAutoLoaded: true }),
-      ])
+      await this.state.remove('status')
+      await this.state.remove('slots', { isAutoLoaded: true })
+      await this.state.remove('slotDetails', { isAutoLoaded: true })
 
       await loadInfo()
       await autoSearch()
@@ -221,6 +243,6 @@ export class NCOPatcher {
       }
     })
 
-    this.#init.appendCanvas(this.#video, this.#nco.canvas)
+    this.#init.appendCanvas(this.#nco.video, this.#nco.canvas)
   }
 }
