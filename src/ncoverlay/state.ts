@@ -206,10 +206,8 @@ const CLEAR_ALL_KEYS: NCOStateItemKey[] = [...CLEAR_KEYS, 'vod', 'fileDetail']
 export async function filterDisplayThreads(
   ncoState: NCOState
 ): Promise<NcoV1Thread[] | null> {
-  const [slots, details] = await Promise.all([
-    ncoState.get('slots'),
-    ncoState.get('slotDetails'),
-  ])
+  const slots = await ncoState.get('slots')
+  const details = await ncoState.get('slotDetails')
 
   if (!slots?.length || !details?.length) {
     return null
@@ -217,27 +215,22 @@ export async function filterDisplayThreads(
 
   const threadMap = new Map<string, NcoV1Thread>()
 
+  const ngSettings = await getNgSettings()
   const [
-    ngSettings,
-    [
-      speed,
-      commentCustomize,
-      hideAssistedComments,
-      adjustJikkyoOffset,
-      jikkyoOnlyAdjustable,
-      sharingLevel,
-    ],
-  ] = await Promise.all([
-    getNgSettings(),
-    settings.get(
-      'comment:speed',
-      'comment:customize',
-      'comment:hideAssistedComments',
-      'comment:adjustJikkyoOffset',
-      'autoSearch:jikkyoOnlyAdjustable',
-      'ng:sharingLevel'
-    ),
-  ])
+    speed,
+    commentCustomize,
+    hideAssistedComments,
+    adjustJikkyoOffset,
+    jikkyoOnlyAdjustable,
+    sharingLevel,
+  ] = await settings.get(
+    'comment:speed',
+    'comment:customize',
+    'comment:hideAssistedComments',
+    'comment:adjustJikkyoOffset',
+    'autoSearch:jikkyoOnlyAdjustable',
+    'ng:sharingLevel'
+  )
 
   let cmtCnt = 0
   let assistedCmtCnt = 0

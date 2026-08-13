@@ -22,20 +22,24 @@ export async function setBadge({
   const bgColor = COLORS[color ?? 'primary']
   const textColor = '#ffffff'
 
-  await Promise.allSettled([
-    webext.action.setBadgeBackgroundColor({
+  await webext.action
+    .setBadgeBackgroundColor({
       color: bgColor,
       tabId,
-    }),
+    })
+    .catch(() => {})
 
-    webext.action.setBadgeTextColor({
+  await webext.action
+    .setBadgeTextColor({
       color: textColor,
       tabId,
-    }),
+    })
+    .catch(() => {})
 
-    webext.action.setBadgeText({
+  await webext.action
+    .setBadgeText({
       text,
       tabId,
-    }),
-  ])
+    })
+    .catch(() => {})
 }

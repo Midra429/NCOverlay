@@ -188,11 +188,9 @@ export class WebExtSettings {
       ][]
     ).filter(([key]) => SETTINGS_EXPORT_KEYS.includes(key))
 
-    await Promise.all(
-      entries.map(([key, value]) => {
-        return this.#storage.set(key, value)
-      })
-    )
+    for (const [key, value] of entries) {
+      await this.#storage.set(key, value)
+    }
   }
 
   readonly export: SettingsExportFunction = async () => {
