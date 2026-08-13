@@ -162,6 +162,10 @@ export class NCORenderer {
       })
 
       this.rerender()
+
+      if (!this.#video.paused) {
+        this.start()
+      }
     }
   }
 
