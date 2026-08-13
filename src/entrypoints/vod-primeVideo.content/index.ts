@@ -101,12 +101,12 @@ async function main() {
     attributes: true,
     attributeFilter: ['src'],
   }
-  const obs = new MutationObserver(() => {
+  const obs = new MutationObserver(async () => {
     obs.disconnect()
 
     if (patcher.nco) {
       if (!patcher.nco.video.checkVisibility()) {
-        patcher.dispose()
+        await patcher.dispose()
       }
     } else {
       const video = document.body.querySelector<HTMLVideoElement>(
@@ -114,7 +114,7 @@ async function main() {
       )
 
       if (video) {
-        patcher.setVideo(video)
+        await patcher.setVideo(video)
       }
     }
 

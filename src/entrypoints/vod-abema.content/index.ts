@@ -182,12 +182,12 @@ async function main() {
     childList: true,
     subtree: true,
   }
-  const obs = new MutationObserver(() => {
+  const obs = new MutationObserver(async () => {
     obs.disconnect()
 
     if (patcher.nco) {
       if (!patcher.nco.video.checkVisibility()) {
-        patcher.dispose()
+        await patcher.dispose()
       }
     } else {
       const { pathname } = location
@@ -198,7 +198,7 @@ async function main() {
         )
 
         if (video) {
-          patcher.setVideo(video)
+          await patcher.setVideo(video)
         }
       }
     }

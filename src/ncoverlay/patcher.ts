@@ -62,20 +62,10 @@ export class NCOPatcher {
   async dispose() {
     logger.log('NCOPatcher.dispose()')
 
+    await this.#nco?.dispose()
+
     this.#video = null
-
-    let oldNco: NCOverlay | null = this.#nco
-
     this.#nco = null
-
-    return new Promise<void>((resolve) => {
-      if (oldNco) {
-        oldNco.dispose().then(resolve)
-        oldNco = null
-      } else {
-        resolve()
-      }
-    })
   }
 
   async setVideo(
@@ -88,21 +78,15 @@ export class NCOPatcher {
 
     this.#video = video
 
-    if (this.#nco) {
-      const oldNco = this.#nco
-
-      this.#nco = null
-
-      await oldNco.dispose()
-    }
-
     if (this.#tabId === null) {
       const tab = await sendExtensionMessage('bg:getCurrentTab', null)
 
       this.#tabId = tab?.id!
     }
 
-    this.#nco = new NCOverlay(this.#tabId, video, this.#functions)
+    await this.#nco?.dispose()
+
+    this.#nco = new NCOverlay(this.#tabId, this.#video, this.#functions)
 
     this.#nco.state.set('vod', this.#vod)
     this.#nco.state.set('fileDetail', fileDetail)
