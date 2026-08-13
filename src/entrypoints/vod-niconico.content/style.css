@@ -6,6 +6,12 @@
   }
 }
 
+.NCOverlay-Capture {
+  .PlayerPresenter > div {
+    border-radius: unset;
+  }
+}
+
 /* フルスクリーン (ブラウザサイズ) */
 section:has(> style:first-child) {
   .grid-area_\[player\] {
