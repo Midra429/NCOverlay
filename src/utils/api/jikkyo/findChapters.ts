@@ -414,7 +414,9 @@ export function filterThreadsByJikkyoChapters(
     for (const chapter of adjustChapters) {
       const startMs = chapter.startMs - totalOffsetMs
       const endMs = chapter.endMs - totalOffsetMs
-      const offsetMs = chapter.isRemove ? endMs - startMs : startMs - endMs
+      const offsetMs = Math.trunc(
+        chapter.isRemove ? endMs - startMs : startMs - endMs
+      )
 
       for (let i = 0; i < commentCount; i++) {
         const cmt = comments[i]
