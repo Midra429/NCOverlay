@@ -13,11 +13,16 @@ import {
   Menu,
   MuteButton,
   PlayButton,
+  PlaybackRateRadioGroup,
   Popover,
   SeekButton,
+  SeekIndicator,
+  StatusAnnouncer,
+  StatusIndicator,
   Time,
   TimeSlider,
   Tooltip,
+  VolumeIndicator,
   VolumeSlider,
   bufferFeature,
   controlsFeature,
@@ -55,7 +60,15 @@ import { flatten } from '@videojs/utils/object'
 
 import '@videojs/react/video/skin.css'
 
-const Player = createPlayer({
+const TOP_STATUS_ACTIONS = [
+  'toggleSubtitles',
+  'toggleFullscreen',
+  'togglePictureInPicture',
+] as const
+
+const CENTER_STATUS_ACTIONS = ['togglePaused'] as const
+
+const { Player } = createPlayer({
   features: [
     playbackFeature,
     playbackRateFeature,
@@ -114,67 +127,67 @@ function SettingsMenu(): ReactNode {
 
   return (
     <Menu.Root side="top" align="center">
-      <Menu.Trigger
-        aria-label={t('menu.settings')}
-        className="media-button--settings"
-        render={<Button />}
-      >
-        <GearIcon className="media-icon media-icon--settings" />
-      </Menu.Trigger>
+      <Tooltip.Root side="top">
+        <Tooltip.Trigger
+          render={
+            <Menu.Trigger
+              aria-label={t('menu.settings')}
+              className="media-button--settings"
+              render={<Button />}
+            >
+              <GearIcon className="media-icon media-icon--settings" />
+            </Menu.Trigger>
+          }
+        />
+        <Tooltip.Popup className="media-surface media-tooltip">
+          <Tooltip.Label>{t('menu.settings')}</Tooltip.Label>
+        </Tooltip.Popup>
+      </Tooltip.Root>
       <Menu.Content className="media-surface media-popover media-menu media-menu--settings">
-        <Menu.View className="media-menu__panel">
-          <div className="media-menu__group">
-            {hasPlaybackRate ? (
-              <Menu.Root>
-                <Menu.Trigger
-                  type="playback-rate"
-                  className="media-menu__item media-menu__item--submenu"
-                  render={(props) => (
-                    <div {...props}>
-                      <SpeedIcon className="media-icon" />
-                      <span>{t('menu.speed')}</span>
-                      <span className="media-menu__hint">
-                        <Menu.ItemValue className="media-menu__hint-label" />
-                        <MenuChevron />
+        <div className="media-menu__group">
+          {hasPlaybackRate ? (
+            <Menu.Root>
+              <Menu.Trigger
+                className="media-menu__item media-menu__item--submenu"
+                render={(props) => (
+                  <div {...props}>
+                    <SpeedIcon className="media-icon" />
+                    <span>{t('menu.speed')}</span>
+                    <span className="media-menu__hint">
+                      <span className="media-menu__hint-label">
+                        {playbackRate.selectedLabel}
                       </span>
-                    </div>
+                      <MenuChevron />
+                    </span>
+                  </div>
+                )}
+              />
+              <Menu.Content className="media-menu__panel">
+                <Menu.Item className="media-menu__back">
+                  <MenuChevron flipped />
+                  {t('menu.speed')}
+                </Menu.Item>
+                <Menu.Separator className="media-menu__separator" />
+                <PlaybackRateRadioGroup
+                  className="media-menu__group"
+                  aria-label={t('menu.playbackRate')}
+                  renderItem={(props, item) => (
+                    <Menu.RadioItem {...props} className="media-menu__item">
+                      <span>{item.label}</span>
+                      <Menu.ItemIndicator
+                        checked={item.checked}
+                        forceMount
+                        className="media-menu__indicator"
+                      >
+                        <CheckIcon className="media-icon" />
+                      </Menu.ItemIndicator>
+                    </Menu.RadioItem>
                   )}
                 />
-                <Menu.Content className="media-menu__panel">
-                  <Menu.Back className="media-menu__back">
-                    <MenuChevron flipped />
-                    {t('menu.speed')}
-                  </Menu.Back>
-                  <Menu.Separator className="media-menu__separator" />
-                  <Menu.RadioGroup
-                    className="media-menu__group"
-                    value={playbackRate.value}
-                    onValueChange={playbackRate.setValue}
-                    aria-label={t('menu.playbackRate')}
-                  >
-                    {playbackRate.options.map((option) => (
-                      <Menu.RadioItem
-                        key={option.value}
-                        className="media-menu__item"
-                        value={option.value}
-                        disabled={option.disabled}
-                      >
-                        <span>{option.label}</span>
-                        <Menu.ItemIndicator
-                          checked={option.value === playbackRate.value}
-                          forceMount
-                          className="media-menu__indicator"
-                        >
-                          <CheckIcon className="media-icon" />
-                        </Menu.ItemIndicator>
-                      </Menu.RadioItem>
-                    ))}
-                  </Menu.RadioGroup>
-                </Menu.Content>
-              </Menu.Root>
-            ) : null}
-          </div>
-        </Menu.View>
+              </Menu.Content>
+            </Menu.Root>
+          ) : null}
+        </div>
       </Menu.Content>
     </Menu.Root>
   )
@@ -227,7 +240,7 @@ export function VideoPlayer({
   ...rest
 }: VideoPlayerProps): ReactNode {
   return (
-    <Player.Provider>
+    <Player>
       <Container
         {...rest}
         className={cn(
@@ -303,16 +316,18 @@ export function VideoPlayer({
                 <Time.Value type="current" className="media-time" />
                 <TimeSlider.Root className="media-slider">
                   <TimeSlider.Track className="media-slider__track">
-                    <TimeSlider.Fill className="media-slider__fill" />
                     <TimeSlider.Buffer className="media-slider__buffer" />
+                    <TimeSlider.Fill className="media-slider__fill" />
                   </TimeSlider.Track>
                   <TimeSlider.Thumb className="media-slider__thumb" />
 
-                  <TimeSlider.Preview className="media-slider__preview">
-                    <TimeSlider.Value
-                      type="pointer"
-                      className="media-time media-slider__value"
-                    />
+                  <TimeSlider.Preview
+                    overflow="visible"
+                    className="media-slider__preview"
+                  >
+                    <div className="media-slider__value">
+                      <TimeSlider.Value type="pointer" className="media-time" />
+                    </div>
                   </TimeSlider.Preview>
                 </TimeSlider.Root>
                 <Time.Value toggle type="duration" className="media-time" />
@@ -373,8 +388,45 @@ export function VideoPlayer({
           value={SEEK_TIME}
           region="right"
         />
+
+        {/* Input Indicators */}
+        <StatusAnnouncer className="media-sr-only" />
+        <div className="media-input-indicator-overlay">
+          <VolumeIndicator.Root className="media-surface media-volume-indicator">
+            <VolumeIndicator.Fill className="media-volume-indicator__content">
+              <VolumeHighIcon className="media-icon media-icon--volume-high" />
+              <VolumeLowIcon className="media-icon media-icon--volume-low" />
+              <VolumeOffIcon className="media-icon media-icon--volume-off" />
+              <VolumeIndicator.Value className="media-volume-indicator__value" />
+            </VolumeIndicator.Fill>
+          </VolumeIndicator.Root>
+
+          <StatusIndicator.Root
+            actions={TOP_STATUS_ACTIONS}
+            className="media-surface media-status-indicator media-status-indicator--state"
+          >
+            <div className="media-status-indicator__content">
+              <FullscreenEnterIcon className="media-icon media-icon--fullscreen-enter" />
+              <FullscreenExitIcon className="media-icon media-icon--fullscreen-exit" />
+              <StatusIndicator.Value className="media-status-indicator__value" />
+            </div>
+          </StatusIndicator.Root>
+
+          <SeekIndicator.Root className="media-seek-indicator">
+            <ChevronIcon className="media-icon media-icon--seek" />
+            <SeekIndicator.Value className="media-seek-indicator__value" />
+          </SeekIndicator.Root>
+
+          <StatusIndicator.Root
+            actions={CENTER_STATUS_ACTIONS}
+            className="media-status-indicator media-status-indicator--playback"
+          >
+            <PlayIcon className="media-icon media-icon--play" />
+            <PauseIcon className="media-icon media-icon--pause" />
+          </StatusIndicator.Root>
+        </div>
       </Container>
-    </Player.Provider>
+    </Player>
   )
 }
 
@@ -399,8 +451,8 @@ const Button = forwardRef<HTMLButtonElement, ComponentProps<'button'>>(
 )
 
 function VolumePopover(): ReactNode {
-  const volumeUnsupported = usePlayer(
-    (s) => s.volumeAvailability === 'unsupported'
+  const volumeUnavailable = usePlayer(
+    (s) => s.volumeAvailability !== 'available'
   )
 
   const muteButton = (
@@ -411,7 +463,7 @@ function VolumePopover(): ReactNode {
     </MuteButton>
   )
 
-  if (volumeUnsupported) return muteButton
+  if (volumeUnavailable) return muteButton
 
   return (
     <Popover.Root openOnHover delay={200} closeDelay={100} side="top">
