@@ -121,8 +121,8 @@ async function main() {
       thisArg,
       argArray: Parameters<typeof window.fetch>
     ) => {
-      const promise = Reflect.apply(target, thisArg, argArray)
-      let response: Response | undefined
+      const promise = Reflect.apply(target, thisArg, argArray).catch(() => {})
+      let response: Response | void = undefined
 
       try {
         const [input] = argArray
@@ -140,7 +140,7 @@ async function main() {
           if (titleId && !playbackUrlsQueue.hit(titleId)) {
             response = await promise
 
-            const json: GetVodPlaybackResources = await response.clone().json()
+            const json: GetVodPlaybackResources = await response?.clone().json()
             const {
               vodPlaylistedPlaybackUrls: {
                 result: { playbackUrls },
@@ -159,7 +159,7 @@ async function main() {
             if (entityId && !catalogQueue.hit(entityId)) {
               response = await promise
 
-              const json: PlayerChromeResources = await response.clone().json()
+              const json: PlayerChromeResources = await response?.clone().json()
               const {
                 resources: {
                   catalogMetadataV2: { catalog },
