@@ -143,8 +143,8 @@ function SettingsMenu(): ReactNode {
           <Tooltip.Label>{t('menu.settings')}</Tooltip.Label>
         </Tooltip.Popup>
       </Tooltip.Root>
-      <Menu.Content className="media-surface media-popover media-menu media-menu--settings">
-        <div className="media-menu__group">
+      <Menu.Popup className="media-surface media-popover media-menu media-menu--settings">
+        <Menu.Content className="media-menu__content">
           {hasPlaybackRate ? (
             <Menu.Root>
               <Menu.Trigger
@@ -173,7 +173,7 @@ function SettingsMenu(): ReactNode {
                   aria-label={t('menu.playbackRate')}
                   renderItem={(props, item) => (
                     <Menu.RadioItem {...props} className="media-menu__item">
-                      <span>{item.label}</span>
+                      <bdi dir="auto">{item.label}</bdi>
                       <Menu.ItemIndicator
                         checked={item.checked}
                         forceMount
@@ -187,8 +187,8 @@ function SettingsMenu(): ReactNode {
               </Menu.Content>
             </Menu.Root>
           ) : null}
-        </div>
-      </Menu.Content>
+        </Menu.Content>
+      </Menu.Popup>
     </Menu.Root>
   )
 }
@@ -258,95 +258,106 @@ export function VideoPlayer({
           )}
         />
 
-        <Controls.Root className="media-surface media-controls media-controls--root">
-          <Tooltip.Provider>
-            <div className="media-surface media-controls media-controls--primary">
-              <div className="media-button-group">
-                <PlaybackControl />
+        <Controls.Root>
+          <Controls.Backdrop className="media-controls__backdrop" />
+          <Controls.Content className="media-surface media-controls media-controls--root">
+            <Tooltip.Provider>
+              <Controls.Group className="media-surface media-controls media-controls--primary">
+                <div className="media-button-group">
+                  <PlaybackControl />
 
-                <Tooltip.Root side="top">
-                  <Tooltip.Trigger
-                    render={
-                      <SeekButton
-                        seconds={-SEEK_TIME}
-                        className="media-button--seek"
-                        render={<Button />}
-                      >
-                        <span className="media-icon__container">
-                          <SeekIcon className="media-icon media-icon--seek media-icon--flipped" />
-                          <span className="media-icon__label">{SEEK_TIME}</span>
-                        </span>
-                      </SeekButton>
-                    }
-                  />
-                  <Tooltip.Popup className="media-surface media-tooltip">
-                    <Tooltip.Label>
-                      {t('seek.backward', { seconds: SEEK_TIME })}
-                    </Tooltip.Label>
-                    <Tooltip.Shortcut className="media-tooltip__kbd" />
-                  </Tooltip.Popup>
-                </Tooltip.Root>
-                <Tooltip.Root side="top">
-                  <Tooltip.Trigger
-                    render={
-                      <SeekButton
-                        seconds={SEEK_TIME}
-                        className="media-button--seek"
-                        render={<Button />}
-                      >
-                        <span className="media-icon__container">
-                          <SeekIcon className="media-icon media-icon--seek" />
-                          <span className="media-icon__label">{SEEK_TIME}</span>
-                        </span>
-                      </SeekButton>
-                    }
-                  />
-                  <Tooltip.Popup className="media-surface media-tooltip">
-                    <Tooltip.Label>
-                      {t('seek.forward', { seconds: SEEK_TIME })}
-                    </Tooltip.Label>
-                    <Tooltip.Shortcut className="media-tooltip__kbd" />
-                  </Tooltip.Popup>
-                </Tooltip.Root>
+                  <Tooltip.Root side="top">
+                    <Tooltip.Trigger
+                      render={
+                        <SeekButton
+                          seconds={-SEEK_TIME}
+                          className="media-button--seek"
+                          render={<Button />}
+                        >
+                          <span className="media-icon__container">
+                            <SeekIcon className="media-icon media-icon--seek media-icon--flipped" />
+                            <span className="media-icon__label">
+                              {SEEK_TIME}
+                            </span>
+                          </span>
+                        </SeekButton>
+                      }
+                    />
+                    <Tooltip.Popup className="media-surface media-tooltip">
+                      <Tooltip.Label>
+                        {t('seek.backward', { seconds: SEEK_TIME })}
+                      </Tooltip.Label>
+                      <Tooltip.Shortcut className="media-tooltip__kbd" />
+                    </Tooltip.Popup>
+                  </Tooltip.Root>
 
-                <VolumePopover />
-              </div>
+                  <Tooltip.Root side="top">
+                    <Tooltip.Trigger
+                      render={
+                        <SeekButton
+                          seconds={SEEK_TIME}
+                          className="media-button--seek"
+                          render={<Button />}
+                        >
+                          <span className="media-icon__container">
+                            <SeekIcon className="media-icon media-icon--seek" />
+                            <span className="media-icon__label">
+                              {SEEK_TIME}
+                            </span>
+                          </span>
+                        </SeekButton>
+                      }
+                    />
+                    <Tooltip.Popup className="media-surface media-tooltip">
+                      <Tooltip.Label>
+                        {t('seek.forward', { seconds: SEEK_TIME })}
+                      </Tooltip.Label>
+                      <Tooltip.Shortcut className="media-tooltip__kbd" />
+                    </Tooltip.Popup>
+                  </Tooltip.Root>
 
-              <div className="media-time-controls">
-                <Time.Value type="current" className="media-time" />
-                <TimeSlider.Root className="media-slider">
-                  <TimeSlider.Track className="media-slider__track">
-                    <TimeSlider.Buffer className="media-slider__buffer" />
-                    <TimeSlider.Fill className="media-slider__fill" />
-                  </TimeSlider.Track>
-                  <TimeSlider.Thumb className="media-slider__thumb" />
+                  <VolumePopover />
+                </div>
 
-                  <TimeSlider.Preview
-                    overflow="visible"
-                    className="media-slider__preview"
-                  >
-                    <div className="media-slider__value">
-                      <TimeSlider.Value type="pointer" className="media-time" />
-                    </div>
-                  </TimeSlider.Preview>
-                </TimeSlider.Root>
-                <Time.Value toggle type="duration" className="media-time" />
-              </div>
+                <div className="media-time-controls">
+                  <Time.Value type="current" className="media-time" />
+                  <TimeSlider.Root className="media-slider">
+                    <TimeSlider.Track className="media-slider__track">
+                      {/*<TimeSlider.Buffer className="media-slider__buffer" />*/}
+                      <TimeSlider.Fill className="media-slider__fill" />
+                    </TimeSlider.Track>
+                    <TimeSlider.Thumb className="media-slider__thumb" />
 
-              <div className="media-button-group">
-                <SettingsMenu />
-              </div>
-            </div>
+                    <TimeSlider.Preview
+                      overflow="visible"
+                      className="media-slider__preview"
+                    >
+                      <div className="media-slider__value">
+                        <TimeSlider.Value
+                          type="pointer"
+                          className="media-time"
+                        />
+                      </div>
+                    </TimeSlider.Preview>
+                  </TimeSlider.Root>
+                  <Time.Value toggle type="duration" className="media-time" />
+                </div>
 
-            <div className="media-surface media-controls media-controls--secondary">
-              <div className="media-button-group">
-                <FullscreenControl />
-              </div>
-            </div>
-          </Tooltip.Provider>
+                <div className="media-button-group">
+                  <SettingsMenu />
+                </div>
+              </Controls.Group>
+
+              <Controls.Group className="media-surface media-controls media-controls--secondary">
+                <div className="media-button-group">
+                  <FullscreenControl />
+                </div>
+              </Controls.Group>
+            </Tooltip.Provider>
+          </Controls.Content>
         </Controls.Root>
 
-        <div className="media-overlay" />
+        {/*<div className="media-overlay" />*/}
 
         {/* Hotkeys */}
         <Hotkey keys="Space" action="togglePaused" />
