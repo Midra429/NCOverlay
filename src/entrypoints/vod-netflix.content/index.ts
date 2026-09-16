@@ -5,6 +5,7 @@ import type {
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
+import { parse } from '@midra/nco-utils/parse'
 
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
@@ -35,21 +36,21 @@ async function main() {
         return null
       }
 
-      const videoData = await ncoApiProxy.netflix.metadata(id)
+      const metadata = await ncoApiProxy.netflix.metadata(id)
 
-      logger.log('netflix.metadata', videoData)
+      logger.log('netflix.metadata', metadata)
 
-      if (!videoData) {
+      if (!metadata) {
         return null
       }
 
       let season: Season | undefined
       let episode: Episode | undefined
 
-      if (videoData.seasons) {
+      if (metadata.seasons) {
         const episodeId = Number(id)
 
-        for (const szn of videoData.seasons) {
+        for (const szn of metadata.seasons) {
           const ep = szn.episodes.find((ep) => ep.id === episodeId)
 
           if (ep) {
@@ -65,18 +66,29 @@ async function main() {
         }
       }
 
-      const workTitle = season
-        ? season.title.startsWith(videoData.title)
-          ? season.title
-          : `${videoData.title} ${season.title}`
-        : videoData.title
+      const subtitle = episode?.title || null
 
-      const episodeTitle = episode
-        ? [`${episode.seq}話`, episode.title].join(' ')
-        : null
+      const episodeNum = episode?.seq ?? -1
+
+      const parsedSubtitle = parse(`タイトル ${subtitle}`)
+      const subtitleEpisode =
+        subtitle && parsedSubtitle.isSingleEpisode
+          ? parsedSubtitle.episode
+          : null
+
+      const workTitle = season
+        ? season.title.startsWith(metadata.title)
+          ? season.title
+          : `${metadata.title} ${season.title}`
+        : metadata.title
+
+      const episodeText =
+        !subtitleEpisode && 0 <= episodeNum ? `第${episodeNum}話` : null
+      const episodeTitle =
+        [episodeText, subtitle].filter(Boolean).join(' ').trim() || null
 
       const duration =
-        (episode?.runtime ?? videoData.runtime ?? nco.video.duration) - 10
+        (episode?.runtime ?? metadata.runtime ?? nco.video.duration) - 10
 
       logger.log('workTitle', workTitle)
       logger.log('episodeTitle', episodeTitle)
