@@ -25,10 +25,12 @@ export async function getNiconicoComment(
   query: string | VideoData,
   when?: number
 ): Promise<GetNiconicoCommentResult | null> {
-  const [useNiconicoCredentials, amount] = await settings.get(
+  const [useNiconicoCredentials, _amount] = await settings.get(
     'comment:useNiconicoCredentials',
     'comment:amount'
   )
+  // コメント表示量を一時的に1倍固定にする
+  const amount = 1
 
   // 動画情報取得
   const videoData =

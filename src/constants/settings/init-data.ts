@@ -152,20 +152,23 @@ export const SETTINGS_INIT_DATA: SettingsInitData = [
         label: '表示量',
         description: [
           'コメント数の目安: 2倍(2,000) 〜 10倍(10,000)',
-          '※倍率が高くなるほど取得に時間がかかったり、エラーが発生する可能性が高くなります。',
+          '※倍率を2倍以上にすると取得に時間がかかったり、エラーが発生する可能性が高くなります。',
         ].join('\n'),
         min: 1,
         max: 10,
         step: 1,
         suffix: '倍',
-        disable: {
-          when: [
-            {
-              key: 'comment:useNiconicoCredentials',
-              value: false,
-            },
-          ],
-        },
+        // disable: {
+        //   when: [
+        //     {
+        //       key: 'comment:useNiconicoCredentials',
+        //       value: false,
+        //     },
+        //   ],
+        // },
+
+        // コメント表示量を一時的に1倍固定にする
+        disable: true,
       },
       {
         settingsKey: 'comment:useNiconicoCredentials',
