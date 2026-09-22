@@ -21,7 +21,7 @@ export interface SettingsInputBaseProps<
   inputType: T
   label: string
   description?: string
-  disable?: SettingsConditional
+  disable?: true | SettingsConditional
 }
 
 export type SettingsKeyValue = {
@@ -51,32 +51,36 @@ export type SettingsInputProps<K extends SettingsKey> =
   | (K extends CommentCustomizer.Key ? CommentCustomizer.Props<K> : never)
 
 export function initConditional(
-  disable: SettingsConditional | undefined,
+  disable: true | SettingsConditional | undefined,
   setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>
 ): (() => void) | undefined {
   if (!disable) return
 
-  const { operator, when } = disable
+  if (disable === true) {
+    setIsDisabled(true)
+  } else {
+    const { operator, when } = disable
 
-  const conditionMap = new Map<SettingsKey, boolean>(
-    when.map((v) => [v.key, false])
-  )
+    const conditionMap = new Map<SettingsKey, boolean>(
+      when.map((v) => [v.key, false])
+    )
 
-  const removeListenerCallbacks = when.map(({ key, value }) => {
-    return settings.watch(key, (val) => {
-      conditionMap.set(key, val === value)
+    const removeListenerCallbacks = when.map(({ key, value }) => {
+      return settings.watch(key, (val) => {
+        conditionMap.set(key, val === value)
 
-      if (operator === 'and') {
-        setIsDisabled(conditionMap.values().every((v) => v))
-      } else {
-        setIsDisabled(conditionMap.values().some((v) => v))
-      }
+        if (operator === 'and') {
+          setIsDisabled(conditionMap.values().every((v) => v))
+        } else {
+          setIsDisabled(conditionMap.values().some((v) => v))
+        }
+      })
     })
-  })
 
-  return () => {
-    while (removeListenerCallbacks.length) {
-      removeListenerCallbacks.pop()?.()
+    return () => {
+      while (removeListenerCallbacks.length) {
+        removeListenerCallbacks.pop()?.()
+      }
     }
   }
 }
