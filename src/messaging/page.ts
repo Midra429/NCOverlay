@@ -1,3 +1,4 @@
+import type { DAnimePlaybackInfo } from '@/entrypoints/page-dAnime.content'
 import type { PrimeVideoPlaybackInfo } from '@/entrypoints/page-primeVideo.content'
 import type { UnextPlaybackInfo } from '@/entrypoints/page-unext.content'
 import type { setBadge } from '@/utils/extension/setBadge'
@@ -15,6 +16,7 @@ export interface ProtocolMap {
     args?: null
   ) => PrimeVideoPlaybackInfo | null
   'page:unext:getPlaybackInfo': (args?: null) => UnextPlaybackInfo | null
+  'page:dAnime:getPlaybackInfo': (args?: null) => DAnimePlaybackInfo | null
 }
 
 export const { sendMessage: sendPageMessage, onMessage: onPageMessage } =

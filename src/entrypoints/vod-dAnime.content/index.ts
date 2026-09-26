@@ -9,7 +9,7 @@ import { normalize } from '@midra/nco-utils/parse/libs/normalize'
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
-import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
+import { sendPageMessage } from '@/messaging/page'
 import { NCOPatcher } from '@/ncoverlay/patcher'
 
 import './style.css'
@@ -35,42 +35,46 @@ async function main() {
 
   const patcher = new NCOPatcher(vod, {
     getInfo: async () => {
-      const partId = new URL(location.href).searchParams.get('partId')
-      const partData = partId ? await ncoApiProxy.danime.part(partId) : null
+      const playbackInfo = await sendPageMessage(
+        'page:dAnime:getPlaybackInfo',
+        null
+      )
 
-      logger.log('danime.part', partData)
+      logger.log('getPlaybackInfo', playbackInfo)
 
-      if (!partData) {
+      if (!playbackInfo) {
         return null
       }
 
-      let workTitle = partData.workTitle
-      let episodeTitle = `${partData.partDispNumber} ${partData.partTitle}`
+      const { data } = playbackInfo
 
-      if (partData.partDispNumber === '本編') {
+      let workTitle = data.workTitle
+      let episodeTitle = `${data.partDispNumber} ${data.partTitle}`
+
+      if (data.partDispNumber === '本編') {
         const workTitleNormalized = normalize(workTitle)
-        const partTitleNormalized = normalize(partData.partTitle)
+        const partTitleNormalized = normalize(data.partTitle)
 
         if (workTitleNormalized === partTitleNormalized) {
           episodeTitle = ''
         } else if (partTitleNormalized.startsWith(workTitleNormalized)) {
-          workTitle = partData.partTitle
+          workTitle = data.partTitle
           episodeTitle = ''
         }
       } else if (
-        EP_TITLE_LAST_REGEXP.test(partData.partDispNumber) &&
-        partData.prevTitle
+        EP_TITLE_LAST_REGEXP.test(data.partDispNumber) &&
+        data.prevTitle
       ) {
-        const parsed = parse(partData.prevTitle)
+        const parsed = parse(data.prevTitle)
 
         if (parsed.isSingleEpisode && parsed.episode) {
-          episodeTitle = `${parsed.episode.number + 1}話 ${partData.partTitle}`
+          episodeTitle = `${parsed.episode.number + 1}話 ${data.partTitle}`
         }
       }
 
-      const duration = partData.partMeasureSecond
+      const duration = data.partMeasureSecond
 
-      const partChapters = structuredClone(partData.chapters)
+      const partChapters = structuredClone(data.chapters)
       const chapters: VideoChapter[] = []
 
       // アバンの手前の部分(多分あらすじ)をアバンに統合する
