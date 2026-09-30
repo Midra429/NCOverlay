@@ -1,4 +1,4 @@
-import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
+import type { WatchV4Data } from '@midra/nco-utils/types/api/niconico/video'
 import type { DeepPartial } from 'utility-types'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
@@ -8,14 +8,17 @@ import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 import { deepmerge } from '@/utils/deepmerge'
 
 export function videoDataToSlotDetail(
-  data: VideoData,
+  data: WatchV4Data,
   detail?: DeepPartial<StateSlotDetailDefault>
 ): StateSlotDetailDefault {
-  const tags = data.tag.items.map((v) => v.name)
+  const tags = data.tags.items.map((v) => v.name)
 
-  const isDAnime = data.channel?.id === `ch${DANIME_CHANNEL_ID}`
-  const isOfficialAnime = !!data.channel?.isOfficialAnime
-  const isSzbh = !!(data.owner && TAG_SZBH_REGEXP.test(tags.join(' ')))
+  const isDAnime = data.metadata.jsonLd.owner.id === `ch${DANIME_CHANNEL_ID}`
+  const isOfficialAnime =
+    data.video.isChannelVideo &&
+    (data.genre.key === 'anime' || data.genre.label === 'アニメ')
+  const isSzbh =
+    !data.video.isChannelVideo && TAG_SZBH_REGEXP.test(tags.join(' '))
 
   return deepmerge<StateSlotDetailDefault, any>(
     {
@@ -38,9 +41,9 @@ export function videoDataToSlotDetail(
           comment: data.video.count.comment,
         },
         thumbnail:
-          data.video.thumbnail.largeUrl ||
-          data.video.thumbnail.middleUrl ||
-          data.video.thumbnail.url,
+          data.video.thumbnail.large ||
+          data.video.thumbnail.middle ||
+          data.video.thumbnail.normal,
       },
     },
     detail

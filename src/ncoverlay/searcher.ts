@@ -307,9 +307,9 @@ export class NCOSearcher {
               kawaii: kawaiiCount,
             },
             thumbnail:
-              video.thumbnail.largeUrl ||
-              video.thumbnail.middleUrl ||
-              video.thumbnail.url,
+              video.thumbnail.large ||
+              video.thumbnail.middle ||
+              video.thumbnail.normal,
           },
         })
       }
@@ -378,7 +378,7 @@ export class NCOSearcher {
             comment: totalCountComment,
             kawaii: totalCountKawaii,
           },
-          thumbnail: thumbnail.largeUrl || thumbnail.middleUrl || thumbnail.url,
+          thumbnail: thumbnail.large || thumbnail.middle || thumbnail.normal,
         },
       })
     }

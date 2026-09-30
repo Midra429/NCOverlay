@@ -50,7 +50,11 @@ async function main() {
 
       logger.log('niconico.video', videoData)
 
-      if (!videoData?.channel?.isOfficialAnime) {
+      if (
+        !videoData ||
+        !videoData.video.isChannelVideo ||
+        (videoData.genre.key !== 'anime' && videoData.genre.label !== 'アニメ')
+      ) {
         return null
       }
 

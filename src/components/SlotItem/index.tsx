@@ -97,9 +97,9 @@ function getAddFunction(detail: StateSlotDetail) {
               kawaii: kawaiiCount,
             },
             thumbnail:
-              video.thumbnail.largeUrl ||
-              video.thumbnail.middleUrl ||
-              video.thumbnail.url,
+              video.thumbnail.large ||
+              video.thumbnail.middle ||
+              video.thumbnail.normal,
           },
         }
 

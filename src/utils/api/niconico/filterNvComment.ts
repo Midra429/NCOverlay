@@ -14,7 +14,9 @@ export function filterNvComment(comment: DataComment) {
       // 引用コメント
       thread.label.includes('extra') ||
       // AIキャラクターコメント
+      // @ts-ignore
       thread.forkLabel === 'ai' ||
+      // @ts-ignore
       thread.label === 'ai'
     ) {
       ignoreThreadIds.push(`${thread.forkLabel}:${thread.id}`)

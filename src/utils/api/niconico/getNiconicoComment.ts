@@ -2,7 +2,7 @@ import type {
   V1Thread,
   V1ThreadsData,
 } from '@midra/nco-utils/types/api/niconico/v1/threads'
-import type { VideoData } from '@midra/nco-utils/types/api/niconico/video'
+import type { WatchV4Data } from '@midra/nco-utils/types/api/niconico/video'
 
 import { KAWAII_REGEXP } from '@/constants'
 import { sleep } from '@/utils/sleep'
@@ -13,7 +13,7 @@ import { settings } from '@/utils/settings/extension'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface GetNiconicoCommentResult {
-  videoData: VideoData
+  videoData: WatchV4Data
   threads: V1Thread[]
   kawaiiCount: number
 }
@@ -22,7 +22,7 @@ export interface GetNiconicoCommentResult {
  * ニコニコ動画のコメント取得
  */
 export async function getNiconicoComment(
-  query: string | VideoData,
+  query: string | WatchV4Data,
   when?: number
 ): Promise<GetNiconicoCommentResult | null> {
   const [useNiconicoCredentials, _amount] = await settings.get(
@@ -47,6 +47,8 @@ export async function getNiconicoComment(
 
   // コメント取得
   filterNvComment(videoData.comment)
+
+  console.log('videoData:', videoData)
 
   let threadsData: V1ThreadsData | null
 
