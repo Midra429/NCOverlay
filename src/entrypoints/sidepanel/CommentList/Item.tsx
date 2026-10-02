@@ -1,5 +1,5 @@
 import type { SlotsToClasses } from '@heroui/react'
-import type { NcoV1Comment, StateSlotDetail } from '@/ncoverlay/state'
+import type { NcoThreadsV1Comment, StateSlotDetail } from '@/ncoverlay/state'
 
 import {
   Dropdown,
@@ -167,7 +167,7 @@ function getCmtClassAndColor(commands: string[]) {
 }
 
 export interface ItemProps {
-  comment: NcoV1Comment
+  comment: NcoThreadsV1Comment
   offsetMs: number
 }
 

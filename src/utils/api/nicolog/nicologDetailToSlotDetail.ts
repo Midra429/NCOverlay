@@ -4,7 +4,7 @@ import type { StateSlotDetailNicolog } from '@/ncoverlay/state'
 
 import { deepmerge } from '@/utils/deepmerge'
 
-export function detailToSlotDetail(
+export function nicologDetailToSlotDetail(
   data: GetDataFormatted,
   detail?: DeepPartial<StateSlotDetailNicolog>
 ): StateSlotDetailNicolog {

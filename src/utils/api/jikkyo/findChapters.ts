@@ -1,4 +1,4 @@
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { MarkerKey } from '@/constants/markers'
 import type { StateInfo } from '@/ncoverlay/state'
 import type { JikkyoMarker } from './findMarkers'
@@ -400,12 +400,12 @@ export function findChapters(
 }
 
 export function filterThreadsByJikkyoChapters(
-  threads: V1Thread[],
+  threads: ThreadsV1.Thread[],
   chapters: JikkyoChapter[]
-): V1Thread[] {
+): ThreadsV1.Thread[] {
   const adjustChapters = chapters.filter((v) => v.isAdd || v.isRemove)
 
-  return threads.map<V1Thread>((thread) => {
+  return threads.map<ThreadsV1.Thread>((thread) => {
     const comments = [...thread.comments]
     const commentCount = comments.length
 

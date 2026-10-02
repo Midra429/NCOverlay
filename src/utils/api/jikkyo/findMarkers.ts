@@ -1,4 +1,4 @@
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { StateInfo } from '@/ncoverlay/state'
 
 import { MARKERS } from '@/constants/markers'
@@ -9,7 +9,7 @@ export type JikkyoMarker = number | null
  * マーカーの位置を探す
  */
 export function findMarkers(
-  threads: V1Thread[],
+  threads: ThreadsV1.Thread[],
   info: StateInfo | null
 ): JikkyoMarker[] {
   if (info?.disableAdjustJikkyoOffset) {

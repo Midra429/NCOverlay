@@ -1,7 +1,7 @@
-import type { Ng } from '@midra/nco-utils/types/api/niconico/video'
+import type * as Watch from '@midra/nco-utils/types/api/niconico/watch'
 import type { NgSettingsFormatted } from '@/utils/api/niconico/getNgSettings'
 
-export function extractNgSettings(ng: Ng): NgSettingsFormatted {
+export function extractNgSettings(ng: Watch.CommentNg): NgSettingsFormatted {
   const ngSettings: NgSettingsFormatted = {
     words: [],
     commands: [],

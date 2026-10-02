@@ -1,4 +1,4 @@
-import type { SearchQueryFilters } from '@midra/nco-utils/types/api/niconico/search'
+import type * as SnapshotV2 from '@midra/nco-utils/types/api/niconico/snapshot/v2'
 import type { SettingItems } from '@/types/storage'
 
 import { getLocalTimeZone, now } from '@internationalized/date'
@@ -6,8 +6,8 @@ import { getLocalTimeZone, now } from '@internationalized/date'
 import { settings } from '@/utils/settings/extension'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
-import { searchDataToSlotDetail } from './searchDataToSlotDetail'
-import { videoDataToSlotDetail } from './videoDataToSlotDetail'
+import { snapshotV2DataToSlotDetail } from './snapshotV2ToSlotDetail'
+import { watchDataToSlotDetail } from './watchDataToSlotDetail'
 
 const TIMEZONE_SUFFIX_REGEXP = /\[.+\]$/
 
@@ -20,12 +20,14 @@ export async function searchNiconicoByIds(...contentIds: string[]) {
     ? 'include'
     : 'omit'
 
-  const data = await ncoApiProxy.niconico.multipleVideo(contentIds, credentials)
+  const data = await Promise.all(
+    contentIds.map((id) => ncoApiProxy.niconico.watch(id, credentials))
+  )
   const filtered = data.filter((v) => v !== null)
 
   if (filtered.length) {
     const total = filtered.length
-    const details = filtered.map((v) => videoDataToSlotDetail(v))
+    const details = filtered.map((v) => watchDataToSlotDetail(v.data))
 
     return { total, details }
   }
@@ -50,7 +52,7 @@ export async function searchNiconicoByKeyword(
 
   const current = now(getLocalTimeZone())
 
-  const filters: SearchQueryFilters = {
+  const filters: SnapshotV2.QueryFilters = {
     commentCounter: { gt: 0 },
     startTime: options?.dateRange
       ? {
@@ -80,7 +82,7 @@ export async function searchNiconicoByKeyword(
       : undefined,
   }
 
-  const response = await ncoApiProxy.niconico.search({
+  const response = await ncoApiProxy.niconico.snapshotV2({
     q: keyword,
     targets: ['title', 'description'],
     fields: [
@@ -107,7 +109,7 @@ export async function searchNiconicoByKeyword(
     const { meta, data } = response
 
     const total = Math.ceil(meta.totalCount / limit)
-    const details = data.map((v) => searchDataToSlotDetail(v))
+    const details = data.map((v) => snapshotV2DataToSlotDetail(v))
 
     return { total, details }
   }

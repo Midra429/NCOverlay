@@ -1,4 +1,4 @@
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { ModalProps } from '@/components/Modal'
 import type { StateSlotDetailFile } from '@/ncoverlay/state'
 
@@ -13,7 +13,7 @@ import {
   legacyXmlToV1Threads,
   parseLegacyXml,
 } from '@midra/nco-utils/api/utils/niconico/legacy/xml'
-import { parseV1Threads } from '@midra/nco-utils/api/utils/niconico/v1/threads'
+import { parseThreadsV1Response } from '@midra/nco-utils/api/utils/niconico/threads/v1'
 
 import { KAWAII_REGEXP } from '@/constants'
 import { validateJsonString } from '@/utils/validateJsonString'
@@ -24,7 +24,7 @@ import { SlotItem } from './SlotItem'
 
 function createSlotDetailFile(
   file: File,
-  threads: V1Thread[]
+  threads: ThreadsV1.Thread[]
 ): StateSlotDetailFile {
   const commentCount = threads.reduce(
     (prev, thread) => prev + thread.commentCount,
@@ -64,7 +64,7 @@ export function SelectCommentFileModal(props: SelectCommentFileModalProps) {
 
   const [file, setFile] = useState<File | null>(null)
   const [text, setText] = useState('')
-  const [threads, setThreads] = useState<V1Thread[] | null>(null)
+  const [threads, setThreads] = useState<ThreadsV1.Thread[] | null>(null)
 
   const stateStatus = useNcoState('status')
   const stateSlotDetails = useNcoState('slotDetails')
@@ -94,7 +94,7 @@ export function SelectCommentFileModal(props: SelectCommentFileModalProps) {
         case 'application/json':
           // v1
           if (validateJsonString(text, { object: true })) {
-            const json = parseV1Threads(text)
+            const json = parseThreadsV1Response(text)
             const { threads } = json.data
 
             setThreads(threads)

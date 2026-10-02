@@ -1,8 +1,5 @@
-import type {
-  V1Thread,
-  V1ThreadsData,
-} from '@midra/nco-utils/types/api/niconico/v1/threads'
-import type { WatchV4Data } from '@midra/nco-utils/types/api/niconico/video'
+import type { WatchResponse } from '@midra/nco-utils/api/services/niconico/watch'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 
 import { KAWAII_REGEXP } from '@/constants'
 import { sleep } from '@/utils/sleep'
@@ -13,8 +10,8 @@ import { settings } from '@/utils/settings/extension'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface GetNiconicoCommentResult {
-  videoData: WatchV4Data
-  threads: V1Thread[]
+  watchResponse: WatchResponse
+  threads: ThreadsV1.Thread[]
   kawaiiCount: number
 }
 
@@ -22,7 +19,7 @@ export interface GetNiconicoCommentResult {
  * ニコニコ動画のコメント取得
  */
 export async function getNiconicoComment(
-  query: string | WatchV4Data,
+  query: string | WatchResponse,
   when?: number
 ): Promise<GetNiconicoCommentResult | null> {
   const [useNiconicoCredentials, _amount] = await settings.get(
@@ -33,33 +30,35 @@ export async function getNiconicoComment(
   const amount = 1
 
   // 動画情報取得
-  const videoData =
+  const watchResponse =
     typeof query === 'string'
-      ? await ncoApiProxy.niconico.video(
+      ? await ncoApiProxy.niconico.watch(
           query,
           useNiconicoCredentials ? 'include' : 'omit'
         )
       : query
 
-  if (!videoData) {
+  if (!watchResponse) {
     return null
   }
 
+  // 取得するコメントの種類をフィルター
+  filterNvComment(watchResponse)
+
+  const { type, data, rawData } = watchResponse
+
   // コメント取得
-  filterNvComment(videoData.comment)
+  let threadsData: ThreadsV1.Data | null
 
-  console.log('videoData:', videoData)
-
-  let threadsData: V1ThreadsData | null
-
+  // 複数回取得
   if (useNiconicoCredentials && 1 < amount) {
     const additionals = {
       when: when || Math.floor(Date.now() / 1000),
       res_from: -1000,
     }
 
-    const baseThreadsData = await ncoApiProxy.niconico.v1.threads(
-      videoData.comment,
+    const baseThreadsData = await ncoApiProxy.niconico.threads(
+      watchResponse,
       additionals
     )
     const baseMainThread = baseThreadsData?.threads
@@ -68,25 +67,37 @@ export async function getNiconicoComment(
         return prev.commentCount < current.commentCount ? current : prev
       })
 
+    // コメントがない or 少ない
     if (!baseMainThread?.comments[0] || baseMainThread.comments[0].no < 5) {
       threadsData = baseThreadsData
-    } else {
-      videoData.comment.nvComment.params.targets =
-        videoData.comment.nvComment.params.targets.filter((val) => {
-          return (
-            val.fork === baseMainThread.fork && val.id === baseMainThread.id
-          )
-        })
+    }
+    // コメントがある
+    else {
+      // baseMainThreadのみを取得するためにNvCommentのtargetsをフィルター
+      switch (type) {
+        case 'v3':
+        case 'v4': {
+          rawData.comment.nvComment.params.targets =
+            rawData.comment.nvComment.params.targets.filter((val) => {
+              return (
+                val.fork === baseMainThread.fork && val.id === baseMainThread.id
+              )
+            })
+
+          break
+        }
+      }
 
       additionals.when = Math.floor(
         new Date(baseMainThread.comments[0].postedAt).getTime() / 1000
       )
 
+      // 複数回
       let count = amount - 1
 
       while (0 < count--) {
-        const threadsData = await ncoApiProxy.niconico.v1.threads(
-          videoData.comment,
+        const threadsData = await ncoApiProxy.niconico.threads(
+          watchResponse,
           additionals
         )
         const mainThread = threadsData?.threads.find((val) => {
@@ -112,8 +123,10 @@ export async function getNiconicoComment(
 
       threadsData = baseThreadsData
     }
-  } else {
-    threadsData = await ncoApiProxy.niconico.v1.threads(videoData.comment, {
+  }
+  // 1回
+  else {
+    threadsData = await ncoApiProxy.niconico.threads(watchResponse, {
       when,
     })
   }
@@ -125,7 +138,7 @@ export async function getNiconicoComment(
   // コメントのNG設定を適用
   const threads = applyNgSettings(
     threadsData.threads,
-    extractNgSettings(videoData.comment.ng)
+    extractNgSettings(data.comment.ng)
   )
 
   const kawaiiCount = threads
@@ -136,5 +149,5 @@ export async function getNiconicoComment(
     })
     .reduce((prev, current) => prev + current, 0)
 
-  return { videoData, threads, kawaiiCount }
+  return { watchResponse, threads, kawaiiCount }
 }

@@ -1,4 +1,4 @@
-import type { SearchData } from '@midra/nco-utils/types/api/niconico/search'
+import type * as SnapshotV2 from '@midra/nco-utils/types/api/niconico/snapshot/v2'
 import type { DeepPartial } from 'utility-types'
 import type { StateSlotDetailDefault } from '@/ncoverlay/state'
 
@@ -10,8 +10,8 @@ import { DANIME_CHANNEL_ID } from '@midra/nco-utils/search/constants'
 
 import { deepmerge } from '@/utils/deepmerge'
 
-export function searchDataToSlotDetail(
-  data: SearchData<
+export function snapshotV2DataToSlotDetail(
+  data: SnapshotV2.Data<
     | 'contentId'
     | 'title'
     | 'userId'

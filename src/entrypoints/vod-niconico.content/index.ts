@@ -5,7 +5,7 @@ import { defineContentScript } from '#imports'
 import { MATCHES } from '@/constants/matches'
 import { logger } from '@/utils/logger'
 import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
-import { videoDataToSlotDetail } from '@/utils/api/niconico/videoDataToSlotDetail'
+import { watchDataToSlotDetail } from '@/utils/api/niconico/watchDataToSlotDetail'
 import { checkVodEnable } from '@/utils/extension/checkVodEnable'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 import { NCOPatcher } from '@/ncoverlay/patcher'
@@ -45,39 +45,37 @@ async function main() {
         }
       )
 
-      const id = location.pathname.split('/').at(-1)!
-      const videoData = await ncoApiProxy.niconico.video(id)
+      const videoId = location.pathname.split('/').at(-1)!
+      const watchResponse = await ncoApiProxy.niconico.watch(videoId)
 
-      logger.log('niconico.video', videoData)
+      logger.log('niconico.watch', watchResponse)
 
-      if (
-        !videoData ||
-        !videoData.video.isChannelVideo ||
-        (videoData.genre.key !== 'anime' && videoData.genre.label !== 'アニメ')
-      ) {
+      if (!watchResponse?.data.channel?.isOfficialAnime) {
         return null
       }
 
       await nco.state.add(
         'slotDetails',
-        videoDataToSlotDetail(videoData, {
-          id,
+        watchDataToSlotDetail(watchResponse.data, {
+          id: videoId,
           status: 'loading',
           isAutoLoaded: true,
         })
       )
 
-      const comment = await getNiconicoComment(videoData)
+      const comment = await getNiconicoComment(watchResponse)
 
       if (comment) {
         const {
-          videoData: { video },
+          watchResponse: {
+            data: { video },
+          },
           threads,
           kawaiiCount,
         } = comment
 
         await nco.state.update('slotDetails', ['id'], {
-          id,
+          id: videoId,
           status: 'ready',
           info: {
             count: {
@@ -86,7 +84,7 @@ async function main() {
           },
         })
 
-        await nco.state.add('slots', { id, threads })
+        await nco.state.add('slots', { id: videoId, threads })
 
         const input = video.title
         const duration = video.duration
@@ -96,7 +94,7 @@ async function main() {
 
         return { input, duration }
       } else {
-        await nco.state.remove('slotDetails', { id })
+        await nco.state.remove('slotDetails', { id: videoId })
       }
 
       return null

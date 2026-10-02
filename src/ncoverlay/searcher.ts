@@ -1,7 +1,7 @@
 import type { ParsedResult } from '@midra/nco-utils/parse'
-import type { SearchDataWithFields } from '@midra/nco-utils/search/services/niconico'
+import type { SnapshotV2DataWithFields } from '@midra/nco-utils/search/services/niconico'
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { AutoSearchTarget } from '@/types/storage'
 import type { GetNiconicoCommentResult } from '@/utils/api/niconico/getNiconicoComment'
 import type {
@@ -22,10 +22,10 @@ import { REGEXP_DANIME_CHAPTER } from '@midra/nco-utils/search/constants'
 
 import { logger } from '@/utils/logger'
 import { getJikkyoKakolog } from '@/utils/api/jikkyo/getJikkyoKakolog'
-import { detailToSlotDetail } from '@/utils/api/nicolog/detailToSlotDetail'
 import { getNicologComment } from '@/utils/api/nicolog/getNicologComment'
+import { nicologDetailToSlotDetail } from '@/utils/api/nicolog/nicologDetailToSlotDetail'
 import { getNiconicoComment } from '@/utils/api/niconico/getNiconicoComment'
-import { searchDataToSlotDetail } from '@/utils/api/niconico/searchDataToSlotDetail'
+import { snapshotV2DataToSlotDetail } from '@/utils/api/niconico/snapshotV2ToSlotDetail'
 import {
   convertProgramTime,
   getSlotIdFromProgram,
@@ -126,7 +126,7 @@ export class NCOSearcher {
     // ニコニコ動画
     function addLoadingSlotDetails(
       type: Exclude<StateSlotDetailDefault['type'], 'normal'>,
-      results: SearchDataWithFields[]
+      results: SnapshotV2DataWithFields[]
     ) {
       for (const data of results) {
         if (loadedIds.includes(data.contentId)) continue
@@ -142,7 +142,7 @@ export class NCOSearcher {
           }
         }
 
-        const slotDetail = searchDataToSlotDetail(data, {
+        const slotDetail = snapshotV2DataToSlotDetail(data, {
           type,
           status: 'loading',
           offsetMs,
@@ -189,7 +189,7 @@ export class NCOSearcher {
 
     // nicolog
     if (searchNicologResult && !loadedIds.includes(searchNicologResult.id)) {
-      const slotDetail = detailToSlotDetail(searchNicologResult, {
+      const slotDetail = nicologDetailToSlotDetail(searchNicologResult, {
         status: 'loading',
         isAutoLoaded,
       })
@@ -273,7 +273,7 @@ export class NCOSearcher {
 
     // 公式, dアニメ, コメント専用
     function addLoadedSlots(
-      results: SearchDataWithFields[],
+      results: SnapshotV2DataWithFields[],
       comments: (GetNiconicoCommentResult | null)[]
     ) {
       const len = results.length
@@ -286,7 +286,9 @@ export class NCOSearcher {
         const { contentId: id } = results[i]!
 
         const {
-          videoData: { video },
+          watchResponse: {
+            data: { video },
+          },
           threads,
           kawaiiCount,
         } = cmt
@@ -324,8 +326,10 @@ export class NCOSearcher {
       const result = searchNiconicoResults.chapter[0]!
       const id = result.contentId
       const {
-        video: { thumbnail },
-      } = commentsChapter[0].videoData
+        data: {
+          video: { thumbnail },
+        },
+      } = commentsChapter[0].watchResponse
 
       const { groups } = result.title.match(REGEXP_DANIME_CHAPTER)!
       const title = groups!.title!.trim()
@@ -336,11 +340,13 @@ export class NCOSearcher {
       let totalCountView = 0
       let totalCountComment = 0
       let totalCountKawaii = 0
-      let mergedThreads: V1Thread[] = []
+      let mergedThreads: ThreadsV1.Thread[] = []
 
       for (const comment of commentsChapter) {
         const {
-          videoData: { video },
+          watchResponse: {
+            data: { video },
+          },
           threads,
           kawaiiCount,
         } = comment

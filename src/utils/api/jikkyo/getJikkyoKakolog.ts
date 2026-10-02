@@ -1,5 +1,5 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { NCOState, StateSlotDetailJikkyo } from '@/ncoverlay/state'
 import type { JikkyoChapter } from '@/utils/api/jikkyo/findChapters'
 import type { JikkyoMarker } from '@/utils/api/jikkyo/findMarkers'
@@ -17,7 +17,7 @@ export interface GetJikkyoKakologParams {
 }
 
 export interface GetJikkyoKakologResult {
-  thread: V1Thread
+  thread: ThreadsV1.Thread
   markers: JikkyoMarker[]
   chapters: JikkyoChapter[]
   kawaiiCount: number

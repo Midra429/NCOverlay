@@ -1,4 +1,4 @@
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { BaseOptions } from '@xpadev-net/niconicomments'
 import type { SettingItems } from '@/types/storage'
 import type { NCOPatcherFunctions } from './patcher'
@@ -20,7 +20,7 @@ export class NCORenderer {
   #canvas: HTMLCanvasElement
 
   #niconicomments: NiconiComments | null = null
-  #threads: V1Thread[] | null = null
+  #threads: ThreadsV1.Thread[] | null = null
   #options: NiconiCommentsOptions | null = null
 
   #offset: number = 0
@@ -104,7 +104,7 @@ export class NCORenderer {
   /**
    * @description `reload()` 必須
    */
-  setThreads(threads: V1Thread[] | null) {
+  setThreads(threads: ThreadsV1.Thread[] | null) {
     this.#threads = threads
   }
 

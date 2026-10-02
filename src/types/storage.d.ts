@@ -3,7 +3,7 @@ import type {
   JikkyoChannelId,
   NiconicoGenre,
 } from '@midra/nco-utils/types/api/constants'
-import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search'
+import type * as SnapshotV2 from '@midra/nco-utils/types/api/niconico/snapshot/v2'
 import type { NCOStateItems, StateSlotDetail } from '@/ncoverlay/state'
 import type { PluginKey, VodKey } from '@/types/constants'
 
@@ -319,7 +319,7 @@ export interface SettingItems {
    * 検索:ソート順
    * @default '-startTime'
    */
-  'search:sort': SearchQuerySort
+  'search:sort': SnapshotV2.QuerySort
 
   /**
    * 検索:投稿日時

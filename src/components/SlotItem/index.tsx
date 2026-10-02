@@ -82,7 +82,9 @@ function getAddFunction(detail: StateSlotDetail) {
 
       if (comment) {
         const {
-          videoData: { video },
+          watchResponse: {
+            data: { video },
+          },
           threads,
           kawaiiCount,
         } = comment

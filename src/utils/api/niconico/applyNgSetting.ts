@@ -1,12 +1,9 @@
-import type {
-  V1Comment,
-  V1Thread,
-} from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { NgSharingLevel } from '@/types/storage'
 import type { NgSettingsFormatted } from '@/utils/api/niconico/getNgSettings'
 
 export function isNgComment(
-  { body, commands, userId }: V1Comment,
+  { body, commands, userId }: ThreadsV1.Comment,
   ngSettings: NgSettingsFormatted
 ): boolean {
   // 単語
@@ -67,14 +64,14 @@ export function isNgCommentByScore(
 }
 
 export function applyNgSettings(
-  threads: V1Thread[],
+  threads: ThreadsV1.Thread[],
   ngSettings: NgSettingsFormatted
-): V1Thread[] {
+): ThreadsV1.Thread[] {
   if (!Object.values(ngSettings).flat().length) {
     return threads
   }
 
-  return threads.map<V1Thread>((thread) => {
+  return threads.map<ThreadsV1.Thread>((thread) => {
     let commentCount = thread.commentCount
 
     const comments = thread.comments.filter(

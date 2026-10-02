@@ -1,4 +1,4 @@
-import type { SearchQuerySort } from '@midra/nco-utils/types/api/niconico/search'
+import type * as SnapshotV2 from '@midra/nco-utils/types/api/niconico/snapshot/v2'
 
 import { ArrowDownUpIcon } from 'lucide-react'
 
@@ -8,7 +8,7 @@ import { Select, SelectItem, SelectSection } from '@/components/Select'
 
 const SORT_OPTIONS: {
   label: string
-  value: SearchQuerySort
+  value: SnapshotV2.QuerySort
 }[] = [
   {
     label: '投稿日時が新しい順',

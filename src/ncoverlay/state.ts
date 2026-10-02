@@ -1,8 +1,5 @@
 import type { JikkyoChannelId } from '@midra/nco-utils/types/api/constants'
-import type {
-  V1Comment,
-  V1Thread,
-} from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 import type { DeepPartial } from 'utility-types'
 import type { VodKey } from '@/types/constants'
 import type {
@@ -78,7 +75,7 @@ export interface StateSlot {
    * 動画ID or `${jkChId}:${starttime}-${endtime}`
    */
   id: string
-  threads: V1Thread[]
+  threads: ThreadsV1.Thread[]
   isAutoLoaded?: boolean
 }
 
@@ -177,7 +174,7 @@ export interface StateFileDetail {
   size: number
 }
 
-export interface NcoV1Comment extends V1Comment {
+export interface NcoThreadsV1Comment extends ThreadsV1.Comment {
   _raw: {
     commands: string[]
     isPremium: boolean
@@ -187,8 +184,8 @@ export interface NcoV1Comment extends V1Comment {
   }
 }
 
-export interface NcoV1Thread extends Omit<V1Thread, 'comments'> {
-  comments: NcoV1Comment[]
+export interface NcoThreadsV1Thread extends Omit<ThreadsV1.Thread, 'comments'> {
+  comments: NcoThreadsV1Comment[]
   _nco: {}
 }
 
@@ -205,7 +202,7 @@ const CLEAR_ALL_KEYS: NCOStateItemKey[] = [...CLEAR_KEYS, 'vod', 'fileDetail']
 
 export async function filterDisplayThreads(
   ncoState: NCOState
-): Promise<NcoV1Thread[] | null> {
+): Promise<NcoThreadsV1Thread[] | null> {
   const slots = await ncoState.get('slots')
   const details = await ncoState.get('slotDetails')
 
@@ -213,7 +210,7 @@ export async function filterDisplayThreads(
     return null
   }
 
-  const threadMap = new Map<string, NcoV1Thread>()
+  const threadMap = new Map<string, NcoThreadsV1Thread>()
 
   const ngSettings = await getNgSettings()
   const [
@@ -344,7 +341,7 @@ export async function filterDisplayThreads(
       cmtCnt += thread.comments.length
       assistedCmtCnt += assistedCommentIds?.length ?? 0
 
-      const comments: NcoV1Comment[] = []
+      const comments: NcoThreadsV1Comment[] = []
 
       for (const cmt of thread.comments) {
         if (

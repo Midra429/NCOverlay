@@ -1,12 +1,12 @@
 import type { GetDataFormatted } from '@midra/nco-utils/types/api/nicolog/get'
-import type { V1Thread } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 
 import { KAWAII_REGEXP } from '@/constants'
 import { ncoApiProxy } from '@/proxy/nco-utils/api/extension'
 
 export interface GetNicologCommentResult {
   detail: GetDataFormatted
-  threads: V1Thread[]
+  threads: ThreadsV1.Thread[]
   commentCount: number
   kawaiiCount: number
 }

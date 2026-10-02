@@ -1,6 +1,6 @@
-import type { V1Comment } from '@midra/nco-utils/types/api/niconico/v1/threads'
+import type * as ThreadsV1 from '@midra/nco-utils/types/api/niconico/threads/v1'
 
-interface V1CommentSorted extends V1Comment {
+interface ThreadsV1CommentSorted extends ThreadsV1.Comment {
   _postedAtTime: number
 }
 
@@ -9,7 +9,7 @@ const COMMENT_ASSIST_STARTED_AT = new Date(
   '2025-04-26T00:00:00+09:00'
 ).getTime()
 
-function isAssistedCommentBase(comment: V1CommentSorted): boolean {
+function isAssistedCommentBase(comment: ThreadsV1CommentSorted): boolean {
   const cmdLen = comment.commands.length
 
   return (
@@ -21,8 +21,8 @@ function isAssistedCommentBase(comment: V1CommentSorted): boolean {
 }
 
 function isAssistedComment(
-  base: V1CommentSorted,
-  target: V1CommentSorted
+  base: ThreadsV1CommentSorted,
+  target: ThreadsV1CommentSorted
 ): boolean {
   const cmdLen = target.commands.length
 
@@ -45,26 +45,28 @@ function isAssistedComment(
 }
 
 export interface AssistedCommentResult {
-  id: V1Comment['id']
+  id: ThreadsV1.Comment['id']
   score: number
 }
 
 /**
  * アシストコメントを探す
  */
-export function findAssistedCommentIds(comments: V1Comment[]): string[] {
+export function findAssistedCommentIds(
+  comments: ThreadsV1.Comment[]
+): string[] {
   if (comments.length <= 3) {
     return []
   }
 
   const sameCommentGroups: [
-    base: V1CommentSorted,
-    ...targets: V1CommentSorted[],
+    base: ThreadsV1CommentSorted,
+    ...targets: ThreadsV1CommentSorted[],
   ][] = []
 
   // 投稿日時順にソート
   const sorted = comments
-    .map<V1CommentSorted>((cmt) => ({
+    .map<ThreadsV1CommentSorted>((cmt) => ({
       ...cmt,
       _postedAtTime: new Date(cmt.postedAt).getTime(),
     }))
