@@ -5,6 +5,7 @@ import type {
 import type { VodKey } from '@/types/constants'
 
 import { defineContentScript } from '#imports'
+import { part } from '@midra/nco-utils/api/services/danime/part'
 
 import { MATCHES } from '@/constants/matches'
 import { convertURL } from '@/utils/convertURL'
@@ -33,7 +34,21 @@ async function main() {
 
   let playbackInfo: DAnimePlaybackInfo | null = null
 
-  onPageMessage('page:dAnime:getPlaybackInfo', () => playbackInfo)
+  onPageMessage('page:dAnime:getPlaybackInfo', async () => {
+    if (!playbackInfo) {
+      const id = new URLSearchParams(location.search).get('partId')
+
+      if (id) {
+        const data = await part(id)
+
+        if (data) {
+          playbackInfo = { id, data }
+        }
+      }
+    }
+
+    return playbackInfo
+  })
 
   // XMLHttpRequest
   const $send = XMLHttpRequest.prototype.send
