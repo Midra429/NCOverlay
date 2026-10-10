@@ -81,7 +81,7 @@ async function main() {
     } else {
       if (location.pathname.startsWith('/title/')) {
         const video = document.body.querySelector<HTMLVideoElement>(
-          '#video_container > video[fpkey="videoPlayer"][src]'
+          '#video_container:not([style*="display: none;"]) > video[src][style*="visibility: visible;"]'
         )
 
         if (video) {
