@@ -1,13 +1,9 @@
 import type { VodKey } from '@/types/constants'
 import type {
   GetPlaylistUrl,
-  MoviePartsPositionList,
+  WebfrontPlaylistUrl,
 } from '@/types/vod/unext/getPlaylistUrl'
-import type {
-  EpisodeElement,
-  GetTitle,
-  WebfrontTitleStage,
-} from '@/types/vod/unext/getTitle'
+import type { GetTitle, WebfrontTitleStage } from '@/types/vod/unext/getTitle'
 
 import { defineContentScript } from '#imports'
 
@@ -31,8 +27,7 @@ const TITLE_EP_ID_REGEXP = /\/play\/(?<titleId>[^\/]+)\/(?<episodeId>[^\/]+)/
 
 export interface UnextPlaybackInfo {
   titleStage: WebfrontTitleStage
-  titleEpisodes: EpisodeElement[]
-  positionList: MoviePartsPositionList[]
+  playlistUrl: WebfrontPlaylistUrl
 }
 
 async function main() {
@@ -41,8 +36,7 @@ async function main() {
   logger.log('page', vod)
 
   const titleStageQueue = new LRUQueue<WebfrontTitleStage>(25)
-  const titleEpisodesQueue = new LRUQueue<EpisodeElement[]>(25)
-  const positionListQueue = new LRUQueue<MoviePartsPositionList[]>(25)
+  const playlistUrlQueue = new LRUQueue<WebfrontPlaylistUrl>(25)
 
   onPageMessage('page:unext:getPlaybackInfo', async () => {
     const groups = location.pathname.match(TITLE_EP_ID_REGEXP)?.groups
@@ -55,14 +49,13 @@ async function main() {
     const titleEpId = `${titleId}/${episodeId}`
 
     const titleStage = titleStageQueue.get(titleEpId)
-    const titleEpisodes = titleEpisodesQueue.get(titleId)
-    const positionList = positionListQueue.get(episodeId)
+    const playlistUrl = playlistUrlQueue.get(episodeId)
 
-    if (!titleStage || !titleEpisodes || !positionList) {
+    if (!titleStage || !playlistUrl) {
       return null
     }
 
-    return { titleStage, titleEpisodes, positionList }
+    return { titleStage, playlistUrl }
   })
 
   // fetch
@@ -97,10 +90,7 @@ async function main() {
 
             const json: GetTitle = await response.clone().json()
             const {
-              data: {
-                webfront_title_stage,
-                webfront_title_titleEpisodes: { episodes },
-              },
+              data: { webfront_title_stage },
             } = json
 
             const titleId = webfront_title_stage.id
@@ -111,10 +101,6 @@ async function main() {
               titleStageQueue.add(titleEpId, webfront_title_stage)
             }
 
-            if (!titleEpisodesQueue.hit(titleId)) {
-              titleEpisodesQueue.add(titleId, episodes)
-            }
-
             break
           }
 
@@ -123,17 +109,13 @@ async function main() {
 
             const json: GetPlaylistUrl = await response.clone().json()
             const {
-              data: {
-                webfront_playlistUrl: {
-                  urlInfo: [urlInfo],
-                },
-              },
+              data: { webfront_playlistUrl },
             } = json
 
             const episodeId = variables.code as string
 
-            if (!positionListQueue.hit(episodeId)) {
-              positionListQueue.add(episodeId, urlInfo!.moviePartsPositionList)
+            if (!playlistUrlQueue.hit(episodeId)) {
+              playlistUrlQueue.add(episodeId, webfront_playlistUrl)
             }
 
             break
