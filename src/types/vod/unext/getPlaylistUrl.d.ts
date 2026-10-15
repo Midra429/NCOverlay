@@ -15,13 +15,11 @@ export interface WebfrontPlaylistUrl {
   resultStatus: number
   licenseExpireDate: string
   urlInfo: UrlInfo[]
-  __typename: string
 }
 
 export interface Result {
   errorCode: string
   errorMessage: string
-  __typename: string
 }
 
 export interface UrlInfo {
@@ -41,15 +39,11 @@ export interface UrlInfo {
   commodityCode: string
   movieAudioList: MovieAudioList[]
   moviePartsPositionList: MoviePartsPositionList[]
-  __typename: string
 }
 
 export interface MovieAudioList {
   audioType: AudioType
-  __typename: MovieAudioListTypename
 }
-
-export type MovieAudioListTypename = 'AudioType'
 
 export type AudioType = 'mp4a'
 
@@ -58,7 +52,6 @@ export interface MoviePartsPositionList {
   fromSeconds: number
   endSeconds: number
   hasRemainingPart: boolean | null
-  __typename: string
 }
 
 export type MoviePartsPositionListType = 'OPENING' | 'ENDING'
@@ -69,18 +62,12 @@ export interface MovieProfile {
   playlistUrl: string
   movieAudioList: MovieAudioList[]
   licenseUrlList: LicenseUrlList[]
-  __typename: MovieProfileTypename
 }
-
-export type MovieProfileTypename = 'PlaylistMovieProfile'
 
 export interface LicenseUrlList {
   type: Type
   licenseUrl: string
-  __typename: LicenseUrlListTypename
 }
-
-export type LicenseUrlListTypename = 'LicenseUrl'
 
 export type Type = 'WIDEVINE' | 'PLAYREADY' | 'FAIRPLAY'
 
@@ -89,5 +76,4 @@ export interface SceneSearchList {
   IMS_L: string
   IMS_M: string
   IMS_S: string
-  __typename: string
 }
