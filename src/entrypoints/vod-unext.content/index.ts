@@ -14,9 +14,7 @@ import { defineContentScript } from '#imports'
 import { compare } from '@midra/nco-utils/compare'
 import { parse } from '@midra/nco-utils/parse'
 import {
-  jikkyoNhkChIdMap,
   jikkyoNhkChIdMap_20231130,
-  nhkJikkyoChIdMap,
   nhkJikkyoChIdMap_20231130,
 } from '@midra/nco-utils/api/constants'
 import { normalizeAll } from '@midra/nco-utils/parse/libs/normalize'
@@ -45,19 +43,13 @@ export default defineContentScript({
   main: () => void main(),
 })
 
-const THUMB_PATH_YEAR_REGEXP = /(?<=\/NOD\/N\/N)\d{4}(?=\d+)/
-
 async function main() {
   if (!(await checkVodEnable(vod))) return
 
   logger.log('vod', vod)
 
-  let year: number | null = null
-
   const patcher = new NCOPatcher(vod, {
     getInfo: async (nco) => {
-      year = null
-
       const playbackInfo = await sendPageMessage(
         'page:unext:getPlaybackInfo',
         null
@@ -149,9 +141,6 @@ async function main() {
       }
 
       const epThumb = (nextEpisode ?? episode)?.thumbnail.standard
-      const yearStr = epThumb?.match(THUMB_PATH_YEAR_REGEXP)?.[0]
-
-      year = yearStr ? Number(yearStr) : null
 
       if (epThumb?.includes('/img/info/NOD/')) {
         input = normalizeTitle(input)
@@ -180,7 +169,7 @@ async function main() {
       }
     },
     autoSearch: async (nco, args) => {
-      if (!args.isNhkOndemand || !year) {
+      if (!args.isNhkOndemand) {
         return nco.searcher.autoSearch(args)
       }
 
@@ -223,19 +212,11 @@ async function main() {
       } = {}
 
       // 過去番組表
-      const isBefore20231130 = year <= 2023
-
       const channelIds = jikkyoChannelIds
-        .map((jkChId) => {
-          return isBefore20231130
-            ? jikkyoNhkChIdMap_20231130.get(jkChId)
-            : jikkyoNhkChIdMap.get(jkChId)
-        })
+        .map((jkChId) => jikkyoNhkChIdMap_20231130.get(jkChId))
         .filter((v) => v != null)
 
       if (!channelIds.length) return
-
-      const onwards = `${year}0101`
 
       const searchTitle = isConsecutiveEp
         ? [
@@ -262,7 +243,6 @@ async function main() {
 
         chronicle = await ncoApiProxy.nhk.chronicle(searchTitleStripped, {
           channelIds,
-          onwards,
         })
       }
 
@@ -283,9 +263,7 @@ async function main() {
       for (const result of matchedChronicleResults) {
         const nhkChId = result.channel1 as NhkChannelId
 
-        const jkChId = isBefore20231130
-          ? nhkJikkyoChIdMap_20231130.get(nhkChId)
-          : nhkJikkyoChIdMap.get(nhkChId)
+        const jkChId = nhkJikkyoChIdMap_20231130.get(nhkChId)
 
         if (!jkChId || !jikkyoChannelIds.includes(jkChId)) {
           continue
